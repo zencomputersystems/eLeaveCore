@@ -37,8 +37,7 @@ export class BranchController {
           },
           err => {
             res.status(400);
-            res.send('Fail to create resource');
-            //console.log(err.response.data.error.context);
+            res.send('Fail to update resource');    
           }
       )
     }

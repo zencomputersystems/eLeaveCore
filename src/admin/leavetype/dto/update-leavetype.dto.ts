@@ -1,12 +1,7 @@
 
 import { IsNotEmpty } from 'class-validator';
-export class UpdateLeaveTypeDto {
+import { LeaveTypeDto } from './leavetype.dto';
+export class UpdateLeaveTypeDto extends LeaveTypeDto {
     @IsNotEmpty()
     readonly id: string; 
-    
-    @IsNotEmpty()
-    readonly code: string;
-
-    @IsNotEmpty()
-    readonly description: string;
 } 

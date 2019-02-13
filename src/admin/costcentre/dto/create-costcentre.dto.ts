@@ -1,6 +1,5 @@
 
-import { IsNotEmpty } from 'class-validator';
-export class CreateCostCentreDto {
-    @IsNotEmpty()
-    readonly name: string;
+import { CostCentreDto } from './costcentre.dto';
+export class CreateCostCentreDto extends CostCentreDto {
+
 } 

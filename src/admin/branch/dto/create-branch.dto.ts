@@ -1,7 +1,4 @@
-
-import { IsNotEmpty } from 'class-validator';
-export class CreateBranchDto {
-    @IsNotEmpty()
-    readonly name: string;
-
+import { BranchDto } from './branch.dto';
+export class CreateBranchDto extends BranchDto {
+   
 } 

@@ -1,8 +1,8 @@
 import { Controller, Post, Body, Req, Res, Patch, Get, Param, UseGuards } from '@nestjs/common';
 import { SectionService } from './section.service';
-import { CreateCostCentreDto } from '../costcentre/dto/create-costcentre.dto';
-import { UpdateCostCentreDto } from '../costcentre/dto/update-costcentre.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateSectionDto } from './dto/create-section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Controller('api/admin/section')
 @UseGuards(AuthGuard('jwt'))
@@ -11,9 +11,9 @@ export class SectionController {
     constructor(private readonly sectionService: SectionService) {}
 
   @Post()
-  create(@Body() createBranchDTO: CreateCostCentreDto,@Req() req, @Res() res) {
+  create(@Body() createSectionDTO: CreateSectionDto,@Req() req, @Res() res) {
 
-    this.sectionService.create(req.user,createBranchDTO.name)
+    this.sectionService.create(req.user,createSectionDTO.name)
       .subscribe(
         data => {
           if(data.status==200)
@@ -28,8 +28,8 @@ export class SectionController {
   }
 
   @Patch()
-  update(@Body() updateBranchDTO: UpdateCostCentreDto,@Req() req, @Res() res) {
-    this.sectionService.update(req.user,updateBranchDTO)
+  update(@Body() updateSectionDTO: UpdateSectionDto,@Req() req, @Res() res) {
+    this.sectionService.update(req.user,updateSectionDTO)
       .subscribe(
         data => {
           if(data.status==200)

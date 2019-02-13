@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import {sign} from 'jsonwebtoken';
+import { async } from 'rxjs/internal/scheduler/async';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
         .then(async user => {
           return (user.data.resource.length>0)
           ? Promise.resolve(user.data.resource[0])
-          : Promise.reject(new UnauthorizedException('Invalid password'))
+          : Promise.reject(new UnauthorizedException('Invalid Credential'))
         })
     }
 
@@ -29,5 +30,15 @@ export class AuthService {
           expires_in: expiresIn,
           access_token: await sign(user, secretOrKey, { expiresIn })
         }
+      }
+
+    //verify the JWT token data
+    public async verify(payload) {
+        return await this.userService.findOneByPayload(payload)
+        .then(async user => {
+            return (user.data.resource.length>0)
+          ? Promise.resolve(user.data.resource[0])
+          : Promise.reject(new UnauthorizedException('Invalid Authorization'))
+        })
       }
 }

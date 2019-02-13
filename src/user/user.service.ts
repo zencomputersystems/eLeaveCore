@@ -16,5 +16,12 @@ export class UserService {
         //call DF to validate the user
         return this.httpService.get(url).toPromise();
         
-      }
+    }
+
+    public async findOneByPayload(payload): Promise<any> {
+        const url = DreamFactory.df_host+"user_main?fields=EMAIL%2CUSER_GUID%2CTENANT_GUID&filter=(EMAIL="+payload.email+")AND(USER_GUID="+payload.userId+")AND(TENANT_GUID="+payload.tenantId+")";
+
+        //call DF to validate the user
+        return this.httpService.get(url).toPromise();
+    }
 }

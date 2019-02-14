@@ -15,7 +15,9 @@ export class LeavetypeEntitlementController {
         this.leavetypeEntitlementService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(
             data => {
                 if(data.status==200)
+                {
                     res.send(data.data.resource[0]);
+                }
                 else {
                     res.status(data.status);
                     res.send();

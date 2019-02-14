@@ -1,5 +1,5 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import {j2xParser} from 'fast-xml-parser';
+import {j2xParser, parse} from 'fast-xml-parser';
 import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from './model/leavetype_entitlement.model';
 import { CreateLeaveEntitlementTypeDto } from './dto/create-leavetype_entitlement.dto';
@@ -7,6 +7,7 @@ import { v1 } from 'uuid';
 import { Observable } from 'rxjs';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { UpdateLeaveTypeEntitlementDto } from './dto/update-leavetype_entitlement.dto';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class LeavetypeEntitlementService {
@@ -35,7 +36,6 @@ export class LeavetypeEntitlementService {
 
     //find all tenant leave definition
     public findAll(userid: string, tenantid:string): Observable<any> {
-console.log(this.db_host);
         //url
         const url = this.db_host+"?filter=TENANT_GUID="+tenantid;
  
@@ -50,7 +50,13 @@ console.log(this.db_host);
         const url = this.db_host+"?fields=ENTITLEMENT_GUID%2CCODE%2CDESCRIPTION%2CPROPERTIES_XML&filter=(ENTITLEMENT_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
         
         //call DF to validate the user
-        return this.httpService.get(url);
+        return this.httpService.get(url).pipe(map(d => {
+            if(d.status==200)
+            {
+                d.data.resource.length>0?d.data.resource[0].PROPERTIES_XML=parse(d.data.resource[0].PROPERTIES_XML):'';
+            }
+            return d;
+        }));
     }
 
     //create new leavetype entitlement
@@ -98,7 +104,7 @@ console.log(this.db_host);
         data.ACTIVE_FLAG = 1;
         
         resource.resource.push(data);
-        
+
         const url = this.db_host+"?id_field=TENANT_GUID%2CENTITLEMENT_GUID";
 
         return this.httpService.patch(url,resource);

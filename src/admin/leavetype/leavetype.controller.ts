@@ -1,8 +1,6 @@
 import { Controller, UseGuards, Post, Body, Req, Res, Patch, Get, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { LeavetypeService } from './leavetype.service';
-import { CreateCostCentreDto } from '../costcentre/dto/create-costcentre.dto';
-import { UpdateCostCentreDto } from '../costcentre/dto/update-costcentre.dto';
 import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
 

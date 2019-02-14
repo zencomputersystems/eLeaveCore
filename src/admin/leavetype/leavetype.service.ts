@@ -11,7 +11,7 @@ export class LeavetypeService {
 
     constructor(private readonly httpService: HttpService){}
 
-    //find all tenant branch
+    //find all tenant leavetype
     public findAll(userid: string, tenantid:string): Observable<any> {
 
         //url
@@ -22,10 +22,10 @@ export class LeavetypeService {
         
     }
 
-    //find tenant branch by id
+    //find tenant leavetype by id
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
         //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=LEAVE_TYPE_GUID%2CCODE%2CDESCRIPTION&filter=(SECTION_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
+        const url = DreamFactory.df_host+this.table_name+"?fields=LEAVE_TYPE_GUID%2CCODE%2CDESCRIPTION&filter=(LEAVE_TYPE_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
         
         //call DF to validate the user
         return this.httpService.get(url);

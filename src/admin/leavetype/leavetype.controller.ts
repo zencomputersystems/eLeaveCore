@@ -3,9 +3,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { LeavetypeService } from './leavetype.service';
 import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('/api/admin/leavetype')
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class LeaveTypeController {
 
   constructor(private readonly leavetypeService: LeavetypeService) {}

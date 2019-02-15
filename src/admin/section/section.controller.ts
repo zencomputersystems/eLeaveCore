@@ -3,9 +3,11 @@ import { SectionService } from './section.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('api/admin/section')
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class SectionController {
 
     constructor(private readonly sectionService: SectionService) {}
@@ -49,7 +51,7 @@ export class SectionController {
         res.send(data.data.resource);
       },
       err => {
-        //console.log(err.response.data);
+
         res.status(400);
         res.send('Fail to fetch resource');  
       }

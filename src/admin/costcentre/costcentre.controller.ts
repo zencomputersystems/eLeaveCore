@@ -3,9 +3,11 @@ import { CreateCostCentreDto } from './dto/create-costcentre.dto';
 import { UpdateCostCentreDto } from './dto/update-costcentre.dto';
 import {CostcentreService} from './costcentre.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('/api/admin/costcentre')
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class CostcentreController {
 
   constructor(private readonly costcentreService: CostcentreService) {}

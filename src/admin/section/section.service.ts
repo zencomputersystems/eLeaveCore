@@ -75,7 +75,7 @@ export class SectionService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CSECTION_GUID";
+        const url = DreamFactory.df_host+this.table_name+"?id_field=SECTION_GUID";
 
         return this.httpService.patch(url,resource);
 

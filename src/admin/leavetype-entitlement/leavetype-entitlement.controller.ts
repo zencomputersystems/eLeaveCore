@@ -3,9 +3,11 @@ import { LeavetypeEntitlementService } from './leavetype-entitlement.service';
 import { CreateLeaveEntitlementTypeDto } from './dto/create-leavetype_entitlement.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateLeaveTypeEntitlementDto } from './dto/update-leavetype_entitlement.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('api/admin/leavetype-entitlement')
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class LeavetypeEntitlementController {
 
     constructor(private readonly leavetypeEntitlementService: LeavetypeEntitlementService){}

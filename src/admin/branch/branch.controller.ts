@@ -3,9 +3,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { BranchService } from './branch.service';
 import { UpdateBranchDto } from './dto/update-branch.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('api/admin/branch')
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class BranchController {
 
     constructor(private readonly branchService: BranchService) {}

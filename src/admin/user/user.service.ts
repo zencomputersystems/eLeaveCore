@@ -1,10 +1,9 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import {DreamFactory} from '../config/dreamfactory';
+import { DreamFactory } from 'src/config/dreamfactory';
 import CryptoJS = require('crypto-js');
 
 @Injectable()
 export class UserService {
-
     constructor(private readonly httpService: HttpService){}
 
     //find single user

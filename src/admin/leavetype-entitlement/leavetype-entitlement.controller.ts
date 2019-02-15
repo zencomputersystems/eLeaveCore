@@ -62,7 +62,6 @@ export class LeavetypeEntitlementController {
                     }
                 },
                 err => {
-                    console.log(err.response.data.error.context);
                     res.status(400);
                     res.send('Fail to update resource');
                 }

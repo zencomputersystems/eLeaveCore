@@ -1,8 +1,8 @@
 import { Module, HttpModule } from '@nestjs/common';
-import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { DreamFactory } from '../config/dreamfactory';
+import { UserService } from './user.service';
 import { PassportModule } from '@nestjs/passport';
+import { DreamFactory } from 'src/config/dreamfactory';
 
 @Module({
   controllers: [UserController],

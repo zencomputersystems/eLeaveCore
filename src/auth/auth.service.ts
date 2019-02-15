@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import {sign} from 'jsonwebtoken';
 import { async } from 'rxjs/internal/scheduler/async';
+import { UserService } from 'src/admin/user/user.service';
 
 @Injectable()
 export class AuthService {

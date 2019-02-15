@@ -4,6 +4,7 @@ import { CostcentreController } from './costcentre.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Module({
   controllers: [
@@ -15,6 +16,7 @@ import { DreamFactory } from 'src/config/dreamfactory';
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
   ],    
   providers: [
+    QueryParserService,
     CostcentreService
   ]
 })

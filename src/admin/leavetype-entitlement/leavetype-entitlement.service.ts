@@ -8,13 +8,14 @@ import { Observable } from 'rxjs';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { UpdateLeaveTypeEntitlementDto } from './dto/update-leavetype_entitlement.dto';
 import { map } from 'rxjs/operators';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Injectable()
 export class LeavetypeEntitlementService {
     private table_name = "l_leavetype_entitlement_def";
     private db_host = DreamFactory.df_host+this.table_name;
 
-    constructor(private readonly httpService: HttpService){}
+    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
 
     private convertJsonToXML(data:any) {
         var defaultOptions = {
@@ -36,8 +37,10 @@ export class LeavetypeEntitlementService {
 
     //find all tenant leave definition
     public findAll(userid: string, tenantid:string): Observable<any> {
+
+        const filters = ['(TENANT_GUID='+tenantid+')'];
         //url
-        const url = this.db_host+"?filter=TENANT_GUID="+tenantid;
+        const url = this.queryService.generateDbQuery(this.table_name,[],filters);
  
         //call DF to validate the user
         return this.httpService.get(url);
@@ -46,9 +49,13 @@ export class LeavetypeEntitlementService {
 
     //find tenant leave definition by id
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
-        //url
-        const url = this.db_host+"?fields=ENTITLEMENT_GUID%2CCODE%2CDESCRIPTION%2CPROPERTIES_XML&filter=(ENTITLEMENT_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
         
+        const fields = ['ENTITLEMENT_GUID','CODE','DESCRIPTION','PROPERTIES_XML'];
+        const filters = ['(ENTITLEMENT_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
+       
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+
+
         //call DF to validate the user
         return this.httpService.get(url).pipe(map(d => {
             if(d.status==200)
@@ -82,7 +89,7 @@ export class LeavetypeEntitlementService {
 
         resource.resource.push(data);
 
-        return this.httpService.post(this.db_host,resource);
+        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
         
     }
 

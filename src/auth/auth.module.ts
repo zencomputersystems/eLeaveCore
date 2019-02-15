@@ -6,9 +6,11 @@ import { LocalStrategy } from './passport/local.strategy';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { UserService } from 'src/admin/user/user.service';
 import { UserModule } from 'src/admin/user/user.module';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Module({
     providers: [
+        QueryParserService,
         AuthService, 
         UserService,
         LocalStrategy,

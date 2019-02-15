@@ -4,20 +4,23 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { SectionModel } from './model/section.model';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Injectable()
 export class SectionService {
 
     private table_name = "main_section";
 
-    constructor(private readonly httpService: HttpService){}
+    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
 
     //find all tenant branch
     public findAll(userid: string, tenantid:string): Observable<any> {
 
-        //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=SECTION_GUID%2CNAME&filter=(TENANT_GUID="+tenantid+")";
- 
+        const fields = ['SECTION_GUID','NAME'];
+        const filters = ['(TENANT_GUID='+tenantid+')'];
+       
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+
         //call DF to validate the user
         return this.httpService.get(url);
         
@@ -25,8 +28,11 @@ export class SectionService {
 
     //find tenant branch by id
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
-        //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=SECTION_GUID%2CNAME&filter=(SECTION_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
+       
+        const fields = ['SECTION_GUID','NAME'];
+        const filters = ['(TENANT_GUID='+tenantid+')','(SECTION_GUID='+id+')'];
+       
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -49,7 +55,7 @@ export class SectionService {
 
         const url = DreamFactory.df_host+this.table_name;
 
-        return this.httpService.post(url,resource);
+        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
 
     }
 

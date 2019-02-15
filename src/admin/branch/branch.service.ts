@@ -4,16 +4,22 @@ import { Observable } from 'rxjs';
 import { BranchModel } from './model/branch.model';
 import { Resource } from 'src/common/model/resource.model';
 import {v1} from 'uuid';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Injectable()
 export class BranchService {
-    constructor(private readonly httpService: HttpService){}
+
+    private table_name = "main_branch";
+
+    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
 
     //find all tenant branch
     public findAll(userid: string, tenantid:string): Observable<any> {
 
+        const fields = ['BRANCH_GUID','NAME'];
+
         //url
-        const url = DreamFactory.df_host+"main_branch?fields=BRANCH_GUID%2CNAME";
+        const url = this.queryService.generateDbQuery(this.table_name,fields,[]);
  
         //call DF to validate the user
         return this.httpService.get(url);
@@ -22,8 +28,12 @@ export class BranchService {
 
     //find tenant branch by id
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
+
+        const fields = ['BRANCH_GUID','NAME'];
+        const filters = ['(BRANCH_GUID='+id+')'];
+
         //url
-        const url = DreamFactory.df_host+"main_branch?fields=BRANCH_GUID%2CNAME&filter=BRANCH_GUID="+id;
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -43,9 +53,7 @@ export class BranchService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+"main_branch";
-
-        return this.httpService.post(url,resource);
+        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
 
     }
 
@@ -64,9 +72,7 @@ export class BranchService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+"main_branch";
-
-        return this.httpService.patch(url,resource);
+        return this.httpService.patch(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
 
     }
 }

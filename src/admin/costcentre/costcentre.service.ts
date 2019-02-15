@@ -4,19 +4,22 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { CostCentreModel } from './model/costcentre.model';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Injectable()
 export class CostcentreService {
     private table_name = "main_cost_centre";
 
-    constructor(private readonly httpService: HttpService){}
+    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
 
     //find all tenant branch
     public findAll(userid: string, tenantid:string): Observable<any> {
 
-        //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=COST_CENTRE_GUID%2CNAME&filter=(TENANT_GUID="+tenantid+")";
- 
+        const fields = ['COST_CENTRE_GUID','NAME'];
+        const filters = ['(TENANT_GUID='+tenantid+')'];
+       
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+
         //call DF to validate the user
         return this.httpService.get(url);
         
@@ -24,8 +27,11 @@ export class CostcentreService {
 
     //find tenant branch by id
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
+        const fields = ['COST_CENTRE_GUID','NAME'];
+        const filters = ['(COST_CENTRE_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
+
         //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=COST_CENTRE_GUID%2CNAME&filter=(COST_CENTRE_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -46,7 +52,7 @@ export class CostcentreService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name;
+        const url = this.queryService.generateDbQuery(this.table_name,[],[]);
 
         return this.httpService.post(url,resource);
 

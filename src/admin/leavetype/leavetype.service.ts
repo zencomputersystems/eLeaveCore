@@ -4,18 +4,21 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { LeaveTypeModel } from './model/leavetype.model';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 @Injectable()
 export class LeavetypeService {
     private table_name = "l_main_leavetype";
 
-    constructor(private readonly httpService: HttpService){}
+    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
 
     //find all tenant leavetype
     public findAll(userid: string, tenantid:string): Observable<any> {
 
+        const fields = ['LEAVE_TYPE_GUID','CODE','DESCRIPTION'];
+        const filters = ['(TENANT_GUID='+tenantid+')'];
         //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=LEAVE_TYPE_GUID%2CCODE%2CDESCRIPTION&filter=(TENANT_GUID="+tenantid+")";
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
  
         //call DF to validate the user
         return this.httpService.get(url);
@@ -24,9 +27,13 @@ export class LeavetypeService {
 
     //find tenant leavetype by id
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
-        //url
-        const url = DreamFactory.df_host+this.table_name+"?fields=LEAVE_TYPE_GUID%2CCODE%2CDESCRIPTION&filter=(LEAVE_TYPE_GUID="+id+")AND(TENANT_GUID="+tenantid+")";
         
+        const fields = ['LEAVE_TYPE_GUID','CODE','DESCRIPTION'];
+        const filters = ['(TENANT_GUID='+tenantid+')','(LEAVE_TYPE_GUID='+id+')'];
+        //url
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+ 
+
         //call DF to validate the user
         return this.httpService.get(url);
     }
@@ -47,9 +54,7 @@ export class LeavetypeService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name;
-
-        return this.httpService.post(url,resource);
+        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
 
     }
 

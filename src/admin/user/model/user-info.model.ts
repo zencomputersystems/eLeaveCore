@@ -1,17 +1,16 @@
 export class UserInfoModel {
     USER_INFO_GUID: string; //PK
     USER_GUID: string; //FK
-    //TENANT_GUID: string;
-    
+
     // Personal Information
     FULLNAME: string;
-    NICKNAME: string;
-    SALUTATION: string;
-    PERSONAL_ID: string;
-    PERSONAL_ID_TYPE: string;
-    GENDER: number;
-    MARITAL_STATUS: number;
-    DOB: Date;
+    //NICKNAME: string; <-XML
+    //SALUTATION: string; <-XML
+    //PERSONAL_ID: string; <-XML
+    //PERSONAL_ID_TYPE: string; <-XML
+    //GENDER: number; <-XML
+    //MARITAL_STATUS: number; <-XML
+    //DOB: Date; <-XML
 
     // Employee Company Information
     TENANT_COMPANY_GUID: string;
@@ -29,7 +28,7 @@ export class UserInfoModel {
     XML: string;
 
     //ACTIVE_FLAG: number;
-    CREATION_TS: Date;
+    CREATION_TS: string;
     CREATION_USER_GUID: string;
     UPDATE_TS: string;
     UPDATE_USER_GUID: string;

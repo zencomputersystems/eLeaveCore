@@ -1,6 +1,4 @@
 import { UserEmployeeDTO } from "./user-employee.dto";
-import { UserSpouseDTO } from "./user-spouse.dto";
-import { UserChildrenDTO } from "./user-children.dto";
 import { UserEducationDTO } from "./user-education.dto";
 import { UserCertificationDTO } from "./user-certification.dto";
 import { IsNotEmpty, ValidateNested } from "class-validator";
@@ -12,9 +10,11 @@ export class UserDto {
     readonly employeeId: string;
 
     @IsNotEmpty()
-    readonly phoneNumber: string;
+    readonly employeeName: string;
 
     @IsNotEmpty()
+    readonly phoneNumber: string;
+
     readonly companyNumber: string;
 
     @IsNotEmpty()
@@ -63,7 +63,7 @@ export class UserDto {
     // professional cert info
     @Type(() => UserCertificationDTO)
     @ValidateNested()
-    readonly professionalCertification: UserCertificationDTO[];
+    readonly professionalCerts: UserCertificationDTO[];
 
     // employee info
     @IsNotEmpty()

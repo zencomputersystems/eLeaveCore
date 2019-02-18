@@ -1,5 +1,4 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { DreamFactory } from 'src/config/dreamfactory';
 import CryptoJS = require('crypto-js');
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 

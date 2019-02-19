@@ -12,6 +12,7 @@ import { UserInviteModule } from './admin/user-invite/user-invite.module';
 import { UserInfoModule } from './admin/user-info/user-info.module';
 import { UserImportService } from './admin/user-import/user-import.service';
 import { UserImportModule } from './admin/user-import/user-import.module';
+import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/mailer';
 
 @Module({
   imports: [
@@ -24,9 +25,30 @@ import { UserImportModule } from './admin/user-import/user-import.module';
     LeavetypeEntitlementModule,
     UserInviteModule,
     UserInfoModule,
-    UserImportModule
+    UserImportModule,
+    MailerModule.forRoot({
+      transport: {
+        service:'Gmail',
+        auth: {
+          user: 'wantan.wonderland.2018@gmail.com',
+          pass: 'wantan123'
+        }
+      },
+      defaults: {
+        from:'"Leave System" <wantan.wonderland.2018@gmail.com',
+      },
+      template: {
+        dir: './src/common/email-templates',
+        adapter: new PugAdapter(), // or new PugAdapter()
+        options: {
+          debug: 'true',
+          doctype: 'html',
+        },
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, UserImportService],
 })
-export class AppModule {}
+export class AppModule {
+}

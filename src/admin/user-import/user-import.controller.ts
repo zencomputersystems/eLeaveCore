@@ -1,7 +1,6 @@
-import { Controller, UseGuards, UseInterceptors, FileInterceptor, UploadedFile, Post, Req, Res } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth } from "@nestjs/swagger";
-
+import { Controller, UseGuards, Post, UseInterceptors, FileInterceptor, UploadedFile, Req, Res } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import parse = require('csv-parse/lib/sync');
 
 @Controller('api/admin/userimport')

@@ -1,12 +1,12 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { DreamFactory } from 'src/config/dreamfactory';
-import { Observable } from 'rxjs';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { CreateUserDTO } from '../dto/create-user.dto';
+import { Observable } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
-import { UserInfoModel } from '../model/user-info.model';
 import { v1 } from 'uuid';
-import { UpdateUserDTO } from '../dto/update-user.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
+import { UserInfoModel } from './model/user-info.model';
 
 @Injectable()
 export class UserInfoService {
@@ -93,3 +93,4 @@ export class UserInfoService {
         return data;
     }
 }
+

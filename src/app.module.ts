@@ -8,6 +8,10 @@ import { SectionModule } from './admin/section/section.module';
 import { LeavetypeModule } from './admin/leavetype/leavetype.module';
 import { LeavetypeEntitlementModule } from './admin/leavetype-entitlement/leavetype-entitlement.module';
 import { UserModule } from './admin/user/user.module';
+import { UserInviteModule } from './admin/user-invite/user-invite.module';
+import { UserInfoModule } from './admin/user-info/user-info.module';
+import { UserImportService } from './admin/user-import/user-import.service';
+import { UserImportModule } from './admin/user-import/user-import.module';
 
 @Module({
   imports: [
@@ -17,9 +21,12 @@ import { UserModule } from './admin/user/user.module';
     CostcentreModule,
     SectionModule,
     LeavetypeModule,
-    LeavetypeEntitlementModule
+    LeavetypeEntitlementModule,
+    UserInviteModule,
+    UserInfoModule,
+    UserImportModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UserImportService],
 })
 export class AppModule {}

@@ -48,7 +48,7 @@ import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/maile
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, UserImportService],
+  providers: [AppService],
 })
 export class AppModule {
 }

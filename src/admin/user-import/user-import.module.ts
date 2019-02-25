@@ -3,11 +3,21 @@ import { UserImportController } from './user-import.controller';
 import { UserImportService } from './user-import.service';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
+import { UserService } from '../user/user.service';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { BranchService } from '../branch/branch.service';
+import { CostcentreService } from '../costcentre/costcentre.service';
+import { SectionService } from '../section/section.service';
 
 @Module({
   controllers: [UserImportController],
   providers: [
-    UserImportService
+    UserImportService,
+    UserService,
+    BranchService,
+    CostcentreService,
+    SectionService,
+    QueryParserService
   ],
   modules: [
     PassportModule.register({session: false}),

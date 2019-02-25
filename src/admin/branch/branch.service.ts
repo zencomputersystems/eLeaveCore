@@ -17,9 +17,11 @@ export class BranchService {
     public findAll(userid: string, tenantid:string): Observable<any> {
 
         const fields = ['BRANCH_GUID','NAME'];
+        const filters = ['(TENANT_GUID='+tenantid+')'];
+
 
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,[]);
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
  
         //call DF to validate the user
         return this.httpService.get(url);
@@ -30,7 +32,7 @@ export class BranchService {
     public findById(userid: string, tenantid:string, id: string): Observable<any> {
 
         const fields = ['BRANCH_GUID','NAME'];
-        const filters = ['(BRANCH_GUID='+id+')'];
+        const filters = ['(BRANCH_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
 
         //url
         const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
@@ -38,6 +40,20 @@ export class BranchService {
         //call DF to validate the user
         return this.httpService.get(url);
     }
+
+    //find tenant branch by name
+    public findByName(name: string, tenantid:string): Observable<any> {
+
+        const fields = ['BRANCH_GUID','NAME'];
+        const filters = ['(NAME like %'+name+'%)','(TENANT_GUID='+tenantid+')'];
+
+        //url
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        
+        //call DF to validate the user
+        return this.httpService.get(url);
+    }
+
 
     //create new branch
     create(user: any, name: string) {
@@ -50,6 +66,7 @@ export class BranchService {
         data.CREATION_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;
         data.NAME = name;
+        data.TENANT_GUID = user.TENANT_GUID;
 
         resource.resource.push(data);
 

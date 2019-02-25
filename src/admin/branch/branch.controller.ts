@@ -59,4 +59,11 @@ export class BranchController {
         res.send(data.data.resource[0]);
       });
     }
+
+    @Get('name/:name')
+    findOneByName(@Param('name') name, @Req() req,@Res() res) {
+      this.branchService.findByName(name,req.user.TENANT_GUID).subscribe(data => {
+        res.send(data.data.resource[0]);
+      });
+    }
 }

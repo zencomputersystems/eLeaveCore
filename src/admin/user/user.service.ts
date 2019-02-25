@@ -1,6 +1,11 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import CryptoJS = require('crypto-js');
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { UserModel } from './model/user.model';
+import { Resource } from 'src/common/model/resource.model';
+import { v1 } from 'uuid';
+import { Observable } from 'rxjs';
+import { DreamFactory } from 'src/config/dreamfactory';
 
 @Injectable()
 export class UserService {
@@ -21,6 +26,16 @@ export class UserService {
         
     }
 
+    // pass list of filter and get the data
+    public findByFilter(filters: Array<string>): Observable<any> {
+        const fields = ['USER_GUID','EMAIL','TENANT_GUID'];
+       
+        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+  
+        //call DF to validate the user
+        return this.httpService.get(url);
+    }
+
     public async findOneByPayload(payload): Promise<any> {
         const fields = ['USER_GUID','EMAIL','TENANT_GUID'];
         const filters = ['(EMAIL='+payload.email+')','(TENANT_GUID='+payload.tenantId+')']
@@ -29,5 +44,35 @@ export class UserService {
   
         //call DF to validate the user
         return this.httpService.get(url).toPromise();
+    }
+
+    //create new user
+    public create(user: any, d: any) {
+
+        const data = new UserModel();
+
+        data.USER_GUID = v1();
+        data.TENANT_GUID = user.TENANT_GUID;
+        data.LOGIN_ID = d.email;
+        
+        return this.createByModel(data);
+
+    }
+
+    public createByModel(data: UserModel) {
+        
+        const resource = new Resource(new Array);
+
+        if(UserModel==null) {
+            return null;
+        }
+
+        resource.resource.push(data);
+
+        const url = DreamFactory.df_host+this.table_name+"?id_field=USER_GUID%2CEMAIL%2CSTAFF_ID";
+
+        return this.httpService.post(url,resource);
+
+        //return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
     }
 }

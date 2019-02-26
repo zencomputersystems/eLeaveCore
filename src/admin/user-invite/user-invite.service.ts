@@ -5,61 +5,100 @@ import { UserInviteModel } from './model/user-invite.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
-import { map, mergeMap } from 'rxjs/operators';
-import { from, forkJoin} from 'rxjs';
-import { InviteListDTO } from './dto/invite-list.dto';
+import { map, mergeMap, flatMap } from 'rxjs/operators';
+import { from, forkJoin, Observable} from 'rxjs';
+import { UserService } from '../user/user.service';
+import { UserModel } from '../user/model/user.model';
+import { InviteValidList } from './dto/invite-valid-list.dto';
+import { InviteDto } from './dto/invite.dto';
 
 @Injectable()
 export class UserInviteService {
     
     private _tableName = 'l_user_invitation';
-
+    private _user: any;
     constructor(
         private readonly mailerService: MailerService,
         private readonly httpService: HttpService,
-        private readonly queryParserService: QueryParserService
+        private readonly queryService: QueryParserService,
+        private readonly userService: UserService
     ) {}
     
-    inviteUser(inviteList:InviteListDTO,user: any) {
+    public inviteUser(inviteList:[InviteDto],user: any) {
+
+        this._user = user;
+
         // check if user already exist in database and active
-        const isValidUser = true; // the invited user available in db
         const isInvitationAvailable = true; // read from subscription
 
-        const userID = v1(); // take from database
 
-        if(!isValidUser||!isInvitationAvailable)
-            return null;
+        const observableData$ = [
+            this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')']),
+            this.findAll(user.USER_GUID,user.TENANT_GUID)
+        ]
 
-        const userEmailObsevable$ = [];
-        
-        // // foreach email, add data into invitation table
-        // inviteList.forEach(element => {
-        //     userEmailObsevable$.push(this.create(userID,element.email,user));
-        // });
-
-        // parallel proessing 
-        return forkJoin(userEmailObsevable$)
+        return forkJoin(observableData$)
                 .pipe(
-                    map(res => this.processEmail(res))
-                )
-
-       
+                    map(res => this.getValidInvitationData(res[0].data.resource,res[1].data.resource, inviteList)),
+                    flatMap(res => this.processValidEmail(res))
+                )  
     }
 
-    private processEmail(res: any) {
+    private getValidInvitationData(userData: [UserModel], userInviteData: [UserInviteModel], inviteData: [InviteDto]) {
+        // based on the invitation list, get valid email
+        const validList = new Array<InviteValidList>();
 
-        const mailObservable$ = [];
+        inviteData.forEach(element => {
+            // check if user exist in main table
+            const checkUserData = userData.find(x=>(x.USER_GUID === element.id)&&(x.ACTIVATION_FLAG==0));
+            const checkUserInvitation = userInviteData.find(x=>x.USER_GUID==element.id);
 
-        res.forEach(element => {
-            if(element.email!=null&&element.token!=null) {
-                mailObservable$.push(this.sendEmail(element.EMAIL,element.INVITATION_GUID).catch(element));
+            if((checkUserData!=null || checkUserData !=undefined)) {
+                
+                if(checkUserInvitation==null || checkUserInvitation == undefined) {
+                    validList.push(new InviteValidList(checkUserData.USER_GUID,checkUserData.EMAIL,''))
+                } else {
+                    if(checkUserInvitation.STATUS!=3) {
+                        validList.push(new InviteValidList(checkUserData.USER_GUID,checkUserData.EMAIL,checkUserInvitation.INVITATION_GUID))   
+                    }
+                }
+
             }
         });
 
-        return from(mailObservable$)
-                    .pipe(mergeMap(res=>res));
-        
+        return validList;
     }
+
+    private processValidEmail(validList: Array<InviteValidList>) {
+        // for item without INVITATION_GUID, we need to insert the data into table
+        // after that we send them an invitation email
+        // for item with INVITATION_GUID, we resend invitation email
+
+        const emailObs$ = [];
+
+        validList.forEach(element => {
+           if(element.INVITATION_GUID!=null&&element.INVITATION_GUID!='') {
+                // send invitation email
+                emailObs$.push(this.sendEmail(element.EMAIL,element.INVITATION_GUID));
+           } else {
+                // insert data into table and send email
+                emailObs$.push(this.processNewInvitation(element));
+           }
+        });
+
+        return forkJoin(emailObs$);
+    }
+
+
+    private processNewInvitation(inviteData: InviteValidList) {
+        //add data into table
+        return this.create(inviteData.USER_GUID,inviteData.EMAIL,this._user)
+                    .pipe(map(res=>{
+                        const result = res.data.resource[0];
+                        return this.sendEmail(result.EMAIL,result.INVITATION_GUID);
+                    }))
+    }
+
 
     private sendEmail(email: string, token: string) {
         return this.mailerService
@@ -73,6 +112,19 @@ export class UserInviteService {
                     code: token
                 }
             });
+    }
+
+    //find all tenant branch
+    public findAll(userid: string, tenantid:string): Observable<any> {
+
+        const fields = ['INVITATION_GUID','EMAIL','USER_GUID'];
+        const filters = ['(TENANT_GUID='+tenantid+')'];
+       
+        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+        
     }
 
     create(userId: string, email: string, user: any) {

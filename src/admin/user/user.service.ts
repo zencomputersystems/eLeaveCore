@@ -28,7 +28,7 @@ export class UserService {
 
     // pass list of filter and get the data
     public findByFilter(filters: Array<string>): Observable<any> {
-        const fields = ['USER_GUID','EMAIL','TENANT_GUID'];
+        const fields = ['USER_GUID','EMAIL','TENANT_GUID','ACTIVATION_FLAG'];
        
         const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
   

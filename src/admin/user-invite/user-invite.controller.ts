@@ -15,19 +15,17 @@ export class UserInviteController {
         private readonly userInviteService: UserInviteService) {}
 
     @Post()
-    invite(@Body() inviteDto: InviteListDTO,@Req() req, @Res() res) {
+    invite(@Body() inviteListDto: [InviteDto],@Req() req, @Res() res) {
 
-
-            this.userInviteService.inviteUser(inviteDto,req.user)
-                .pipe(switchMap(res=>res))
-                .subscribe(
-                    res => {
-                        console.log(res);
-                    },
-                    err => {
-                        console.log(err);
-                    }
-                )
+        this.userInviteService.inviteUser(inviteListDto,req.user)
+            .subscribe(
+                result => {
+                    res.send("ss");
+                },
+                err => {
+                    console.log(err);
+                }
+            )
 
         
              

@@ -4,7 +4,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import parse = require('csv-parse/lib/sync');
 import { UserImportService } from './user-import.service';
 import { UserCsvDto } from './dto/user-csv.dto';
-import { mergeMap, map, flatMap, first, switchMap } from 'rxjs/operators';
+import { flatMap} from 'rxjs/operators';
 
 @Controller('api/admin/userimport')
 @UseGuards(AuthGuard('jwt'))
@@ -15,17 +15,17 @@ export class UserImportController {
     
     @Post()
     create(@Body() userInviteDto: [UserCsvDto],@Req() req, @Res() res) {
-        
-        this.userImportService.processImportList(req.user,userInviteDto)
-        .subscribe(
-            data=> {
-                res.send(data);
-            },
-            err => {
-                res.status(400);
-                res.send("Bad Request");
-            }
-        )
+       
+        // this.userImportService.processImportList(req.user,userInviteDto)
+        // .subscribe(
+        //     data=> {
+        //         res.send(data);
+        //     },
+        //     err => {
+        //         res.status(400);
+        //         res.send("Bad Request");
+        //     }
+        // )
     }
 
     @Post('csv')
@@ -41,16 +41,16 @@ export class UserImportController {
             skip_empty_lines: true
           })
 
-        
         let f = [];
-        this.userImportService.processImportList(req.user,records)
+        this.userImportService.processImportData(req.user,records)
             .pipe(flatMap(res=>res))
             .subscribe(
                 data=>{
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
+                    res.status(400);
+                    res.send("Bad Request");
                 }
             )
         

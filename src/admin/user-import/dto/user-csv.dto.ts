@@ -49,4 +49,5 @@ export class UserCsvDto {
     readonly RESIGNATION_DATE: string;
 
     readonly SUPERIOR_EMAIL: string;
+
 }

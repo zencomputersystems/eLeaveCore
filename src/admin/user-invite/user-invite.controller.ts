@@ -3,6 +3,8 @@ import { InviteDto } from './dto/invite.dto';
 import { UserInviteService } from './user-invite.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { flatMap, map, switchMap } from 'rxjs/operators';
+import { InviteListDTO } from './dto/invite-list.dto';
 
 @Controller('api/admin/user-invite')
 @UseGuards(AuthGuard('jwt'))
@@ -13,16 +15,22 @@ export class UserInviteController {
         private readonly userInviteService: UserInviteService) {}
 
     @Post()
-    invite(@Body() inviteDto: [InviteDto],@Req() req, @Res() res) {
+    invite(@Body() inviteDto: InviteListDTO,@Req() req, @Res() res) {
 
-        this.userInviteService.inviteUser(inviteDto[0].email,req.user)
-        .then(()=>{
-            res.send("email sent");
-        })
-        .catch(()=>{
-            res.send("email fail");
-        })
-            
+
+            this.userInviteService.inviteUser(inviteDto,req.user)
+                .pipe(switchMap(res=>res))
+                .subscribe(
+                    res => {
+                        console.log(res);
+                    },
+                    err => {
+                        console.log(err);
+                    }
+                )
+
+        
+             
     }
 
 }

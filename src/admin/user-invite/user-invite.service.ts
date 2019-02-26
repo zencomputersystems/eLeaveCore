@@ -5,8 +5,9 @@ import { UserInviteModel } from './model/user-invite.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
-import { map, switchMap } from 'rxjs/operators';
-import { Observable, from } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { from, forkJoin} from 'rxjs';
+import { InviteListDTO } from './dto/invite-list.dto';
 
 @Injectable()
 export class UserInviteService {
@@ -19,7 +20,7 @@ export class UserInviteService {
         private readonly queryParserService: QueryParserService
     ) {}
     
-    async inviteUser(email: string,user: any) {
+    inviteUser(inviteList:InviteListDTO,user: any) {
         // check if user already exist in database and active
         const isValidUser = true; // the invited user available in db
         const isInvitationAvailable = true; // read from subscription
@@ -29,18 +30,39 @@ export class UserInviteService {
         if(!isValidUser||!isInvitationAvailable)
             return null;
 
-       try {
-            const data = await this.create(userID, email, user);
-            return this.sendEmail(email, data.data.resource[0].INVITATION_GUID);
-        }
-        catch (err) {
-            return Promise.reject(null);
-        }
+        const userEmailObsevable$ = [];
+        
+        // // foreach email, add data into invitation table
+        // inviteList.forEach(element => {
+        //     userEmailObsevable$.push(this.create(userID,element.email,user));
+        // });
+
+        // parallel proessing 
+        return forkJoin(userEmailObsevable$)
+                .pipe(
+                    map(res => this.processEmail(res))
+                )
+
        
     }
 
+    private processEmail(res: any) {
+
+        const mailObservable$ = [];
+
+        res.forEach(element => {
+            if(element.email!=null&&element.token!=null) {
+                mailObservable$.push(this.sendEmail(element.EMAIL,element.INVITATION_GUID).catch(element));
+            }
+        });
+
+        return from(mailObservable$)
+                    .pipe(mergeMap(res=>res));
+        
+    }
+
     private sendEmail(email: string, token: string) {
-        this.mailerService
+        return this.mailerService
             .sendMail({
                 to: email, // sender address
                 from: 'wantan.wonderland.2018@gmail.com', // list of receivers
@@ -51,7 +73,6 @@ export class UserInviteService {
                     code: token
                 }
             });
-                    
     }
 
     create(userId: string, email: string, user: any) {
@@ -67,9 +88,9 @@ export class UserInviteService {
 
         resource.resource.push(invitationModel);
 
-        const url = this.queryParserService.generateDbQuery(this._tableName,[],[]);
-
-        return this.httpService.post(url,resource).toPromise();
+        //const url = this.queryParserService.generateDbQuery(this._tableName,[],[]);
+        const url = DreamFactory.df_host+this._tableName+"?id_field=INVITATION_GUID%2CEMAIL";
+        return this.httpService.post(url,resource);
     }
 
     acceptInvitation(token: string) {

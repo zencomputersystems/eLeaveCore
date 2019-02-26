@@ -3,21 +3,22 @@ import { UserCsvDto } from './dto/user-csv.dto';
 import { v1 } from 'uuid';
 import { UserModel } from '../user/model/user.model';
 import { UserService } from '../user/user.service';
-import { map, switchMap, mergeMap, flatMap, concatMap } from 'rxjs/operators';
-import { forkJoin, of, empty, from, combineLatest, Observable } from 'rxjs';
+import { map,flatMap} from 'rxjs/operators';
+import { forkJoin, of,Observable } from 'rxjs';
 import { UserImport } from './dto/user-import';
-import {groupBy} from 'lodash';
 import { BranchService } from '../branch/branch.service';
 import { CostcentreService } from '../costcentre/costcentre.service';
 import { SectionService } from '../section/section.service';
+import { Resource } from 'src/common/model/resource.model';
+import { UserImportResult } from './dto/user-import-result.dto';
 
 @Injectable()
 export class UserImportService {
-    public globalUserImport: [UserCsvDto];
+    private _userImport: [UserCsvDto];
     public branchData: any;
     public costCentreData: any;
     public sectionData: any;
-    public user: any;
+    private _user: any;
 
     constructor(
         private readonly userService: UserService,
@@ -26,77 +27,144 @@ export class UserImportService {
         private readonly sectionService: SectionService
         ) {}
 
-    processUserInfo(data: any, generalResult: any) {
+    // proess the imported user data
+    public processImportData(user: any,importData: [UserCsvDto]) {
+
+        // set the public userimport data
+        this._userImport = importData;
+
+        //set the public user data
+        this._user = user;
+
+        //get all the the user for this tenant
+        return this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')'])
+            .pipe(
+                flatMap(res=>this.buildUserMain(user,res.data.resource,importData)),
+                map(res=>this.buildUserImportResult(res)),
+                map((resultStatus) => {
+                    
+                    //get the general data
+                    const generalObservable = [
+                        this.branchService.findAll(user.USER_GUID,user.TENANT_GUID),
+                        this.costCentreService.findAll(user.USER_GUID,user.TENANT_GUID),
+                        this.sectionService.findAll(user.USER_GUID,user.TENANT_GUID)
+                    ];
+
+                   
+                    return forkJoin(generalObservable)
+                                .pipe(
+                                    flatMap(res=>this.processUserInfo(resultStatus,res)),
+                                    map(()=>{return resultStatus})
+                                )
+
+
+                })
+            )
+
+    }
+
+    // build the data to be inserted into main user table
+    private buildUserMain(user: any, res: any, importData: [UserCsvDto]) {
+        
+        const resourceArray = new Resource(new Array);
+        const existingUser = new Array<UserCsvDto>();
+
+        importData.forEach(element => {
+        
+            const checkUserExistInDB = res.find(x=>x.EMAIL.toLowerCase()===element.STAFF_EMAIL.toLowerCase());
+
+            if(checkUserExistInDB==null) {
+                //user does not exist in database
+                //create new user
+                const data = new UserModel();
+    
+                data.USER_GUID = v1();
+                data.ACTIVATION_FLAG = 0;
+                data.CREATION_TS = new Date().toISOString();
+                data.CREATION_USER_GUID = user.USER_GUID;
+                data.TENANT_GUID = user.TENANT_GUID;
+                data.IS_TENANT_ADMIN = "";
+                data.LOGIN_ID = element.STAFF_EMAIL;
+                data.EMAIL = element.STAFF_EMAIL;
+                
+                resourceArray.resource.push(data);
+
+            } else {
+                existingUser.push(element)
+            }
+        });
+
+        const obs$ = [];
+
+        if(resourceArray.resource.length>0) {
+            obs$.push(this.userService.createByModel(resourceArray).pipe(map(res=>res.data.resource)));
+        } else {
+            obs$.push(of(null));
+        }
+
+        obs$.push(of(existingUser));
+        
+        return forkJoin(obs$);
+    }
+
+    // build the import result
+    // result is divided into fail and success
+    private buildUserImportResult(res: any) {
+        const resultStatus = new UserImportResult();
+
+        const saved = res[0];
+            if(saved!=null) {
+                saved.forEach(element => {
+                    resultStatus.SUCCESS.push(new UserImport(element.USER_GUID,element.EMAIL,'','SUCCESS'))  
+            });
+        }
+
+        const nonSaved = res[1];
+        nonSaved.forEach(element => {
+            resultStatus.FAIL.push(new UserImport('',element.STAFF_EMAIL,'','FAIL'))  
+        })
+
+        return resultStatus;
+
+    }
+
+    private processUserInfo(resultStatus: UserImportResult, generalResult: any) {
+   
         this.branchData = generalResult[0].data.resource;
         this.costCentreData = generalResult[1].data.resource
         this.sectionData = generalResult[2].data.resource;
-        const userimportResult = data;
-
-        //group user based on their import status
-        const groupUserByStatus = groupBy(userimportResult, function(data) {
-            return data.STATUS;
-        });
-
 
         const generalData$ = [];
 
         //for success user, we need to process their other information
-        this.globalUserImport.forEach(element => {
-            generalData$.push(this.buildUserInfo(this.branchData,"BRANCH_GUID",'BRANCH',element,this.branchService));
-            generalData$.push(this.buildUserInfo(this.sectionData,"SECTION_GUID",'DEPARTMENT',element,this.sectionService));
-            generalData$.push(this.buildUserInfo(this.costCentreData,"COST_CENTRE_GUID",'COST_CENTRE',element,this.costCentreService));
+        this._userImport.forEach(element => {
+
+            if(resultStatus.SUCCESS.find(x=>x.EMAIL.toLowerCase()===element.STAFF_EMAIL.toLowerCase()!=null)) {
+                generalData$.push(this.buildUserInfo(this.branchData,"BRANCH_GUID",'BRANCH',element,this.branchService));
+                generalData$.push(this.buildUserInfo(this.sectionData,"SECTION_GUID",'DEPARTMENT',element,this.sectionService));
+                generalData$.push(this.buildUserInfo(this.costCentreData,"COST_CENTRE_GUID",'COST_CENTRE',element,this.costCentreService));
+            }
 
         })
 
-        return forkJoin(generalData$)
-                .pipe(
-                    map(()=>{
-                        return groupUserByStatus;
-                    })
-                );
-    }
-
-    getGeneralData(): Observable<any> {
-        const generalObservable = [
-            this.branchService.findAll(this.user.USER_GUID,this.user.TENANT_GUID),
-            this.costCentreService.findAll(this.user.USER_GUID,this.user.TENANT_GUID),
-            this.sectionService.findAll(this.user.USER_GUID,this.user.TENANT_GUID)
-        ];
-
-        return forkJoin(generalObservable);
-    }
-
-    processImportList(user: any,data: [UserCsvDto]) {
-        this.globalUserImport = data;
-        this.user = user;
-
-        return this.getGeneralData()
-            .pipe(
-                switchMap(generalResult=>{
-                    const userMainObservable = [];
-                    data.forEach(element => {
-                        // just create the Observable here but don't subscribe yet
-                        userMainObservable.push(this.buildUserMain(user,element.STAFF_EMAIL));
-                    });
-
-                    const t = [];
-                    //process the main user
-                    return forkJoin(userMainObservable)
-                        .pipe(
-                            map(res => this.processUserInfo(res,generalResult))
-                        )    
-                })
-            )
-    }
-
-
-    private buildUserInfo(sourceData: Array<any>,data_GUID: string, data_name: string,element: UserCsvDto, dataService: any) {
         
+        if(generalData$.length>1) {
+            return forkJoin(generalData$)
+                    .pipe(
+                        map(()=>{return resultStatus})
+                    );
+        }
+
+        return of(resultStatus);
+    }
+
+    private buildUserInfo(sourceData: Array<any>,data_GUID: string, data_name: string,element: UserCsvDto, dataService: any): Observable<any> {
+
         const checkData = sourceData.find(item => item.NAME.toLowerCase() === element[data_name].toLowerCase());
 
         if(element[data_name]!="") {
 
-            if(checkData!=null) {
+            if(checkData!=null||checkData!=undefined) {
                 //branch already exist in database
                 element[data_name] = checkData[data_GUID];
                 return of(element);
@@ -104,7 +172,7 @@ export class UserImportService {
                 //data not exist
                 //we need to create new data
                 //add new data into source data array
-                return  dataService.create(this.user,element[data_name])
+                return dataService.create(this._user,element[data_name])
                             .pipe(
                                 map(
                                     (data: any) => {
@@ -118,60 +186,10 @@ export class UserImportService {
                             )
             }
 
+
+        } else {
+
+            return of(element);
         }
-
-        return of(element);
-    }
-
-    //save data into USER_MAIN table
-    private buildUserMain(user: any,email: string) {
-        
-        // before saving new user, we need to check if the ACTIVATION_FLAG is ACTIVE
-        // if active, check if same email exist and that ACTIVATION_FLAG is NOT ACITVE in table 
-        // if same activated email exist, we will not proceed with the insertion
-        const filters = ['(EMAIL='+email+')','(TENANT_GUID='+user.TENANT_GUID+')'];
-
-        return this.userService.findByFilter(filters)
-            .pipe(
-                flatMap(
-                    res => {
-                        
-                        if(res.data.resource.length>0)
-                        {
-                            //remove user from global array
-                            //this.globalUserImport.splice(this.globalUserImport.findIndex(item=>item.STAFF_EMAIL==email),1);
-
-                            return of(email);
-                        }
-                        
-                        if(res!=null||res!=undefined) {
-                            const data = new UserModel();
-    
-                            data.USER_GUID = v1();
-                            data.ACTIVATION_FLAG = 0;
-                            data.CREATION_TS = new Date().toISOString();
-                            data.CREATION_USER_GUID = user.USER_GUID;
-                            data.TENANT_GUID = user.TENANT_GUID;
-                            data.IS_TENANT_ADMIN = "";
-                            data.LOGIN_ID = email;
-                            data.EMAIL = email;
-    
-                            return this.userService.createByModel(data);
-                        }
-                    }
-                ),
-                map(
-                    (res) => {
-                       
-                        if(typeof res == 'string') {
-                            return new UserImport('',res,'','FAIL');
-                        } else {
-                            const qResult = res.data.resource[0];
-    
-                            return new UserImport(qResult.USER_GUID,qResult.EMAIL,'','SUCCESS');
-                        }
-                    }
-                )
-            )
     }
 }

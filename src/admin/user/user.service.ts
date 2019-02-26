@@ -54,25 +54,19 @@ export class UserService {
         data.USER_GUID = v1();
         data.TENANT_GUID = user.TENANT_GUID;
         data.LOGIN_ID = d.email;
-        
-        return this.createByModel(data);
+
+        const resource = new Resource(new Array);
+        resource.resource.push(data);
+
+        return this.createByModel(resource);
 
     }
 
-    public createByModel(data: UserModel) {
-        
-        const resource = new Resource(new Array);
-
-        if(UserModel==null) {
-            return null;
-        }
-
-        resource.resource.push(data);
-
+    public createByModel(data: Resource) {
+    
         const url = DreamFactory.df_host+this.table_name+"?id_field=USER_GUID%2CEMAIL%2CSTAFF_ID";
 
-        return this.httpService.post(url,resource);
+        return this.httpService.post(url,data);
 
-        //return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
     }
 }

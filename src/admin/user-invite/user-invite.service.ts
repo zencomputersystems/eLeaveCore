@@ -5,8 +5,8 @@ import { UserInviteModel } from './model/user-invite.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
-import { map, mergeMap, flatMap } from 'rxjs/operators';
-import { from, forkJoin, Observable} from 'rxjs';
+import { map, mergeMap, flatMap, switchMap } from 'rxjs/operators';
+import { from, forkJoin, Observable, of} from 'rxjs';
 import { UserService } from '../user/user.service';
 import { UserModel } from '../user/model/user.model';
 import { InviteValidList } from './dto/invite-valid-list.dto';
@@ -42,6 +42,16 @@ export class UserInviteService {
                     map(res => this.getValidInvitationData(res[0].data.resource,res[1].data.resource, inviteList)),
                     flatMap(res => this.processValidEmail(res))
                 )  
+    }
+
+    // user accept an invitation
+    public acceptInvitation(token: string) {
+        const filters = ['(INVITATION_GUID='+token+')','(STATUS=1)'];
+        return this.findOne(filters)
+                .pipe(
+                    switchMap(res => this.validateInvitedUser(res.data.resource[0]))
+                )
+
     }
 
     private getValidInvitationData(userData: [UserModel], userInviteData: [UserInviteModel], inviteData: [InviteDto]) {
@@ -89,17 +99,17 @@ export class UserInviteService {
         return forkJoin(emailObs$);
     }
 
-
     private processNewInvitation(inviteData: InviteValidList) {
         //add data into table
         return this.create(inviteData.USER_GUID,inviteData.EMAIL,this._user)
-                    .pipe(map(res=>{
+                    .pipe(flatMap(res=>{
                         const result = res.data.resource[0];
+
                         return this.sendEmail(result.EMAIL,result.INVITATION_GUID);
                     }))
     }
 
-
+    // send email to user
     private sendEmail(email: string, token: string) {
         return this.mailerService
             .sendMail({
@@ -109,9 +119,32 @@ export class UserInviteService {
                 template: 'userinvitation.html',
                 context: {  // Data to be sent to template files.
                     email: email,
-                    code: token
+                    code: "http://localhost:3000/api/accept-invite/"+token
                 }
             });
+    }
+
+    private validateInvitedUser(invitationData: any) {
+
+        if(invitationData==null||invitationData==undefined) {
+            return of(null);
+        }
+
+        const filters = ['(USER_GUID='+invitationData.USER_GUID+')','(ACTIVATION_FLAG=0)'];
+
+        return this.userService.findByFilter(filters)
+            .pipe(
+                flatMap(res => {
+                    const result = res.data.resource[0];
+
+                    if(result==null) {
+                        return of(null);
+                    }
+
+                    // activate the user
+                    return this.update(invitationData.INVITATION_GUID,2);
+                })
+            )
     }
 
     //find all tenant branch
@@ -125,6 +158,19 @@ export class UserInviteService {
         //call DF to validate the user
         return this.httpService.get(url);
         
+    }
+
+    //find all tenant branch
+    public findOne(filters:string[]): Observable<any> {
+
+        const fields = ['INVITATION_GUID','EMAIL','USER_GUID','STATUS'];
+        //const filters = ['(INVITATION_GUID='+token+')','(STATUS=1)'];
+       
+        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+                  
     }
 
     create(userId: string, email: string, user: any) {
@@ -145,7 +191,16 @@ export class UserInviteService {
         return this.httpService.post(url,resource);
     }
 
-    acceptInvitation(token: string) {
+    update(id: string,status: number) {
+        const resource = new Resource(new Array());
 
+        const data = new UserInviteModel();
+        data.INVITATION_GUID = id;
+        data.STATUS = status;
+
+        resource.resource.push(data);
+
+        const url = DreamFactory.df_host+this._tableName;
+        return this.httpService.patch(url,resource);
     }
 }

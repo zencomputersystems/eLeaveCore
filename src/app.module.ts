@@ -39,7 +39,7 @@ import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/maile
       },
       template: {
         dir: './src/common/email-templates',
-        adapter: new PugAdapter(), // or new PugAdapter()
+        adapter: new HandlebarsAdapter(), // or new PugAdapter()
         options: {
           debug: 'true',
           doctype: 'html',

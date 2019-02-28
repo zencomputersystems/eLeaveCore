@@ -21,7 +21,7 @@ export class BranchService {
 
 
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQueryV2(this.table_name,fields,filters,[]);
  
         //call DF to validate the user
         return this.httpService.get(url);
@@ -35,7 +35,7 @@ export class BranchService {
         const filters = ['(BRANCH_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
 
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQueryV2(this.table_name,fields,filters,[]);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -48,7 +48,7 @@ export class BranchService {
         const filters = ['(NAME like %'+name+'%)','(TENANT_GUID='+tenantid+')'];
 
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQueryV2(this.table_name,fields,filters,[]);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -70,7 +70,12 @@ export class BranchService {
 
         resource.resource.push(data);
 
-        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
+        return this.createByModel(resource,[],[],[]);
+
+    }
+
+    createByModel(resource: Resource, fields: string[], filters: string[], idFields: string[]) {
+        return this.httpService.post(this.queryService.generateDbQueryV2(this.table_name,fields,filters,idFields),resource);
 
     }
 
@@ -89,7 +94,10 @@ export class BranchService {
 
         resource.resource.push(data);
 
-        return this.httpService.patch(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
+        return this.updateByModel(resource,[],[],[]);
+    }
 
+    updateByModel(resource: Resource, fields: string[], filters: string[], idFields: string[]) {
+        return this.httpService.patch(this.queryService.generateDbQueryV2(this.table_name,fields,filters,idFields),resource);
     }
 }

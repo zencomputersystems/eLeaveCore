@@ -23,4 +23,38 @@ export class QueryParserService {
 
     }
 
+    generateDbQueryV2(tableName: string, fields: Array<string>, filters: Array<string>, idFields: Array<string>) {
+        let url = DreamFactory.df_host+tableName+"?";
+
+        const paramArray = [];
+
+
+        // build the parameter
+        if(fields.length>0) {
+            const field = "fields="+fields.join(",");
+
+            paramArray.push(field);
+        }
+
+        if(filters.length>0) {
+            
+            const filter = "filter="+filters.join("AND");
+
+            paramArray.push(filter);
+        }
+
+
+        if(idFields.length>0) {
+            const idField = "id_field="+idFields.join(",");   
+
+            paramArray.push(idField);
+        }
+
+        return url+paramArray.join("&");
+
+    }
+
+    //const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CCOST_CENTRE_GUID";
+
+
 }

@@ -3,7 +3,7 @@ import { UserCsvDto } from './dto/user-csv.dto';
 import { v1 } from 'uuid';
 import { UserModel } from '../user/model/user.model';
 import { UserService } from '../user/user.service';
-import { map,flatMap} from 'rxjs/operators';
+import { map,flatMap, catchError} from 'rxjs/operators';
 import { forkJoin, of,Observable } from 'rxjs';
 import { UserImport } from './dto/user-import';
 import { BranchService } from '../branch/branch.service';
@@ -45,9 +45,9 @@ export class UserImportService {
                     
                     //get the general data
                     const generalObservable = [
-                        this.branchService.findAll(user.USER_GUID,user.TENANT_GUID),
-                        this.costCentreService.findAll(user.USER_GUID,user.TENANT_GUID),
-                        this.sectionService.findAll(user.USER_GUID,user.TENANT_GUID)
+                        this.branchService.findAll(user.USER_GUID,user.TENANT_GUID).pipe(map(res=>res),catchError(e=>of(e))),
+                        this.costCentreService.findAll(user.USER_GUID,user.TENANT_GUID).pipe(map(res=>res),catchError(e=>of(e))),
+                        this.sectionService.findAll(user.USER_GUID,user.TENANT_GUID).pipe(map(res=>res),catchError(e=>of(e)))
                     ];
 
                    
@@ -129,10 +129,11 @@ export class UserImportService {
     }
 
     private processUserInfo(resultStatus: UserImportResult, generalResult: any) {
-   
-        this.branchData = generalResult[0].data.resource;
-        this.costCentreData = generalResult[1].data.resource
-        this.sectionData = generalResult[2].data.resource;
+
+        //console.log(resultStatus);
+        this.branchData = generalResult[0].data==undefined?[]:generalResult[0].data.resource;
+        this.costCentreData = generalResult[1].data==undefined?[]:generalResult[1].data.resource;
+        this.sectionData = generalResult[2].data==undefined?[]:generalResult[2].data.resource;
 
         const generalData$ = [];
 
@@ -140,9 +141,15 @@ export class UserImportService {
         this._userImport.forEach(element => {
 
             if(resultStatus.SUCCESS.find(x=>x.EMAIL.toLowerCase()===element.STAFF_EMAIL.toLowerCase()!=null)) {
-                generalData$.push(this.buildUserInfo(this.branchData,"BRANCH_GUID",'BRANCH',element,this.branchService));
-                generalData$.push(this.buildUserInfo(this.sectionData,"SECTION_GUID",'DEPARTMENT',element,this.sectionService));
-                generalData$.push(this.buildUserInfo(this.costCentreData,"COST_CENTRE_GUID",'COST_CENTRE',element,this.costCentreService));
+
+                if(this.branchData.length>1)
+                    generalData$.push(this.buildUserInfo(this.branchData.data.resource[0],"BRANCH_GUID",'BRANCH',element,this.branchService));
+
+                if(this.costCentreData.length>1)
+                    generalData$.push(this.buildUserInfo(this.sectionData.data.resource[0],"SECTION_GUID",'DEPARTMENT',element,this.sectionService));
+
+                if(this.sectionData.length>1)
+                    generalData$.push(this.buildUserInfo(this.costCentreData.data.resource[0],"COST_CENTRE_GUID",'COST_CENTRE',element,this.costCentreService));
             }
 
         })

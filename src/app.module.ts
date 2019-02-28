@@ -13,6 +13,7 @@ import { UserInfoModule } from './admin/user-info/user-info.module';
 import { UserImportService } from './admin/user-import/user-import.service';
 import { UserImportModule } from './admin/user-import/user-import.module';
 import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/mailer';
+import { InvitationModule } from './employee/invitation/invitation.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/maile
         },
       },
     }),
+    InvitationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

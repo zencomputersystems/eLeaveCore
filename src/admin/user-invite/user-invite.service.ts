@@ -34,6 +34,8 @@ export class UserInviteService {
 
         const observableData$ = [
             this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')']),
+
+            //get all invitation data for this tenant
             this.findAll(user.USER_GUID,user.TENANT_GUID)
         ]
 
@@ -44,15 +46,6 @@ export class UserInviteService {
                 )  
     }
 
-    // user accept an invitation
-    public acceptInvitation(token: string) {
-        const filters = ['(INVITATION_GUID='+token+')','(STATUS=1)'];
-        return this.findOne(filters)
-                .pipe(
-                    switchMap(res => this.validateInvitedUser(res.data.resource[0]))
-                )
-
-    }
 
     private getValidInvitationData(userData: [UserModel], userInviteData: [UserInviteModel], inviteData: [InviteDto]) {
         // based on the invitation list, get valid email
@@ -63,6 +56,7 @@ export class UserInviteService {
             const checkUserData = userData.find(x=>(x.USER_GUID === element.id)&&(x.ACTIVATION_FLAG==0));
             const checkUserInvitation = userInviteData.find(x=>x.USER_GUID==element.id);
 
+            console.log(checkUserData);
             if((checkUserData!=null || checkUserData !=undefined)) {
                 
                 if(checkUserInvitation==null || checkUserInvitation == undefined) {
@@ -83,6 +77,10 @@ export class UserInviteService {
         // for item without INVITATION_GUID, we need to insert the data into table
         // after that we send them an invitation email
         // for item with INVITATION_GUID, we resend invitation email
+
+        if(validList.length==0) {
+            return of(validList);
+        }
 
         const emailObs$ = [];
 
@@ -119,33 +117,11 @@ export class UserInviteService {
                 template: 'userinvitation.html',
                 context: {  // Data to be sent to template files.
                     email: email,
-                    code: "http://localhost:3000/api/accept-invite/"+token
+                    code: "http://localhost:3000/api/employee/invitation/accept/"+token
                 }
             });
     }
 
-    private validateInvitedUser(invitationData: any) {
-
-        if(invitationData==null||invitationData==undefined) {
-            return of(null);
-        }
-
-        const filters = ['(USER_GUID='+invitationData.USER_GUID+')','(ACTIVATION_FLAG=0)'];
-
-        return this.userService.findByFilter(filters)
-            .pipe(
-                flatMap(res => {
-                    const result = res.data.resource[0];
-
-                    if(result==null) {
-                        return of(null);
-                    }
-
-                    // activate the user
-                    return this.update(invitationData.INVITATION_GUID,2);
-                })
-            )
-    }
 
     //find all tenant branch
     public findAll(userid: string, tenantid:string): Observable<any> {

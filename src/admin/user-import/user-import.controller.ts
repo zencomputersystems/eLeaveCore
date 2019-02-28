@@ -49,6 +49,7 @@ export class UserImportController {
                     res.send(data);
                 },
                 err => {
+                    console.log(err);
                     res.status(400);
                     res.send("Bad Request");
                 }

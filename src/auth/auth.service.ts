@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import {sign} from 'jsonwebtoken';
-import { async } from 'rxjs/internal/scheduler/async';
 import { UserService } from 'src/admin/user/user.service';
 
 @Injectable()

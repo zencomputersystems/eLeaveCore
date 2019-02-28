@@ -17,8 +17,11 @@ export class UserService {
     public async findOne(email: string,password: string): Promise<any> {
 
         const fields = ['USER_GUID','EMAIL','TENANT_GUID'];
-        const filters = ['(EMAIL='+email+')','(PASSWORD='+CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex)+')'];
-       
+        //const filters = ['(EMAIL='+email+')','(PASSWORD='+CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex)+')'];
+        const filters = ['(EMAIL='+email+')','(PASSWORD='+password+')'];
+
+        console.log(filters);
+
         const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
   
         //call DF to validate the user
@@ -60,6 +63,11 @@ export class UserService {
 
         return this.createByModel(resource);
 
+    }
+
+    //update user
+    public updateByModel(data: Resource) {
+        return this.httpService.patch(this.queryService.generateDbQuery(this.table_name,[],[]),data);
     }
 
     public createByModel(data: Resource) {

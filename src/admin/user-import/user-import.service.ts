@@ -3,35 +3,44 @@ import { UserCsvDto } from './dto/user-csv.dto';
 import { v1 } from 'uuid';
 import { UserModel } from '../user/model/user.model';
 import { UserService } from '../user/user.service';
-import { map,flatMap, catchError} from 'rxjs/operators';
-import { forkJoin, of,Observable } from 'rxjs';
+import { map,flatMap, catchError, filter, concatMap, mergeMap, zipAll, combineLatest, switchMap} from 'rxjs/operators';
+import { forkJoin, of,Observable, empty, throwError, from, zip, pipe } from 'rxjs';
 import { UserImport } from './dto/user-import';
 import { BranchService } from '../branch/branch.service';
 import { CostcentreService } from '../costcentre/costcentre.service';
 import { SectionService } from '../section/section.service';
 import { Resource } from 'src/common/model/resource.model';
 import { UserImportResult } from './dto/user-import-result.dto';
+import { DepartmentService } from '../department/department.service';
+import { CompanyService } from '../company/company.service';
+import { UserInfoModel } from '../user-info/model/user-info.model';
+import { UserImportSuccessDTO } from './dto/user-import-success.dto';
+import { UserDto } from '../user-info/dto/user.dto';
+import { UserInfoService } from '../user-info/user-info.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 @Injectable()
 export class UserImportService {
-    private _userImport: [UserCsvDto];
     public branchData: any;
     public costCentreData: any;
     public sectionData: any;
+    public departmentData: any;
     private _user: any;
+    private _existingUser = new Array<UserCsvDto>(); // store existing user list
 
     constructor(
         private readonly userService: UserService,
         private readonly branchService: BranchService,
         private readonly costCentreService: CostcentreService,
-        private readonly sectionService: SectionService
+        private readonly sectionService: SectionService,
+        private readonly departmentService: DepartmentService,
+        private readonly companyService: CompanyService,
+        private readonly userInfoService: UserInfoService,
+        private readonly xmlParserService: XMLParserService
         ) {}
 
     // proess the imported user data
     public processImportData(user: any,importData: [UserCsvDto]) {
-
-        // set the public userimport data
-        this._userImport = importData;
 
         //set the public user data
         this._user = user;
@@ -40,37 +49,157 @@ export class UserImportService {
         return this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')'])
             .pipe(
                 flatMap(res=>this.buildUserMain(user,res.data.resource,importData)),
-                map(res=>this.buildUserImportResult(res)),
-                map((resultStatus) => {
-                    
-                    //get the general data
-                    const generalObservable = [
-                        this.branchService.findAll(user.USER_GUID,user.TENANT_GUID).pipe(map(res=>res),catchError(e=>of(e))),
-                        this.costCentreService.findAll(user.USER_GUID,user.TENANT_GUID).pipe(map(res=>res),catchError(e=>of(e))),
-                        this.sectionService.findAll(user.USER_GUID,user.TENANT_GUID).pipe(map(res=>res),catchError(e=>of(e)))
-                    ];
+                filter(res=>res!==null),
+                flatMap(successUser => {
+                    const successList = this.filterSuccessUser(successUser,importData);
 
-                   
-                    return forkJoin(generalObservable)
-                                .pipe(
-                                    flatMap(res=>this.processUserInfo(resultStatus,res)),
-                                    map(()=>{return resultStatus})
-                                )
+                    const obs$ = [];
 
+                    successList.forEach(element => {
+                        obs$.push(this.buildGeneralData(element,user));
+                    });
 
-                })
+                    return forkJoin(from(obs$).pipe(flatMap(res=>res)));
+
+                }),
             )
+    }
 
+    private buildGeneralData(data: UserImportSuccessDTO,user: any) {
+
+        return this.buildBranch(data.USER_IMPORT.BRANCH,user)
+                .pipe(
+                    map(branchResult => {
+                        data.USER_IMPORT.BRANCH = branchResult;
+
+                        return data;
+                    }),
+                    switchMap(userData => {
+                        return this.buildDepartment(userData.USER_IMPORT.DEPARTMENT,user)
+                                .pipe(map(departmentResult => {
+                                    userData.USER_IMPORT.DEPARTMENT = departmentResult;
+
+                                    return userData;
+                                }))
+                    }),
+                    switchMap(userData => {
+                        return this.buildCompany(userData.USER_IMPORT.COMPANY,user)
+                            .pipe(map(companyResult => {
+                                userData.USER_IMPORT.COMPANY = companyResult;
+
+                                return userData;
+                            }))
+                    }),
+                    switchMap(userData => {
+                        return this.buildUserInfo(userData,user);
+                    })
+                )
+    }
+
+    private buildUserInfo(userData: UserImportSuccessDTO,user: any) {
+
+
+        const userModelData = new UserInfoModel();
+
+        userModelData.USER_INFO_GUID = v1();
+        userModelData.USER_GUID = userData.USER_ID;
+        userModelData.TENANT_GUID = user.TENANT_GUID;
+        userModelData.FULLNAME = userData.USER_IMPORT.FULLNAME;
+        userModelData.CREATION_USER_GUID = user.USER_GUID;
+
+        const resource = new Resource(new Array);
+
+        resource.resource.push(userModelData);
+
+        console.log(resource);
+        return this.userInfoService.createByModel(resource,[],[],[]);
+
+    }
+
+    private buildBranch(BRANCH: string, user: any) {
+
+        return this.branchService.findByName(BRANCH,user.TENANT_GUID)
+        .pipe(
+            mergeMap(res => {
+                if(res.status==200) {
+                    const d = res.data.resource.find(x => x.NAME.toLowerCase()==BRANCH.toLowerCase());
+
+                    if(d==undefined||d==null) {
+                        return this.branchService.create(user,BRANCH)
+                                .pipe(
+                                    map(branchRes => {
+                                        return branchRes.data.resource[0].BRANCH_GUID;
+                                    })
+                                )
+                    } else {
+                        return of(d.BRANCH_GUID);
+                    }
+                }
+            })
+        );       
+    }
+
+    private buildDepartment(DEPARTMENT: string, user: any) {
+
+        const fields = ['DEPARTMENT_GUID','NAME'];
+        const filters = ['(NAME='+DEPARTMENT+')','(TENANT_GUID='+user.TENANT_GUID+')'];
+
+        return this.departmentService.findByFilter(fields,filters)
+        .pipe(
+            flatMap(res => {
+                if(res.status==200) {
+
+                    const d = res.data.resource.find(x => x.NAME.toLowerCase()==DEPARTMENT.toLowerCase());
+
+                    if(d==undefined||d==null) {
+                        return this.departmentService.create(user,DEPARTMENT)
+                                .pipe(
+                                    map(branchRes => {
+                                        return branchRes.data.resource[0].DEPARTMENT_GUID;
+                                    })
+                                )
+                    } else {
+                        return of(d.DEPARTMENT_GUID);
+                    }
+                }
+            })
+        );       
+    }
+
+    private buildCompany(COMPANY: string, user: any) {
+        const fields = ['TENANT_COMPANY_GUID,NAME'];
+        const filters = ['(NAME ='+COMPANY+')','(TENANT_GUID='+user.TENANT_GUID+')'];
+
+        return this.companyService.findByFilter(fields,filters)
+        .pipe(
+            mergeMap(res => {
+                if(res.status==200) {
+                    const d = res.data.resource.find(x => x.NAME.toLowerCase()==COMPANY.toLowerCase());
+
+                    if(d==undefined||d==null) {
+                        return this.companyService.create(user,COMPANY)
+                                .pipe(
+                                    map(companyRes => {
+                                        return companyRes.data.resource[0].TENANT_COMPANY_GUID;
+                                    })
+                                )
+                    } else {
+                        return of(d.TENANT_COMPANY_GUID);
+                    }
+                }
+            })
+        );    
     }
 
     // build the data to be inserted into main user table
     private buildUserMain(user: any, res: any, importData: [UserCsvDto]) {
         
         const resourceArray = new Resource(new Array);
-        const existingUser = new Array<UserCsvDto>();
+
 
         importData.forEach(element => {
         
+            // find user in database data
             const checkUserExistInDB = res.find(x=>x.EMAIL.toLowerCase()===element.STAFF_EMAIL.toLowerCase());
 
             if(checkUserExistInDB==null) {
@@ -90,21 +219,50 @@ export class UserImportService {
                 resourceArray.resource.push(data);
 
             } else {
-                existingUser.push(element)
+                this._existingUser.push(element)
             }
         });
 
-        const obs$ = [];
 
         if(resourceArray.resource.length>0) {
-            obs$.push(this.userService.createByModel(resourceArray).pipe(map(res=>res.data.resource)));
+            // update user table with imported list
+            return this.userService.createByModel(resourceArray,[],[],['EMAIL,USER_GUID']).pipe(map(res=>res.data.resource));
         } else {
-            obs$.push(of(null));
+            return of(null);
         }
+    }
 
-        obs$.push(of(existingUser));
+    // filter success user from main list
+    private filterSuccessUser(saveUser: any, importList: [UserCsvDto]) {
         
-        return forkJoin(obs$);
+        const successUser = new Array<UserImportSuccessDTO>();
+
+        saveUser.forEach(element => {
+            const checkUser = importList.find(x => x.STAFF_EMAIL.toLowerCase()===element.EMAIL.toLowerCase());
+            if(checkUser!=undefined||checkUser!=null) {
+                
+                const success = new UserImportSuccessDTO(element.USER_GUID,checkUser);
+                successUser.push(success);
+            }
+        });
+
+        return successUser;
+    }
+
+
+
+
+
+
+
+
+
+    private getUniqueData(source: any[],element: string) {
+        // get unique branch name
+        const uniqueData = source.map(item => item[element])
+                                .filter((value, index, self) => self.indexOf(value) === index)
+
+        return uniqueData;
     }
 
     // build the import result
@@ -128,44 +286,9 @@ export class UserImportService {
 
     }
 
-    private processUserInfo(resultStatus: UserImportResult, generalResult: any) {
 
-        //console.log(resultStatus);
-        this.branchData = generalResult[0].data==undefined?[]:generalResult[0].data.resource;
-        this.costCentreData = generalResult[1].data==undefined?[]:generalResult[1].data.resource;
-        this.sectionData = generalResult[2].data==undefined?[]:generalResult[2].data.resource;
 
-        const generalData$ = [];
-
-        //for success user, we need to process their other information
-        this._userImport.forEach(element => {
-
-            if(resultStatus.SUCCESS.find(x=>x.EMAIL.toLowerCase()===element.STAFF_EMAIL.toLowerCase()!=null)) {
-
-                if(this.branchData.length>1)
-                    generalData$.push(this.buildUserInfo(this.branchData.data.resource[0],"BRANCH_GUID",'BRANCH',element,this.branchService));
-
-                if(this.costCentreData.length>1)
-                    generalData$.push(this.buildUserInfo(this.sectionData.data.resource[0],"SECTION_GUID",'DEPARTMENT',element,this.sectionService));
-
-                if(this.sectionData.length>1)
-                    generalData$.push(this.buildUserInfo(this.costCentreData.data.resource[0],"COST_CENTRE_GUID",'COST_CENTRE',element,this.costCentreService));
-            }
-
-        })
-
-        
-        if(generalData$.length>1) {
-            return forkJoin(generalData$)
-                    .pipe(
-                        map(()=>{return resultStatus})
-                    );
-        }
-
-        return of(resultStatus);
-    }
-
-    private buildUserInfo(sourceData: Array<any>,data_GUID: string, data_name: string,element: UserCsvDto, dataService: any): Observable<any> {
+    private buildInfo(sourceData: Array<any>,data_GUID: string, data_name: string,element: UserCsvDto, dataService: any): Observable<any> {
 
         const checkData = sourceData.find(item => item.NAME.toLowerCase() === element[data_name].toLowerCase());
 

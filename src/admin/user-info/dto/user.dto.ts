@@ -1,74 +1,80 @@
 import { UserEmployeeDTO } from "./user-employee.dto";
-import { UserEducationDTO } from "./user-education.dto";
-import { UserCertificationDTO } from "./user-certification.dto";
 import { IsNotEmpty, ValidateNested } from "class-validator";
 import { UserFamilyDTO } from "./user-family.dto";
 import { Type } from "class-transformer";
+import { UserEducationDetailDTO } from "./user-education-detail.dto";
+import { UserCertificationDetailDTO } from "./user-certification-detail.dto";
+import { UserEmergencyContactDetailDTO } from "./user-emergency-contact-detail.dto";
 
 export class UserDto {
-    @IsNotEmpty()
-    readonly employeeId: string;
 
     @IsNotEmpty()
-    readonly employeeName: string;
+    employeeId: string;
 
     @IsNotEmpty()
-    readonly phoneNumber: string;
-
-    readonly companyNumber: string;
+    employeeName: string;
 
     @IsNotEmpty()
-    readonly maritalStatus: number;
+    phoneNumber: string;
+
+    companyNumber: string;
 
     @IsNotEmpty()
-    readonly icNumber: string;
+    maritalStatus: number;
 
     @IsNotEmpty()
-    readonly dob: Date;
+    icNumber: string;
 
     @IsNotEmpty()
-    readonly gender: number;
+    dob: Date;
 
     @IsNotEmpty()
-    readonly email: string;
+    gender: number;
+
+    @IsNotEmpty()
+    email: string;
 
     // residential address info
     @IsNotEmpty()
-    readonly address1: string;
+    address1: string;
 
-    readonly address2: string;
-
-    @IsNotEmpty()
-    readonly city: string;
+    address2: string;
 
     @IsNotEmpty()
-    readonly postcode: string;
+    city: string;
 
     @IsNotEmpty()
-    readonly state: string;
+    postcode: string;
 
     @IsNotEmpty()
-    readonly country: string;
+    state: string;
+
+    @IsNotEmpty()
+    country: string;
 
     // family info
     @Type(() => UserFamilyDTO)
     @ValidateNested()
-    readonly families: UserFamilyDTO[];
+    family: UserFamilyDTO[];
+
+    @Type(() => UserEmergencyContactDetailDTO)
+    @ValidateNested()
+    emergencyContacts: UserEmergencyContactDetailDTO;
 
     // education info
-    @Type(() => UserEducationDTO)
+    @Type(() => UserEducationDetailDTO)
     @ValidateNested()
-    readonly educations: UserEducationDTO[];
+    education: UserEducationDetailDTO;
 
     // professional cert info
-    @Type(() => UserCertificationDTO)
+    @Type(() => UserCertificationDetailDTO)
     @ValidateNested()
-    readonly professionalCerts: UserCertificationDTO[];
+    professionalCerts: UserCertificationDetailDTO
 
     // employee info
     @IsNotEmpty()
     @Type(() => UserEmployeeDTO)
     @ValidateNested()
-    readonly employmentDetail: UserEmployeeDTO;
+    employmentDetail: UserEmployeeDTO;
 
 }

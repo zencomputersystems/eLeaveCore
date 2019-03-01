@@ -22,6 +22,7 @@ export class UserInfoController {
     @Patch()
     update(@Body() updateUserDTO: UpdateUserDTO,@Req() req, @Res() res) {
         
+        console.log(updateUserDTO);
         this.userInfoService.update(req.user,updateUserDTO)
             .subscribe(
                 data => {

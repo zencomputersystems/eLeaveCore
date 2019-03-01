@@ -14,7 +14,7 @@ export class LeavetypeEntitlementController {
     
     @Get(':id')
     findOne(@Param('id') id, @Req() req,@Res() res) {
-        this.leavetypeEntitlementService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(
+        this.leavetypeEntitlementService.findById(req.user.TENANT_GUID, id).subscribe(
             data => {
                 if(data.status==200)
                 {
@@ -35,7 +35,7 @@ export class LeavetypeEntitlementController {
 
     @Get()
     findAll(@Req() req,@Res() res) {
-        this.leavetypeEntitlementService.findAll(req.user.USER_GUID,req.user.TENANT_GUID).subscribe(
+        this.leavetypeEntitlementService.findAll(req.user.TENANT_GUID).subscribe(
             data => {
                 if(data.status==200)
                     res.send(data.data.resource);

@@ -5,6 +5,7 @@ import parse = require('csv-parse/lib/sync');
 import { UserImportService } from './user-import.service';
 import { UserCsvDto } from './dto/user-csv.dto';
 import { flatMap} from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 @Controller('api/admin/userimport')
 @UseGuards(AuthGuard('jwt'))
@@ -43,15 +44,19 @@ export class UserImportController {
 
         let f = [];
         this.userImportService.processImportData(req.user,records)
-            .pipe(flatMap(res=>res))
             .subscribe(
                 data=>{
-                    res.send(data);
+                    console.log("emitted");
+                    //console.log(data);
+                    //res.send(data);
                 },
                 err => {
-                    console.log(err);
                     res.status(400);
-                    res.send("Bad Request");
+                    //res.send(err);
+                    console.log(err.response.data.error.context.resource);
+                },
+                () => {
+                    console.log("complete");
                 }
             )
         

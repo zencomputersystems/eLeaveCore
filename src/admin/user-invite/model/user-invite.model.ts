@@ -8,4 +8,5 @@ export class UserInviteModel {
     CREATION_TS: string;
     UPDATE_USER_GUID: string;
     UPDATE_TS: string;
+    DELETED_AT: string;
 }

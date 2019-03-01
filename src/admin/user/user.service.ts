@@ -1,17 +1,20 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import CryptoJS = require('crypto-js');
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserModel } from './model/user.model';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { Observable } from 'rxjs';
-import { DreamFactory } from 'src/config/dreamfactory';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseDBService {
 
     private table_name = 'user_main';
-    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
+    constructor(
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService){
+            super(httpService,queryService,"user_main")
+        }
 
     //find single user
     public async findOne(email: string,password: string): Promise<any> {
@@ -61,20 +64,8 @@ export class UserService {
         const resource = new Resource(new Array);
         resource.resource.push(data);
 
-        return this.createByModel(resource);
+        return this.createByModel(resource,[],[],[]);
 
     }
 
-    //update user
-    public updateByModel(data: Resource) {
-        return this.httpService.patch(this.queryService.generateDbQuery(this.table_name,[],[]),data);
-    }
-
-    public createByModel(data: Resource) {
-    
-        const url = DreamFactory.df_host+this.table_name+"?id_field=USER_GUID%2CEMAIL%2CSTAFF_ID";
-
-        return this.httpService.post(url,data);
-
-    }
 }

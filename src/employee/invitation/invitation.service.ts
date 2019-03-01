@@ -142,7 +142,7 @@ export class InvitationService {
                     const resource = new Resource(new Array);
                     resource.resource.push(userData);
 
-                    return this.userService.updateByModel(resource);
+                    return this.userService.updateByModel(resource,[],[],[]);
                 }));
     }
 }

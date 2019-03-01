@@ -47,7 +47,7 @@ export class BranchController {
     @Get()
     findAll(@Req() req,@Res() res) {
 
-      this.branchService.findAll(req.user.USER_GUID,req.user.TENANT_GUID).subscribe(data => {
+      this.branchService.findAll(req.user.TENANT_GUID).subscribe(data => {
         res.send(data.data.resource);
       });
 
@@ -55,7 +55,7 @@ export class BranchController {
   
     @Get(':id')
     findOne(@Param('id') id, @Req() req,@Res() res) {
-      this.branchService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(data => {
+      this.branchService.findById(req.user.TENANT_GUID, id).subscribe(data => {
         res.send(data.data.resource[0]);
       });
     }

@@ -2,14 +2,14 @@ import { IsNotEmpty } from "class-validator";
 
 export class UserCertificationDTO {
     @IsNotEmpty()
-    readonly certificationName: string;
+    certificationName: string;
 
     @IsNotEmpty()
-    readonly certificationEnrollYear: number;
+    certificationEnrollYear: number;
 
     @IsNotEmpty()
-    readonly certificationGraduateYear: number;
+    certificationGraduateYear: number;
 
     @IsNotEmpty()
-    readonly certificationAttachment: string;
+    certificationAttachment: string;
 }

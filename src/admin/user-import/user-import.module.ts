@@ -8,6 +8,10 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BranchService } from '../branch/branch.service';
 import { CostcentreService } from '../costcentre/costcentre.service';
 import { SectionService } from '../section/section.service';
+import { DepartmentService } from '../department/department.service';
+import { CompanyService } from '../company/company.service';
+import { UserInfoService } from '../user-info/user-info.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 @Module({
   controllers: [UserImportController],
@@ -17,7 +21,11 @@ import { SectionService } from '../section/section.service';
     BranchService,
     CostcentreService,
     SectionService,
-    QueryParserService
+    QueryParserService,
+    DepartmentService,
+    CompanyService,
+    UserInfoService,
+    XMLParserService
   ],
   modules: [
     PassportModule.register({session: false}),

@@ -5,12 +5,14 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { AuthModule } from 'src/auth/auth.module';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 @Module({
   controllers: [UserInfoController],
   providers: [
     UserInfoService,
-    QueryParserService
+    QueryParserService,
+    XMLParserService
   ],
   modules: [
     AuthModule,

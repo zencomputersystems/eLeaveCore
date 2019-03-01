@@ -8,14 +8,9 @@ import { Type } from "class-transformer";
 export class UserFamilyDTO {
     @Type(() => UserSpouseDTO)
     @ValidateNested()
-    readonly spouses: UserSpouseDTO[];
+    spouse: UserSpouseDTO[];
 
     @Type(() => UserChildrenDTO)
     @ValidateNested()
-    readonly childrens: UserChildrenDTO[];
-
-    @IsNotEmpty()
-    readonly emergencyContact1: string;
-
-    readonly emergencyContact2: string;
+    child: UserChildrenDTO[];
 }

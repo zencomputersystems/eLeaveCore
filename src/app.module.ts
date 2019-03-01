@@ -10,11 +10,13 @@ import { LeavetypeEntitlementModule } from './admin/leavetype-entitlement/leavet
 import { UserModule } from './admin/user/user.module';
 import { UserInviteModule } from './admin/user-invite/user-invite.module';
 import { UserInfoModule } from './admin/user-info/user-info.module';
-import { UserImportService } from './admin/user-import/user-import.service';
 import { UserImportModule } from './admin/user-import/user-import.module';
 import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/mailer';
 import { InvitationModule } from './employee/invitation/invitation.module';
 import { DepartmentModule } from './admin/department/department.module';
+import { CompanyModule } from './admin/company/company.module';
+import { DesignationModule } from './admin/designation/designation.module';
+import { XMLParserService } from './common/helper/xml-parser.service';
 
 @Module({
   imports: [
@@ -50,9 +52,13 @@ import { DepartmentModule } from './admin/department/department.module';
     }),
     InvitationModule,
     DepartmentModule,
+    CompanyModule,
+    DesignationModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {
 }

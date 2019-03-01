@@ -14,7 +14,7 @@ export class DepartmentController {
 
     @Get()
     findAll(@Req() req,@Res() res) {
-        this.departmentService.findAll(req.user.USER_GUID,req.user.TENANT_GUID).subscribe(
+        this.departmentService.findAll(req.user.TENANT_GUID).subscribe(
         data => {
             res.send(data.data.resource);
         },
@@ -28,7 +28,7 @@ export class DepartmentController {
 
     @Get(':id')
     findOne(@Param('id') id, @Req() req,@Res() res) {
-        this.departmentService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(
+        this.departmentService.findById(req.user.TENANT_GUID, id).subscribe(
         data => {
             res.send(data.data.resource[0]);
         },

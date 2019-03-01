@@ -2,40 +2,40 @@ import { IsNotEmpty } from "class-validator";
 
 export class UserEmployeeDTO {
     @IsNotEmpty()
-    readonly designationId: string;
+    designationId: string;
 
     @IsNotEmpty()
-    readonly companyId: string;
+    companyId: string;
 
     @IsNotEmpty()
-    readonly departmentId: string;
+    departmentId: string;
 
     @IsNotEmpty()
-    readonly joinDate: Date;
+    joinDate: Date;
 
     @IsNotEmpty()
-    readonly confirmationDate: Date;
+    confirmationDate: Date;
 
-    readonly resignationDate: Date;
+    resignationDate: Date;
     
     @IsNotEmpty()
-    readonly emailId: string;
+    emailId: string;
 
     @IsNotEmpty()
-    readonly branchId: string;
+    branchId: string;
 
     @IsNotEmpty()
-    readonly roleId: string;
+    roleId: string;
 
     @IsNotEmpty()
-    readonly reportingToId: string;
+    reportingToId: string;
 
     @IsNotEmpty()
-    readonly calendarId: string;
+    calendarId: string;
 
     @IsNotEmpty()
-    readonly employmentStatus: number;
+    employmentStatus: number;
 
     @IsNotEmpty()
-    readonly costCentreId: string;
+    costCentreId: string;
 }

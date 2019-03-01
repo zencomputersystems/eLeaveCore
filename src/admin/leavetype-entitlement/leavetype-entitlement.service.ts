@@ -1,46 +1,34 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import {j2xParser, parse} from 'fast-xml-parser';
+import {parse} from 'fast-xml-parser'; 
 import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from './model/leavetype_entitlement.model';
 import { CreateLeaveEntitlementTypeDto } from './dto/create-leavetype_entitlement.dto';
 import { v1 } from 'uuid';
 import { Observable } from 'rxjs';
-import { DreamFactory } from 'src/config/dreamfactory';
 import { UpdateLeaveTypeEntitlementDto } from './dto/update-leavetype_entitlement.dto';
 import { map } from 'rxjs/operators';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class LeavetypeEntitlementService {
+export class LeavetypeEntitlementService extends BaseDBService {
     private table_name = "l_leavetype_entitlement_def";
-    private db_host = DreamFactory.df_host+this.table_name;
 
-    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
+    constructor(
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService,
+        private readonly xmlParserService: XMLParserService){
+            super(httpService,queryService,"l_leavetype_entitlement_def");
+        }
 
-    private convertJsonToXML(data:any) {
-        var defaultOptions = {
-            attributeNamePrefix : "@_",
-            attrNodeName: "@", //default is false
-            textNodeName : "#text",
-            ignoreAttributes : true,
-            cdataTagName: "__cdata", //default is false
-            cdataPositionChar: "\\c",
-            format: false,
-            indentBy: "  ",
-            supressEmptyNode: false
-        };
-
-        const converter = new j2xParser(defaultOptions);
-
-        return converter.parse(data);
-    }
 
     //find all tenant leave definition
-    public findAll(userid: string, tenantid:string): Observable<any> {
+    public findAll(tenantid:string): Observable<any> {
 
         const filters = ['(TENANT_GUID='+tenantid+')'];
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,[],filters);
+        const url = this.queryService.generateDbQueryV2(this.table_name,[],filters,[]);
  
         //call DF to validate the user
         return this.httpService.get(url);
@@ -48,7 +36,7 @@ export class LeavetypeEntitlementService {
     }
 
     //find tenant leave definition by id
-    public findById(userid: string, tenantid:string, id: string): Observable<any> {
+    public findById(tenantid:string, id: string): Observable<any> {
         
         const fields = ['ENTITLEMENT_GUID','CODE','DESCRIPTION','PROPERTIES_XML'];
         const filters = ['(ENTITLEMENT_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
@@ -76,7 +64,7 @@ export class LeavetypeEntitlementService {
         
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.convertJsonToXML(d.properties);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
 
         data.ENTITLEMENT_GUID = v1();
         data.LEAVE_TYPE_GUID = d.leavetype_id;
@@ -86,11 +74,7 @@ export class LeavetypeEntitlementService {
         data.CREATION_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;
         
-
-        resource.resource.push(data);
-
-        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
-        
+        return this.createByModel(resource,[],[],[]);
     }
 
     //update new leavetype entitlement
@@ -105,16 +89,14 @@ export class LeavetypeEntitlementService {
         data.TENANT_GUID = user.TENANT_GUID;
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.convertJsonToXML(d.properties);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;
         
         resource.resource.push(data);
 
-        const url = this.db_host+"?id_field=TENANT_GUID%2CENTITLEMENT_GUID";
-
-        return this.httpService.patch(url,resource);
+        return this.updateByModel(resource,[],[],[]);
         
     }
 

@@ -2,8 +2,8 @@ import { IsNotEmpty } from "class-validator";
 
 export class UserChildrenDTO {
     @IsNotEmpty()
-    readonly childName: string;
+    childName: string;
 
     @IsNotEmpty()
-    readonly childIdentificationNumber: string;
+    childIdentificationNumber: string;
 }

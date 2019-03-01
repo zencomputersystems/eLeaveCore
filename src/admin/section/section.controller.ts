@@ -46,7 +46,7 @@ export class SectionController {
 
   @Get()
   findAll(@Req() req,@Res() res) {
-    this.sectionService.findAll(req.user.USER_GUID,req.user.TENANT_GUID).subscribe(
+    this.sectionService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
         res.send(data.data.resource);
       },
@@ -61,7 +61,7 @@ export class SectionController {
 
   @Get(':id')
   findOne(@Param('id') id, @Req() req,@Res() res) {
-    this.sectionService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(
+    this.sectionService.findById(req.user.TENANT_GUID, id).subscribe(
       data => {
         res.send(data.data.resource[0]);
       },

@@ -8,4 +8,5 @@ export class CostCentreModel {
     UPDATE_USER_GUID: string;
     ACTIVE_FLAG: number;
     TENANT_GUID: string;
+    DELETED_AT: string;
 } 

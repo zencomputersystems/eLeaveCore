@@ -31,26 +31,27 @@ export class QueryParserService {
 
         // build the parameter
         if(fields.length>0) {
-            const field = "fields="+fields.join(",");
+            const field = "fields="+fields.map(res=>encodeURIComponent(res)).join(",");
 
             paramArray.push(field);
         }
 
         if(filters.length>0) {
             
-            const filter = "filter="+filters.join("AND");
+            const filter = "filter="+filters.map(res=>encodeURIComponent(res)).join("AND");
 
             paramArray.push(filter);
         }
 
 
         if(idFields.length>0) {
-            const idField = "id_field="+idFields.join(",");   
+            const idField = "id_field="+idFields.map(res=>encodeURIComponent(res)).join(",");   
 
             paramArray.push(idField);
         }
 
-        return url+paramArray.join("&");
+        const buildurl = url+paramArray.join("&");
+        return buildurl;
 
     }
 

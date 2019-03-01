@@ -1,53 +1,52 @@
 import { IsNotEmpty, IsEmail } from "class-validator";
 
 export class UserCsvDto {
-    readonly USER_GUID: string;
-
+    
     @IsNotEmpty()
     @IsEmail()
-    readonly STAFF_EMAIL: string;
+    STAFF_EMAIL: string;
 
-    readonly STAFF_ID: string;
+    STAFF_ID: string;
 
     @IsNotEmpty()
-    readonly FULLNAME: string;
+    FULLNAME: string;
 
-    readonly IC_NUMBER: string;
+    IC_NUMBER: string;
 
-    readonly DOB: string;
+    DOB: string;
 
-    readonly GENDER: string;
+    GENDER: string;
 
-    readonly PHONE_NUMBER: string;
+    PHONE_NUMBER: string;
 
-    readonly COMPANY_NUMBER: string;
+    COMPANY_NUMBER: string;
 
-    readonly MARITAL_STATUS: string;
+    MARITAL_STATUS: string;
 
-    readonly ADDRESS: string;
+    ADDRESS: string;
 
-    readonly POSTCODE: string;
+    POSTCODE: string;
 
-    readonly STATE: string;
+    STATE: string;
 
-    readonly COUNTRY: string;
+    COUNTRY: string;
 
-    readonly DESIGNATION: string;
+    DESIGNATION: string;
 
     DEPARTMENT: string;
 
     COST_CENTRE: string;
 
-    readonly COMPANY: string;
+    COMPANY: string;
 
     BRANCH: string;
 
-    readonly JOIN_DATE: string;
+    JOIN_DATE: string;
 
-    readonly CONFIRMATION_DATE: string;
+    CONFIRMATION_DATE: string;
 
-    readonly RESIGNATION_DATE: string;
+    RESIGNATION_DATE: string;
 
-    readonly SUPERIOR_EMAIL: string;
+    SUPERIOR_EMAIL: string;
 
 }

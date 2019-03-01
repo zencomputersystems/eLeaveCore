@@ -46,7 +46,7 @@ export class LeaveTypeController {
 
   @Get()
   findAll(@Req() req,@Res() res) {
-    this.leavetypeService.findAll(req.user.USER_GUID,req.user.TENANT_GUID).subscribe(
+    this.leavetypeService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
         res.send(data.data.resource);
       },
@@ -60,7 +60,7 @@ export class LeaveTypeController {
 
   @Get(':id')
   findOne(@Param('id') id, @Req() req,@Res() res) {
-    this.leavetypeService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(
+    this.leavetypeService.findById(req.user.TENANT_GUID, id).subscribe(
       data => {
         res.send(data.data.resource[0]);
       },

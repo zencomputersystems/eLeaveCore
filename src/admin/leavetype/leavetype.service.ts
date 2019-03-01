@@ -5,15 +5,20 @@ import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { LeaveTypeModel } from './model/leavetype.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class LeavetypeService {
+export class LeavetypeService extends BaseDBService {
     private table_name = "l_main_leavetype";
 
-    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
+    constructor(
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService){
+            super(httpService,queryService,"l_main_leavetype");
+        }
 
     //find all tenant leavetype
-    public findAll(userid: string, tenantid:string): Observable<any> {
+    public findAll(tenantid:string): Observable<any> {
 
         const fields = ['LEAVE_TYPE_GUID','CODE','DESCRIPTION'];
         const filters = ['(TENANT_GUID='+tenantid+')'];
@@ -26,7 +31,7 @@ export class LeavetypeService {
     }
 
     //find tenant leavetype by id
-    public findById(userid: string, tenantid:string, id: string): Observable<any> {
+    public findById(tenantid:string, id: string): Observable<any> {
         
         const fields = ['LEAVE_TYPE_GUID','CODE','DESCRIPTION'];
         const filters = ['(TENANT_GUID='+tenantid+')','(LEAVE_TYPE_GUID='+id+')'];
@@ -54,8 +59,7 @@ export class LeavetypeService {
 
         resource.resource.push(data);
 
-        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
-
+        return this.createByModel(resource,[],[],[]);
     }
 
     //update existing branch
@@ -75,9 +79,7 @@ export class LeavetypeService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CLEAVE_TYPE_GUID";
-
-        return this.httpService.patch(url,resource);
+        return this.updateByModel(resource,[],[],[]);
 
     }
 }

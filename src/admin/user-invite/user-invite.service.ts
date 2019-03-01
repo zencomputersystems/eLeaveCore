@@ -3,26 +3,29 @@ import { v1 } from 'uuid';
 import { MailerService } from '@nest-modules/mailer';
 import { UserInviteModel } from './model/user-invite.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
-import { map, mergeMap, flatMap, switchMap } from 'rxjs/operators';
-import { from, forkJoin, Observable, of} from 'rxjs';
+import { map, flatMap} from 'rxjs/operators';
+import {forkJoin, Observable, of} from 'rxjs';
 import { UserService } from '../user/user.service';
 import { UserModel } from '../user/model/user.model';
 import { InviteValidList } from './dto/invite-valid-list.dto';
 import { InviteDto } from './dto/invite.dto';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class UserInviteService {
+export class UserInviteService extends BaseDBService {
     
     private _tableName = 'l_user_invitation';
     private _user: any;
+
     constructor(
         private readonly mailerService: MailerService,
-        private readonly httpService: HttpService,
-        private readonly queryService: QueryParserService,
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService,
         private readonly userService: UserService
-    ) {}
+    ) {
+        super(httpService,queryService,"l_user_invitation");
+    }
     
     public inviteUser(inviteList:[InviteDto],user: any) {
 
@@ -36,7 +39,7 @@ export class UserInviteService {
             this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')']),
 
             //get all invitation data for this tenant
-            this.findAll(user.USER_GUID,user.TENANT_GUID)
+            this.findAll(user.TENANT_GUID)
         ]
 
         return forkJoin(observableData$)
@@ -124,7 +127,7 @@ export class UserInviteService {
 
 
     //find all tenant branch
-    public findAll(userid: string, tenantid:string): Observable<any> {
+    public findAll(tenantid:string): Observable<any> {
 
         const fields = ['INVITATION_GUID','EMAIL','USER_GUID'];
         const filters = ['(TENANT_GUID='+tenantid+')'];
@@ -162,9 +165,7 @@ export class UserInviteService {
 
         resource.resource.push(invitationModel);
 
-        //const url = this.queryParserService.generateDbQuery(this._tableName,[],[]);
-        const url = DreamFactory.df_host+this._tableName+"?id_field=INVITATION_GUID%2CEMAIL";
-        return this.httpService.post(url,resource);
+        return this.createByModel(resource,[],[],['INVITATION_GUID,EMAIL']);
     }
 
     update(id: string,status: number) {
@@ -176,7 +177,6 @@ export class UserInviteService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this._tableName;
-        return this.httpService.patch(url,resource);
+        return this.updateByModel(resource,[],[],[]);
     }
 }

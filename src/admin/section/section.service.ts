@@ -5,21 +5,26 @@ import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { SectionModel } from './model/section.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class SectionService {
+export class SectionService extends BaseDBService {
 
-    private table_name = "main_section";
+    private _tableName = "main_section";
 
-    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
+    constructor(
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService){
+            super(httpService,queryService,"main_section");
+        }
 
     //find all tenant branch
-    public findAll(userid: string, tenantid:string): Observable<any> {
+    public findAll(tenantid:string): Observable<any> {
 
         const fields = ['SECTION_GUID','NAME'];
         const filters = ['(TENANT_GUID='+tenantid+')'];
        
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
 
         //call DF to validate the user
         return this.httpService.get(url);
@@ -27,12 +32,12 @@ export class SectionService {
     }
 
     //find tenant branch by id
-    public findById(userid: string, tenantid:string, id: string): Observable<any> {
+    public findById(tenantid:string, id: string): Observable<any> {
        
         const fields = ['SECTION_GUID','NAME'];
         const filters = ['(TENANT_GUID='+tenantid+')','(SECTION_GUID='+id+')'];
        
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -53,10 +58,7 @@ export class SectionService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name;
-
-        return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
-
+       return this.createByModel(resource,[],[],[]);
     }
 
     //update existing branch
@@ -75,9 +77,7 @@ export class SectionService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name+"?id_field=SECTION_GUID";
-
-        return this.httpService.patch(url,resource);
+        return this.updateByModel(resource,[],[],[]);
 
     }
 }

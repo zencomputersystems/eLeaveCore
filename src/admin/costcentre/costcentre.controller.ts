@@ -46,11 +46,12 @@ export class CostcentreController {
 
   @Get()
   findAll(@Req() req,@Res() res) {
-    this.costcentreService.findAll(req.user.USER_GUID,req.user.TENANT_GUID).subscribe(
+    this.costcentreService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
         res.send(data.data.resource);
       },
       err => {
+        console.log(err.response.data.error);
         res.status(400);
           res.send('Fail to fetch resource');  
       }
@@ -60,7 +61,7 @@ export class CostcentreController {
 
   @Get(':id')
   findOne(@Param('id') id, @Req() req,@Res() res) {
-    this.costcentreService.findById(req.user.USER_GUID,req.user.TENANT_GUID, id).subscribe(
+    this.costcentreService.findById(req.user.TENANT_GUID, id).subscribe(
       data => {
         res.send(data.data.resource[0]);
       },

@@ -2,8 +2,8 @@ import { IsNotEmpty } from "class-validator";
 
 export class UserSpouseDTO {
     @IsNotEmpty()
-    readonly spouseName: string;
+    spouseName: string;
 
     @IsNotEmpty()
-    readonly spouseIdentificationNumber: string;
+    spouseIdentificationNumber: string;
 }

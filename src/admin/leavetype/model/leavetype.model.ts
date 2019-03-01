@@ -10,4 +10,5 @@ export class LeaveTypeModel {
     ACTIVE_FLAG: number;
     TENANT_GUID: string;
     TENANT_COMPANY_GUID: string;
+    DELETED_AT: string;
 } 

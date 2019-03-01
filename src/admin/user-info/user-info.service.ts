@@ -7,13 +7,21 @@ import { v1 } from 'uuid';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserInfoModel } from './model/user-info.model';
+import {j2xParser, parse} from 'fast-xml-parser';
+import { UserDto } from './dto/user.dto';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class UserInfoService {
-    private table_name = "user_info";
-    private db_host = DreamFactory.df_host+this.table_name;
+export class UserInfoService extends BaseDBService {
+    private _tableName = "user_info";
 
-    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
+    constructor(
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService,
+        public readonly xmlParserService: XMLParserService){
+            super(httpService,queryService,"user_info");
+        }
 
     //find single user
     public findOne(userId: string, tenantId: string): Observable<any> {
@@ -32,7 +40,7 @@ export class UserInfoService {
         ];
         const filters = ['(USER_GUID='+userId+')'];
 
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
 
         return this.httpService.get(url);
 
@@ -50,10 +58,11 @@ export class UserInfoService {
         data.CREATION_TS = new Date().toISOString();
 
         resource.resource.push(data);
-        console.log(resource);
-        //return this.httpService.post(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
+
+        return this.createByModel(resource,[],[],[]);
         
     }
+
 
     update(user: any, d: UpdateUserDTO) {
 
@@ -65,12 +74,11 @@ export class UserInfoService {
         data.USER_INFO_GUID = d.id;
        
         resource.resource.push(data);
-        console.log(resource);
-        return this.httpService.patch(this.queryService.generateDbQuery(this.table_name,[],[]),resource);
-        
+
+        return this.updateByModel(resource,[],[],[]);        
     }
 
-    private mapData(d:any,userId: string) {
+    public mapData(d:UserDto,userId: string) {
         const data = new UserInfoModel();
         
         data.USER_GUID = userId;
@@ -88,7 +96,9 @@ export class UserInfoService {
         data.MANAGER_USER_GUID = d.employmentDetail.reportingToId;
         data.EMPLOYEE_STATUS = d.employmentDetail.employmentStatus;
 
-        data.XML = "";
+        const xmldata = d;
+        xmldata.employmentDetail = null;
+        data.XML = this.xmlParserService.convertJsonToXML(xmldata);
            
         return data;
     }

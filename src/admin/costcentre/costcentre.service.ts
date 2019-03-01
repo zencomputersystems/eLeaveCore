@@ -1,24 +1,28 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { CostCentreModel } from './model/costcentre.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { BaseDBService } from 'src/common/base/base-db.service';
 
 @Injectable()
-export class CostcentreService {
-    private table_name = "main_cost_centre";
+export class CostcentreService extends BaseDBService {
+    private _tableName = 'main_cost_centre';
 
-    constructor(private readonly httpService: HttpService, private readonly queryService: QueryParserService){}
+    constructor(
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService){
+            super(httpService,queryService,"main_cost_centre");
+        }
 
     //find all tenant branch
-    public findAll(userid: string, tenantid:string): Observable<any> {
+    public findAll(TENANT_GUID:string): Observable<any> {
 
         const fields = ['COST_CENTRE_GUID','NAME'];
-        const filters = ['(TENANT_GUID='+tenantid+')'];
+        const filters = ['(TENANT_GUID='+TENANT_GUID+')'];
        
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQueryV2(this._tableName,fields,filters,[]);
 
         //call DF to validate the user
         return this.httpService.get(url);
@@ -26,12 +30,12 @@ export class CostcentreService {
     }
 
     //find tenant branch by id
-    public findById(userid: string, tenantid:string, id: string): Observable<any> {
+    public findById(TENANT_GUID:string, id: string): Observable<any> {
         const fields = ['COST_CENTRE_GUID','NAME'];
-        const filters = ['(COST_CENTRE_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
+        const filters = ['(COST_CENTRE_GUID='+id+')','(TENANT_GUID='+TENANT_GUID+')'];
 
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+        const url = this.queryService.generateDbQueryV2(this._tableName,fields,filters,[]);
         
         //call DF to validate the user
         return this.httpService.get(url);
@@ -52,9 +56,7 @@ export class CostcentreService {
 
         resource.resource.push(data);
 
-        const url = this.queryService.generateDbQuery(this.table_name,[],[]);
-
-        return this.httpService.post(url,resource);
+        return this.createByModel(resource,[],[],[]);
 
     }
 
@@ -74,9 +76,7 @@ export class CostcentreService {
 
         resource.resource.push(data);
 
-        const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CCOST_CENTRE_GUID";
-
-        return this.httpService.patch(url,resource);
+        return this.updateByModel(resource,[],[],['TENANT_GUID','COST_CENTRE_GUID']);
 
     }
 }

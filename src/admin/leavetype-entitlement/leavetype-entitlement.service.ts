@@ -10,9 +10,10 @@ import { map } from 'rxjs/operators';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class LeavetypeEntitlementService extends BaseDBService {
+export class LeavetypeEntitlementService extends BaseDBService implements IDbService {
     private table_name = "l_leavetype_entitlement_def";
 
     constructor(

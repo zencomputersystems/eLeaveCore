@@ -48,7 +48,7 @@ export class UserImportController {
                 data=>{
                     console.log("emitted");
                     //console.log(data);
-                    //res.send(data);
+                    res.send(data);
                 },
                 err => {
                     res.status(400);

@@ -15,13 +15,14 @@ export class LeaveTypeController {
   @Post()
   create(@Body() createLeavetypeDTO: CreateLeaveTypeDto,@Req() req, @Res() res) {
 
-    this.leavetypeService.create(req.user,createLeavetypeDTO.code,createLeavetypeDTO.description)
+    this.leavetypeService.create(req.user,createLeavetypeDTO)
       .subscribe(
         data => {
           if(data.status==200)
             res.send(data.data);
         },
         err => {
+          console.log(err.response.data.error.context);
           res.status(400);
           res.send('Fail to create resource');
           //console.log(err.response.data.error.context);

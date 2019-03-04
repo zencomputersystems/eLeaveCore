@@ -11,9 +11,16 @@ import {j2xParser, parse} from 'fast-xml-parser';
 import { UserDto } from './dto/user.dto';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class UserInfoService extends BaseDBService {
+export class UserInfoService extends BaseDBService implements IDbService {
+    findAll(USERINFO_GUID: string): Observable<any> {
+        throw new Error("Method not implemented.");
+    }
+    findById(USERINFO_GUID: any, id: string): Observable<any> {
+        throw new Error("Method not implemented.");
+    }
     private _tableName = "user_info";
 
     constructor(

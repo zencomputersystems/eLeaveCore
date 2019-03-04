@@ -5,9 +5,10 @@ import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { CompanyModel } from './model/company.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class CompanyService extends BaseDBService {
+export class CompanyService extends BaseDBService implements IDbService{
 
     private _tableName = "tenant_company";
 
@@ -16,6 +17,7 @@ export class CompanyService extends BaseDBService {
         public readonly queryService: QueryParserService){
             super(httpService,queryService,"tenant_company");
         }
+
 
      //find all tenant company
      public findAll(TENANT_GUID: string): Observable<any> {

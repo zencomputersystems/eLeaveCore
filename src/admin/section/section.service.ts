@@ -6,9 +6,10 @@ import { v1 } from 'uuid';
 import { SectionModel } from './model/section.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class SectionService extends BaseDBService {
+export class SectionService extends BaseDBService implements IDbService {
 
     private _tableName = "main_section";
 

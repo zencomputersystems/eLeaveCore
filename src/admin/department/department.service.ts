@@ -5,9 +5,10 @@ import { v1 } from 'uuid';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { DepartmentModel } from './model/department.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class DepartmentService extends BaseDBService {
+export class DepartmentService extends BaseDBService implements IDbService {
 
     private _tableName = "main_department";
 

@@ -5,9 +5,10 @@ import { v1 } from 'uuid';
 import { CostCentreModel } from './model/costcentre.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class CostcentreService extends BaseDBService {
+export class CostcentreService extends BaseDBService implements IDbService {
     private _tableName = 'main_cost_centre';
 
     constructor(

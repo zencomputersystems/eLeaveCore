@@ -1,14 +1,15 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { DreamFactory } from 'src/config/dreamfactory';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { LeaveTypeModel } from './model/leavetype.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class LeavetypeService extends BaseDBService {
+export class LeavetypeService extends BaseDBService implements IDbService {
+    
     private table_name = "l_main_leavetype";
 
     constructor(
@@ -43,24 +44,44 @@ export class LeavetypeService extends BaseDBService {
         return this.httpService.get(url);
     }
 
-    //create new branch
-    create(user: any, code: string, description: string) {
-
+    create(user: any, data: any) {
+        
         const resource = new Resource(new Array);
-        const data = new LeaveTypeModel()
+        const modelData = new LeaveTypeModel()
 
-        data.LEAVE_TYPE_GUID = v1();
-        data.CREATION_TS = new Date().toISOString();
-        data.CREATION_USER_GUID = user.USER_GUID;
-        data.ACTIVE_FLAG = 1;
-        data.CODE = code;
-        data.DESCRIPTION = description;
-        data.TENANT_GUID = user.TENANT_GUID;
+        modelData.LEAVE_TYPE_GUID = v1();
+        modelData.CREATION_TS = new Date().toISOString();
+        modelData.CREATION_USER_GUID = user.USER_GUID;
+        modelData.ACTIVE_FLAG = 1;
+        modelData.CODE = data.code;
+        modelData.DESCRIPTION = data.description;
+        modelData.TENANT_GUID = user.TENANT_GUID;
+        modelData.TENANT_COMPANY_GUID = "test";
 
-        resource.resource.push(data);
+        resource.resource.push(modelData);
 
+        console.log(resource);
         return this.createByModel(resource,[],[],[]);
     }
+
+    //create new branch
+    // create(user: any, code: string, description: string) {
+
+    //     const resource = new Resource(new Array);
+    //     const data = new LeaveTypeModel()
+
+    //     data.LEAVE_TYPE_GUID = v1();
+    //     data.CREATION_TS = new Date().toISOString();
+    //     data.CREATION_USER_GUID = user.USER_GUID;
+    //     data.ACTIVE_FLAG = 1;
+    //     data.CODE = code;
+    //     data.DESCRIPTION = description;
+    //     data.TENANT_GUID = user.TENANT_GUID;
+
+    //     resource.resource.push(data);
+
+    //     return this.createByModel(resource,[],[],[]);
+    // }
 
     //update existing branch
     update(user:any, d: any) {

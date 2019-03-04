@@ -6,9 +6,10 @@ import { Resource } from 'src/common/model/resource.model';
 import {v1} from 'uuid';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
-export class BranchService extends BaseDBService{
+export class BranchService extends BaseDBService implements IDbService{
 
     private _tableName = "main_branch";
 

@@ -19,4 +19,8 @@ export class XMLParserService {
 
         return converter.parse(data);
     }
+
+    public convertXMLToJson(data: any) {
+        return parse(data);
+    }
 }

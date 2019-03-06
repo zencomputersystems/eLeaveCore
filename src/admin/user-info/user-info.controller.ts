@@ -15,14 +15,29 @@ export class UserInfoController {
     @Post()
     create(@Body() createUserDTO: CreateUserDTO ,@Req() req, @Res() res) {
         
-        this.userInfoService.create(req.user,createUserDTO);
-        res.send(createUserDTO);
+        this.userInfoService.create(req.user,createUserDTO)
+            .subscribe(
+                data => {
+                    if(data.status==200)
+                        res.send(data.data.resource[0]);
+                    else {
+                        res.status(data.status);
+                        res.send();
+                    }
+                },
+                err => {
+                    console.log(err.response.data.error.context);
+                    res.status(400);
+                    res.send('Fail to update resource');
+                }
+            )
+
     }
 
     @Patch()
     update(@Body() updateUserDTO: UpdateUserDTO,@Req() req, @Res() res) {
         
-        console.log(updateUserDTO);
+
         this.userInfoService.update(req.user,updateUserDTO)
             .subscribe(
                 data => {

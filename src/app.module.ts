@@ -12,11 +12,12 @@ import { UserInviteModule } from './admin/user-invite/user-invite.module';
 import { UserInfoModule } from './admin/user-info/user-info.module';
 import { UserImportModule } from './admin/user-import/user-import.module';
 import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/mailer';
-import { InvitationModule } from './employee/invitation/invitation.module';
 import { DepartmentModule } from './admin/department/department.module';
 import { CompanyModule } from './admin/company/company.module';
 import { DesignationModule } from './admin/designation/designation.module';
 import { XMLParserService } from './common/helper/xml-parser.service';
+import { InvitationModule } from './api/invitation/invitation.module';
+import { UserprofileModule } from './api/userprofile/userprofile.module';
 
 @Module({
   imports: [
@@ -53,7 +54,8 @@ import { XMLParserService } from './common/helper/xml-parser.service';
     InvitationModule,
     DepartmentModule,
     CompanyModule,
-    DesignationModule
+    DesignationModule,
+    UserprofileModule
   ],
   controllers: [AppController],
   providers: [

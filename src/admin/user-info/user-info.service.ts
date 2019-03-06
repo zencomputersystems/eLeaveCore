@@ -15,12 +15,7 @@ import { IDbService } from 'src/interface/IDbService';
 
 @Injectable()
 export class UserInfoService extends BaseDBService implements IDbService {
-    findAll(USERINFO_GUID: string): Observable<any> {
-        throw new Error("Method not implemented.");
-    }
-    findById(USERINFO_GUID: any, id: string): Observable<any> {
-        throw new Error("Method not implemented.");
-    }
+
     private _tableName = "user_info";
 
     constructor(
@@ -53,15 +48,24 @@ export class UserInfoService extends BaseDBService implements IDbService {
 
     }
 
+    findAll(TENANT_GUID: string): Observable<any> {
+        throw new Error("Method not implemented.");
+    }
+    findById(USERINFO_GUID: any, id: string): Observable<any> {
+        throw new Error("Method not implemented.");
+    }
+
     //create new leavetype entitlement
     create(user: any, d: CreateUserDTO) {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource = new Resource(new Array);
+
         const data = this.mapData(d,user.USER_GUID);
         
         data.USER_INFO_GUID = v1();
+        data.CREATION_USER_GUID = user.USER_GUID;
         data.CREATION_TS = new Date().toISOString();
 
         resource.resource.push(data);

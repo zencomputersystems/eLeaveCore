@@ -4,6 +4,7 @@ import { CreateBranchDto } from './dto/create-branch.dto';
 import { BranchService } from './branch.service';
 import { UpdateBranchDto } from './dto/update-branch.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { RolesGuard } from 'src/guard/role.guard';
 
 @Controller('api/admin/branch')
 @UseGuards(AuthGuard('jwt'))

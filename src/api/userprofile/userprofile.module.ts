@@ -9,13 +9,15 @@ import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { DreamFactory } from 'src/config/dreamfactory';
+import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 
 @Module({
   providers: [
     UserprofileService,
     UserInfoService,
     QueryParserService,
-    XMLParserService
+    XMLParserService,
+    AccessLevelValidateService
   ],
   modules:[
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),

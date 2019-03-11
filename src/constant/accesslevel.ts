@@ -22,5 +22,10 @@ export const ACCESSLEVEL = {
     [
         'TENANT_COMPANY_GUID',
         'DIVISION'
+    ],
+    'PERSONAL':
+    [
+        'TENANT_COMPANY_GUID',
+        'USER_GUID'
     ]
 }

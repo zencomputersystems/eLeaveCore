@@ -2,11 +2,11 @@ import { Controller, Get, Req, Res, UseGuards, Param, Patch, Body } from '@nestj
 import { UserprofileService } from '../../userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
-import { RolesGuard } from 'src/guard/role.guard';
-import { Resources } from 'src/decorator/resource.decorator';
 import { ResourceDecoratorModel } from 'src/decorator/resource.decorator.model';
 import { switchMap } from 'rxjs/operators';
 import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-detail/update-personal-detail.dto';
+import { ResourceGuard } from 'src/guard/resource.guard';
+import { Roles } from 'src/decorator/resource.decorator';
 
 @Controller('employment-detail')
 export class EmploymentDetailController {
@@ -14,9 +14,9 @@ export class EmploymentDetailController {
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService) {}
 
-    @UseGuards(RolesGuard)
+    @UseGuards(ResourceGuard)
     @Get('employment-detail/edit/:id')
-    @Resources(new ResourceDecoratorModel('EditProfile','GET'))
+    @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Get employment detail to edit for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
     findOne(@Param('id') id,@Req() req,@Res() res) {
@@ -37,9 +37,9 @@ export class EmploymentDetailController {
             )
     }
 
-    @UseGuards(RolesGuard)
+    @UseGuards(ResourceGuard)
     @Patch('employment-detail/edit')
-    @Resources(new ResourceDecoratorModel('EditProfile','UPDATE'))
+    @Roles('ProfileAdmin')
     @ApiOperation({title: 'Update employment detail for this user profile'})
     update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO,@Req() req, @Res() res) {
         res.send(" Update employment Detail");

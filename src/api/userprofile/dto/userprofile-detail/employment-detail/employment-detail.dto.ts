@@ -1,10 +1,15 @@
 export class EmploymentDetailDTO {
     staffId: string;
-    employeeDesignation: string;
-    icNumber: string;
-    reportingTo: string;
+    designation: string;
+    nric: string;
+    workLocation: string;
+
     department: string;
-    employeeLocation: string;
+    branch: string;
+    division: string;
+
+    reportingTo: string;
+    
     dateOfJoin: string;
     dateOfConfirmation: string;
     dateOfResign: string;
@@ -12,6 +17,7 @@ export class EmploymentDetailDTO {
 
     employmentType: string;
     employmentStatus: string;
+    
     userRole: string;
 
     bankAccountName: string;

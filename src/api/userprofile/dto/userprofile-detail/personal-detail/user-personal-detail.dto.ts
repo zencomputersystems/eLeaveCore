@@ -1,7 +1,6 @@
-import { UserEmergencyContactDTO } from "./user-emergency-contact.dto";
-import { EducationDTO } from "./user-education.dto";
-import { UserFamilyDTO } from "./user-family.dto";
-import { UserBankDTO } from "../employment-detail/user-bank.dto";
+import { UserEmergencyContactDetailDTO } from "./xml/user-emergency-contact-detail.dto";
+import { UserEducationDetailDTO } from "./xml/user-education-detail.dto";
+import { UserFamilyDTO } from "./xml/user-family.dto";
 
 export class UserPersonalDetailDTO {
     dob: string;
@@ -15,7 +14,7 @@ export class UserPersonalDetailDTO {
     emailAddress: string;
     workEmailAddress: string;
     residentialAddress: string;
-    emergencyContactNumber = new Array<any>();
-    education = new Array<any>();
-    family = new Array<any>();
+    emergencyContactNumber: UserEmergencyContactDetailDTO;
+    education: UserEducationDetailDTO;
+    family: UserFamilyDTO;
 }

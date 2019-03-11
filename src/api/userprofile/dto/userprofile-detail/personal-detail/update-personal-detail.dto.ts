@@ -1,50 +1,9 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsString} from "class-validator";
+import { PersonalDetailXML } from "./xml/personal-detail.xml";
 
-export class UpdatePersonalDetailDTO {
+export class UpdatePersonalDetailDTO extends PersonalDetailXML {
     @IsNotEmpty()
+    @IsString()
     id: string;
 
-    @IsNotEmpty()
-    dob: string;
-
-    @IsNotEmpty()
-    @IsNumber()
-    gender: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    maritalStatus: number;
-
-    @IsNotEmpty()
-    race: string;
-
-    @IsNotEmpty()
-    religion: string;
-
-    @IsNotEmpty()
-    nationality: string;
-
-    @IsNotEmpty()
-    phoneNumber: string;
-
-    @IsNotEmpty()
-    workPhoneNumber: string;
-
-    @IsNotEmpty()
-    emailAddress: string;
-
-    @IsNotEmpty()
-    workEmailAddress: string;
-
-    @IsNotEmpty()
-    residentialAddress: string;
-
-    @IsNotEmpty()
-    emergencyContactNumber = new Array<any>();
-
-    @IsNotEmpty()
-    education = new Array<any>();
-
-    @IsNotEmpty()
-    family = new Array<any>();
 }

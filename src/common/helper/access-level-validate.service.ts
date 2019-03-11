@@ -34,9 +34,7 @@ export class AccessLevelValidateService {
                                 buildFilter.push('('+element+'='+res.data.resource[0][element]+')');
                             });
 
-                            console.log(buildFilter);
                             return of(buildFilter.join('AND'));
-                            //return of('('+filterLevel+'='+res.data.resource[0][filterLevel]+')');
                         } else {
                             return throwError('Fail to Load Permission');
                         }

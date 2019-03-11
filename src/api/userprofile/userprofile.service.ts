@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { map, switchMap, filter, tap, catchError } from 'rxjs/operators';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserPersonalDetailDTO } from './dto/userprofile-detail/personal-detail/user-personal-detail.dto';
 import { UserProfileDTO } from './dto/userprofile-detail/userprofile.dto';
-import { UserDto } from 'src/admin/user-info/dto/user.dto';
 import { EmploymentDetailDTO } from './dto/userprofile-detail/employment-detail/employment-detail.dto';
 import { leaveEntitlementMock } from './mockdata/leave-entitlement';
-import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
-import { Observable } from 'rxjs';
+import { UserprofileListDTO } from './dto/userprofile-list/userprofile-list.dto';
+import { UserprofileDbService } from './db/userprofile.db.service';
+import { UpdatePersonalDetailDTO } from './dto/userprofile-detail/personal-detail/update-personal-detail.dto';
+import { UserInfoService } from 'src/admin/user-info/user-info.service';
+import { Resource } from 'src/common/model/resource.model';
+import { UserDto } from 'src/admin/user-info/dto/user.dto';
+import { PersonalDetailXML } from './dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
 
 
 @Injectable()
@@ -17,11 +20,33 @@ export class UserprofileService {
 
     constructor(
         private readonly userInfoService: UserInfoService,
+        private readonly userprofileDBService: UserprofileDbService,
         private readonly xmlParserService: XMLParserService) {}
 
     public getList(filters: string[]) {
         
-        return this.userInfoService.findByFilter([],filters);
+        return this.userprofileDBService.findByFilter([],filters)
+            .pipe(map(res => {
+                if(res.status==200) {
+
+                    const userArray = new Array();
+                    
+                    res.data.resource.forEach(element => {
+                        const useritem = new UserprofileListDTO();
+                        useritem.id = element.USER_INFO_GUID;
+                        useritem.userId = element.USER_GUID;
+                        useritem.staffId = element.PERSONAL_ID;
+                        useritem.employeeName = element.FULLNAME;
+                        useritem.email = element.EMAIL;
+                        useritem.designation = element.DESIGNATION;
+
+                        userArray.push(useritem);
+
+                    });
+
+                    return userArray;
+                }
+            }));
     }
 
     // Get User Detail
@@ -41,6 +66,8 @@ export class UserprofileService {
         
     }
 
+    //#region PERSONAL DETAIL
+
     public getPersonalDetail(filters:string[]) {
         return this.userInfoService.findByFilter([],filters)
                 .pipe(map(res => {
@@ -53,6 +80,25 @@ export class UserprofileService {
                     }
                 }));
     }
+
+    public updatePersonalDetail(data: UpdatePersonalDetailDTO,userId: string) {
+        const modeldata = new UserInfoModel();
+        modeldata.USER_INFO_GUID = data.id;
+        modeldata.NICKNAME = data.nickname;
+        modeldata.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+        modeldata.UPDATE_TS = new Date().toISOString();
+        modeldata.UPDATE_USER_GUID = userId;
+
+        const resource = new Resource(new Array());
+        resource.resource.push(modeldata);
+
+        return this.userInfoService.updateByModel(resource,[],[],[]);
+    }
+
+    //#endregion
+
+
+    //#region EMPLOYMENT DETAIL
 
     public getEmploymentDetail(filters:string[]) {
         return this.userInfoService.findByFilter([],filters)
@@ -67,6 +113,12 @@ export class UserprofileService {
                 }))
     }
 
+    public updateEmploymentDetail() {
+
+    }
+
+    //#endregion
+
     private buildProfileData(
         data: UserInfoModel,
         isShowPersonalData: boolean,
@@ -79,27 +131,27 @@ export class UserprofileService {
         userProfileData.id = data.USER_INFO_GUID;
         userProfileData.userId = data.USER_GUID;
         userProfileData.employeeName = data.FULLNAME;
-        userProfileData.employeeDesignation = data.DESIGNATION_GUID;
+        userProfileData.employeeDesignation = data.DESIGNATION;
         userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
     
-        if(data.XML&&isShowPersonalData) {
+        if(data.PROPERTIES_XML&&isShowPersonalData) {
             const userPersonalDetail = new UserPersonalDetailDTO();
 
             //process the personal detail
-            const parseXMLtoJSON: UserDto= this.xmlParserService.convertXMLToJson(data.XML);
+            const parseXMLtoJSON: PersonalDetailXML= this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
 
-            userPersonalDetail.dob = parseXMLtoJSON.dob.toString();
-            userPersonalDetail.emailAddress = parseXMLtoJSON.email;
-            userPersonalDetail.workEmailAddress = "shafuan1015@gmail.com";
+            userPersonalDetail.dob = parseXMLtoJSON.dob;
+            userPersonalDetail.emailAddress = parseXMLtoJSON.emailAddress;
+            userPersonalDetail.workEmailAddress = parseXMLtoJSON.workEmailAddress;
             userPersonalDetail.gender = parseXMLtoJSON.gender==1?"Male":"Female";
             userPersonalDetail.residentialAddress = this.joinText([parseXMLtoJSON.address1,parseXMLtoJSON.address2,parseXMLtoJSON.city,parseXMLtoJSON.state,parseXMLtoJSON.country]);
-            userPersonalDetail.religion = "Islam";
-            userPersonalDetail.nationality = "Malaysian";
+            userPersonalDetail.religion = parseXMLtoJSON.religion;
+            userPersonalDetail.nationality = parseXMLtoJSON.nationality;
             userPersonalDetail.phoneNumber = parseXMLtoJSON.phoneNumber;
-            userPersonalDetail.race = "Malay";
+            userPersonalDetail.race = parseXMLtoJSON.race;
             userPersonalDetail.family = parseXMLtoJSON.family;
-            userPersonalDetail.education = parseXMLtoJSON.education.educationDetail;
-            userPersonalDetail.emergencyContactNumber = parseXMLtoJSON.emergencyContacts.contact;
+            userPersonalDetail.education = parseXMLtoJSON.education;
+            userPersonalDetail.emergencyContactNumber = parseXMLtoJSON.emergencyContact;
 
             userProfileData.personalDetail = userPersonalDetail;
         }
@@ -108,13 +160,13 @@ export class UserprofileService {
             const employmentDetail = new EmploymentDetailDTO();
 
             //process the employment data
-            employmentDetail.department = data.DEPT_GUID;
-            employmentDetail.employeeDesignation = data.DESIGNATION_GUID;
-            employmentDetail.employeeLocation = data.TENANT_COMPANY_GUID;
-            employmentDetail.staffId = "A13455";
+            employmentDetail.department = data.DEPARTMENT;
+            employmentDetail.designation = data.DESIGNATION;;
+            employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
+            employmentDetail.staffId = "A12334";
             employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
             employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
-            employmentDetail.icNumber = "543654654354";
+            employmentDetail.nric = "dddddd";
             employmentDetail.reportingTo = data.MANAGER_USER_GUID;
             employmentDetail.userRole = "Employee";
             employmentDetail.yearOfService = "3 Years";

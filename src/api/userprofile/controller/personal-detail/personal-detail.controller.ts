@@ -1,13 +1,13 @@
 import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, Body } from '@nestjs/common';
-import { RolesGuard } from 'src/guard/role.guard';
-import { Resources } from 'src/decorator/resource.decorator';
-import { ResourceDecoratorModel } from 'src/decorator/resource.decorator.model';
 import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UserprofileService } from '../../userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { switchMap } from 'rxjs/operators';
 import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-detail/update-personal-detail.dto';
+import { ResourceGuard } from 'src/guard/resource.guard';
+import { Roles } from 'src/decorator/resource.decorator';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
@@ -16,7 +16,8 @@ export class PersonalDetailController {
     
     constructor(
         private readonly userprofileService: UserprofileService,
-        private readonly accessLevelValidationService: AccessLevelValidateService) {}
+        private readonly accessLevelValidationService: AccessLevelValidateService,
+        private readonly xmlParserService: XMLParserService) {}
 
 
     @Get('me/edit')
@@ -39,9 +40,9 @@ export class PersonalDetailController {
             )
     }
 
-    @UseGuards(RolesGuard)
+    @UseGuards(ResourceGuard)
     @Get('personal-detail/edit/:id')
-    @Resources(new ResourceDecoratorModel('EditProfile','GET'))
+    @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Get personal detail to edit for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
     findOne(@Param('id') id,@Req() req,@Res() res) {
@@ -62,11 +63,25 @@ export class PersonalDetailController {
             )
     }
 
-    @UseGuards(RolesGuard)
+    @UseGuards(ResourceGuard)
     @Patch('personal-detail/edit')
-    @Resources(new ResourceDecoratorModel('EditProfile','UPDATE'))
+    @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Update userprofile'})
     update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO,@Req() req, @Res() res) {
-        res.send("update personal detail");
+        
+        return this.userprofileService.updatePersonalDetail(updatePersonalDetailDTO,req.USER_GUID)
+            .subscribe(
+                data => {
+                    res.send(data.data.resource);
+                },
+                err => {
+                    res.status(500);
+                    if(err.response.data) {
+                        res.send(err.response.data.error)
+                    } else {
+                        res.send(err);
+                    }
+                }
+            )
     }
 }

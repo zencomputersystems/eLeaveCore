@@ -1,12 +1,11 @@
 import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch } from '@nestjs/common';
-import { RolesGuard } from 'src/guard/role.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
-import { Resources } from 'src/decorator/resource.decorator';
-import { ResourceDecoratorModel } from 'src/decorator/resource.decorator.model';
+import { Roles } from 'src/decorator/resource.decorator';
 import { UserprofileService } from '../../userprofile.service';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
+import { ResourceGuard } from 'src/guard/resource.guard';
 
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
@@ -17,10 +16,10 @@ export class UserprofileController {
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService) {}
 
-    @UseGuards(RolesGuard)
+    @UseGuards(ResourceGuard)
     @Get('list')
     @ApiOperation({title: 'Get list of employee'})
-    @Resources(new ResourceDecoratorModel('ViewProfile','GETALL'))
+    @Roles('ViewProfile','ProfileAdmin','EditProfile')
     findAll(@Req() req, @Res() res) {
 
         this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID,req.user.USER_GUID,req.accessLevel,[])
@@ -29,20 +28,24 @@ export class UserprofileController {
             }))
             .subscribe(
                 data => {
-                    return res.send(data.data.resource);
+                    return res.send(data);
                 },
                 err => {
                     res.status(500);
-                    res.send(err.response.data.error);
+                    if(err.response.data) {
+                        res.send(err.response.data.error)
+                    } else {
+                        res.send(err);
+                    }
                 }
             )
     }
 
-    @UseGuards(RolesGuard)
+    @UseGuards(ResourceGuard)
     @Get('detail/:id')
     @ApiOperation({title: 'Get profile detail for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-    @Resources(new ResourceDecoratorModel('ViewProfile','GET'))
+    @Roles('ViewProfile','ProfileAdmin')
     findOne(@Param('id') id, @Req() req,@Res() res) {
         
         if(id==null) {
@@ -63,9 +66,13 @@ export class UserprofileController {
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
+
                     res.status(500);
-                    res.send(err);
+                    if(err.response.data) {
+                        res.send(err.response.data.error)
+                    } else {
+                        res.send(err);
+                    }
                 }
             )
     }
@@ -85,8 +92,13 @@ export class UserprofileController {
                     res.send(data);
                 },
                 err => {
+                    console.log(err);
                     res.status(500);
-                    res.send();
+                    if(err.response) {
+                        res.send(err.response.data.error)
+                    } else {
+                        res.send(err);
+                    }
                 }
             )
     }

@@ -30,8 +30,8 @@ export class UpdateEmploymentDetailDTO {
     reportingTo: string;
     
     @IsNotEmpty()
-    @IsNumber()
-    employmentType: number;
+    @IsString()
+    employmentType: string;
 
     @IsNotEmpty()
     @IsNumber()

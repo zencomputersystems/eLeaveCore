@@ -20,7 +20,7 @@ export class UserInfoModel {
     CONFIRMATION_DATE: string;
     RESIGNATION_DATE: string;
     EMPLOYEE_STATUS: number;
-    EMPLOYEE_TYPE: number;
+    EMPLOYEE_TYPE: string;
 
     PROPERTIES_XML: string;
 

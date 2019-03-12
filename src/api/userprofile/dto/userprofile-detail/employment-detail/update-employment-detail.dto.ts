@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsNumber } from "class-validator";
+import { IsString, IsNotEmpty, IsNumber, IsISO8601, ValidateIf, Validate } from "class-validator";
+import { ReportingToValidator } from "src/common/validator/reportingToValidator";
 
 export class UpdateEmploymentDetailDTO {
     @IsNotEmpty()
@@ -25,8 +26,8 @@ export class UpdateEmploymentDetailDTO {
     @IsString()
     division: string;
 
-    @IsNotEmpty()
     @IsString()
+    //@Validate(ReportingToValidator)
     reportingTo: string;
     
     @IsNotEmpty()
@@ -38,13 +39,15 @@ export class UpdateEmploymentDetailDTO {
     employmentStatus: number;
 
     @IsNotEmpty()
-    @IsString()
+    @IsISO8601()
     dateOfJoin: string;
 
-    @IsString()
+    @ValidateIf(x=>x.dateOfConfirmation!="")
+    @IsISO8601()
     dateOfConfirmation: string;
 
-    @IsString()
+    @ValidateIf(x=>x.dateOfResign!="")
+    @IsISO8601()
     dateOfResign: string;
 
     @IsString()

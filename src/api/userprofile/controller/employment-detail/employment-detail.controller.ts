@@ -33,8 +33,13 @@ export class EmploymentDetailController {
                     res.send(data);
                 },
                 err => {
-                    res.status(500);
-                    res.send(err);
+                    if(err.response.data) {
+                        res.status(err.response.data.error.context.resource[0].status_code);
+                        res.send(err.response.data.error.context.resource[0].message)
+                    } else {
+                        res.status(500);
+                        res.send(err);
+                    }
                 }
             )
     }

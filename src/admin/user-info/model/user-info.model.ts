@@ -15,6 +15,7 @@ export class UserInfoModel {
     BRANCH: string; //employee belong to which branch
     DEPARTMENT: string; //employee belong to which department
     DESIGNATION: string //employee job title
+    DIVISION: string;
 
     JOIN_DATE: string;
     CONFIRMATION_DATE: string;

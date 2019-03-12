@@ -119,9 +119,11 @@ export class UserprofileService {
 
         modelData.USER_INFO_GUID = data.id;
 
+        modelData.PERSONAL_ID = data.employeeNumber;
         modelData.DESIGNATION = data.designation;
         modelData.DEPARTMENT = data.department;
         modelData.BRANCH = data.branch;
+        modelData.DIVISION = data.division;
         modelData.MANAGER_USER_GUID = data.reportingTo;
 
         modelData.JOIN_DATE = data.dateOfJoin;
@@ -148,6 +150,24 @@ export class UserprofileService {
 
     //#endregion
 
+
+    //#region CERTIFICATION DETAIL
+
+    public getCertificationDetail(filters:string[]) {
+        return this.userInfoService.findByFilter([],filters)
+                .pipe(map(res => {
+                    if(res.status==200) {
+                        const data: UserInfoModel = res.data.resource[0];
+
+                        if(data) {
+                            return this.buildProfileData(data,false,false,false,true);
+                        }
+                    }
+                }))
+    }
+
+    //#endregion
+
     private buildProfileData(
         data: UserInfoModel,
         isShowPersonalData: boolean,
@@ -163,28 +183,37 @@ export class UserprofileService {
         userProfileData.employeeDesignation = data.DESIGNATION;
         userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
     
-        if(data.PROPERTIES_XML&&isShowPersonalData) {
-            const userPersonalDetail = new UserPersonalDetailDTO();
+        if(data.PROPERTIES_XML) {
 
             //process the personal detail
             const parseXMLtoJSON: PersonalDetailXML= this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
 
-            userPersonalDetail.dob = parseXMLtoJSON.dob;
-            userPersonalDetail.emailAddress = parseXMLtoJSON.emailAddress;
-            userPersonalDetail.workEmailAddress = parseXMLtoJSON.workEmailAddress;
-            userPersonalDetail.gender = parseXMLtoJSON.gender==1?"Male":"Female";
-            userPersonalDetail.maritalStatus = parseXMLtoJSON.maritalStatus==1?"Married":"Single";
-            userPersonalDetail.residentialAddress = this.joinText([parseXMLtoJSON.address1,parseXMLtoJSON.address2,parseXMLtoJSON.city,parseXMLtoJSON.state,parseXMLtoJSON.country]);
-            userPersonalDetail.religion = parseXMLtoJSON.religion;
-            userPersonalDetail.nationality = parseXMLtoJSON.nationality;
-            userPersonalDetail.phoneNumber = parseXMLtoJSON.phoneNumber;
-            userPersonalDetail.workPhoneNumber = parseXMLtoJSON.workPhoneNumber;
-            userPersonalDetail.race = parseXMLtoJSON.race;
-            userPersonalDetail.family = parseXMLtoJSON.family;
-            userPersonalDetail.education = parseXMLtoJSON.education;
-            userPersonalDetail.emergencyContactNumber = parseXMLtoJSON.emergencyContact;
+            if(isShowPersonalData) {
+                const userPersonalDetail = new UserPersonalDetailDTO();
 
-            userProfileData.personalDetail = userPersonalDetail;
+                userPersonalDetail.dob = parseXMLtoJSON.dob;
+                userPersonalDetail.emailAddress = parseXMLtoJSON.emailAddress;
+                userPersonalDetail.workEmailAddress = parseXMLtoJSON.workEmailAddress;
+                userPersonalDetail.gender = parseXMLtoJSON.gender==1?"Male":"Female";
+                userPersonalDetail.maritalStatus = parseXMLtoJSON.maritalStatus==1?"Married":"Single";
+                userPersonalDetail.residentialAddress = this.joinText([parseXMLtoJSON.address1,parseXMLtoJSON.address2,parseXMLtoJSON.city,parseXMLtoJSON.state,parseXMLtoJSON.country]);
+                userPersonalDetail.religion = parseXMLtoJSON.religion;
+                userPersonalDetail.nationality = parseXMLtoJSON.nationality;
+                userPersonalDetail.phoneNumber = parseXMLtoJSON.phoneNumber;
+                userPersonalDetail.workPhoneNumber = parseXMLtoJSON.workPhoneNumber;
+                userPersonalDetail.race = parseXMLtoJSON.race;
+                userPersonalDetail.family = parseXMLtoJSON.family;
+                userPersonalDetail.education = parseXMLtoJSON.education;
+                userPersonalDetail.emergencyContactNumber = parseXMLtoJSON.emergencyContact;
+
+                userProfileData.personalDetail = userPersonalDetail;
+            }
+
+            if(isShowCertData) {
+               
+                //userProfileData.awardCertification = parseXMLtoJSON.
+                userProfileData.awardCertification = [];
+            }
         }
 
         if(isShowEmploymentData) {
@@ -214,7 +243,6 @@ export class UserprofileService {
         if(isShowEntitlementData) {
             userProfileData.entitlementDetail = leaveEntitlementMock;
         }
-
 
         return userProfileData;
 

@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import { UserEmergencyContactDetailDTO } from "./user-emergency-contact-detail.dto";
 import { UserEducationDetailDTO } from "./user-education-detail.dto";
 import { UserFamilyDTO } from "./user-family.dto";
+import { UserCertificationDetailDTO } from "../../employment-detail/xml/user-certification-detail.dto";
 
 
 export class PersonalDetailXML {
@@ -13,6 +14,10 @@ export class PersonalDetailXML {
     @IsNotEmpty()
     @IsString()
     nickname: string;
+
+    @IsNotEmpty()
+    @IsString()
+    nric: string;
 
     @IsNotEmpty()
     @IsString()
@@ -86,6 +91,10 @@ export class PersonalDetailXML {
     @Type(() => UserEducationDetailDTO)
     @ValidateNested()
     education: UserEducationDetailDTO;
+
+    @Type(() => UserCertificationDetailDTO)
+    @ValidateNested()
+    certification: UserCertificationDetailDTO;
 
     @Type(() => UserFamilyDTO)
     @ValidateNested()

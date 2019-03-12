@@ -3,6 +3,7 @@ import { UserEducationDetailDTO } from "./xml/user-education-detail.dto";
 import { UserFamilyDTO } from "./xml/user-family.dto";
 
 export class UserPersonalDetailDTO {
+    nric: string;
     dob: string;
     gender: string;
     maritalStatus: string;

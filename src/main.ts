@@ -21,15 +21,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, options);
 
-  // (<any>document)["securityDefinitions"] = {
-  //   'jwt-auth' : {
-  //   'type' : 'apiKey',
-  //   'name': 'Authorization',
-  //   'in': 'header'
-  //       }
-  //     };
-  //     (<any>document)["security"] = {'jwt-auth':[]};
-    
   SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(3000);

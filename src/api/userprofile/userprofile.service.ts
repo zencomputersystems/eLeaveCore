@@ -144,6 +144,7 @@ export class UserprofileService {
             userPersonalDetail.emailAddress = parseXMLtoJSON.emailAddress;
             userPersonalDetail.workEmailAddress = parseXMLtoJSON.workEmailAddress;
             userPersonalDetail.gender = parseXMLtoJSON.gender==1?"Male":"Female";
+            userPersonalDetail.maritalStatus = parseXMLtoJSON.maritalStatus==1?"Married":"Single";
             userPersonalDetail.residentialAddress = this.joinText([parseXMLtoJSON.address1,parseXMLtoJSON.address2,parseXMLtoJSON.city,parseXMLtoJSON.state,parseXMLtoJSON.country]);
             userPersonalDetail.religion = parseXMLtoJSON.religion;
             userPersonalDetail.nationality = parseXMLtoJSON.nationality;

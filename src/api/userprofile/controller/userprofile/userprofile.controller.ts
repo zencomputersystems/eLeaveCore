@@ -92,7 +92,7 @@ export class UserprofileController {
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
+
                     res.status(500);
                     if(err.response) {
                         res.send(err.response.data.error)

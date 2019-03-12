@@ -149,6 +149,7 @@ export class UserprofileService {
             userPersonalDetail.religion = parseXMLtoJSON.religion;
             userPersonalDetail.nationality = parseXMLtoJSON.nationality;
             userPersonalDetail.phoneNumber = parseXMLtoJSON.phoneNumber;
+            userPersonalDetail.workPhoneNumber = parseXMLtoJSON.workPhoneNumber;
             userPersonalDetail.race = parseXMLtoJSON.race;
             userPersonalDetail.family = parseXMLtoJSON.family;
             userPersonalDetail.education = parseXMLtoJSON.education;

@@ -1,9 +1,15 @@
-import { IsString } from "class-validator";
+import { IsString, IsNotEmpty, IsNumber } from "class-validator";
 
-export class EmploymentDetailDTO {
+export class UpdateEmploymentDetailDTO {
+    @IsNotEmpty()
+    @IsString()
+    id: string;
+
+    @IsNotEmpty()
     @IsString()
     employeeNumber: string;
 
+    @IsNotEmpty()
     @IsString()
     designation: string;
 
@@ -19,9 +25,19 @@ export class EmploymentDetailDTO {
     @IsString()
     division: string;
 
+    @IsNotEmpty()
     @IsString()
     reportingTo: string;
+    
+    @IsNotEmpty()
+    @IsNumber()
+    employmentType: number;
 
+    @IsNotEmpty()
+    @IsNumber()
+    employmentStatus: number;
+
+    @IsNotEmpty()
     @IsString()
     dateOfJoin: string;
 
@@ -30,18 +46,6 @@ export class EmploymentDetailDTO {
 
     @IsString()
     dateOfResign: string;
-
-    @IsString()
-    yearOfService: string;
-
-    @IsString()
-    employmentType: string;
-
-    @IsString()
-    employmentStatus: string;
-    
-    @IsString()
-    userRole: string;
 
     @IsString()
     bankAccountName: string;
@@ -54,6 +58,4 @@ export class EmploymentDetailDTO {
 
     @IsString()
     incomeTaxNumber: string;
-
-    
 }

@@ -5,6 +5,7 @@ export class UserInfoModel {
     // Personal Information
     FULLNAME: string;
     NICKNAME: string;
+    PERSONAL_ID: string;
 
     // Employee Company Information
     TENANT_COMPANY_GUID: string;
@@ -15,15 +16,20 @@ export class UserInfoModel {
     DEPARTMENT: string; //employee belong to which department
     DESIGNATION: string //employee job title
 
-    JOIN_DATE: Date;
-    CONFIRMATION_DATE: Date;
-    RESIGNATION_DATE: Date;
+    JOIN_DATE: string;
+    CONFIRMATION_DATE: string;
+    RESIGNATION_DATE: string;
     EMPLOYEE_STATUS: number;
     EMPLOYEE_TYPE: number;
 
     PROPERTIES_XML: string;
 
     ATTACHMENT_ID: string;
+
+    PR_EPF_NUMBER: string;
+    PR_INCOMETAX_NUMBER: string;
+    BANK: string;
+    PR_ACCOUNT_NUMBER: string;
 
     //ACTIVE_FLAG: number;
     CREATION_TS: string;

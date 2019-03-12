@@ -13,6 +13,7 @@ import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { Resource } from 'src/common/model/resource.model';
 import { UserDto } from 'src/admin/user-info/dto/user.dto';
 import { PersonalDetailXML } from './dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
+import { UpdateEmploymentDetailDTO } from './dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 
 
 @Injectable()
@@ -113,8 +114,36 @@ export class UserprofileService {
                 }))
     }
 
-    public updateEmploymentDetail() {
+    public updateEmploymentDetail(data: UpdateEmploymentDetailDTO,userId: string) {
+        const modelData = new UserInfoModel();
 
+        modelData.USER_INFO_GUID = data.id;
+
+        modelData.DESIGNATION = data.designation;
+        modelData.DEPARTMENT = data.department;
+        modelData.BRANCH = data.branch;
+        modelData.MANAGER_USER_GUID = data.reportingTo;
+
+        modelData.JOIN_DATE = data.dateOfJoin;
+        modelData.RESIGNATION_DATE = data.dateOfResign;
+        modelData.CONFIRMATION_DATE = data.dateOfConfirmation;
+
+        modelData.EMPLOYEE_STATUS = data.employmentStatus;
+        modelData.EMPLOYEE_TYPE = data.employmentType;
+
+        modelData.BANK = data.bankAccountName;
+        modelData.PR_ACCOUNT_NUMBER = data.bankAccountNumber;
+        modelData.PR_EPF_NUMBER = data.epfNumber;
+        modelData.PR_INCOMETAX_NUMBER = data.incomeTaxNumber;
+        
+        modelData.UPDATE_TS = new Date().toISOString();
+        modelData.UPDATE_USER_GUID = userId;
+
+        const resource = new Resource(new Array());
+
+        resource.resource.push(modelData);
+
+        return this.userInfoService.updateByModel(resource,[],[],[]);
     }
 
     //#endregion
@@ -165,17 +194,19 @@ export class UserprofileService {
             employmentDetail.department = data.DEPARTMENT;
             employmentDetail.designation = data.DESIGNATION;;
             employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
-            employmentDetail.staffId = "A12334";
+            employmentDetail.employeeNumber = data.PERSONAL_ID;
             employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
             employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
-            employmentDetail.nric = "dddddd";
             employmentDetail.reportingTo = data.MANAGER_USER_GUID;
             employmentDetail.userRole = "Employee";
+            employmentDetail.dateOfJoin = data.JOIN_DATE;
+            employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
+            employmentDetail.dateOfResign = data.RESIGNATION_DATE;
             employmentDetail.yearOfService = "3 Years";
-            employmentDetail.epfNumber = "A12343";
-            employmentDetail.incomeTaxNumber = "C6543-GFD89";
-            employmentDetail.bankAccountName = "CIMB BERHAD";
-            employmentDetail.bankAccountNumber ="8765434678765";
+            employmentDetail.epfNumber = data.PR_EPF_NUMBER;
+            employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
+            employmentDetail.bankAccountName = data.BANK;
+            employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
 
             userProfileData.employmentDetail = employmentDetail;
         }

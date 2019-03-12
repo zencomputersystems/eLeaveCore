@@ -11,7 +11,7 @@ export class UserProfileDTO {
     employeeLocation: string;
     personalDetail: UserPersonalDetailDTO;
     employmentDetail: EmploymentDetailDTO;
-    awardCertification = new Array<CertificationDetailDTO>();
+    awardCertification : any;
     entitlementDetail: any;
 
 }

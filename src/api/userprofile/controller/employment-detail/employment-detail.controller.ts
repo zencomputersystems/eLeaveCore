@@ -1,14 +1,16 @@
 import { Controller, Get, Req, Res, UseGuards, Param, Patch, Body } from '@nestjs/common';
 import { UserprofileService } from '../../userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
-import { ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
-import { ResourceDecoratorModel } from 'src/decorator/resource.decorator.model';
+import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { switchMap } from 'rxjs/operators';
-import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-detail/update-personal-detail.dto';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 
-@Controller('employment-detail')
+@Controller('api/userprofile')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class EmploymentDetailController {
     constructor(
         private readonly userprofileService: UserprofileService,
@@ -41,8 +43,24 @@ export class EmploymentDetailController {
     @Patch('employment-detail/edit')
     @Roles('ProfileAdmin')
     @ApiOperation({title: 'Update employment detail for this user profile'})
-    update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO,@Req() req, @Res() res) {
-        res.send(" Update employment Detail");
+    update(@Body() updateEmploymentDetailDTO: UpdateEmploymentDetailDTO,@Req() req, @Res() res) {
+
+        this.userprofileService.updateEmploymentDetail(updateEmploymentDetailDTO,req.user.USER_GUID)
+            .subscribe(
+                data => {
+                    res.send(data.data.resource);
+                },
+                err => {
+                    if(err.response.data) {
+                        res.status(err.response.data.error.context.resource[0].status_code);
+                        res.send(err.response.data.error.context.resource[0].message)
+                    } else {
+                        res.status(500);
+                        res.send(err);
+                    }
+                }
+            )
+
     }
 }
 

@@ -14,7 +14,7 @@ export const roles = {
             },
             {
                 "ResourceName":"EditProfile",
-                "Level":"Department",
+                "Level":"All",
                 "Operation":
                     [
                         {"name":"GET"},

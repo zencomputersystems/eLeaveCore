@@ -19,7 +19,7 @@ export class ResourceGuard implements CanActivate {
     const isInPermisson = true;
    
     if(isInPermisson) {
-        request.accessLevel = "personal";
+        request.accessLevel = "all";
 
         return true;
     }

@@ -7,7 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ResourceGuard } from 'src/guard/resource.guard';
 
-@Controller('api/userprofile')
+@Controller('api')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class UserprofileController {
@@ -17,7 +17,7 @@ export class UserprofileController {
         private readonly accessLevelValidationService: AccessLevelValidateService) {}
 
     @UseGuards(ResourceGuard)
-    @Get('list')
+    @Get('/users')
     @ApiOperation({title: 'Get list of employee'})
     @Roles('ViewProfile','ProfileAdmin','EditProfile')
     findAll(@Req() req, @Res() res) {
@@ -42,7 +42,7 @@ export class UserprofileController {
     }
 
     @UseGuards(ResourceGuard)
-    @Get('detail/:id')
+    @Get('userprofile/:id')
     @ApiOperation({title: 'Get profile detail for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
     @Roles('ViewProfile','ProfileAdmin')
@@ -77,7 +77,7 @@ export class UserprofileController {
             )
     }
 
-    @Get('me')
+    @Get('userprofile')
     @ApiOperation({title: 'Get profile detail for requesting user'})
     findOwn(@Req() req,@Res() res) {
         

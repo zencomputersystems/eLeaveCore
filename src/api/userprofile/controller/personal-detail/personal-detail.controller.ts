@@ -20,7 +20,7 @@ export class PersonalDetailController {
         private readonly xmlParserService: XMLParserService) {}
 
 
-    @Get('me/edit')
+    @Get('personal-detail')
     @ApiOperation({title: 'Get personal detail to edit for this user'})
     findOwn(@Req() req,@Res() res) {
         //get the requesting user
@@ -41,7 +41,7 @@ export class PersonalDetailController {
     }
 
     @UseGuards(ResourceGuard)
-    @Get('personal-detail/edit/:id')
+    @Get('personal-detail/:id')
     @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Get personal detail to edit for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
@@ -64,7 +64,7 @@ export class PersonalDetailController {
     }
 
     @UseGuards(ResourceGuard)
-    @Patch('personal-detail/edit')
+    @Patch('personal-detail')
     @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Update userprofile'})
     update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO,@Req() req, @Res() res) {

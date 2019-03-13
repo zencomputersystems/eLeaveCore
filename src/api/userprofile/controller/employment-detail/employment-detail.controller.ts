@@ -17,7 +17,7 @@ export class EmploymentDetailController {
         private readonly accessLevelValidationService: AccessLevelValidateService) {}
 
     @UseGuards(ResourceGuard)
-    @Get('employment-detail/edit/:id')
+    @Get('employment-detail/:id')
     @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Get employment detail to edit for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
@@ -45,7 +45,7 @@ export class EmploymentDetailController {
     }
 
     @UseGuards(ResourceGuard)
-    @Patch('employment-detail/edit')
+    @Patch('employment-detail')
     @Roles('ProfileAdmin')
     @ApiOperation({title: 'Update employment detail for this user profile'})
     update(@Body() updateEmploymentDetailDTO: UpdateEmploymentDetailDTO,@Req() req, @Res() res) {

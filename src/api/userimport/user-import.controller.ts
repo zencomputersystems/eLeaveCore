@@ -35,17 +35,11 @@ export class UserImportController {
         this.userImportService.processImportData(req.user,records)
             .subscribe(
                 data=>{
-                    //console.log(data);
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
                     res.status(400);
-                    //res.send(err);
-                    //console.log(err.response.data.error.context.resource);
-                },
-                () => {
-                    console.log("complete");
+                    res.send("fail to process data");
                 }
             )
         

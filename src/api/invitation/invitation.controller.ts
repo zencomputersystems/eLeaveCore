@@ -2,7 +2,7 @@ import { Controller, Get, Param, Req, Res, Post, Body } from '@nestjs/common';
 import { InvitationService } from './invitation.service';
 import { ActivatedByPassword } from './dto/activated-by-password.dto';
 
-@Controller('api/employee/invitation')
+@Controller('api/invitation')
 
 export class InvitationController {
 

@@ -30,10 +30,10 @@ export class UserInfoService extends BaseDBService implements IDbService {
         const fields = [
             'USER_INFO_GUID',
             'FULLNAME',
-            'XML',
+            'PROPERTIES_XML',
             'BRANCH',
-            'DEPT_GUID',
-            'DESIGNATION_GUID',
+            'DEPARTMENT',
+            'DESIGNATION',
             'JOIN_DATE',
             'CONFIRMATION_DATE',
             'RESIGNATION_DATE',
@@ -94,22 +94,22 @@ export class UserInfoService extends BaseDBService implements IDbService {
         
         data.USER_GUID = userId;
 
-        data.DESIGNATION_GUID = d.employmentDetail.designationId;
-        data.DEPT_GUID = d.employmentDetail.departmentId;
+        data.DESIGNATION = d.employmentDetail.designationId;
+        data.DEPARTMENT = d.employmentDetail.departmentId;
         data.BRANCH = d.employmentDetail.branchId;
         data.TENANT_COMPANY_GUID = d.employmentDetail.companyId;
         
-        data.EMPLOYEE_TYPE = 1;
+        data.EMPLOYEE_TYPE = "Intern";
         data.FULLNAME = d.employeeName;
-        data.JOIN_DATE = d.employmentDetail.joinDate;
-        data.CONFIRMATION_DATE = d.employmentDetail.confirmationDate;
-        data.RESIGNATION_DATE = d.employmentDetail.resignationDate;
+        data.JOIN_DATE = d.employmentDetail.joinDate.toDateString();
+        data.CONFIRMATION_DATE = d.employmentDetail.confirmationDate.toDateString();
+        data.RESIGNATION_DATE = d.employmentDetail.resignationDate.toDateString();
         data.MANAGER_USER_GUID = d.employmentDetail.reportingToId;
         data.EMPLOYEE_STATUS = d.employmentDetail.employmentStatus;
 
         const xmldata = d;
         xmldata.employmentDetail = null;
-        data.XML = this.xmlParserService.convertJsonToXML(xmldata);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(xmldata);
            
         return data;
     }

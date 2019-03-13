@@ -1,24 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UserCsvDto } from './dto/csv/user-csv.dto';
 import { v1 } from 'uuid';
-import { UserModel } from '../user/model/user.model';
-import { UserService } from '../user/user.service';
-import { map,flatMap, catchError, filter, concatMap, mergeMap, zipAll, combineLatest, switchMap} from 'rxjs/operators';
-import { forkJoin, of,Observable, empty, throwError, from, zip, pipe, merge } from 'rxjs';
-import { UserImport } from './dto/user-import';
-import { BranchService } from '../branch/branch.service';
-import { CostcentreService } from '../costcentre/costcentre.service';
-import { SectionService } from '../section/section.service';
-import { Resource } from 'src/common/model/resource.model';
 import { UserImportResult } from './dto/user-import-result.dto';
-import { DepartmentService } from '../department/department.service';
-import { CompanyService } from '../company/company.service';
-import { UserInfoModel } from '../user-info/model/user-info.model';
-import { UserImportSuccessDTO } from './dto/user-import-success.dto';
-import { UserDto } from '../user-info/dto/user.dto';
-import { UserInfoService } from '../user-info/user-info.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
-import { IDbService } from 'src/interface/IDbService';
+import { UserService } from 'src/admin/user/user.service';
+import { UserInfoService } from 'src/admin/user-info/user-info.service';
+import { map, mergeMap } from 'rxjs/operators';
+import { UserModel } from 'src/admin/user/model/user.model';
+import { of } from 'rxjs';
+import { Resource } from 'src/common/model/resource.model';
+import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
+import { UserImport } from './dto/user-import';
+
 
 @Injectable()
 export class UserImportService {
@@ -44,7 +36,7 @@ export class UserImportService {
                     const existingUsers: [UserModel] = res.data.resource;  
                     return existingUsers;
                }),
-               map(res => this.filterExistingUser(importData,res)),
+               map(res => this.filterData(importData,res,'Existing User','EMAIL','STAFF_EMAIL')),
                map(res => this.filterDuplicateUser(res)),
                mergeMap(successUser => this.saveImportList(successUser,user)),
                mergeMap(successUser => this.saveInfoDataList(successUser,user))
@@ -54,6 +46,9 @@ export class UserImportService {
 
     private saveImportList(importData: Array<UserCsvDto>,user: any) {
 
+        if(importData.length==0) {
+            return of(importData);
+        }
         const userResourceArray = new Resource(new Array);
         
         importData.forEach(element => {
@@ -75,15 +70,17 @@ export class UserImportService {
             .pipe(map(res => {
                 if(res.status==200) {
                     const saveUser =  res.data.resource;
-
-                    return this.filterSaveUser(saveUser,importData);
+                    return this.filterData(importData,saveUser,'Fail','EMAIL','STAFF_EMAIL')
                 }
             }))
 
     }
 
     private saveInfoDataList(importData: Array<UserCsvDto>,user:any) {
-        
+        if(importData.length==0) {
+            return of(this.importResult);
+        }
+
         const userInfoResourceArray = new Resource(new Array);
 
         importData.forEach(element => {
@@ -121,6 +118,34 @@ export class UserImportService {
             }))
     }
 
+    private filterData(
+        importData: Array<UserCsvDto>,
+        checkModelArray: any,
+        categoryName: string,
+        findElement: any,
+        findItem: any) {
+
+        const data = new UserImportResult();
+        data.category = categoryName;
+
+        const successList = new Array<UserCsvDto>();
+
+        // remove existing users from csv list
+        importData.forEach(element => {
+
+            if(checkModelArray.find(x=>x[findElement].toUpperCase()===element[findItem].toUpperCase())) {
+                data.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
+            } else {
+                successList.push(element);
+            }
+
+        });
+
+        this.importResult.push(data);
+
+        return successList;
+    }
+
     private filterDuplicateUser(importData: Array<UserCsvDto>) {
         const duplicateUser = new UserImportResult();
         duplicateUser.category = "Duplicate";
@@ -143,55 +168,6 @@ export class UserImportService {
         return successList;
     }
 
-    private filterExistingUser(importData: [UserCsvDto],existingUsers:[UserModel]) {
-
-        const existedUser = new UserImportResult();
-        existedUser.category = "ExistingUser";
-
-        const successList = new Array<UserCsvDto>();
-
-        // remove existing users from csv list
-        importData.forEach(element => {
-
-            if(existingUsers.find(x=>x.EMAIL.toUpperCase()===element.STAFF_EMAIL.toUpperCase())) {
-                existedUser.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
-            } else {
-                successList.push(element);
-            }
-
-        });
-
-        this.importResult.push(existedUser);
-
-        return successList;
-
-    }
-
-    private filterSaveUser(saveUser: any, importData: Array<UserCsvDto>): Array<UserCsvDto> {
-        const failUser = new UserImportResult();
-        failUser.category = "Fail";
-
-        const successList = new Array<UserCsvDto>();
-
-        // remove existing users from csv list
-        importData.forEach(element => {
-
-            const checkUser = saveUser.find(x=>x.EMAIL.toUpperCase()===element.STAFF_EMAIL.toUpperCase())
-            if(checkUser) {
-                element.ID = checkUser.USER_GUID;
-                successList.push(element);
-
-            } else {
-                failUser.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
-            }
-
-        });
-
-        this.importResult.push(failUser);
-
-        return successList;
-    }
-
     private filterSaveUserByID(saveUser: any, importData: Array<UserCsvDto>) {
         const failUser = new UserImportResult();
         failUser.category = "Fail";
@@ -208,7 +184,7 @@ export class UserImportService {
             if(checkUser) {
                 element.ID = checkUser.USER_GUID;
                 successList.push(element);
-                successUser.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
+                successUser.data.push(new UserImport(checkUser.USER_GUID,element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
 
 
             } else {

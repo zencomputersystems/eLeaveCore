@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { BaseDBService } from 'src/common/base/base-db.service';
-import { IDbService } from 'src/interface/IDbService';
+import { DesignationDbService } from './db/designation.db.service';
+import { map } from 'rxjs/operators';
 
 @Injectable()
-export class DesignationService  extends BaseDBService implements IDbService{
+export class DesignationService {
+    constructor(private readonly designationDbService: DesignationDbService) {}
 
-    findAll(GUID: string): import("rxjs").Observable<any> {
-        throw new Error("Method not implemented.");
-    }    
-    
-    findById(GUID: any, id: string): import("rxjs").Observable<any> {
-        throw new Error("Method not implemented.");
+    public getList(tenantId: string) {
+        return this.designationDbService.findAll(tenantId)
+                .pipe(map(res => {
+                    if(res.status==200) {
+                        return res.data.resource;
+                    }
+                }))
     }
-    
-    create(user: any, data: any) {
-        throw new Error("Method not implemented.");
-    }
-
-
 }

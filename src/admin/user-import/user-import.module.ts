@@ -12,6 +12,8 @@ import { DepartmentService } from '../department/department.service';
 import { CompanyService } from '../company/company.service';
 import { UserInfoService } from '../user-info/user-info.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { BranchDbService } from '../branch/db/branch.db.service';
+import { DepartmentDbService } from '../department/db/department.db.service';
 
 @Module({
   controllers: [UserImportController],
@@ -25,7 +27,9 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
     DepartmentService,
     CompanyService,
     UserInfoService,
-    XMLParserService
+    XMLParserService,
+    BranchDbService,
+    DepartmentDbService
   ],
   modules: [
     PassportModule.register({session: false}),

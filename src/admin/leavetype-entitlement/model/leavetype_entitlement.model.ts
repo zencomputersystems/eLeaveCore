@@ -1,5 +1,3 @@
-import { LeaveTypePropertiesModel } from "./leavetype_properties.model";
-
 export class LeaveTypeEntitlementModel {
     ENTITLEMENT_GUID: string;
     LEAVE_TYPE_GUID: string;

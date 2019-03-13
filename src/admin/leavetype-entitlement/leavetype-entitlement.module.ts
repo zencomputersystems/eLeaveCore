@@ -1,11 +1,12 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { LeavetypeEntitlementController } from './leavetype-entitlement.controller';
-import { LeavetypeEntitlementService } from './leavetype-entitlement.service';
+import { LeavetypeEntitlementDbService } from './db/leavetype-entitlement.db.service';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 
 @Module({
   controllers: [LeavetypeEntitlementController],
@@ -15,7 +16,8 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
   ],
   providers: [
-    LeavetypeEntitlementService,
+    LeaveTypeEntitlementService,
+    LeavetypeEntitlementDbService,
     QueryParserService,
     XMLParserService
   ]

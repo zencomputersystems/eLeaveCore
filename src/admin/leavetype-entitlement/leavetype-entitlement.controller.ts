@@ -1,48 +1,54 @@
 import { Controller, Get, Req, Res, Post, Body, UseGuards, Param, Patch } from '@nestjs/common';
-import { LeavetypeEntitlementService } from './leavetype-entitlement.service';
+import { LeavetypeEntitlementDbService } from './db/leavetype-entitlement.db.service';
 import { CreateLeaveEntitlementTypeDto } from './dto/create-leavetype_entitlement.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateLeaveTypeEntitlementDto } from './dto/update-leavetype_entitlement.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ResourceGuard } from 'src/guard/resource.guard';
+import { Roles } from 'src/decorator/resource.decorator';
+import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 
-@Controller('api/admin/leavetype-entitlement')
+@Controller('api/leavetype-entitlement')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class LeavetypeEntitlementController {
 
-    constructor(private readonly leavetypeEntitlementService: LeavetypeEntitlementService){}
+    constructor(
+        private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
+        private readonly leavetypeEntitlementService: LeaveTypeEntitlementService
+        ){}
     
+    @UseGuards(ResourceGuard)
+    @Roles('LeaveSetup')
+    @ApiOperation({title: 'Get leave entitlement for this tenant'})
+    @ApiImplicitQuery({ name: 'id', description: 'filter leave by ENTITLEMENT GUID', required: true })
     @Get(':id')
     findOne(@Param('id') id, @Req() req,@Res() res) {
-        this.leavetypeEntitlementService.findById(req.user.TENANT_GUID, id).subscribe(
+
+        this.leavetypeEntitlementService.getDetail(req.user.TENANT_GUID,id).subscribe(
             data => {
-                if(data.status==200)
-                {
-                    res.send(data.data.resource[0]);
-                }
-                else {
-                    res.status(data.status);
-                    res.send();
-                }
+                res.send(data);
             },
             err => {
-                res.status(400);
-                res.send('Fail to fetch resource');
+                if(err.response.data) {
+                    res.status(err.response.data.error.status_code);
+                    res.send(err.response.data.error.message)
+                } else {
+                    res.status(500);
+                    res.send(err);
+                }
             }
         );
     }
 
-
+    @UseGuards(ResourceGuard)
+    @Roles('LeaveSetup')
+    @ApiOperation({title: 'Get list of leave entitlement for this tenant'})
     @Get()
     findAll(@Req() req,@Res() res) {
-        this.leavetypeEntitlementService.findAll(req.user.TENANT_GUID).subscribe(
+        this.leavetypeEntitlementService.getList(req.user.TENANT_GUID).subscribe(
             data => {
-                if(data.status==200)
-                    res.send(data.data.resource);
-                else {
-                    res.status(data.status);
-                    res.send();
-                }
+                res.send(data);
             },
             err => {
                 res.status(400);
@@ -53,7 +59,7 @@ export class LeavetypeEntitlementController {
 
     @Post()
     create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDto,@Req() req, @Res() res) {
-        this.leavetypeEntitlementService.create(req.user,createLeaveEntitlementDTO)
+        this.leavetypeEntitlementDbService.create(req.user,createLeaveEntitlementDTO)
             .subscribe(
                 data => {
                     if(data.status==200)
@@ -72,7 +78,7 @@ export class LeavetypeEntitlementController {
 
     @Patch()
     update(@Body() updateLeaveTypeEntitlementDTO: UpdateLeaveTypeEntitlementDto,@Req() req, @Res() res) {
-        this.leavetypeEntitlementService.update(req.user,updateLeaveTypeEntitlementDTO)
+        this.leavetypeEntitlementDbService.update(req.user,updateLeaveTypeEntitlementDTO)
         .subscribe(
             data => {
                 if(data.status==200)

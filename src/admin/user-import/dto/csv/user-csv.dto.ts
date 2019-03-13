@@ -2,6 +2,8 @@ import { IsNotEmpty, IsEmail } from "class-validator";
 
 export class UserCsvDto {
     
+    ID: string;
+    
     @IsNotEmpty()
     @IsEmail()
     STAFF_EMAIL: string;

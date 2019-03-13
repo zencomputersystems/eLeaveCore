@@ -11,7 +11,6 @@ import { UserprofileDbService } from './db/userprofile.db.service';
 import { UpdatePersonalDetailDTO } from './dto/userprofile-detail/personal-detail/update-personal-detail.dto';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { Resource } from 'src/common/model/resource.model';
-import { UserDto } from 'src/admin/user-info/dto/user.dto';
 import { PersonalDetailXML } from './dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
 import { UpdateEmploymentDetailDTO } from './dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 

@@ -5,6 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { DepartmentDbService } from './db/department.db.service';
 
 @Module({
   modules:[
@@ -14,6 +15,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
   ],    
   providers: [
     QueryParserService,
+    DepartmentDbService,
     DepartmentService
   ],
   controllers: [DepartmentController]

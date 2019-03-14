@@ -6,7 +6,6 @@ import { switchMap } from 'rxjs/operators';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
@@ -17,7 +16,7 @@ export class CertificationDetailController {
         private readonly accessLevelValidationService: AccessLevelValidateService) {}
 
     @UseGuards(ResourceGuard)
-    @Get('certification-detail/edit/:id')
+    @Get('certification-detail/:id')
     @Roles('EditProfile','ProfileAdmin')
     @ApiOperation({title: 'Get certification detail for requested user'})
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
@@ -45,7 +44,7 @@ export class CertificationDetailController {
     }
 
     @UseGuards(ResourceGuard)
-    @Patch('certification-detail/edit')
+    @Patch('certification-detail')
     @Roles('ProfileAdmin')
     @ApiOperation({title: 'Update certification detail for this user profile'})
     update(@Body() updateCertificationDetailDTO,@Req() req, @Res() res) {

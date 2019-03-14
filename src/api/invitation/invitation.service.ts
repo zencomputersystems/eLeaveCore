@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { UserInviteService } from 'src/admin/user-invite/user-invite.service';
 import { switchMap, flatMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from 'src/admin/user/user.service';
 import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from 'src/admin/user/model/user.model';
 import { ActivatedResultDTO } from './dto/activated-result.dto';
+import { InvitationDbService } from './db/invitation.db.service';
 
 @Injectable()
 export class InvitationService {
 
     constructor(
-        private readonly userInviteService: UserInviteService,
+        private readonly inviteDbService: InvitationDbService,
         private readonly userService: UserService
         ) {}
 
@@ -21,7 +21,7 @@ export class InvitationService {
         // check the invitation table
         // we only allow invitation with status = 1
         const filters = ['(INVITATION_GUID='+token+')','(STATUS=1)'];
-        return this.userInviteService.findOne(filters)
+        return this.inviteDbService.findOne(filters)
                 .pipe(
                     flatMap(res => this.validateInvitedUser(res.data.resource[0])),
                     flatMap(res => {
@@ -45,7 +45,7 @@ export class InvitationService {
 
         //get the user detail
         const filters = ['(INVITATION_GUID='+invitationId+')','(STATUS=1)'];
-        return this.userInviteService.findOne(filters)
+        return this.inviteDbService.findOne(filters)
                 .pipe(
                     flatMap(res => this.validateInvitedUser(res.data.resource[0])),
                     flatMap(res => {
@@ -136,7 +136,7 @@ export class InvitationService {
     // activate user that has been validated
     private activateValidatedUser(invitationId: string, userData: UserModel) {
 
-        return this.userInviteService.update(invitationId,2)
+        return this.inviteDbService.update(invitationId,2)
                 .pipe(switchMap(() => {
 
                     const resource = new Resource(new Array);
@@ -145,4 +145,6 @@ export class InvitationService {
                     return this.userService.updateByModel(resource,[],[],[]);
                 }));
     }
+
+    
 }

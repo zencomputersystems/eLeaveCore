@@ -13,6 +13,7 @@ import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { Resource } from 'src/common/model/resource.model';
 import { PersonalDetailXML } from './dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
 import { UpdateEmploymentDetailDTO } from './dto/userprofile-detail/employment-detail/update-employment-detail.dto';
+import { Access } from 'src/common/dto/access.dto';
 
 
 @Injectable()
@@ -32,14 +33,16 @@ export class UserprofileService {
                     const userArray = new Array();
                     
                     res.data.resource.forEach(element => {
-                        const useritem = new UserprofileListDTO();
-                        useritem.id = element.USER_INFO_GUID;
-                        useritem.userId = element.USER_GUID;
-                        useritem.staffId = element.PERSONAL_ID;
-                        useritem.employeeName = element.FULLNAME;
-                        useritem.email = element.EMAIL;
-                        useritem.designation = element.DESIGNATION;
-
+                        const useritem = new UserprofileListDTO(
+                            element.USER_INFO_GUID,
+                            element.USER_GUID,
+                            element.PERSONAL_ID==null?'n/a':element.PERSONAL_ID,
+                            element.FULLNAME,
+                            element.EMAIL,
+                            element.DESIGNATION,
+                            new Access()
+                        );
+                        
                         userArray.push(useritem);
 
                     });

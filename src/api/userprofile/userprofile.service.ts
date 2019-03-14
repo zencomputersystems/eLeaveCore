@@ -38,8 +38,8 @@ export class UserprofileService {
                             element.USER_GUID,
                             element.PERSONAL_ID==null?'':element.PERSONAL_ID,
                             element.FULLNAME,
-                            element.EMAIL,
                             element.DESIGNATION,
+                            element.EMAIL,
                             new Access()
                         );
                         

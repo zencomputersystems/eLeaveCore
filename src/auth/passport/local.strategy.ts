@@ -1,4 +1,4 @@
-import { Strategy } from 'passport-local';
+var Strategy = require('passport-local');
 import { AuthService } from '../auth.service';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable} from '@nestjs/common';
@@ -11,6 +11,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       usernameField: 'email',
       passReqToCallback: false
     });
+    console.log('sss');
   }
 
   async validate(email, password, done: Function) {

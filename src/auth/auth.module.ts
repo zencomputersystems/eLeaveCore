@@ -7,6 +7,7 @@ import { JwtStrategy } from './passport/jwt.strategy';
 import { UserService } from 'src/admin/user/user.service';
 import { UserModule } from 'src/admin/user/user.module';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { ActiveDirectoryStrategy } from './passport/ad.strategy';
 
 @Module({
     providers: [
@@ -14,6 +15,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
         AuthService, 
         UserService,
         LocalStrategy,
+        ActiveDirectoryStrategy,
         JwtStrategy],
     controllers: [
         AuthController

@@ -184,6 +184,7 @@ export class UserprofileService {
         userProfileData.employeeName = data.FULLNAME;
         userProfileData.employeeDesignation = data.DESIGNATION;
         userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
+        userProfileData.employeeDepartment = data.DEPARTMENT;
     
         if(data.PROPERTIES_XML) {
 

@@ -8,13 +8,23 @@ export class AuthService {
 
     //log the user using provided user password
     public async logIn(email, password) {
-
         return await this.userService.findOne(email, password)
         .then(async user => {
           return (user.data.resource.length>0)
           ? Promise.resolve(user.data.resource[0])
           : Promise.reject(new UnauthorizedException('Invalid Credential'))
         })
+    }
+
+    public async adLogin(data) {
+
+      return await this.userService.findByFilter(['(LOGIN_ID='+data._json.userPrincipalName+')'],).toPromise()
+      .then(async user => {
+
+        return (user.data.resource.length>0)
+        ? Promise.resolve(user.data.resource[0])
+        : Promise.reject(new UnauthorizedException('Invalid Credential'))
+      })
     }
 
     //create JWT token to be sent to client

@@ -9,6 +9,7 @@ export class UserProfileDTO {
     employeeName: string;
     employeeDesignation: string;
     employeeLocation: string;
+    employeeDepartment: string;
     personalDetail: UserPersonalDetailDTO;
     employmentDetail: EmploymentDetailDTO;
     awardCertification : any;

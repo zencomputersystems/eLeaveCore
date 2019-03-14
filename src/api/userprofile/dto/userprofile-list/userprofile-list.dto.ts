@@ -2,7 +2,7 @@ import { Access } from "src/common/dto/access.dto";
 
 export class UserprofileListDTO {
     
-    constructor(public id: string, public userId: string, public staffId: string, public employeeName: string, public designation: string, public email: string,public access: Access) {
+    constructor(public id: string, public userId: string, public staffNumber: string, public employeeName: string, public designation: string, public email: string,public access: Access) {
 
     }
     // id: string; //userinfo GUID

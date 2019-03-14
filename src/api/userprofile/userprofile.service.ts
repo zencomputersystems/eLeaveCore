@@ -36,7 +36,7 @@ export class UserprofileService {
                         const useritem = new UserprofileListDTO(
                             element.USER_INFO_GUID,
                             element.USER_GUID,
-                            element.PERSONAL_ID==null?'n/a':element.PERSONAL_ID,
+                            element.PERSONAL_ID==null?'':element.PERSONAL_ID,
                             element.FULLNAME,
                             element.EMAIL,
                             element.DESIGNATION,

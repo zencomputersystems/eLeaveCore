@@ -3,8 +3,8 @@ import { BaseDBService } from "src/common/base/base-db.service";
 import { QueryParserService } from "src/common/helper/query-parser.service";
 import { Observable } from "rxjs";
 import { Resource } from "src/common/model/resource.model";
-import { UserInviteModel } from "src/admin/user-invite/model/user-invite.model";
 import { v1 } from "uuid";
+import { UserInviteModel } from "../model/user-invite.model";
 
 @Injectable()
 export class InvitationDbService extends BaseDBService {

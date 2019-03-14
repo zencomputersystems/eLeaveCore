@@ -111,7 +111,7 @@ export class InvitationService {
     // For AD, activate automatically once validated
     // For DB, user need to update their password before activated. They need extra step
     private authMethodPicker(data: ActivatedResultDTO) {
-        let companyLoginSetting = "DB";
+        let companyLoginSetting = "AD";
         
         data.authMethod = companyLoginSetting;
 

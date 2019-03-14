@@ -8,7 +8,6 @@ import { SectionModule } from './admin/section/section.module';
 import { LeavetypeModule } from './admin/leavetype/leavetype.module';
 import { LeavetypeEntitlementModule } from './admin/leavetype-entitlement/leavetype-entitlement.module';
 import { UserModule } from './admin/user/user.module';
-import { UserInviteModule } from './admin/user-invite/user-invite.module';
 import { UserInfoModule } from './admin/user-info/user-info.module';
 import { HandlebarsAdapter, MailerModule, PugAdapter } from '@nest-modules/mailer';
 import { DepartmentModule } from './admin/department/department.module';
@@ -27,7 +26,6 @@ import { UserImportModule } from './api/userimport/user-import.module';
     SectionModule,
     LeavetypeModule,
     LeavetypeEntitlementModule,
-    UserInviteModule,
     UserInfoModule,
     UserImportModule,
     MailerModule.forRoot({

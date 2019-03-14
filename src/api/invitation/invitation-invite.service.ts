@@ -1,119 +1,158 @@
-// import { MailerService } from "@nest-modules/mailer";
+import { MailerService } from "@nest-modules/mailer";
 
-// import { HttpService } from "@nestjs/common";
-// import { QueryParserService } from "src/common/helper/query-parser.service";
-// import { UserService } from "src/admin/user/user.service";
-// import { InviteDto } from "src/admin/user-invite/dto/invite.dto";
-// import { forkJoin, of } from "rxjs";
-// import { map, flatMap } from "rxjs/operators";
-// import { UserModel } from "src/admin/user/model/user.model";
-// import { UserInviteModel } from "src/admin/user-invite/model/user-invite.model";
-// import { InviteValidList } from "src/admin/user-invite/dto/invite-valid-list.dto";
-// import { InvitationDbService } from "./db/invitation.db.service";
+import { HttpService, Injectable } from "@nestjs/common";
+import { QueryParserService } from "src/common/helper/query-parser.service";
+import { UserService } from "src/admin/user/user.service";
+import { InvitationDbService } from "./db/invitation.db.service";
+import { InviteDTO } from "./dto/invite.dto";
+import { map, mergeMap} from "rxjs/operators";
+import { UserModel } from "src/admin/user/model/user.model";
+import { EmailList } from "./dto/email-list";
+import { Resource } from "src/common/model/resource.model";
+import { v1 } from "uuid";
+import { of, forkJoin} from "rxjs";
+import { UserInviteModel } from "./model/user-invite.model";
 
-// export class InvitationInviteService {
+@Injectable()
+export class InvitationInviteService {
 
-//     constructor(
-//         private readonly inviteDbService: InvitationDbService,
-//         private readonly mailerService: MailerService,
-//         public readonly httpService: HttpService,
-//         public readonly queryService: QueryParserService,
-//         private readonly userService: UserService
-//     ){}
+    constructor(
+        private readonly inviteDbService: InvitationDbService,
+        private readonly mailerService: MailerService,
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService,
+        private readonly userService: UserService
+    ){
+    }
 
-//     public inviteUser(inviteList:[InviteDto],user: any) {
+    public invite(inviteList: Array<InviteDTO>, user: any) {
+ 
+        const userFilter = ['(TENANT_GUID='+user.TENANT_GUID+')','(ACTIVATION_FLAG=0)']
 
-//         // check if user already exist in database and active
-//         const isInvitationAvailable = true; // read from subscription
+        return this.userService.findByFilter(userFilter)
+            .pipe(
+                map(res => {
+                    if(res.status==200) {
+                        const data = res.data.resource;
 
+                        return this.filterUser(inviteList,data);
+                    }
+                }),
+                mergeMap(res => {
+                    return this.checkInvitationStatus(res,user.TENANT_GUID);
+                }),
+                mergeMap(res => this.saveInvitation(res,user)),
+                mergeMap((res) => {
+                    const observableEmail$ = [];
 
-//         const observableData$ = [
-//             this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')']),
+                    res.forEach(element => {
+                        observableEmail$.push(this.sendEmail(element.email,element.invitationId)); 
+                    });
 
-//             //get all invitation data for this tenant
-//             this.inviteDbService.findAll(user.TENANT_GUID)
-//         ]
+                    return forkJoin(observableEmail$);
+                })
+            )
+    }
 
-//         return forkJoin(observableData$)
-//                 .pipe(
-//                     map(res => this.getValidInvitationData(res[0].data.resource,res[1].data.resource, inviteList)),
-//                     flatMap(res => this.processValidEmail(res))
-//                 )  
-//     }
+    private filterUser(inviteList:Array<InviteDTO>,userList: Array<UserModel>) {
 
+        const successList = new Array<EmailList>()
+        // check if invitelist user exist in userlist
+        inviteList.forEach(element => {
+            const checkUser = userList.find(x=>x.USER_GUID===element.id);
+            if(checkUser) {
+                successList.push(new EmailList(checkUser.USER_GUID,'',checkUser.EMAIL,checkUser.EMAIL));
+            }
+        });
 
-//     private getValidInvitationData(userData: [UserModel], userInviteData: [UserInviteModel], inviteData: [InviteDto]) {
-//         // based on the invitation list, get valid email
-//         const validList = new Array<InviteValidList>();
+        return successList;
+    }
 
-//         inviteData.forEach(element => {
-//             // check if user exist in main table
-//             const checkUserData = userData.find(x=>(x.USER_GUID === element.id)&&(x.ACTIVATION_FLAG==0));
-//             const checkUserInvitation = userInviteData.find(x=>x.USER_GUID==element.id);
+    private checkInvitationStatus(inviteList: Array<EmailList>,tenantId: string) {
+        
+        return this.inviteDbService.findAll(tenantId)
+            .pipe(
+                map(res => {
+                    if(res.status==200) {
+                        const data: Array<UserInviteModel> = res.data.resource;
 
-//             console.log(checkUserData);
-//             if((checkUserData!=null || checkUserData !=undefined)) {
+                        const mailList = new Array<EmailList>();
+                        inviteList.forEach(element => {
+                            const checkInvitation = data.find(x=>x.USER_GUID === element.userId);
+
+                            if(checkInvitation) {
+                                // resend email to user
+                                mailList.push(new EmailList(checkInvitation.USER_GUID,checkInvitation.INVITATION_GUID,checkInvitation.EMAIL,checkInvitation.EMAIL));
+                            } else {
+                                // store user into invitation db and send email
+                                mailList.push(element);
+                            }
+                        });
+
+                        return mailList;
+                    }
+                })
+            )
+
+    }
+
+    private saveInvitation(inviteList: Array<EmailList>,user: any) {
+        
+        const inviteResourceArray = new Resource(new Array);
+        const emailList = new Array<EmailList>();
+
+        inviteList.forEach(element => {
+            if(element.invitationId==null||element.invitationId=='') {
+                const data = new UserInviteModel();
+                data.INVITATION_GUID = v1();
+                data.STATUS = 1;
+                data.USER_GUID = element.userId;
+                data.CREATION_TS = user.USER_GUID;
+                data.TENANT_GUID = user.TENANT_GUID;
+                data.CREATION_TS = new Date().toISOString();
+                data.EMAIL = element.email;
                 
-//                 if(checkUserInvitation==null || checkUserInvitation == undefined) {
-//                     validList.push(new InviteValidList(checkUserData.USER_GUID,checkUserData.EMAIL,''))
-//                 } else {
-//                     if(checkUserInvitation.STATUS!=3) {
-//                         validList.push(new InviteValidList(checkUserData.USER_GUID,checkUserData.EMAIL,checkUserInvitation.INVITATION_GUID))   
-//                     }
-//                 }
+                inviteResourceArray.resource.push(data);
+            } else {
+                emailList.push(element);
+            }
+        });
 
-//             }
-//         });
 
-//         return validList;
-//     }
+        if(inviteResourceArray.resource.length==0) {
+            return of(inviteList);
+        }
 
-//     private processValidEmail(validList: Array<InviteValidList>) {
-//         // for item without INVITATION_GUID, we need to insert the data into table
-//         // after that we send them an invitation email
-//         // for item with INVITATION_GUID, we resend invitation email
+        return this.inviteDbService.createByModel(inviteResourceArray,[],[],['EMAIL','INVITATION_GUID','USER_GUID'])
+                .pipe(map(res => {
 
-//         if(validList.length==0) {
-//             return of(validList);
-//         }
+                    if(res.status==200) {
+                    
+                        const data = res.data.resource;
 
-//         const emailObs$ = [];
+                        data.forEach(element => {
+                            emailList.push(new EmailList(element.USER_GUID,element.INVITATION_GUID,element.EMAIL,element.EMAIL));
+                        });
+                    
 
-//         validList.forEach(element => {
-//            if(element.INVITATION_GUID!=null&&element.INVITATION_GUID!='') {
-//                 // send invitation email
-//                 emailObs$.push(this.sendEmail(element.EMAIL,element.INVITATION_GUID));
-//            } else {
-//                 // insert data into table and send email
-//                 emailObs$.push(this.processNewInvitation(element));
-//            }
-//         });
+                        return emailList;
+                    }
+                }))
 
-//         return forkJoin(emailObs$);
-//     }
+    }
 
-//     private processNewInvitation(inviteData: InviteValidList) {
-//         //add data into table
-//         return this.inviteDbService.create(inviteData.USER_GUID,inviteData.EMAIL,this._user)
-//                     .pipe(flatMap(res=>{
-//                         const result = res.data.resource[0];
-
-//                         return this.sendEmail(result.EMAIL,result.INVITATION_GUID);
-//                     }))
-//     }
-
-//     // send email to user
-//     private sendEmail(email: string, token: string) {
-//         return this.mailerService
-//             .sendMail({
-//                 to: email, // sender address
-//                 from: 'wantan.wonderland.2018@gmail.com', // list of receivers
-//                 subject: 'Testing Invitation System ✔',
-//                 template: 'userinvitation.html',
-//                 context: {  // Data to be sent to template files.
-//                     email: email,
-//                     code: "http://localhost:3000/api/employee/invitation/accept/"+token
-//                 }
-//             });
-//     }
-// }
+    // send email to user
+    private sendEmail(email: string, token: string) {
+        return this.mailerService
+            .sendMail({
+                to: email, // sender address
+                from: 'wantan.wonderland.2018@gmail.com', // list of receivers
+                subject: 'Testing Invitation System ✔',
+                template: 'userinvitation.html',
+                context: {  // Data to be sent to template files.
+                    email: email,
+                    code: "http://localhost:3000/api/invitation/"+token
+                }
+            });
+    }
+}

@@ -33,17 +33,17 @@ export class UserprofileService {
                     const userArray = new Array();
                     
                     res.data.resource.forEach(element => {
-                        const useritem = new UserprofileListDTO(
+
+                        userArray.push(
+                            new UserprofileListDTO(
                             element.USER_INFO_GUID,
                             element.USER_GUID,
                             element.PERSONAL_ID==null?'':element.PERSONAL_ID,
                             element.FULLNAME,
-                            element.EMAIL,
                             element.DESIGNATION,
+                            element.EMAIL,
                             new Access()
-                        );
-                        
-                        userArray.push(useritem);
+                        ));
 
                     });
 

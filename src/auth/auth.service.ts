@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import {sign} from 'jsonwebtoken';
 import { UserService } from 'src/admin/user/user.service';
+import { ldap } from './passport/mock/ldap';
 
 @Injectable()
 export class AuthService {

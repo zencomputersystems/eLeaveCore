@@ -11,6 +11,10 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { UserprofileDbService } from './db/userprofile.db.service';
+import { EntitlementDetailController } from './controller/entitlement-detail/entitlement-detail.controller';
+import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.service';
+import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
+import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 
 @Module({
   providers: [
@@ -19,7 +23,10 @@ import { UserprofileDbService } from './db/userprofile.db.service';
     UserprofileDbService,
     QueryParserService,
     XMLParserService,
-    AccessLevelValidateService
+    AccessLevelValidateService,
+    UserLeaveEntitlementDbService,
+    UserLeaveEntitlementService,
+    LeavetypeEntitlementDbService
   ],
   modules:[
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),
@@ -29,6 +36,7 @@ import { UserprofileDbService } from './db/userprofile.db.service';
     EmploymentDetailController,
     LeaveEntitlementController,
     CertificationDetailController,
-    UserprofileController],
+    UserprofileController,
+    EntitlementDetailController],
 })
 export class UserprofileModule {}

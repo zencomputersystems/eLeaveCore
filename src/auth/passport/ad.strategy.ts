@@ -1,22 +1,19 @@
 import { AuthService } from '../auth.service';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable} from '@nestjs/common';
+import { ldap } from './mock/ldap';
 var Strategy = require('passport-activedirectory');
 
 @Injectable()
 export class ActiveDirectoryStrategy extends PassportStrategy(Strategy,'ad') {
     
-  constructor(private readonly authService: AuthService) {
+  constructor(
+      private readonly authService: AuthService) {
     super({
         integrated: false,
         usernameField: 'email',
         passReqToCallback: false,
-        ldap: {
-            url: 'ldap://zen.com.my',
-            baseDN: 'DC=zen,DC=com,DC=my',
-            username: 'tarmimi@zen.com.my',
-            password: 'P@ss1234'
-        }
+        ldap: ldap
     });
   }
 

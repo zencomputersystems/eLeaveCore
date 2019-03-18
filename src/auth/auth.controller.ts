@@ -11,7 +11,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService){}
 
     @Post('login')
-    @UseGuards(AuthGuard('local'))
+    @UseGuards(AuthGuard('ad'))
     public async login(@Body() loginDTO: LoginDto,@Req() req) {
 
         return await this.authService.createToken(req.user);

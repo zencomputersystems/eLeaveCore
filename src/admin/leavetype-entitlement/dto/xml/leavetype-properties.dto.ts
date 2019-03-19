@@ -2,6 +2,7 @@ import { IsNotEmpty, IsBoolean, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LeaveTypeServiceYearDto } from './leavetype-serviceyear.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { LeaveTypeLevelsDTO } from './leavetype-levels.dto';
 export class LeaveTypePropertiesDto {
     
     @ApiModelProperty()
@@ -38,11 +39,11 @@ export class LeaveTypePropertiesDto {
     // @IsNotEmpty()
     // readonly allow_cancel_after_startdate: any;
 
-    @ApiModelProperty({type:LeaveTypeServiceYearDto})
+    @ApiModelProperty({type:LeaveTypeLevelsDTO})
     @IsNotEmpty()
     @ValidateNested({ each: true })
-    @Type(() => LeaveTypeServiceYearDto)
-    readonly levels: LeaveTypeServiceYearDto[]
+    @Type(() => LeaveTypeLevelsDTO)
+    readonly levels: LeaveTypeLevelsDTO
 
 
 } 

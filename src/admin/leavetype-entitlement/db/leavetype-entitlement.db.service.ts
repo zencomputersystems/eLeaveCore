@@ -70,6 +70,8 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         data.CREATION_TS = new Date().toISOString();
         data.CREATION_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;
+
+        resource.resource.push(data);
         
         return this.createByModel(resource,[],[],[]);
     }

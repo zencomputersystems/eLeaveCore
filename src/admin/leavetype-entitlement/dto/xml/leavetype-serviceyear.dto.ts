@@ -10,12 +10,12 @@ export class LeaveTypeServiceYearDto {
     @ApiModelProperty()
     @IsNotEmpty()
     @IsNumber()
-    readonly min_year: number;
+    readonly service_year_from: number;
 
     @ApiModelProperty()
     @IsNotEmpty()
     @IsNumber()
-    readonly max_year: number;
+    readonly service_year_to: number;
 
     @ApiModelProperty()
     @IsNotEmpty()

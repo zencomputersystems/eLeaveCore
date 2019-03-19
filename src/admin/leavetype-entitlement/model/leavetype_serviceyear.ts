@@ -1,7 +1,7 @@
 export class LeaveTypeServiceYear {
     id: string;
-    min_year: number;
-    max_year: number;
+    service_year_from: number;
+    service_year_to: number;
     entitled_days: number;
     carry_forward: number;
 }

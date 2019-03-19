@@ -1,5 +1,5 @@
 import { IsNotEmpty, ValidateNested } from 'class-validator';
-import { LeaveTypePropertiesDto } from './xml/leavetype-properties.dto';
+import { LeaveTypePropertiesDto } from './leavetype-properties.dto';
 import { Type } from 'class-transformer';
 import { ApiModelProperty } from '@nestjs/swagger';
 

@@ -1,9 +1,10 @@
 import { Injectable, HttpService } from "@nestjs/common";
 import { BaseDBService } from "src/common/base/base-db.service";
 import { QueryParserService } from "src/common/helper/query-parser.service";
+import { IDbService } from "src/interface/IDbService";
 
 @Injectable()
-export class UserLeaveEntitlementDbService extends BaseDBService {
+export class UserLeaveEntitlementDbService extends BaseDBService implements IDbService {
     private _table = 'l_main_user_leave_entitlement';
 
     constructor(

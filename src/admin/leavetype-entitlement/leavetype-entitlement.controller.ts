@@ -59,6 +59,7 @@ export class LeavetypeEntitlementController {
 
     @Post()
     create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDto,@Req() req, @Res() res) {
+
         this.leavetypeEntitlementDbService.create(req.user,createLeaveEntitlementDTO)
             .subscribe(
                 data => {
@@ -70,6 +71,7 @@ export class LeavetypeEntitlementController {
                     }
                 },
                 err => {
+                    console.log(err.response.data.error.context.resource);
                     res.status(400);
                     res.send('Fail to update resource');
                 }

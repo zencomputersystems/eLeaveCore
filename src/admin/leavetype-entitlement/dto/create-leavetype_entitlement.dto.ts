@@ -1,8 +1,9 @@
 
-import { LeaveTypeEntitlementDto } from './xml/leavetype-entitlement.dto';
 import { IsNotEmpty } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
-export class CreateLeaveEntitlementTypeDto extends LeaveTypeEntitlementDto {
+import { LeaveTypeEntitlementXmlDTO } from './xml/leavetype-entitlement.xml.dto';
+
+export class CreateLeaveEntitlementTypeDTO extends LeaveTypeEntitlementXmlDTO {
     @ApiModelProperty()
     @IsNotEmpty()
     readonly leavetype_id: string;

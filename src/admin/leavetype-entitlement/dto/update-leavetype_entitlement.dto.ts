@@ -1,8 +1,9 @@
 
 import { IsNotEmpty } from 'class-validator';
-import { LeaveTypeEntitlementDto } from './xml/leavetype-entitlement.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
-export class UpdateLeaveTypeEntitlementDto extends LeaveTypeEntitlementDto {
+import { LeaveTypeEntitlementXmlDTO } from './xml/leavetype-entitlement.xml.dto';
+
+export class UpdateLeaveTypeEntitlementDto extends LeaveTypeEntitlementXmlDTO{
     
     @ApiModelProperty()
     @IsNotEmpty()

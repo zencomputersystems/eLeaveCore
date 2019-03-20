@@ -8,7 +8,7 @@ export class UserLeaveEntitlementModel {
     PARENT_FLAG: number;
     CF_FLAG: number;
     DAYS_ADDED: number;
-    YEAR: number;
+    YEAR: number; //year the policy is assigned
     EXPIREDATE: Date;
 
     ACTIVE_FLAG: number;

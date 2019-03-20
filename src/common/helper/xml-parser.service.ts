@@ -12,7 +12,7 @@ export class XMLParserService {
             cdataPositionChar: "\\c",
             format: false,
             indentBy: "  ",
-            supressEmptyNode: true
+            supressEmptyNode: false
         };
 
         const converter = new j2xParser(defaultOptions);

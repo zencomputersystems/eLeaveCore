@@ -1,6 +1,6 @@
 import { Controller, Get, Req, Res, Post, Body, UseGuards, Param, Patch } from '@nestjs/common';
 import { LeavetypeEntitlementDbService } from './db/leavetype-entitlement.db.service';
-import { CreateLeaveEntitlementTypeDto } from './dto/create-leavetype_entitlement.dto';
+import { CreateLeaveEntitlementTypeDTO } from './dto/create-leavetype_entitlement.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateLeaveTypeEntitlementDto } from './dto/update-leavetype_entitlement.dto';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
@@ -58,7 +58,7 @@ export class LeavetypeEntitlementController {
     }
 
     @Post()
-    create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDto,@Req() req, @Res() res) {
+    create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDTO,@Req() req, @Res() res) {
 
         this.leavetypeEntitlementDbService.create(req.user,createLeaveEntitlementDTO)
             .subscribe(

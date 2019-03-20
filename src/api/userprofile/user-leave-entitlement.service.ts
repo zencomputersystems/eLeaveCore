@@ -11,7 +11,6 @@ import { Resource } from "src/common/model/resource.model";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { IDbService } from "src/interface/IDbService";
 import * as moment from 'moment';
-import { LeaveTypePropertiesDto } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.dto";
 import { of } from "rxjs";
 import { UserInfoService } from "src/admin/user-info/user-info.service";
 import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
@@ -82,11 +81,12 @@ export class UserLeaveEntitlementService {
                 }),
                 mergeMap((res) => {
 
+                    const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
                     // get the service year
-                    const serviceYear = this.calculateServiceYear(new Date(res.userInfoResult.JOIN_DATE));
+                    const serviceYear = this.calculateServiceYear(dateOfJoin);
 
                     //get the entitlement days
-                    const entitlementDay = this.calculateEntitleLeave(res.res.PROPERTIES_XML,serviceYear);
+                    const entitlementDay = this.calculateEntitleLeave(res.res.PROPERTIES_XML,serviceYear,dateOfJoin);
 
 
                     if(entitlementDay==0 || entitlementDay==undefined) {
@@ -128,7 +128,11 @@ export class UserLeaveEntitlementService {
 
     }
 
-    public calculateEntitleLeave(xml: string, yearOfService: number) {
+    public calculateEntitleLeave(xml: string, yearOfService: number,dateOfJoin: Date) {
+
+        // month join
+        const monthJoin = dateOfJoin.getMonth();
+
         const xmlToJson = this.xmlParserService.convertXMLToJson(xml);
 
         const checkArray = xmlToJson.levels.leaveEntitlement instanceof Array;
@@ -145,7 +149,7 @@ export class UserLeaveEntitlementService {
         }
 
         if(entitledDay) {
-            return entitledDay.entitled_days;
+            return (entitledDay.entitled_days/12)*(12-monthJoin);
         } else {
             return undefined;
         }
@@ -155,12 +159,13 @@ export class UserLeaveEntitlementService {
     // calculate the year of service
     // return year of service
     public calculateServiceYear(dateOfJoin: Date) {
-
+        dateOfJoin = new Date('2018-04-30');
         let dateJoin = moment(dateOfJoin,'YYYY-MM-DD');
         let now = moment();
 
         let serviceYear = moment.duration(now.diff(dateJoin)).asYears()
 
+        console.log(serviceYear);
         return Math.floor(serviceYear);
     }
 

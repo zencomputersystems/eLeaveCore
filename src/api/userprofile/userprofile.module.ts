@@ -1,5 +1,5 @@
 import { Module, HttpModule } from '@nestjs/common';
-import { UserprofileService } from './userprofile.service';
+import { UserprofileService } from './service/userprofile.service';
 import { PersonalDetailController } from './controller/personal-detail/personal-detail.controller';
 import { EmploymentDetailController } from './controller/employment-detail/employment-detail.controller';
 import { LeaveEntitlementController } from './controller/leave-entitlement/leave-entitlement.controller';
@@ -13,7 +13,7 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
 import { UserprofileDbService } from './db/userprofile.db.service';
 import { EntitlementDetailController } from './controller/entitlement-detail/entitlement-detail.controller';
 import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.service';
-import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
+import { UserLeaveEntitlementService } from './service/user-leave-entitlement.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 
 @Module({

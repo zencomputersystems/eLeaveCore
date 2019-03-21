@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { map, switchMap, filter, tap, catchError } from 'rxjs/operators';
+import { map} from 'rxjs/operators';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
-import { UserPersonalDetailDTO } from './dto/userprofile-detail/personal-detail/user-personal-detail.dto';
-import { UserProfileDTO } from './dto/userprofile-detail/userprofile.dto';
-import { EmploymentDetailDTO } from './dto/userprofile-detail/employment-detail/employment-detail.dto';
-import { leaveEntitlementMock } from './mockdata/leave-entitlement';
-import { UserprofileListDTO } from './dto/userprofile-list/userprofile-list.dto';
-import { UserprofileDbService } from './db/userprofile.db.service';
-import { UpdatePersonalDetailDTO } from './dto/userprofile-detail/personal-detail/update-personal-detail.dto';
+import { UserPersonalDetailDTO } from '../dto/userprofile-detail/personal-detail/user-personal-detail.dto';
+import { UserProfileDTO } from '../dto/userprofile-detail/userprofile.dto';
+import { EmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/employment-detail.dto';
+import { leaveEntitlementMock } from '../mockdata/leave-entitlement';
+import { UserprofileListDTO } from '../dto/userprofile-list/userprofile-list.dto';
+import { UserprofileDbService } from '../db/userprofile.db.service';
+import { UpdatePersonalDetailDTO } from '../dto/userprofile-detail/personal-detail/update-personal-detail.dto';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { Resource } from 'src/common/model/resource.model';
-import { PersonalDetailXML } from './dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
-import { UpdateEmploymentDetailDTO } from './dto/userprofile-detail/employment-detail/update-employment-detail.dto';
+import { PersonalDetailXML } from '../dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
+import { UpdateEmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 import { Access } from 'src/common/dto/access.dto';
 
 

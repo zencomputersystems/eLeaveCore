@@ -2,7 +2,7 @@ import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch } from '@nestj
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
-import { UserprofileService } from '../../userprofile.service';
+import { UserprofileService } from '../../service/userprofile.service';
 import { switchMap } from 'rxjs/operators';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ResourceGuard } from 'src/guard/resource.guard';

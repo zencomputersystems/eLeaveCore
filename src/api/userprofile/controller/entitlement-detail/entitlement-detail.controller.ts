@@ -3,7 +3,7 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AssignLeavePolicyDTO } from '../../dto/leave-entitlement/assign-leave-policy.dto';
-import { UserLeaveEntitlementService } from '../../user-leave-entitlement.service';
+import { UserLeaveEntitlementService } from '../../service/user-leave-entitlement.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/userprofile')

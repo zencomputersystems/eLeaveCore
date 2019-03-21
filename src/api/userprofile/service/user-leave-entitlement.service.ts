@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { UserLeaveEntitlementDbService } from "./db/user-leave-entitlement.db.service";
-import { AssignLeavePolicyDTO } from "./dto/leave-entitlement/assign-leave-policy.dto";
-import { UserprofileDbService } from "./db/userprofile.db.service";
+import { UserLeaveEntitlementDbService } from "../db/user-leave-entitlement.db.service";
+import { AssignLeavePolicyDTO } from "../dto/leave-entitlement/assign-leave-policy.dto";
+import { UserprofileDbService } from "../db/userprofile.db.service";
 import { map, filter, switchMap, mergeMap } from "rxjs/operators";
 import { LeavetypeEntitlementDbService } from "src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service";
-import { UserLeaveEntitlementModel } from "./model/user-leave-entitlement.model";
+import { UserLeaveEntitlementModel } from "../model/user-leave-entitlement.model";
 import { v1 } from "uuid";
 import { LeaveTypeEntitlementModel } from "src/admin/leavetype-entitlement/model/leavetype_entitlement.model";
 import { Resource } from "src/common/model/resource.model";

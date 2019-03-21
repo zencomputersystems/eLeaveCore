@@ -4,6 +4,7 @@ import { UserFamilyDTO } from "./xml/user-family.dto";
 
 export class UserPersonalDetailDTO {
     nric: string;
+    nickname: string;
     dob: string;
     gender: string;
     maritalStatus: string;

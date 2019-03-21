@@ -1,5 +1,5 @@
 import { Controller, Get, Req, Res, UseGuards, Param, Patch, Body } from '@nestjs/common';
-import { UserprofileService } from '../../userprofile.service';
+import { UserprofileService } from '../../service/userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { switchMap } from 'rxjs/operators';

@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, Body } from '@nestjs/common';
 import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { UserprofileService } from '../../userprofile.service';
+import { UserprofileService } from '../../service/userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { switchMap } from 'rxjs/operators';
 import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-detail/update-personal-detail.dto';

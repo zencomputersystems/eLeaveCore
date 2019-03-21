@@ -18,6 +18,6 @@ export class YearEntitlementBaseService {
             }
         }
 
-        return entitledDay;
+        return entitledDay.entitled_days;
     }
 }

@@ -15,6 +15,7 @@ import { EntitlementDetailController } from './controller/entitlement-detail/ent
 import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.service';
 import { UserLeaveEntitlementService } from './service/user-leave-entitlement.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { DayToDayService } from 'src/admin/leavetype-entitlement/services/year-entitlement-calculation-service/dayToDay.service';
 
 @Module({
   providers: [
@@ -26,7 +27,8 @@ import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/d
     AccessLevelValidateService,
     UserLeaveEntitlementDbService,
     UserLeaveEntitlementService,
-    LeavetypeEntitlementDbService
+    LeavetypeEntitlementDbService,
+    DayToDayService
   ],
   modules:[
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),

@@ -2,7 +2,9 @@ import moment = require("moment");
 import { IYearEntitleCalcService } from "../../interface/iYearEntitleCalc";
 import { YearEntitlementBaseService } from "./year-entitlement-base.service";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class DayToDayService extends YearEntitlementBaseService  implements IYearEntitleCalcService{
 
     constructor(
@@ -26,10 +28,12 @@ export class DayToDayService extends YearEntitlementBaseService  implements IYea
             Total Entitle = (Entitle Per Month * 9 Month) + (Entitle Per Day * 9 Days)
         */
 
+
         let dateJoin = moment(dateOfJoin,this.dateFormat);
 
         // join month entitlement will be calculated based on days
         const monthJoin = dateJoin.month();
+
 
         // Convert xml to json
         const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
@@ -62,14 +66,22 @@ export class DayToDayService extends YearEntitlementBaseService  implements IYea
        joinMonthAmount: number,
        lastDayOfMonthJoin: number) {
 
+
         const yearEntitlement = this.getEntitlementFromPolicy(policyJson,serviceYear);
+
+
         const yearEntitlementPerMonth  = (yearEntitlement/12);
         
         const yearlyEntitlement = (yearEntitlementPerMonth * monthAmount);
         const jointMonthEntitlementPerDay = (yearEntitlementPerMonth/lastDayOfMonthJoin);
 
+
         const joinMonthEntitlement = jointMonthEntitlementPerDay*joinMonthAmount;
-        return (yearlyEntitlement+joinMonthEntitlement)
+
+
+        const total = yearlyEntitlement+joinMonthEntitlement;
+
+        return total;
         
    }
 

@@ -2,8 +2,10 @@ import { IYearEntitleCalcService } from "../../interface/iYearEntitleCalc";
 import moment = require("moment");
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { YearEntitlementBaseService } from "./year-entitlement-base.service";
+import { Injectable } from "@nestjs/common";
 
-export class MonthToMonthService extends YearEntitlementBaseService  implements IYearEntitleCalcService{
+@Injectable()
+export class MonthToMonthService extends YearEntitlementBaseService implements IYearEntitleCalcService{
 
     constructor(
         private readonly xmlParserService: XMLParserService

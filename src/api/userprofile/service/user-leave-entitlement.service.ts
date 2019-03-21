@@ -14,6 +14,8 @@ import * as moment from 'moment';
 import { of } from "rxjs";
 import { UserInfoService } from "src/admin/user-info/user-info.service";
 import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
+import { IYearEntitleCalcService } from "src/admin/leavetype-entitlement/interface/iYearEntitleCalc";
+import { DayToDayService } from "src/admin/leavetype-entitlement/services/year-entitlement-calculation-service/dayToDay.service";
 
 @Injectable()
 export class UserLeaveEntitlementService {
@@ -23,7 +25,8 @@ export class UserLeaveEntitlementService {
         private readonly userDbService: UserprofileDbService,
         private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
         private readonly xmlParserService: XMLParserService,
-        private readonly userInfoDbService: UserInfoService
+        private readonly userInfoDbService: UserInfoService,
+        private readonly dayToDayService: DayToDayService
     ) {}
 
     public getEntitlementList(user: any) {
@@ -85,9 +88,11 @@ export class UserLeaveEntitlementService {
                     // get the service year
                     const serviceYear = this.calculateServiceYear(dateOfJoin);
 
-                    //get the entitlement days
-                    const entitlementDay = this.calculateEntitleLeave(res.res.PROPERTIES_XML,serviceYear,dateOfJoin);
 
+                    // //get the entitlement days
+                    // const entitlementDay = this.calculateEntitleLeave(res.res.PROPERTIES_XML,serviceYear,dateOfJoin);
+
+                    const entitlementDay = this.dayToDayService.calculateYearlyEntitlement(dateOfJoin,serviceYear,res.res.PROPERTIES_XML)
 
                     if(entitlementDay==0 || entitlementDay==undefined) {
                         return of(null);
@@ -103,7 +108,7 @@ export class UserLeaveEntitlementService {
                     entitlementModel.PARENT_FLAG = 1;
                     entitlementModel.CF_FLAG = 0;
                     entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
-                    entitlementModel.YEAR = 2019;
+                    entitlementModel.YEAR = moment().year();
                     entitlementModel.REMARKS = 'this is remark';
                     entitlementModel.ACTIVE_FLAG = 1;
                     
@@ -159,14 +164,12 @@ export class UserLeaveEntitlementService {
     // calculate the year of service
     // return year of service
     public calculateServiceYear(dateOfJoin: Date) {
-        dateOfJoin = new Date('2018-04-30');
         let dateJoin = moment(dateOfJoin,'YYYY-MM-DD');
         let now = moment();
 
         let serviceYear = moment.duration(now.diff(dateJoin)).asYears()
 
-        console.log(serviceYear);
-        return Math.floor(serviceYear);
+        return Math.ceil(serviceYear);
     }
 
     private dbSearch(IDbService: IDbService, filter: string[]) {

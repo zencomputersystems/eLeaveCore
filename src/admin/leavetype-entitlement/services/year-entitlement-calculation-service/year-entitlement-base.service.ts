@@ -1,5 +1,8 @@
 export class YearEntitlementBaseService {
-    public getEntitlementFromPolicy(leavePolicy: any, yearOfService: number) {
+
+    protected dateFormat = 'YYYY-MM-DD';
+
+    protected getEntitlementFromPolicy(leavePolicy: any, yearOfService: number) {
 
         // Check if leave entitlement is an array or not
         const checkArray = leavePolicy.levels.leaveEntitlement instanceof Array;

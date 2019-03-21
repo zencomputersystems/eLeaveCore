@@ -11,7 +11,6 @@ export class MonthToMonthService extends YearEntitlementBaseService  implements 
         super()
     }
 
-    private dateFormat = 'YYYY-MM-DD';
     calculateYearlyEntitlement(dateOfJoin: Date, yearOfService: number,leavePolicy: string): number {
         /* EG:
             
@@ -48,7 +47,7 @@ export class MonthToMonthService extends YearEntitlementBaseService  implements 
                 //get previous year entitlement
                 const previousYearEntitlement = this.getEntitlementFromPolicy(policyJson,yearOfService-1);
 
-                const actualPreviousYearEntitlement = ((previousYearEntitlement/12)*monthJoin);
+                const actualPreviousYearEntitlement = ((previousYearEntitlement/12)*(monthJoin-1));
 
                 return actualCurrentYearEntitlement+actualPreviousYearEntitlement;
             

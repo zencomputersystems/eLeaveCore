@@ -8,14 +8,13 @@ import { UserLeaveEntitlementModel } from "../model/user-leave-entitlement.model
 import { v1 } from "uuid";
 import { LeaveTypeEntitlementModel } from "src/admin/leavetype-entitlement/model/leavetype_entitlement.model";
 import { Resource } from "src/common/model/resource.model";
-import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { IDbService } from "src/interface/IDbService";
 import * as moment from 'moment';
 import { of } from "rxjs";
 import { UserInfoService } from "src/admin/user-info/user-info.service";
 import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
-import { IYearEntitleCalcService } from "src/admin/leavetype-entitlement/interface/iYearEntitleCalc";
 import { DayToDayService } from "src/admin/leavetype-entitlement/services/year-entitlement-calculation-service/dayToDay.service";
+import { ServiceYearCalc } from "src/admin/leavetype-entitlement/services/service-year-calulation-service/serviceYearCalc.service";
 
 @Injectable()
 export class UserLeaveEntitlementService {
@@ -24,9 +23,9 @@ export class UserLeaveEntitlementService {
         private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
         private readonly userDbService: UserprofileDbService,
         private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
-        private readonly xmlParserService: XMLParserService,
         private readonly userInfoDbService: UserInfoService,
-        private readonly dayToDayService: DayToDayService
+        private readonly dayToDayService: DayToDayService,
+        private readonly serviceYearCalcService: ServiceYearCalc
     ) {}
 
     public getEntitlementList(user: any) {
@@ -86,7 +85,7 @@ export class UserLeaveEntitlementService {
 
                     const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
                     // get the service year
-                    const serviceYear = this.calculateServiceYear(dateOfJoin);
+                    const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
 
 
                     // //get the entitlement days
@@ -131,45 +130,6 @@ export class UserLeaveEntitlementService {
                 })
             )
 
-    }
-
-    public calculateEntitleLeave(xml: string, yearOfService: number,dateOfJoin: Date) {
-
-        // month join
-        const monthJoin = dateOfJoin.getMonth();
-
-        const xmlToJson = this.xmlParserService.convertXMLToJson(xml);
-
-        const checkArray = xmlToJson.levels.leaveEntitlement instanceof Array;
-
-        let entitledDay;
-
-        if(checkArray) {
-            //find the entitle day for this service year
-            entitledDay = xmlToJson.levels.leaveEntitlement.find(x=>yearOfService>=x.service_year_from&&yearOfService<=x.service_year_to);
-        } else {
-            if(yearOfService>=xmlToJson.levels.leaveEntitlement.service_year_from&&yearOfService<=xmlToJson.levels.leaveEntitlement.service_year_to) {
-                entitledDay = xmlToJson.levels.leaveEntitlement;
-            }
-        }
-
-        if(entitledDay) {
-            return (entitledDay.entitled_days/12)*(12-monthJoin);
-        } else {
-            return undefined;
-        }
-    }
-
-
-    // calculate the year of service
-    // return year of service
-    public calculateServiceYear(dateOfJoin: Date) {
-        let dateJoin = moment(dateOfJoin,'YYYY-MM-DD');
-        let now = moment();
-
-        let serviceYear = moment.duration(now.diff(dateJoin)).asYears()
-
-        return Math.ceil(serviceYear);
     }
 
     private dbSearch(IDbService: IDbService, filter: string[]) {

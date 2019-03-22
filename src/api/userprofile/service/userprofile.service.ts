@@ -14,6 +14,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { PersonalDetailXML } from '../dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
 import { UpdateEmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 import { Access } from 'src/common/dto/access.dto';
+import { ServiceYearCalc } from 'src/admin/leavetype-entitlement/services/service-year-calulation-service/serviceYearCalc.service';
 
 
 @Injectable()
@@ -22,7 +23,8 @@ export class UserprofileService {
     constructor(
         private readonly userInfoService: UserInfoService,
         private readonly userprofileDBService: UserprofileDbService,
-        private readonly xmlParserService: XMLParserService) {}
+        private readonly xmlParserService: XMLParserService,
+        private readonly serviceYearCalcService: ServiceYearCalc) {}
 
     public getList(filters: string[]) {
         
@@ -234,7 +236,7 @@ export class UserprofileService {
             employmentDetail.dateOfJoin = data.JOIN_DATE;
             employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
             employmentDetail.dateOfResign = data.RESIGNATION_DATE;
-            employmentDetail.yearOfService = "3 Years";
+            employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE))+" Years";
             employmentDetail.epfNumber = data.PR_EPF_NUMBER;
             employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
             employmentDetail.bankAccountName = data.BANK;

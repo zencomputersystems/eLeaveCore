@@ -20,4 +20,36 @@ export class YearEntitlementBaseService {
 
         return entitledDay.entitled_days;
     }
+
+    protected calculateEntitlement(
+        serviceYear: number,
+        policyJson: string, 
+        monthAmount: number, 
+        joinMonthAmount: number,
+        lastDayOfMonthJoin: number,
+        type: string) {
+ 
+ 
+         const yearEntitlement = this.getEntitlementFromPolicy(policyJson,serviceYear);
+ 
+ 
+         const yearEntitlementPerMonth  = (yearEntitlement/12);
+         
+         const yearlyEntitlement = (yearEntitlementPerMonth * monthAmount);
+
+         if(type.toUpperCase()==="DAY") {
+            const jointMonthEntitlementPerDay = (yearEntitlementPerMonth/lastDayOfMonthJoin);
+    
+    
+            const joinMonthEntitlement = jointMonthEntitlementPerDay*joinMonthAmount;
+    
+    
+            const total = yearlyEntitlement+joinMonthEntitlement;
+    
+            return total;
+        }
+
+        return yearEntitlement;
+         
+    }
 }

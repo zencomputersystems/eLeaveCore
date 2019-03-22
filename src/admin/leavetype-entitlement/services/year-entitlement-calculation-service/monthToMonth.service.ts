@@ -37,19 +37,15 @@ export class MonthToMonthService extends YearEntitlementBaseService implements I
         // if month join is not 1, we need to calculate entitlement from current year of service and previous year of service
         if(monthJoin > 1) {
 
-            const currentYearEntitlement = this.getEntitlementFromPolicy(policyJson,yearOfService);
-
             const workingMonth = (12+1) - monthJoin;
 
-            const actualCurrentYearEntitlement = ((currentYearEntitlement/12) * workingMonth);
+            const actualCurrentYearEntitlement = this.calculateEntitlement(yearOfService,policyJson,workingMonth,0,0,'MONTH');
 
             // if year of service == 1, employee doesnt have previous year data
             if(yearOfService > 1) {
 
                 //get previous year entitlement
-                const previousYearEntitlement = this.getEntitlementFromPolicy(policyJson,yearOfService-1);
-
-                const actualPreviousYearEntitlement = ((previousYearEntitlement/12)*(monthJoin-1));
+                const actualPreviousYearEntitlement = this.calculateEntitlement(yearOfService,policyJson,(monthJoin-1),0,0,'MONTH');
 
                 return actualCurrentYearEntitlement+actualPreviousYearEntitlement;
             

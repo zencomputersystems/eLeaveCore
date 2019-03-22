@@ -45,44 +45,18 @@ export class DayToDayService extends YearEntitlementBaseService  implements IYea
 
         const joinMonthDayAmount = (lastDayOfMonthJoin+1)-dateJoin.day();
 
-        const currentYearEntitlement = this.calculateEntitlement(yearOfService,policyJson,monthFullEntitlement,joinMonthDayAmount,lastDayOfMonthJoin);
+        const currentYearEntitlement = this.calculateEntitlement(yearOfService,policyJson,monthFullEntitlement,joinMonthDayAmount,lastDayOfMonthJoin,'DAY');
        
         if(yearOfService > 1) {
             // we need to read from 2 year of service data
             const previousServiceYear = yearOfService - 1;
 
-            const previousYearEntitlement = this.calculateEntitlement(previousServiceYear,policyJson,(monthJoin-1),dateJoin.day(),lastDayOfMonthJoin);
+            const previousYearEntitlement = this.calculateEntitlement(previousServiceYear,policyJson,(monthJoin-1),dateJoin.day(),lastDayOfMonthJoin,'DAY');
             
             return (currentYearEntitlement+previousYearEntitlement)
         } else {
             return currentYearEntitlement;
         }
-   }
-
-   public calculateEntitlement(
-       serviceYear: number,
-       policyJson: string, 
-       monthAmount: number, 
-       joinMonthAmount: number,
-       lastDayOfMonthJoin: number) {
-
-
-        const yearEntitlement = this.getEntitlementFromPolicy(policyJson,serviceYear);
-
-
-        const yearEntitlementPerMonth  = (yearEntitlement/12);
-        
-        const yearlyEntitlement = (yearEntitlementPerMonth * monthAmount);
-        const jointMonthEntitlementPerDay = (yearEntitlementPerMonth/lastDayOfMonthJoin);
-
-
-        const joinMonthEntitlement = jointMonthEntitlementPerDay*joinMonthAmount;
-
-
-        const total = yearlyEntitlement+joinMonthEntitlement;
-
-        return total;
-        
    }
 
 }

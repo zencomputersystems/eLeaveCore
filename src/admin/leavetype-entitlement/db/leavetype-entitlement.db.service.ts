@@ -2,7 +2,6 @@ import { Injectable, HttpService } from '@nestjs/common';
 import {parse} from 'fast-xml-parser'; 
 import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from '../model/leavetype_entitlement.model';
-import { CreateLeaveEntitlementTypeDto } from '../dto/create-leavetype_entitlement.dto';
 import { v1 } from 'uuid';
 import { Observable } from 'rxjs';
 import { UpdateLeaveTypeEntitlementDto } from '../dto/update-leavetype_entitlement.dto';
@@ -11,6 +10,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
+import { CreateLeaveEntitlementTypeDTO } from '../dto/create-leavetype_entitlement.dto';
 
 @Injectable()
 export class LeavetypeEntitlementDbService extends BaseDBService implements IDbService {
@@ -52,7 +52,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
     }
 
     //create new leavetype entitlement
-    create(user: any, d: CreateLeaveEntitlementTypeDto): Observable<any> {
+    create(user: any, d: CreateLeaveEntitlementTypeDTO): Observable<any> {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant
 

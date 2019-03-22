@@ -11,14 +11,14 @@ export class YearEntitlementBaseService {
 
         if(checkArray) {
             //find the entitle day for this service year
-            entitledDay = leavePolicy.levels.leaveEntitlement.find(x=>yearOfService>=x.service_year_from&&yearOfService<=x.service_year_to);
+            entitledDay = leavePolicy.levels.leaveEntitlement.find(x=>yearOfService>=x.serviceYearFrom&&yearOfService<=x.serviceYearTo);
         } else {
-            if(yearOfService>=leavePolicy.levels.leaveEntitlement.service_year_from&&yearOfService<=leavePolicy.levels.leaveEntitlement.service_year_to) {
+            if(yearOfService>=leavePolicy.levels.leaveEntitlement.serviceYearFrom&&yearOfService<=leavePolicy.levels.leaveEntitlement.serviceYearTo) {
                 entitledDay = leavePolicy.levels.leaveEntitlement;
             }
         }
 
-        return entitledDay.entitled_days;
+        return entitledDay.entitledDays;
     }
 
     protected calculateEntitlement(

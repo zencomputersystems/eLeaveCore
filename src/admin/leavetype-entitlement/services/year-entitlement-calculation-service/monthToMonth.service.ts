@@ -3,12 +3,14 @@ import moment = require("moment");
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { YearEntitlementBaseService } from "./year-entitlement-base.service";
 import { Injectable } from "@nestjs/common";
+import { EntitlementRoundingService } from "../leave-entitlement-rounding-service/entitlement-rounding.service";
 
 @Injectable()
 export class MonthToMonthService extends YearEntitlementBaseService implements IYearEntitleCalcService{
 
     constructor(
-        private readonly xmlParserService: XMLParserService
+        private readonly xmlParserService: XMLParserService,
+        private readonly roundingService: EntitlementRoundingService
     ) {
         super()
     }
@@ -47,15 +49,17 @@ export class MonthToMonthService extends YearEntitlementBaseService implements I
                 //get previous year entitlement
                 const actualPreviousYearEntitlement = this.calculateEntitlement(yearOfService,policyJson,(monthJoin-1),0,0,'MONTH');
 
-                return actualCurrentYearEntitlement+actualPreviousYearEntitlement;
+                return this.roundingService.leaveEntitlementRounding(actualCurrentYearEntitlement+actualPreviousYearEntitlement,policyJson.leaveEntitlementRounding);
             
 
             } else {
-                return actualCurrentYearEntitlement;
+                return this.roundingService.leaveEntitlementRounding(actualCurrentYearEntitlement,policyJson.leaveEntitlementRounding);
             }
 
         } else {
-            return this.getEntitlementFromPolicy(policyJson,yearOfService);
+            const totalEntitlement =  this.getEntitlementFromPolicy(policyJson,yearOfService);
+
+            return this.roundingService.leaveEntitlementRounding(totalEntitlement,policyJson.leaveEntitlementRounding);
         }
     }
 

@@ -3,12 +3,14 @@ import { IYearEntitleCalcService } from "../../interface/iYearEntitleCalc";
 import { YearEntitlementBaseService } from "./year-entitlement-base.service";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { Injectable } from "@nestjs/common";
+import { EntitlementRoundingService } from "../leave-entitlement-rounding-service/entitlement-rounding.service";
 
 @Injectable()
 export class DayToDayService extends YearEntitlementBaseService  implements IYearEntitleCalcService{
 
     constructor(
-        private readonly xmlParserService: XMLParserService
+        private readonly xmlParserService: XMLParserService,
+        private readonly roundingService: EntitlementRoundingService
     ) {
         super()
     }
@@ -53,9 +55,9 @@ export class DayToDayService extends YearEntitlementBaseService  implements IYea
 
             const previousYearEntitlement = this.calculateEntitlement(previousServiceYear,policyJson,(monthJoin-1),dateJoin.day(),lastDayOfMonthJoin,'DAY');
             
-            return (currentYearEntitlement+previousYearEntitlement)
+            return this.roundingService.leaveEntitlementRounding((currentYearEntitlement+previousYearEntitlement),policyJson.leaveEntitlementRounding)
         } else {
-            return currentYearEntitlement;
+            return this.roundingService.leaveEntitlementRounding(currentYearEntitlement,policyJson.leaveEntitlementRounding);
         }
    }
 

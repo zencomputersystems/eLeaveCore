@@ -45,6 +45,7 @@ export class EntitlementDetailController {
                     res.send(data);
                 },
                 err => {
+                    console.log(err);
                     res.status(500);
                     res.send();
                 },

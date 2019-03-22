@@ -16,6 +16,7 @@ import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.se
 import { UserLeaveEntitlementService } from './service/user-leave-entitlement.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { DayToDayService } from 'src/admin/leavetype-entitlement/services/year-entitlement-calculation-service/dayToDay.service';
+import { EntitlementRoundingService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-rounding-service/entitlement-rounding.service';
 
 @Module({
   providers: [
@@ -28,7 +29,8 @@ import { DayToDayService } from 'src/admin/leavetype-entitlement/services/year-e
     UserLeaveEntitlementDbService,
     UserLeaveEntitlementService,
     LeavetypeEntitlementDbService,
-    DayToDayService
+    DayToDayService,
+    EntitlementRoundingService
   ],
   modules:[
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),

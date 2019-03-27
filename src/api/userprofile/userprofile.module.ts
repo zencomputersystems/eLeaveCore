@@ -15,9 +15,10 @@ import { EntitlementDetailController } from './controller/entitlement-detail/ent
 import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.service';
 import { UserLeaveEntitlementService } from './service/user-leave-entitlement.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
-import { DayToDayService } from 'src/admin/leavetype-entitlement/services/year-entitlement-calculation-service/dayToDay.service';
 import { EntitlementRoundingService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-rounding-service/entitlement-rounding.service';
 import { ServiceYearCalc } from 'src/admin/leavetype-entitlement/services/service-year-calulation-service/serviceYearCalc.service';
+import { ProratedDateEndYearService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-type/proratedDateEndYear.service';
+import { ProratedDateCurrentMonthService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-type/proratedDateCurrentMonth.service';
 
 @Module({
   providers: [
@@ -30,9 +31,10 @@ import { ServiceYearCalc } from 'src/admin/leavetype-entitlement/services/servic
     UserLeaveEntitlementDbService,
     UserLeaveEntitlementService,
     LeavetypeEntitlementDbService,
-    DayToDayService,
     EntitlementRoundingService,
-    ServiceYearCalc
+    ServiceYearCalc,
+    ProratedDateEndYearService,
+    ProratedDateCurrentMonthService
   ],
   modules:[
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),

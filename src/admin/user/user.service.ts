@@ -32,16 +32,16 @@ export class UserService extends BaseDBService {
         
     }
 
-    // pass list of filter and get the data
-    public findByFilter(filters: Array<string>): Observable<any> {
+    // // pass list of filter and get the data
+    // public findByFilter(filters: Array<string>): Observable<any> {
 
-        const fields = ['USER_GUID','EMAIL','TENANT_GUID','ACTIVATION_FLAG'];
+    //     const fields = ['USER_GUID','EMAIL','TENANT_GUID','ACTIVATION_FLAG'];
        
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
+    //     const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
   
-        //call DF to validate the user
-        return this.httpService.get(url);
-    }
+    //     //call DF to validate the user
+    //     return this.httpService.get(url);
+    // }
 
     public async findOneByPayload(payload): Promise<any> {
         const fields = ['USER_GUID','EMAIL','TENANT_GUID'];

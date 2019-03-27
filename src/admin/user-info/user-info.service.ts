@@ -1,5 +1,4 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
@@ -7,7 +6,6 @@ import { v1 } from 'uuid';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserInfoModel } from './model/user-info.model';
-import {j2xParser, parse} from 'fast-xml-parser';
 import { UserDto } from './dto/user.dto';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';

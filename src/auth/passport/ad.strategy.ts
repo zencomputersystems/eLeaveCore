@@ -9,12 +9,14 @@ export class ActiveDirectoryStrategy extends PassportStrategy(Strategy,'ad') {
     
   constructor(
       private readonly authService: AuthService) {
-    super({
-        integrated: false,
-        usernameField: 'email',
-        passReqToCallback: false,
-        ldap: ldap
-    });
+    super(
+        {
+          integrated: false,
+          usernameField: 'email',
+          passReqToCallback: false,
+          ldap: ldap
+        }
+    );
   }
 
   async validate(profile, ad, done: Function) {

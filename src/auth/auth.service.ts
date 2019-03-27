@@ -7,6 +7,15 @@ import { ldap } from './passport/mock/ldap';
 export class AuthService {
     constructor(private readonly userService: UserService) {}
 
+    public authMethod(email: string) {
+      return {
+          url: 'ldap://zen.com.my',
+          baseDN: 'DC=zen,DC=com,DC=my',
+          username: 'tarmimi@zen.com.my',
+          password: 'P@ss1234'
+      }
+    }
+
     //log the user using provided user password
     public async logIn(email, password) {
         return await this.userService.findOne(email, password)
@@ -19,11 +28,11 @@ export class AuthService {
 
     public async adLogin(data) {
 
-      return await this.userService.findByFilter(['(LOGIN_ID='+data._json.userPrincipalName+')'],).toPromise()
+      return await this.userService.findByFilterV2([],['(LOGIN_ID='+data._json.userPrincipalName+')'],).toPromise()
       .then(async user => {
 
-        return (user.data.resource.length>0)
-        ? Promise.resolve(user.data.resource[0])
+        return (user.length>0)
+        ? Promise.resolve(user[0])
         : Promise.reject(new UnauthorizedException('Invalid Credential'))
       })
     }

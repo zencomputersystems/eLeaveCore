@@ -23,15 +23,15 @@ export class AccessLevelValidateService {
         // find the field name to be filtered
         const filterLevel = ACCESSLEVEL[accessLevel.toUpperCase()];
 
-        return this.userInfoService.findByFilter(filterLevel,filter)
+        return this.userInfoService.findByFilterV2(filterLevel,filter)
                 .pipe(
                     switchMap(res => {
-                        if(res.status==200) {
+                        if(res) {
 
                             const buildFilter = new Array<string>();
 
                             filterLevel.forEach(element => {
-                                buildFilter.push('('+element+'='+res.data.resource[0][element]+')');
+                                buildFilter.push('('+element+'='+res[0][element]+')');
                             });
 
                             return of(buildFilter.join('AND'));

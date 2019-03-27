@@ -84,11 +84,11 @@ export class InvitationService {
         // validate the user data
         const filters = ['(USER_GUID='+invitationData.USER_GUID+')','(ACTIVATION_FLAG=0)'];
 
-        return this.userService.findByFilter(filters)
+        return this.userService.findByFilterV2([],filters)
             .pipe(
                 map(res => {
 
-                    const result = res.data.resource[0];
+                    const result = res[0];
 
                     if(result==null) {
                         activatedResult.message = "Invalid User";

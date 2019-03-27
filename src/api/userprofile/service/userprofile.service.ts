@@ -28,13 +28,12 @@ export class UserprofileService {
 
     public getList(filters: string[]) {
         
-        return this.userprofileDBService.findByFilter([],filters)
-            .pipe(map(res => {
-                if(res.status==200) {
-
+        return this.userprofileDBService.findByFilterV2([],filters)
+            .pipe(
+                map(res => {
                     const userArray = new Array();
-                    
-                    res.data.resource.forEach(element => {
+                        
+                    res.forEach(element => {
 
                         userArray.push(
                             new UserprofileListDTO(
@@ -50,40 +49,40 @@ export class UserprofileService {
                     });
 
                     return userArray;
-                }
-            }));
+                })
+            );
     }
 
     // Get User Detail
     public getDetail(filters:string[]) {
 
-        return this.userInfoService.findByFilter([],filters)
-                .pipe(map(res => {
-                    if(res.status==200) {
-
-                        const data: UserInfoModel = res.data.resource[0];
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res => {
+                        console.log(res);
+                        const data: UserInfoModel = res[0];
 
                         if(data) {
                             return this.buildProfileData(data,true,true,true,true);
                         }
-                    }
-                }))
+                    })
+                )
         
     }
 
     //#region PERSONAL DETAIL
 
     public getPersonalDetail(filters:string[]) {
-        return this.userInfoService.findByFilter([],filters)
-                .pipe(map(res => {
-                    if(res.status==200) {
-                        const data: UserInfoModel = res.data.resource[0];
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res => {
+                        const data: UserInfoModel = res[0];
 
                         if(data) {
                             return this.buildProfileData(data,true,false,false,false);
                         }
-                    }
-                }));
+                    })
+                );
     }
 
     public updatePersonalDetail(data: UpdatePersonalDetailDTO,userId: string) {
@@ -106,16 +105,16 @@ export class UserprofileService {
     //#region EMPLOYMENT DETAIL
 
     public getEmploymentDetail(filters:string[]) {
-        return this.userInfoService.findByFilter([],filters)
-                .pipe(map(res => {
-                    if(res.status==200) {
-                        const data: UserInfoModel = res.data.resource[0];
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res => {
+                        const data: UserInfoModel = res[0];
 
                         if(data) {
                             return this.buildProfileData(data,false,true,false,false);
                         }
-                    }
-                }))
+                    })
+                )
     }
 
     public updateEmploymentDetail(data: UpdateEmploymentDetailDTO,userId: string) {
@@ -158,16 +157,16 @@ export class UserprofileService {
     //#region CERTIFICATION DETAIL
 
     public getCertificationDetail(filters:string[]) {
-        return this.userInfoService.findByFilter([],filters)
-                .pipe(map(res => {
-                    if(res.status==200) {
-                        const data: UserInfoModel = res.data.resource[0];
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res => {
+                        const data: UserInfoModel = res[0];
 
                         if(data) {
                             return this.buildProfileData(data,false,false,false,true);
                         }
-                    }
-                }))
+                    })
+                )
     }
 
     //#endregion

@@ -20,6 +20,16 @@ export class EntitlementDetailController {
     findOwn(@Req() req,@Res() res) {
 
         const user = req.user;
+
+        this.entitlementService.getEntitlementList(user.TENANT_GUID,user.USER_GUID)
+            .subscribe(
+                result => {
+                    res.send(result);
+                },
+                err => {
+                    console.log(err);
+                }
+            )
         
     }
 

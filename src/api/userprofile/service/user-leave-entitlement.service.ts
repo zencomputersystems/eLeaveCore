@@ -13,8 +13,9 @@ import * as moment from 'moment';
 import { of } from "rxjs";
 import { UserInfoService } from "src/admin/user-info/user-info.service";
 import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
-import { DayToDayService } from "src/admin/leavetype-entitlement/services/year-entitlement-calculation-service/dayToDay.service";
 import { ServiceYearCalc } from "src/admin/leavetype-entitlement/services/service-year-calulation-service/serviceYearCalc.service";
+import { ProratedDateEndYearService } from "src/admin/leavetype-entitlement/services/leave-entitlement-type/proratedDateEndYear.service";
+import { ProratedDateCurrentMonthService } from "src/admin/leavetype-entitlement/services/leave-entitlement-type/proratedDateCurrentMonth.service";
 
 @Injectable()
 export class UserLeaveEntitlementService {
@@ -24,11 +25,16 @@ export class UserLeaveEntitlementService {
         private readonly userDbService: UserprofileDbService,
         private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
         private readonly userInfoDbService: UserInfoService,
-        private readonly dayToDayService: DayToDayService,
-        private readonly serviceYearCalcService: ServiceYearCalc
+        private readonly serviceYearCalcService: ServiceYearCalc,
+        private readonly proratedMonthEndYearService: ProratedDateEndYearService,
+        private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService
     ) {}
 
-    public getEntitlementList(user: any) {
+    public getEntitlementList(tenantId: string, userId: string) {
+        
+        const userFilter = ['(USER_GUID='+userId+')','(TENANT_GUID='+tenantId+')'];
+
+        return this.userLeaveEntitlementDbService.findByFilterV2([],userFilter);
 
     }
 
@@ -89,9 +95,7 @@ export class UserLeaveEntitlementService {
 
 
                     // //get the entitlement days
-                    // const entitlementDay = this.calculateEntitleLeave(res.res.PROPERTIES_XML,serviceYear,dateOfJoin);
-
-                    const entitlementDay = this.dayToDayService.calculateYearlyEntitlement(dateOfJoin,serviceYear,res.res.PROPERTIES_XML)
+                    const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin,serviceYear,res.res.PROPERTIES_XML);
 
                     if(entitlementDay==0 || entitlementDay==undefined) {
                         return of(null);
@@ -133,16 +137,14 @@ export class UserLeaveEntitlementService {
     }
 
     private dbSearch(IDbService: IDbService, filter: string[]) {
-        return IDbService.findByFilter([],filter)
+        return IDbService.findByFilterV2([],filter)
                 .pipe(
                     map(res => {
-                        if(res.status==200) {
-                            const result = res.data.resource;
-
-                            if(result.length > 0) {
-                                return result[0];
+                        
+                            if(res.length > 0) {
+                                return res[0];
                             }
-                        }
+                        
                     })
                 )
     }

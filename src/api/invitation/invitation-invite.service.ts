@@ -29,14 +29,10 @@ export class InvitationInviteService {
  
         const userFilter = ['(TENANT_GUID='+user.TENANT_GUID+')','(ACTIVATION_FLAG=0)']
 
-        return this.userService.findByFilter(userFilter)
+        return this.userService.findByFilterV2([],userFilter)
             .pipe(
                 map(res => {
-                    if(res.status==200) {
-                        const data = res.data.resource;
-
-                        return this.filterUser(inviteList,data);
-                    }
+                    return this.filterUser(inviteList,res);
                 }),
                 mergeMap(res => {
                     return this.checkInvitationStatus(res,user.TENANT_GUID);

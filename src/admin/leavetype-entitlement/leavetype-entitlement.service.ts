@@ -43,11 +43,13 @@ export class LeaveTypeEntitlementService {
                 .pipe(map(res => {
 
                     if(res.status==200) {
-                        const data: ViewLeaveTypeSetupModel = res.data.resource[0];
+                        if(res.data.resource.length > 0) {
+                            const data: ViewLeaveTypeSetupModel = res.data.resource[0];
 
-                        data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
-                        
-                        return data;
+                            data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+                            
+                            return data;
+                        }
                     }
                 }))
     }

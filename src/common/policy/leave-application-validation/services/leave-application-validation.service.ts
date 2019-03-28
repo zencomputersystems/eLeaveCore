@@ -45,6 +45,10 @@ export class LeaveApplicationValidationService {
             }
         }
 
+        if(!this.allowedDay(policy,startDate,endDate)) {
+            validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
+        }
+
         if(validationStatus.message.length==0) {
             validationStatus.valid = true;
         }
@@ -96,12 +100,9 @@ export class LeaveApplicationValidationService {
         
         const currentDate = moment(new Date(),'YYYY-MM-DD').startOf('day');
 
-        // find the date duation between start date and current date
+        // find the date duration between start date and current date
         // check if rest day and holiday is included or not
-
         const dayDifference = this.dateCalculationService.getDayDuration(currentDate,startDate,policy.applyBeforeProperties.excludeDayType.isExcludeHoliday,policy.applyBeforeProperties.excludeDayType.isExcludeRestDay);
-
-        console.log(dayDifference);
 
         if(dayDifference > policy.applyBeforeProperties.numberOfDays ) {
             return true;
@@ -119,7 +120,7 @@ export class LeaveApplicationValidationService {
 
         const currentDate = moment(new Date(),'YYYY-MM-DD').startOf('day');
         
-        const dayDifference = moment.duration(currentDate.diff(endDate)).asDays();
+        const dayDifference = this.dateCalculationService.getDayDuration(endDate,currentDate,policy.applyWithinProperties.excludeDayType.isExcludeHoliday,policy.applyWithinProperties.excludeDayType.isExcludeRestDay);
 
         if(dayDifference <= policy.applyWithinProperties.numberOfDays) {
             return true;
@@ -128,7 +129,16 @@ export class LeaveApplicationValidationService {
         return false;
     }
 
-    private allowedDay(policy: LeaveTypePropertiesXmlDTO): boolean {
+    private allowedDay(policy: LeaveTypePropertiesXmlDTO,startDate: moment.Moment, endDate: moment.Moment): boolean {
+        
+        const maxAllowedDay = policy.maxDayPerLeave;
+
+        const leaveDuration = this.dateCalculationService.getDayDuration(startDate,endDate,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+
+        if(leaveDuration <= maxAllowedDay) {
+            return true;
+        }
+
         return false;
     }
 

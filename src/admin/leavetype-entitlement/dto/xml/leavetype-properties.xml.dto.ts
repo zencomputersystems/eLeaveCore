@@ -19,7 +19,7 @@ export class LeaveTypePropertiesXmlDTO {
         this.applyBeforeProperties = new ApplyBeforePropertiesXmlDTO();
         this.applyWithinProperties = new ApplyWithinPropertiesXmlDTO();
         this.isAllowAppliedMoreThanBalance = new GeneralPropertiesXmlDTO();
-        this.isAllowAfterEmploymentStatus = new GeneralPropertiesXmlDTO();
+        this.isAllowAfterJoinDate = true;
         this.isAllowLeaveCancelAfterDate = new GeneralPropertiesXmlDTO();
         this.isLimitApplicationToCarryForward = new GeneralPropertiesXmlDTO();
     }
@@ -86,12 +86,11 @@ export class LeaveTypePropertiesXmlDTO {
 
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description:'Allow to Apply Leave After reach this employment status'
+        description:'Allow to Apply Leave After Join'
     })
     @IsNotEmpty()
-    @ValidateNested({ each: true })
-    @Type(() => GeneralPropertiesXmlDTO)
-    isAllowAfterEmploymentStatus: GeneralPropertiesXmlDTO;
+    @IsBoolean()
+    isAllowAfterJoinDate: boolean
 
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,

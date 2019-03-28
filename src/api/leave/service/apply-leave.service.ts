@@ -2,25 +2,66 @@ import { Injectable } from '@nestjs/common';
 import { Moment } from 'moment';
 import { ApplyLeaveDTO } from '../dto/apply-leave.dto';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
-import { map } from 'rxjs/operators';
+import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
+import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-entitlement.model';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { LeaveApplicationValidationService } from 'src/common/policy/leave-application-validation/services/leave-application-validation.service';
+import { UserInfoService } from 'src/admin/user-info/user-info.service';
+import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
+import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import moment = require('moment');
 
 
 @Injectable()
 export class ApplyLeaveService {
 
     constructor(
-        private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService
+        private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+        private readonly xmlParserService: XMLParserService,
+        private readonly leaveValidationService: LeaveApplicationValidationService,
+        private readonly userInfoService: UserInfoService,
+        private readonly balanceService: DateCalculationService
     ) {}
 
     // process leave application
     public processLeave(applyLeaveDTO: ApplyLeaveDTO, user: any) {
-        return this.checkUserLeaveEntitlement(applyLeaveDTO.leaveTypeID,user);
-    }
+        
+        //const dayDuration = this.balanceService.getDayDuration(moment(applyLeaveDTO.startDate),moment(applyLeaveDTO.endDate),true,true);
 
-    // calculate how many day leave is taken
-    // check the policy for excluded day type
-    public getTotalAppliedDay(startDate: Moment, endDate:Moment) {
-        return this.getMonths(startDate,endDate);
+
+        // get user info
+        return this.userInfoService.findByFilterV2(['JOIN_DATE','CONFIRMATION_DATE'],['(USER_GUID='+user.USER_GUID+')','(TENANT_GUID='+user.TENANT_GUID+')'])
+                .pipe(
+                    map(res => {
+                        return res[0];
+                    }),
+                    mergeMap((userInfo:UserInfoModel) => {
+                        return this.checkUserLeaveEntitlement(applyLeaveDTO.leaveTypeID,user)
+                                .pipe(
+                                    map((userEntitlement:UserLeaveEntitlementModel[]) => {
+                                        return {userInfo,userEntitlement};
+                                    })
+                                )
+
+                    }),
+                    map((result) => {
+
+                        //find the parent leave
+                        const parent = result.userEntitlement.filter(x=>x.PARENT_FLAG==1)[0];
+
+                        if(parent.PROPERTIES_XML==null||parent.PROPERTIES_XML==undefined) {
+                            throw "Policy Not Found";
+                        }
+
+                        const policy = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+
+                        // validate the policy
+                        const validation = this.leaveValidationService.validateLeave(policy,applyLeaveDTO,result.userInfo);
+
+                        return validation;
+
+                    })
+                )
     }
 
     // check if leave entitlement policy is available
@@ -44,16 +85,6 @@ export class ApplyLeaveService {
                         return result;
                     })
                 )
-    }
-
-    // calculate balance available on leave date
-    private calculateLeaveBalance(startDate: Moment, endDate: Moment, leavePolicy: string) {
-        
-        // get the month list
-        const month = this.getMonths(startDate,endDate);
-
-        
-
     }
 
     // get month between 2 date

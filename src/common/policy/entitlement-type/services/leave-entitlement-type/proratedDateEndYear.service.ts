@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { LeaveEntitlementBaseService } from "./leave-entitlement-base.service";
 import { ILeaveEntitlementType } from "../../interface/iLeaveEntitlementType";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
-import { EntitlementRoundingService } from "../leave-entitlement-rounding-service/entitlement-rounding.service";
+import { EntitlementRoundingService } from "src/common/policy/entitlement-rounding/services/entitlement-rounding.service";
 
 @Injectable()
 export class ProratedDateEndYearService extends LeaveEntitlementBaseService implements ILeaveEntitlementType {

@@ -18,9 +18,5 @@ export const ENTITLEMENTTYPE = [
     {
         "id":5,
         "name":"Prorated from date-of-confirm to end of year"
-    },
-    {
-        "id":6,
-        "name":"Leave entitled after 12 months"
     }
 ]

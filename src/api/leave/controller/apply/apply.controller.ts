@@ -17,20 +17,16 @@ export class ApplyController {
     @ApiOperation({title: 'Apply leave'})
     findAll(@Body() applyLeaveDTO: ApplyLeaveDTO,@Req() req, @Res() res) {
 
-        const g = this.applyLeaveService.getTotalAppliedDay(moment(applyLeaveDTO.startDate,'YYYY-MM-DD'),moment(applyLeaveDTO.endDate,'YYYY-MM-DD'));
+        this.applyLeaveService.processLeave(applyLeaveDTO,req.user)
+            .subscribe(
+                data => {
+                    res.send(data);
+                },
+                err => {
 
-        return res.send(g);
-        // this.applyLeaveService.processLeave(applyLeaveDTO,req.user)
-        //     .subscribe(
-        //         data => {
-        //             console.log(data);
-        //             res.send('success');
-        //         },
-        //         err => {
-
-        //             console.log(err);
-        //             res.send('fail');
-        //         }
-        //     )
+                    console.log(err);
+                    res.send('fail');
+                }
+            )
     }
 }

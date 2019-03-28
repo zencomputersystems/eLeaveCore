@@ -1,6 +1,5 @@
-import { ILeaveRounding } from "../../interface/iLeaveRounding";
 
-export class EntitlementRoundingService implements ILeaveRounding {
+export class EntitlementRoundingService{
     
     leaveEntitlementRounding(entitleDay: number, strategy: string): number {
         

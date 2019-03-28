@@ -15,10 +15,10 @@ import { EntitlementDetailController } from './controller/entitlement-detail/ent
 import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.service';
 import { UserLeaveEntitlementService } from './service/user-leave-entitlement.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
-import { EntitlementRoundingService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-rounding-service/entitlement-rounding.service';
-import { ServiceYearCalc } from 'src/admin/leavetype-entitlement/services/service-year-calulation-service/serviceYearCalc.service';
-import { ProratedDateEndYearService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-type/proratedDateEndYear.service';
-import { ProratedDateCurrentMonthService } from 'src/admin/leavetype-entitlement/services/leave-entitlement-type/proratedDateCurrentMonth.service';
+import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service';
+import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
+import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 
 @Module({
   providers: [

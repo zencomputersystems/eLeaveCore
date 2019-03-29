@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsISO8601, IsString } from "class-validator";
+import { IsNotEmpty, IsISO8601, IsString, IsNumber } from "class-validator";
+import { ApiModelProperty } from "@nestjs/swagger";
 
 export class ApplyLeaveDTO {
 
@@ -13,8 +14,11 @@ export class ApplyLeaveDTO {
     @IsISO8601()
     endDate: Date;
 
-    @IsString()
-    halfDay: string;
+    @IsNumber()
+    @ApiModelProperty({
+        description:'Type of Day, 0 = Full Day, 1 = Half Day, 2 = Quarter Day'
+    })
+    dayType: number;
 
     @IsString()
     reason: string;

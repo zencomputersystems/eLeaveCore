@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import moment = require("moment");
 import { holidayMock } from "../mock/holiday.mock";
+import { ApplyLeaveDTO } from "src/api/leave/dto/apply-leave.dto";
 
 @Injectable()
 export class DateCalculationService {
@@ -54,5 +55,22 @@ export class DateCalculationService {
         
         return totalDuration;
 
+    }
+
+    getLeaveDuration(firstDate: Date, secondDate: Date, dayType: number,isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
+        const startDate = moment(firstDate,'YYYY-MM-DD');
+        const endDate = moment(secondDate,'YYYY-MM-DD');
+
+        const duration = this.getDayDuration(startDate,endDate,isIncludeHoliday,isIncludeRestDay);
+
+        if(dayType==1) {
+            return (duration-0.5);
+        }
+
+        if(dayType==2) {
+            return (duration-0.75);
+        }
+
+        return duration;
     }
 }

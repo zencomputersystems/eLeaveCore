@@ -8,6 +8,12 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveApplicationValidationService } from 'src/common/policy/leave-application-validation/services/leave-application-validation.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { LeaveBalanceValidationService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation.service';
+import { EntitledFullService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/entitledFull.service';
+import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service';
+import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
+import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 
 @Module({
   modules: [
@@ -21,7 +27,13 @@ import { DateCalculationService } from 'src/common/calculation/service/date-calc
     XMLParserService,
     LeaveApplicationValidationService,
     UserInfoService,
-    DateCalculationService
+    DateCalculationService,
+    LeaveBalanceValidationService,
+    EntitledFullService,
+    ProratedDateCurrentMonthService,
+    ProratedDateEndYearService,
+    ServiceYearCalc,
+    EntitlementRoundingService
   ],
 })
 export class LeaveModule {}

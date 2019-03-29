@@ -4,6 +4,7 @@ import { LeaveEntitlementBaseService } from "./leave-entitlement-base.service";
 import { ILeaveEntitlementType } from "../../interface/iLeaveEntitlementType";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { EntitlementRoundingService } from "src/common/policy/entitlement-rounding/services/entitlement-rounding.service";
+import { LeaveTypePropertiesXmlDTO } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto";
 
 @Injectable()
 export class ProratedDateEndYearService extends LeaveEntitlementBaseService implements ILeaveEntitlementType {
@@ -15,7 +16,7 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
     }
     
     // get full entitlement of this service year
-    calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: string): number {
+    calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: LeaveTypePropertiesXmlDTO): number {
         
         /* EG:
             
@@ -41,9 +42,9 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
         const monthFullEntitlement = (12 - monthJoin);
 
         // Convert xml to json
-        const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
+        //const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
 
-        const currentYearActualEntitlement = this.calculateEntitlement(dateMoment,policyJson,yearOfService,monthFullEntitlement,"END")
+        const currentYearActualEntitlement = this.calculateEntitlement(dateMoment,leavePolicy,yearOfService,monthFullEntitlement,"END")
         
         if(yearOfService<=1) {
    
@@ -51,7 +52,7 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
             return currentYearActualEntitlement;
         }
 
-        const previousYearActualEntitlemnt = this.calculateEntitlement(dateMoment,policyJson,(yearOfService-1),(monthJoin-1),"START");
+        const previousYearActualEntitlemnt = this.calculateEntitlement(dateMoment,leavePolicy,(yearOfService-1),(monthJoin-1),"START");
 
         return currentYearActualEntitlement+previousYearActualEntitlemnt;
     }

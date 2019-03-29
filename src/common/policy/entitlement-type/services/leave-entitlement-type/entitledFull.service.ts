@@ -2,6 +2,7 @@ import { LeaveEntitlementBaseService } from "./leave-entitlement-base.service";
 import { ILeaveEntitlementType } from "../../interface/iLeaveEntitlementType";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { Injectable } from "@nestjs/common";
+import { LeaveTypePropertiesXmlDTO } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto";
 
 @Injectable()
 export class EntitledFullService extends LeaveEntitlementBaseService implements ILeaveEntitlementType {
@@ -13,12 +14,12 @@ export class EntitledFullService extends LeaveEntitlementBaseService implements 
     /*
         Full entitlement
     */
-    calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: string): number {
+    calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: LeaveTypePropertiesXmlDTO): number {
         
         // Convert xml to json
-        const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
+        //const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
 
-        return this.getEntitlementFromPolicy(policyJson,yearOfService);
+        return this.getEntitlementFromPolicy(leavePolicy,yearOfService);
         
     }
 

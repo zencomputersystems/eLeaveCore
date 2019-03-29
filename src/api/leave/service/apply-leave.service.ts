@@ -8,8 +8,9 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveApplicationValidationService } from 'src/common/policy/leave-application-validation/services/leave-application-validation.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
-import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import moment = require('moment');
+import { of } from 'rxjs';
+import { LeaveBalanceValidationService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation.service';
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class ApplyLeaveService {
         private readonly xmlParserService: XMLParserService,
         private readonly leaveValidationService: LeaveApplicationValidationService,
         private readonly userInfoService: UserInfoService,
-        private readonly balanceService: DateCalculationService
+        private readonly balanceValidationService: LeaveBalanceValidationService
     ) {}
 
     // process leave application
@@ -56,7 +57,7 @@ export class ApplyLeaveService {
                         const policy = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
 
                         // validate the policy
-                        const validation = this.leaveValidationService.validateLeave(policy,applyLeaveDTO,result.userInfo);
+                        const validation = this.leaveValidationService.validateLeave(policy,applyLeaveDTO,result.userInfo,result.userEntitlement);
 
                         return validation;
 

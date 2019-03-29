@@ -5,22 +5,29 @@ import { ApplyLeaveDTO } from "src/api/leave/dto/apply-leave.dto";
 import { ValidationStatusDTO } from "../dto/validation-status.dto";
 import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
 import { DateCalculationService } from "src/common/calculation/service/date-calculation.service";
+import { LeaveBalanceValidationService } from "./leave-balance-validation.service";
+import { UserLeaveEntitlementModel } from "src/api/userprofile/model/user-leave-entitlement.model";
 
 @Injectable()
 export class LeaveApplicationValidationService {
 
-    constructor(private readonly dateCalculationService: DateCalculationService) {}
+    constructor(private readonly dateCalculationService: DateCalculationService, private readonly balanceValidationService: LeaveBalanceValidationService) {}
     
     public validateLeave(
         policy: LeaveTypePropertiesXmlDTO,
         applyLeaveDTO: ApplyLeaveDTO,
-        userInfo: UserInfoModel) {
+        userInfo: UserInfoModel,
+        userEntitlement: UserLeaveEntitlementModel[]) {
 
         const validationStatus = new ValidationStatusDTO();
 
         const startDate = this.convertDateToMoment(applyLeaveDTO.startDate);
         const endDate = this.convertDateToMoment(applyLeaveDTO.endDate);
 
+
+        if(!this.validateBalance(userInfo,applyLeaveDTO,userEntitlement)){ 
+            validationStatus.message.push("Leave balance not enough");
+        }
 
         if(!this.allowAdvancedLeave(policy,startDate,endDate)) {
             validationStatus.message.push("Cannot apply advanced leave");
@@ -45,7 +52,7 @@ export class LeaveApplicationValidationService {
             }
         }
 
-        if(!this.allowedDay(policy,startDate,endDate)) {
+        if(!this.allowedDay(policy,applyLeaveDTO)) {
             validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
         }
 
@@ -54,6 +61,12 @@ export class LeaveApplicationValidationService {
         }
         return validationStatus;
 
+    }
+
+    private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
+        const balance = this.balanceValidationService.validateLeaveBalance(userInfo,applyLeaveDTO,userEntitlement);
+
+        return balance;
     }
     
     // check if employee can apply more than current date
@@ -129,11 +142,11 @@ export class LeaveApplicationValidationService {
         return false;
     }
 
-    private allowedDay(policy: LeaveTypePropertiesXmlDTO,startDate: moment.Moment, endDate: moment.Moment): boolean {
+    private allowedDay(policy: LeaveTypePropertiesXmlDTO,applyLeaveDTO: ApplyLeaveDTO): boolean {
         
         const maxAllowedDay = policy.maxDayPerLeave;
 
-        const leaveDuration = this.dateCalculationService.getDayDuration(startDate,endDate,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+        const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 
         if(leaveDuration <= maxAllowedDay) {
             return true;

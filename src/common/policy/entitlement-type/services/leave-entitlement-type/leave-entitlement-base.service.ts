@@ -1,4 +1,5 @@
 import { Moment } from "moment";
+import { LeaveTypePropertiesXmlDTO } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto";
 
 export class LeaveEntitlementBaseService {
     
@@ -39,7 +40,7 @@ export class LeaveEntitlementBaseService {
 
     protected calculateEntitlement(
         date: Moment,
-        policyJson: string,
+        policyJson: LeaveTypePropertiesXmlDTO,
         yearOfService: number,
         monthFullEntitlement: number,
         option: string

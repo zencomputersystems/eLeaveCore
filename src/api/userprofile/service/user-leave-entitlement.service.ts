@@ -16,6 +16,7 @@ import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
 import { ServiceYearCalc } from "src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service";
 import { ProratedDateEndYearService } from "src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service";
 import { ProratedDateCurrentMonthService } from "src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service";
+import { XMLParserService } from "src/common/helper/xml-parser.service";
 
 @Injectable()
 export class UserLeaveEntitlementService {
@@ -27,7 +28,8 @@ export class UserLeaveEntitlementService {
         private readonly userInfoDbService: UserInfoService,
         private readonly serviceYearCalcService: ServiceYearCalc,
         private readonly proratedMonthEndYearService: ProratedDateEndYearService,
-        private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService
+        private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService,
+        private readonly xmlParserService: XMLParserService
     ) {}
 
     public getEntitlementList(tenantId: string, userId: string) {
@@ -93,9 +95,10 @@ export class UserLeaveEntitlementService {
                     // get the service year
                     const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
 
+                    const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
 
                     // //get the entitlement days
-                    const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin,serviceYear,res.res.PROPERTIES_XML);
+                    const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin,serviceYear,policy);
 
                     if(entitlementDay==0 || entitlementDay==undefined) {
                         return of(null);

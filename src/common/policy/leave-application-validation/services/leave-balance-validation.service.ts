@@ -10,6 +10,9 @@ import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
 import { ServiceYearCalc } from "../../entitlement-type/services/service-year-calulation-service/serviceYearCalc.service";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import moment = require("moment");
+import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
+import { map } from "rxjs/operators";
+import { LeaveTransactionModel } from "src/api/leave/model/leave-transaction.model";
 
 @Injectable()
 export class LeaveBalanceValidationService {
@@ -20,7 +23,8 @@ export class LeaveBalanceValidationService {
         private readonly proratedDateMonthService: ProratedDateCurrentMonthService,
         private readonly proratedDateEndYearService: ProratedDateEndYearService,
         private readonly workingYearService: ServiceYearCalc,
-        private readonly xmlParserService: XMLParserService) {}
+        private readonly xmlParserService: XMLParserService,
+        private readonly leaveTransactionDbService: LeaveTransactionDbService) {}
 
     // validate if the balance is enough
     public validateLeaveBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO,userEntitlement: UserLeaveEntitlementModel[]) {
@@ -34,25 +38,49 @@ export class LeaveBalanceValidationService {
 
         const policy:LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
 
-        // get leave duration
+        // get leave applied duration
         const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 
-        // calculate all available leave
-        // for parent flag, we need to calculate based on policy
-        // balance calculation will be based on entitlement type in policy
-        // for child leave, we need to check the expiry date
-        const parentBalance = this.getParentBalance(userInfo,policy);
+        // get all applied leave for this leave type
+        const currentDateStartYear = new Date().getFullYear()+"-01-01";
 
-        const childBalance = this.getChildBalance(applyLeaveDTO,userEntitlement,policy);
-        
 
-        const balance = ((parentBalance+childBalance) - leaveDuration);
+        const filter = ["((START_DATE <= "+currentDateStartYear+")OR(END_DATE >="+currentDateStartYear+")AND(START_DATE <= "+applyLeaveDTO.endDate+")OR(END_DATE>="+applyLeaveDTO.endDate+"))"];
+        return this.leaveTransactionDbService.findByFilterV2([],filter)
+            .pipe(map((leaveTransactions: LeaveTransactionModel[]) => {
+                
+                // we need to check policy if current leave type rely on another leave
+                // eg: medical leave and hospitalization leave
+                // hospitaliation leave calculation:
+                // Actual Entitlement = (( Available Hospitalization - Used Hospitalization) - Used Medical)
+                let counterAppliedDay = 0;
+                leaveTransactions.forEach(element => {
+                    
+                    if(element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID==parent.LEAVE_TYPE_GUID) {
+                        counterAppliedDay+=element.NO_OF_DAYS;
+                    }
+                });
 
-        if(balance<0) {
-            return false;
-        } 
+                // calculate all available leave
+                // for parent flag, we need to calculate based on policy
+                // balance calculation will be based on entitlement type in policy
+                // for child leave, we need to check the expiry date
+                const parentBalance = this.getParentBalance(userInfo,policy);
 
-        return true;
+                const childBalance = this.getChildBalance(applyLeaveDTO,userEntitlement,policy);
+
+
+                const balance = ((parentBalance+childBalance) - (leaveDuration+counterAppliedDay));
+
+
+                if(balance<0) {
+                    return false;
+                } 
+
+                return true;
+
+            }))
+            
     }
 
     public getParentBalance(userInfo: UserInfoModel, policy: LeaveTypePropertiesXmlDTO) {

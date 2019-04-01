@@ -8,7 +8,7 @@ import { DateCalculationService } from "src/common/calculation/service/date-calc
 import { LeaveBalanceValidationService } from "./leave-balance-validation.service";
 import { UserLeaveEntitlementModel } from "src/api/userprofile/model/user-leave-entitlement.model";
 import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
-import { map } from "rxjs/operators";
+import { map, mergeMap } from "rxjs/operators";
 
 @Injectable()
 export class LeaveApplicationValidationService {
@@ -36,45 +36,51 @@ export class LeaveApplicationValidationService {
                     if(!result) {
                         validationStatus.message.push("You have applied another leave between this date");
                     }
+                }),
+                mergeMap(res => {
     
-                    if(!this.validateBalance(userInfo,applyLeaveDTO,userEntitlement)){ 
-                        validationStatus.message.push("Leave balance not enough");
-                    }
-            
-                    if(!this.allowAdvancedLeave(policy,startDate,endDate)) {
-                        validationStatus.message.push("Cannot apply advanced leave");
-                    }
-            
-                    if(!this.allowNextYearApplciation(policy,startDate,endDate)) {
-                        validationStatus.message.push("Cannot apply leave on the following year");
-                    }
-            
-                    if(!this.allowAfterConfirm(policy,this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
-                        validationStatus.message.push("Cannot apply before confirm");
-                    }
-            
-                    if(!this.validateApplyBefore(policy, startDate)) {
-                        validationStatus.message.push("You need to apply "+policy.applyBeforeProperties.numberOfDays+" Days before");
-                    }
-            
-                    // apply within will be overwited by apply before properties if available
-                    if(policy.applyBeforeProperties.numberOfDays==0||policy.applyBeforeProperties.numberOfDays==null) {
-                        if(!this.validateApplyWithin(policy,endDate)) {
-                            validationStatus.message.push("You need to apply within "+policy.applyWithinProperties.numberOfDays+" days after leave end");
-                        }
-                    }
-            
-                    if(!this.allowedDay(policy,applyLeaveDTO)) {
-                        validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
-                    }
-            
-                    if(validationStatus.message.length==0) {
-                        validationStatus.valid = true;
-                    }
-    
-                    return validationStatus;
-                })
-            )           
+                    return this.validateBalance(userInfo,applyLeaveDTO,userEntitlement)
+                            .pipe(map((validateBalanceResult: boolean)=> {
+                                if(!validateBalanceResult) {
+                                    validationStatus.message.push("Leave balance not enough");
+                                }
+
+                                if(!this.allowAdvancedLeave(policy,startDate,endDate)) {
+                                    validationStatus.message.push("Cannot apply advanced leave");
+                                }
+                        
+                                if(!this.allowNextYearApplciation(policy,startDate,endDate)) {
+                                    validationStatus.message.push("Cannot apply leave on the following year");
+                                }
+                        
+                                if(!this.allowAfterConfirm(policy,this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
+                                    validationStatus.message.push("Cannot apply before confirm");
+                                }
+                        
+                                if(!this.validateApplyBefore(policy, startDate)) {
+                                    validationStatus.message.push("You need to apply "+policy.applyBeforeProperties.numberOfDays+" Days before");
+                                }
+                        
+                                // apply within will be overwited by apply before properties if available
+                                if(policy.applyBeforeProperties.numberOfDays==0||policy.applyBeforeProperties.numberOfDays==null) {
+                                    if(!this.validateApplyWithin(policy,endDate)) {
+                                        validationStatus.message.push("You need to apply within "+policy.applyWithinProperties.numberOfDays+" days after leave end");
+                                    }
+                                }
+                        
+                                if(!this.allowedDay(policy,applyLeaveDTO)) {
+                                    validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
+                                }
+                        
+                                if(validationStatus.message.length==0) {
+                                    validationStatus.valid = true;
+                                }
+                
+                                return validationStatus;
+                            })
+                        )
+                        })  
+            )         
     }
 
     private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {

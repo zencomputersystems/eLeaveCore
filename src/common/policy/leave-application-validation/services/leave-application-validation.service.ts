@@ -7,11 +7,16 @@ import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
 import { DateCalculationService } from "src/common/calculation/service/date-calculation.service";
 import { LeaveBalanceValidationService } from "./leave-balance-validation.service";
 import { UserLeaveEntitlementModel } from "src/api/userprofile/model/user-leave-entitlement.model";
+import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class LeaveApplicationValidationService {
 
-    constructor(private readonly dateCalculationService: DateCalculationService, private readonly balanceValidationService: LeaveBalanceValidationService) {}
+    constructor(
+        private readonly dateCalculationService: DateCalculationService,
+        private readonly balanceValidationService: LeaveBalanceValidationService,
+        private readonly leaveTransactionDbService: LeaveTransactionDbService) {}
     
     public validateLeave(
         policy: LeaveTypePropertiesXmlDTO,
@@ -25,42 +30,51 @@ export class LeaveApplicationValidationService {
         const endDate = this.convertDateToMoment(applyLeaveDTO.endDate);
 
 
-        if(!this.validateBalance(userInfo,applyLeaveDTO,userEntitlement)){ 
-            validationStatus.message.push("Leave balance not enough");
-        }
-
-        if(!this.allowAdvancedLeave(policy,startDate,endDate)) {
-            validationStatus.message.push("Cannot apply advanced leave");
-        }
-
-        if(!this.allowNextYearApplciation(policy,startDate,endDate)) {
-            validationStatus.message.push("Cannot apply leave on the following year");
-        }
-
-        if(!this.allowAfterConfirm(policy,this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
-            validationStatus.message.push("Cannot apply before confirm");
-        }
-
-        if(!this.validateApplyBefore(policy, startDate)) {
-            validationStatus.message.push("You need to apply "+policy.applyBeforeProperties.numberOfDays+" Days before");
-        }
-
-        // apply within will be overwited by apply before properties if available
-        if(policy.applyBeforeProperties.numberOfDays==0||policy.applyBeforeProperties.numberOfDays==null) {
-            if(!this.validateApplyWithin(policy,endDate)) {
-                validationStatus.message.push("You need to apply within "+policy.applyWithinProperties.numberOfDays+" days after leave end");
-            }
-        }
-
-        if(!this.allowedDay(policy,applyLeaveDTO)) {
-            validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
-        }
-
-        if(validationStatus.message.length==0) {
-            validationStatus.valid = true;
-        }
-        return validationStatus;
-
+        return this.validateOverlapLeave(applyLeaveDTO.startDate,applyLeaveDTO.endDate)
+            .pipe(
+                map((result: boolean) => {
+                    if(!result) {
+                        validationStatus.message.push("You have applied another leave between this date");
+                    }
+    
+                    if(!this.validateBalance(userInfo,applyLeaveDTO,userEntitlement)){ 
+                        validationStatus.message.push("Leave balance not enough");
+                    }
+            
+                    if(!this.allowAdvancedLeave(policy,startDate,endDate)) {
+                        validationStatus.message.push("Cannot apply advanced leave");
+                    }
+            
+                    if(!this.allowNextYearApplciation(policy,startDate,endDate)) {
+                        validationStatus.message.push("Cannot apply leave on the following year");
+                    }
+            
+                    if(!this.allowAfterConfirm(policy,this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
+                        validationStatus.message.push("Cannot apply before confirm");
+                    }
+            
+                    if(!this.validateApplyBefore(policy, startDate)) {
+                        validationStatus.message.push("You need to apply "+policy.applyBeforeProperties.numberOfDays+" Days before");
+                    }
+            
+                    // apply within will be overwited by apply before properties if available
+                    if(policy.applyBeforeProperties.numberOfDays==0||policy.applyBeforeProperties.numberOfDays==null) {
+                        if(!this.validateApplyWithin(policy,endDate)) {
+                            validationStatus.message.push("You need to apply within "+policy.applyWithinProperties.numberOfDays+" days after leave end");
+                        }
+                    }
+            
+                    if(!this.allowedDay(policy,applyLeaveDTO)) {
+                        validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
+                    }
+            
+                    if(validationStatus.message.length==0) {
+                        validationStatus.valid = true;
+                    }
+    
+                    return validationStatus;
+                })
+            )           
     }
 
     private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
@@ -171,5 +185,22 @@ export class LeaveApplicationValidationService {
 
     private convertDateToMoment(date: Date) {
         return moment(date,'YYYY-MM-DD');
+    }
+
+    // validate if other leave overlap with applied leave
+    // except cancelled leave
+    public validateOverlapLeave(startDate: Date, endDate: Date) {
+        const filter = ["((START_DATE <= "+startDate+")AND(END_DATE >="+startDate+")OR(START_DATE <= "+endDate+")AND(END_DATE>="+endDate+"))"];
+
+        //const filter = ["(START_DATE<="+startDate+")"];
+        return this.leaveTransactionDbService.findByFilterV2([],filter)
+                .pipe(map(res => {
+                    console.log(res);
+                    if(res.length > 0) {
+                        return false;
+                    }
+                    
+                    return true;
+                }))
     }
 }

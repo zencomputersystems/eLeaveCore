@@ -45,7 +45,7 @@ export class ApplyLeaveService {
                                 )
 
                     }),
-                    map((result) => {
+                    mergeMap((result) => {
 
                         //find the parent leave
                         const parent = result.userEntitlement.filter(x=>x.PARENT_FLAG==1)[0];

@@ -14,6 +14,7 @@ import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-t
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+import { LeaveTransactionDbService } from './db/leave-transaction.db.service';
 
 @Module({
   modules: [
@@ -26,6 +27,7 @@ import { EntitlementRoundingService } from 'src/common/policy/entitlement-roundi
     UserLeaveEntitlementDbService,
     XMLParserService,
     LeaveApplicationValidationService,
+    LeaveTransactionDbService,
     UserInfoService,
     DateCalculationService,
     LeaveBalanceValidationService,

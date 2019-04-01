@@ -30,10 +30,10 @@ export class UserImportService {
 
 
         //get all the the user for this tenant
-        return this.userService.findByFilter(['(TENANT_GUID='+user.TENANT_GUID+')'])
+        return this.userService.findByFilterV2([],['(TENANT_GUID='+user.TENANT_GUID+')'])
             .pipe(
                map(res => {
-                    const existingUsers: [UserModel] = res.data.resource;  
+                    const existingUsers: UserModel[] = res;
                     return existingUsers;
                }),
                map(res => this.filterData(importData,res,'Existing User','EMAIL','STAFF_EMAIL')),

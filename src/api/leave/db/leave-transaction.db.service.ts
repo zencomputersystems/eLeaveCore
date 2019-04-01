@@ -13,11 +13,11 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService){
-            super(httpService,queryService,"l_leavetype_entitlement_def");
+            super(httpService,queryService,"l_main_leave_transaction");
         }
 
     public create(applyLeaveDTO: ApplyLeaveDTO, user: any) {
-        
+    
         const data = new LeaveTransactionModel();
 
         data.LEAVE_TRANSACTION_GUID = v1();

@@ -21,6 +21,12 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         const data = new LeaveTransactionModel();
 
         data.LEAVE_TRANSACTION_GUID = v1();
+        data.CREATION_USER_GUID = user.USER_GUID;
+        data.USER_GUID = user.USER_GUID;
+        data.TENANT_GUID = user.TENANT_GUID;
+        data.ENTITLEMENT_GUID = applyLeaveDTO.leaveTypeID;
+        data.START_DATE = applyLeaveDTO.startDate;
+        data.END_DATE = applyLeaveDTO.endDate;
         
     }
         

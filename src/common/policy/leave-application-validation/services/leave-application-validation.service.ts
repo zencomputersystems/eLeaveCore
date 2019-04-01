@@ -192,10 +192,9 @@ export class LeaveApplicationValidationService {
     public validateOverlapLeave(startDate: Date, endDate: Date) {
         const filter = ["((START_DATE <= "+startDate+")AND(END_DATE >="+startDate+")OR(START_DATE <= "+endDate+")AND(END_DATE>="+endDate+"))"];
 
-        //const filter = ["(START_DATE<="+startDate+")"];
         return this.leaveTransactionDbService.findByFilterV2([],filter)
                 .pipe(map(res => {
-                    console.log(res);
+                    
                     if(res.length > 0) {
                         return false;
                     }

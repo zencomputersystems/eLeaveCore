@@ -25,7 +25,7 @@ export class ApplyController {
                 },
                 err => {
 
-                    console.log(err);
+                    console.log(err.response.data.error.context);
                     res.send('fail');
                 }
             )

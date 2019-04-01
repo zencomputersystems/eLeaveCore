@@ -11,6 +11,12 @@ import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import moment = require('moment');
 import { of } from 'rxjs';
 import { LeaveBalanceValidationService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation.service';
+import { LeaveTransactionModel } from '../model/leave-transaction.model';
+import { v1 } from 'uuid';
+import { Resource } from 'src/common/model/resource.model';
+import { LeaveTransactionDbService } from '../db/leave-transaction.db.service';
+import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
 
 @Injectable()
@@ -21,7 +27,8 @@ export class ApplyLeaveService {
         private readonly xmlParserService: XMLParserService,
         private readonly leaveValidationService: LeaveApplicationValidationService,
         private readonly userInfoService: UserInfoService,
-        private readonly balanceValidationService: LeaveBalanceValidationService
+        private readonly leaveTransactionDbService: LeaveTransactionDbService,
+        private readonly dateCalculationService: DateCalculationService
     ) {}
 
     // process leave application
@@ -54,13 +61,53 @@ export class ApplyLeaveService {
                             throw "Policy Not Found";
                         }
 
-                        const policy = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+                        const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
 
                         // validate the policy
                         const validation = this.leaveValidationService.validateLeave(policy,applyLeaveDTO,result.userInfo,result.userEntitlement);
 
-                        return validation;
+                        return validation.pipe(map(validationResult => {
+                            return {result,validationResult,policy};
+                        }));
 
+                    }),
+                    mergeMap(result => {
+                        
+                        if(result.validationResult.valid) {
+                            //start to save leave transaction into db
+                            const leaveData = new LeaveTransactionModel();
+
+                            leaveData.LEAVE_TRANSACTION_GUID = v1();
+                            leaveData.LEAVE_TYPE_GUID = result.result.userEntitlement[0].LEAVE_TYPE_GUID;
+                            leaveData.ENTITLEMENT_GUID = result.result.userEntitlement[0].ENTITLEMENT_GUID;
+                            leaveData.USER_GUID = user.USER_GUID;
+                            leaveData.TENANT_GUID = user.TENANT_GUID;
+                            leaveData.CREATION_USER_GUID = user.USER_GUID;
+                            leaveData.TENANT_COMPANY_GUID = result.result.userInfo.TENANT_COMPANY_GUID==undefined?"":result.result.userInfo.TENANT_COMPANY_GUID;
+                            
+                            leaveData.START_DATE = applyLeaveDTO.startDate;
+                            leaveData.END_DATE = applyLeaveDTO.endDate;
+                            leaveData.REASON = applyLeaveDTO.reason;
+                            leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,result.policy.excludeDayType.isExcludeHoliday,result.policy.excludeDayType.isExcludeRestDay);
+                            leaveData.ENTITLEMENT_XML_SNAPSHOT = this.xmlParserService.convertJsonToXML(result.policy);
+                            leaveData.ACTIVE_FLAG = true;
+
+                            const resource = new Resource(new Array());
+
+                            resource.resource.push(leaveData);
+
+                            return this.leaveTransactionDbService.createByModel(resource,[],[],[])
+                                .pipe(map((res) => {
+
+                                    if(res.status!=200) {
+                                        result.validationResult.valid = false;
+                                    } 
+
+                                    return result.validationResult;
+                                }))
+                        } else {
+                            return of(result.validationResult);
+                        }
                     })
                 )
     }

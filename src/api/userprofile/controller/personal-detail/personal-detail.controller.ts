@@ -34,6 +34,7 @@ export class PersonalDetailController {
                     res.send(data);
                 },
                 err => {
+                    console.log(err.response.data.error);
                     res.status(500);
                     res.send();
                 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, ValidateNested, IsISO8601 } from "class-validator";
 import { Type } from "class-transformer";
 import { UserEmergencyContactDetailDTO } from "./user-emergency-contact-detail.dto";
 import { UserEducationDetailDTO } from "./user-education-detail.dto";
@@ -20,8 +20,8 @@ export class PersonalDetailXML {
     nric: string;
 
     @IsNotEmpty()
-    @IsString()
-    dob: string;
+    @IsISO8601()
+    dob: Date;
 
     @IsNotEmpty()
     @IsNumber()

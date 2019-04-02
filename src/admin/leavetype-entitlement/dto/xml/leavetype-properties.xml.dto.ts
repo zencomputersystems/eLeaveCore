@@ -13,7 +13,8 @@ export class LeaveTypePropertiesXmlDTO {
         this.applyInAdvance = false;
         this.applyNextYear = false;
         this.claimEntitlement = false;
-        this.applyHalfday = false;
+        this.applyFractionUnit = "";
+        this.includeOtherLeaveType = "";
         this.attachmentRequired = false;
         this.excludeDayType = new ExcludeDayTypeXmlDTO();
         this.applyBeforeProperties = new ApplyBeforePropertiesXmlDTO();
@@ -39,10 +40,13 @@ export class LeaveTypePropertiesXmlDTO {
     @IsBoolean()
     claimEntitlement: boolean;
     
-    @ApiModelProperty({description:'Allow Applicant to Apply Half Day (0.5) Leave'})
-    @IsNotEmpty()
-    @IsBoolean()
-    applyHalfday: boolean;
+    @ApiModelProperty({description:'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)'})
+    @IsString()
+    applyFractionUnit: string;
+
+    @ApiModelProperty({description:'Include other leave type in balance calculation'})
+    @IsString()
+    includeOtherLeaveType: string;
     
     @ApiModelProperty({description:'Attach Certificate/ Supporting Documents (e.g.: Medical Certificate)'})
     @IsNotEmpty()
@@ -90,7 +94,7 @@ export class LeaveTypePropertiesXmlDTO {
     })
     @IsNotEmpty()
     @IsBoolean()
-    isAllowAfterJoinDate: boolean
+    isAllowAfterJoinDate: boolean;
 
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,

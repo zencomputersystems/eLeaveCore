@@ -46,18 +46,28 @@ export class LeaveBalanceValidationService {
 
 
         const filter = ["((START_DATE <= "+currentDateStartYear+")OR(END_DATE >="+currentDateStartYear+")AND(START_DATE <= "+applyLeaveDTO.endDate+")OR(END_DATE>="+applyLeaveDTO.endDate+"))"];
+        
         return this.leaveTransactionDbService.findByFilterV2([],filter)
             .pipe(map((leaveTransactions: LeaveTransactionModel[]) => {
                 
                 // we need to check policy if current leave type rely on another leave
                 // eg: medical leave and hospitalization leave
-                // hospitaliation leave calculation:
-                // Actual Entitlement = (( Available Hospitalization - Used Hospitalization) - Used Medical)
+                //      Hospitalization leave balance is depending on medical leave usage
+                //      hospitaliation leave calculation:
+                //      Actual Entitlement = (( Available Hospitalization - Used Hospitalization) - Used Medical)
                 let counterAppliedDay = 0;
                 leaveTransactions.forEach(element => {
                     
                     if(element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID==parent.LEAVE_TYPE_GUID) {
                         counterAppliedDay+=element.NO_OF_DAYS;
+                    }
+
+                    if(policy.includeOtherLeaveType!=null||policy.includeOtherLeaveType!="") {
+                        // add the applied day into calcuation
+                        if(element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == policy.includeOtherLeaveType) {
+                            console.log(element.LEAVE_TYPE_GUID+" = "+element.NO_OF_DAYS);
+                            counterAppliedDay += element.NO_OF_DAYS;
+                        }
                     }
                 });
 
@@ -69,9 +79,7 @@ export class LeaveBalanceValidationService {
 
                 const childBalance = this.getChildBalance(applyLeaveDTO,userEntitlement,policy);
 
-
                 const balance = ((parentBalance+childBalance) - (leaveDuration+counterAppliedDay));
-
 
                 if(balance<0) {
                     return false;

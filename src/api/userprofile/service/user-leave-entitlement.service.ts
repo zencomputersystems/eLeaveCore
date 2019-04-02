@@ -50,7 +50,6 @@ export class UserLeaveEntitlementService {
             .pipe(
                 filter(x=>x!=null),
                 switchMap(() => {
-
                     //check if current leavetype has active policy
                     const userEntitlementFilter = [
                         '(TENANT_GUID='+user.TENANT_GUID+')',
@@ -73,7 +72,6 @@ export class UserLeaveEntitlementService {
                         '(LEAVE_TYPE_GUID='+data.leaveTypeId+')',
                         '(ACTIVE_FLAG=true)'
                     ];
-
 
                     return this.dbSearch(this.leaveEntitlementDbService,entitlementFilter);
                 }),
@@ -143,7 +141,6 @@ export class UserLeaveEntitlementService {
         return IDbService.findByFilterV2([],filter)
                 .pipe(
                     map(res => {
-                        
                             if(res.length > 0) {
                                 return res[0];
                             }

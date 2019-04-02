@@ -17,6 +17,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { LeaveTransactionDbService } from '../db/leave-transaction.db.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
+import { ValidationStatusDTO } from 'src/common/policy/leave-application-validation/dto/validation-status.dto';
 
 
 @Injectable()
@@ -58,7 +59,10 @@ export class ApplyLeaveService {
                         const parent = result.userEntitlement.filter(x=>x.PARENT_FLAG==1)[0];
 
                         if(parent.PROPERTIES_XML==null||parent.PROPERTIES_XML==undefined) {
-                            throw "Policy Not Found";
+                            const res = new ValidationStatusDTO();
+                            res.valid = false;
+                            res.message.push("Policy Not Found");
+                            throw res;
                         }
 
                         const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
@@ -127,7 +131,10 @@ export class ApplyLeaveService {
                 .pipe(
                     map(result => {
                         if(result.length==0) {
-                            throw ('Leave entitlement not available');
+                            const res = new ValidationStatusDTO();
+                            res.valid = false;
+                            res.message.push("Leave Entitlement Not Available");
+                            throw res;
                         }
                         
                         return result;

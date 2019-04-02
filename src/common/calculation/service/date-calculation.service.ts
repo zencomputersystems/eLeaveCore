@@ -13,7 +13,7 @@ export class DateCalculationService {
         // mock holiday
         const mockHoliday = holidayMock;
         const filterRestDay = new Array<any>();
-        const filterHoliday = new Array<any>(); // hold the filtered holodau date
+        const filterHoliday = new Array<any>(); // hold the filtered holiday date
         
         // duration between start and end data
         let startEndDuration = 0;

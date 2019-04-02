@@ -4,8 +4,6 @@ import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { switchMap } from 'rxjs/operators';
 import { ApplyLeaveService } from '../../service/apply-leave.service';
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
-import moment = require('moment');
-import { LeaveApplicationValidationService } from 'src/common/policy/leave-application-validation/services/leave-application-validation.service';
 
 @Controller('api')
 @UseGuards(AuthGuard('jwt'))
@@ -24,9 +22,7 @@ export class ApplyController {
                     res.send(data);
                 },
                 err => {
-
-                    console.log(err);
-                    res.send('fail');
+                    res.send(err);
                 }
             )
 

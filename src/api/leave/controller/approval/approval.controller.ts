@@ -12,6 +12,24 @@ export class ApprovedController {
 
     constructor(private readonly approvedService: ApprovalService){}
 
+    @Post('leave/policy')
+    @ApiOperation({title: 'Approved Leave'})
+    policyChange(@Req() req, @Res() res) {
+        
+        this.approvedService.onPolicyChanged("EVERYONE",1,req.user.TENANT_GUID)
+            .subscribe(
+                data => {
+                    res.send(data);
+                },
+                err => {
+                    console.log(err);
+                },
+                () => {
+                    res.send();
+                }
+            )
+    }
+
     @Post('leave/approved')
     @ApiOperation({title: 'Approved Leave'})
     approved(@Body() approvedLeaveDTO: ApprovedLeaveDTO,@Req() req, @Res() res) {

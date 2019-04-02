@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { of } from "rxjs";
-import { map, mergeMap } from "rxjs/operators";
+import { map, mergeMap, filter } from "rxjs/operators";
 import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
 import { LeaveTransactionModel } from "src/api/leave/model/leave-transaction.model";
 import { STATESDTO } from "../dto/states.dto";
@@ -34,9 +34,48 @@ export class ApprovalService {
     }
 
     // trigger when approval policy change
-    onPolicyChanged() {
+    // only for EVERYONE and level deducted
+    onPolicyChanged(policyType: string, policyLevel: number,tenantId: string) {
+        
+        //get current policy
+        return this.getApprovalPolicy()
+            .pipe(
+                mergeMap(currentPolicy => {
 
+                // check if current policy is bigger than policy level
+                if(policyType === "EVERYONE" && currentPolicy.approvalLevel>policyLevel) {
+                    // find all leave with policy == policyLevel and is pending
+                    const filter = ["(TENANT_GUID="+tenantId+")","(CURRENT_APPROVAL_LEVEL="+policyLevel+")","(STATUS=PENDING)"]
+
+                    return this.leaveTransactionService.findByFilterV2([],filter);
+                }
+            }),
+            filter(x=>x.length>0),
+            mergeMap((leaveTransaction:LeaveTransactionModel[])=> {
+
+                console.log(leaveTransaction);
+                const resource = new Resource(new Array());
+                leaveTransaction.forEach(element => {
+                    element.STATUS = "APPROVED";
+
+                    resource.resource.push(element);
+                });
+
+                if(resource.resource.length > 0) {
+                    return this.leaveTransactionService.updateByModel(resource,[],[],[])
+                        .pipe(
+                            map(data => {
+                                if(data.status!=200) {
+                                    throw "Update error";
+                                }
+                                return data.data.resource;
+                            })
+                        )
+                }
+            })
+        )
     }
+    
 
     onApproveReject(leaveTransactionId: string, tenantId: string, approverUserId: string, isApprove: boolean) {
 

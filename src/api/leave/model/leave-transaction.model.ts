@@ -1,3 +1,5 @@
+import { STATESDTO } from "src/common/approval/dto/states.dto";
+
 export class LeaveTransactionModel {
 
     constructor() {
@@ -31,5 +33,9 @@ export class LeaveTransactionModel {
     UPDATE_TS: string;
     UPDATE_USER_GUID: string;
     DELETED_AT: string;
+
+    //TMP
+    STATES: string;
+    CURRENT_APPROVAL_LEVEL: number;
     
 }

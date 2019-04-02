@@ -15,12 +15,14 @@ import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/s
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeaveTransactionDbService } from './db/leave-transaction.db.service';
+import { ApprovedController } from './controller/approval/approval.controller';
+import { ApprovalService } from 'src/common/approval/service/approval.service';
 
 @Module({
   modules: [
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),
   ],
-  controllers: [ApplyController],
+  controllers: [ApplyController,ApprovedController],
   providers: [
     ApplyLeaveService,
     QueryParserService,
@@ -35,7 +37,8 @@ import { LeaveTransactionDbService } from './db/leave-transaction.db.service';
     ProratedDateCurrentMonthService,
     ProratedDateEndYearService,
     ServiceYearCalc,
-    EntitlementRoundingService
+    EntitlementRoundingService,
+    ApprovalService
   ],
 })
 export class LeaveModule {}

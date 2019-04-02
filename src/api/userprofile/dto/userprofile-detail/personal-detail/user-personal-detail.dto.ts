@@ -17,7 +17,12 @@ export class UserPersonalDetailDTO {
         this.workPhoneNumber = "";
         this.emailAddress = "";
         this.workEmailAddress = "";
-        this.residentialAddress = "";
+        this.residentialAddress1 = "";
+        this.residentialAddress2 = "";
+        this.city = "";
+        this.postcode = "";
+        this.state = "";
+        this.country = "";
         
         this.emergencyContactNumber = new UserEmergencyContactDetailDTO();
         this.education = new UserEducationDetailDTO();
@@ -35,7 +40,12 @@ export class UserPersonalDetailDTO {
     workPhoneNumber: string;
     emailAddress: string;
     workEmailAddress: string;
-    residentialAddress: string;
+    residentialAddress1: string;
+    residentialAddress2: string;
+    city: string;
+    state: string;
+    country: string;
+    postcode: string;
     emergencyContactNumber: UserEmergencyContactDetailDTO;
     education: UserEducationDetailDTO;
     family: UserFamilyDTO;

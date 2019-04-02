@@ -85,6 +85,7 @@ export class UserprofileService {
     }
 
     public updatePersonalDetail(data: UpdatePersonalDetailDTO,userId: string) {
+
         const modeldata = new UserInfoModel();
         modeldata.USER_INFO_GUID = data.id;
         modeldata.NICKNAME = data.nickname;
@@ -195,11 +196,18 @@ export class UserprofileService {
                 const userPersonalDetail = new UserPersonalDetailDTO();
 
                 userPersonalDetail.dob = parseXMLtoJSON.dob;
+                userPersonalDetail.nric = parseXMLtoJSON.nric;
+                userPersonalDetail.nickname = parseXMLtoJSON.nickname;
                 userPersonalDetail.emailAddress = parseXMLtoJSON.emailAddress;
                 userPersonalDetail.workEmailAddress = parseXMLtoJSON.workEmailAddress;
                 userPersonalDetail.gender = parseXMLtoJSON.gender==1?"Male":"Female";
                 userPersonalDetail.maritalStatus = parseXMLtoJSON.maritalStatus==1?"Married":"Single";
-                userPersonalDetail.residentialAddress = this.joinText([parseXMLtoJSON.address1,parseXMLtoJSON.address2,parseXMLtoJSON.city,parseXMLtoJSON.state,parseXMLtoJSON.country]);
+                userPersonalDetail.residentialAddress1 = parseXMLtoJSON.address1;
+                userPersonalDetail.residentialAddress2 = parseXMLtoJSON.address2;
+                userPersonalDetail.city = parseXMLtoJSON.city;
+                userPersonalDetail.postcode = parseXMLtoJSON.postcode;
+                userPersonalDetail.state = parseXMLtoJSON.state;
+                userPersonalDetail.country = parseXMLtoJSON.country;
                 userPersonalDetail.religion = parseXMLtoJSON.religion;
                 userPersonalDetail.nationality = parseXMLtoJSON.nationality;
                 userPersonalDetail.phoneNumber = parseXMLtoJSON.phoneNumber;

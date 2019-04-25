@@ -17,9 +17,9 @@ export class UserInfoModel {
     DESIGNATION: string //employee job title
     DIVISION: string;
 
-    JOIN_DATE: string;
-    CONFIRMATION_DATE: string;
-    RESIGNATION_DATE: string;
+    JOIN_DATE: Date;
+    CONFIRMATION_DATE: Date;
+    RESIGNATION_DATE: Date;
     EMPLOYEE_STATUS: number;
     EMPLOYEE_TYPE: string;
 

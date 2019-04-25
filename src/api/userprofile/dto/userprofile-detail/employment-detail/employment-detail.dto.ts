@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsString, IsISO8601 } from "class-validator";
 
 export class EmploymentDetailDTO {
     @IsString()
@@ -22,14 +22,14 @@ export class EmploymentDetailDTO {
     @IsString()
     reportingTo: string;
 
-    @IsString()
-    dateOfJoin: string;
+    @IsISO8601()
+    dateOfJoin: Date;
 
-    @IsString()
-    dateOfConfirmation: string;
+    @IsISO8601()
+    dateOfConfirmation: Date;
 
-    @IsString()
-    dateOfResign: string;
+    @IsISO8601()
+    dateOfResign: Date;
 
     @IsString()
     yearOfService: string;

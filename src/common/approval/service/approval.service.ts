@@ -104,7 +104,7 @@ export class ApprovalService {
                     if(result.currentPolicy.approvalType.toUpperCase() === "EVERYONE") {
                         result.leave = this.verticalLevel(result.leave,approverUserId,isApprove,result.currentPolicy.approvalLevel);
                     } else {
-                        result.leave = this.horizantalLevel(result.leave,approverUserId,isApprove);
+                        result.leave = this.horizontalLevel(result.leave,approverUserId,isApprove);
                     }
 
                     result.leave.UPDATE_USER_GUID = approverUserId;
@@ -153,7 +153,7 @@ export class ApprovalService {
         
     }
 
-    private horizantalLevel(leave: LeaveTransactionModel,approverUserId: string,isApprove: boolean) {
+    private horizontalLevel(leave: LeaveTransactionModel,approverUserId: string,isApprove: boolean) {
         // only 1 level vertically
         leave.CURRENT_APPROVAL_LEVEL = 1;
 

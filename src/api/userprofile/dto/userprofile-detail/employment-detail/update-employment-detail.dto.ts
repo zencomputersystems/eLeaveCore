@@ -40,15 +40,15 @@ export class UpdateEmploymentDetailDTO {
 
     @IsNotEmpty()
     @IsISO8601()
-    dateOfJoin: string;
+    dateOfJoin: Date;
 
     @ValidateIf(x=>x.dateOfConfirmation!="")
     @IsISO8601()
-    dateOfConfirmation: string;
+    dateOfConfirmation: Date;
 
     @ValidateIf(x=>x.dateOfResign!="")
     @IsISO8601()
-    dateOfResign: string;
+    dateOfResign: Date;
 
     @IsString()
     bankAccountName: string;

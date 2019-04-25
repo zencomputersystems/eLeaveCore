@@ -99,9 +99,9 @@ export class UserImportService {
                 userInfoModel.BRANCH = element.BRANCH;
                 userInfoModel.DESIGNATION = element.DESIGNATION;
                 
-                userInfoModel.JOIN_DATE = element.JOIN_DATE;
-                userInfoModel.CONFIRMATION_DATE = element.CONFIRMATION_DATE;
-                userInfoModel.RESIGNATION_DATE = element.RESIGNATION_DATE;
+                userInfoModel.JOIN_DATE = new Date(element.JOIN_DATE);
+                userInfoModel.CONFIRMATION_DATE = new Date(element.CONFIRMATION_DATE);
+                userInfoModel.RESIGNATION_DATE = new Date(element.RESIGNATION_DATE);
                 
                 userInfoResourceArray.resource.push(userInfoModel);
             }

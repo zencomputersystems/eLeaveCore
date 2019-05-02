@@ -99,9 +99,9 @@ export class UserInfoService extends BaseDBService implements IDbService {
         
         data.EMPLOYEE_TYPE = "Intern";
         data.FULLNAME = d.employeeName;
-        data.JOIN_DATE = d.employmentDetail.joinDate.toDateString();
-        data.CONFIRMATION_DATE = d.employmentDetail.confirmationDate.toDateString();
-        data.RESIGNATION_DATE = d.employmentDetail.resignationDate.toDateString();
+        data.JOIN_DATE = d.employmentDetail.joinDate; //.toDateString();
+        data.CONFIRMATION_DATE = d.employmentDetail.confirmationDate; //.toDateString();
+        data.RESIGNATION_DATE = d.employmentDetail.resignationDate; //.toDateString();
         data.MANAGER_USER_GUID = d.employmentDetail.reportingToId;
         data.EMPLOYEE_STATUS = d.employmentDetail.employmentStatus;
 

@@ -6,6 +6,7 @@ import { UserprofileService } from '../../service/userprofile.service';
 import { switchMap } from 'rxjs/operators';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ResourceGuard } from 'src/guard/resource.guard';
+import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
 
 @Controller('api')
 @UseGuards(AuthGuard('jwt'))
@@ -62,14 +63,39 @@ export class UserprofileController {
                 })
             )
             .subscribe(
-                data => {
-                    res.send(data);
+                data1 => {
+                    this.userprofileService.getEntitlementDetail(user.TENANT_GUID,user.USER_GUID).subscribe(
+                        data => {
+                            let leaveData = [];
+                            for(let i = 0;i<data.length;i++){
+                                let tempObj = new EntitlementDetailDTO;
+                                tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
+                                tempObj.leaveTypeName = data[i].LEAVE_CODE;
+                                tempObj.entitledDays = data[i].ENTITLED_DAYS;
+                                tempObj.pendingDays = data[i].TOTAL_PENDING;
+                                tempObj.takenDays = data[i].TOTAL_APPROVED;
+                                tempObj.balanceDays = data[i].BALANCE_DAYS;
+                                leaveData.push(tempObj);
+                            }
+                            data1.entitlementDetail = leaveData;
+                            res.send(data1);
+                        },
+                        err => {
+                            res.status(500);
+                            if(err.response) {
+                                res.send(err.response.data.error)
+                            } else {
+                                res.send(err);
+                            }
+                        }
+                    )
+                    
                 },
                 err => {
 
                     res.status(500);
-                    if(err.response.data) {
-                        res.send(err.response.data.error)
+                    if(err.response.data1) {
+                        res.send(err.response.data1.error)
                     } else {
                         res.send(err);
                     }
@@ -88,8 +114,33 @@ export class UserprofileController {
 
         this.userprofileService.getDetail(filters)
             .subscribe(
-                data => {
-                    res.send(data);
+                data1 => {
+                    this.userprofileService.getEntitlementDetail(user.TENANT_GUID,user.USER_GUID).subscribe(
+                        data => {
+                            let leaveData = [];
+                            for(let i = 0;i<data.length;i++){
+                                let tempObj = new EntitlementDetailDTO;
+                                console.log(data[i].LEAVE_TYPE_GUID);
+                                tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
+                                tempObj.leaveTypeName = data[i].LEAVE_CODE;
+                                tempObj.entitledDays = data[i].ENTITLED_DAYS;
+                                tempObj.pendingDays = data[i].TOTAL_PENDING;
+                                tempObj.takenDays = data[i].TOTAL_APPROVED;
+                                tempObj.balanceDays = data[i].BALANCE_DAYS;
+                                leaveData.push(tempObj);
+                            }
+                            data1.entitlementDetail = leaveData;
+                            res.send(data1);
+                        },
+                        err => {
+                            res.status(500);
+                            if(err.response) {
+                                res.send(err.response.data.error)
+                            } else {
+                                res.send(err);
+                            }
+                        }
+                    )
                 },
                 err => {
 
@@ -101,6 +152,7 @@ export class UserprofileController {
                     }
                 }
             )
+
     }
   
 }

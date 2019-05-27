@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res, Req } from '@nestjs/common';
 import { map} from 'rxjs/operators';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserPersonalDetailDTO } from '../dto/userprofile-detail/personal-detail/user-personal-detail.dto';
 import { UserProfileDTO } from '../dto/userprofile-detail/userprofile.dto';
 import { EmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/employment-detail.dto';
+import { EntitlementDetailDTO } from '../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
 import { leaveEntitlementMock } from '../mockdata/leave-entitlement';
 import { UserprofileListDTO } from '../dto/userprofile-list/userprofile-list.dto';
 import { UserprofileDbService } from '../db/userprofile.db.service';
@@ -15,6 +16,8 @@ import { PersonalDetailXML } from '../dto/userprofile-detail/personal-detail/xml
 import { UpdateEmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 import { Access } from 'src/common/dto/access.dto';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service';
+import { UserLeaveEntitlementModel } from "../model/user-leave-entitlement.model";
+import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 
 @Injectable()
 export class UserprofileService {
@@ -23,10 +26,11 @@ export class UserprofileService {
         private readonly userInfoService: UserInfoService,
         private readonly userprofileDBService: UserprofileDbService,
         private readonly xmlParserService: XMLParserService,
+        private readonly entitlementDetailService: UserLeaveEntitlementService,
         private readonly serviceYearCalcService: ServiceYearCalc) {}
 
     public getList(filters: string[]) {
-        
+        console.log('iamhereinlist');
         return this.userprofileDBService.findByFilterV2([],filters)
             .pipe(
                 map(res => {
@@ -54,7 +58,7 @@ export class UserprofileService {
 
     // Get User Detail
     public getDetail(filters:string[]) {
-
+console.log('iamhereindetail');
         return this.userInfoService.findByFilterV2([],filters)
                 .pipe(
                     map(res => {
@@ -72,6 +76,7 @@ export class UserprofileService {
     //#region PERSONAL DETAIL
 
     public getPersonalDetail(filters:string[]) {
+        console.log('iamhereinpersonaldetail');
         return this.userInfoService.findByFilterV2([],filters)
                 .pipe(
                     map(res => {
@@ -105,6 +110,7 @@ export class UserprofileService {
     //#region EMPLOYMENT DETAIL
 
     public getEmploymentDetail(filters:string[]) {
+        console.log('iamhereinemploymentdetail');
         return this.userInfoService.findByFilterV2([],filters)
                 .pipe(
                     map(res => {
@@ -149,6 +155,12 @@ export class UserprofileService {
         resource.resource.push(modelData);
 
         return this.userInfoService.updateByModel(resource,[],[],[]);
+    }
+
+    //#region ENTITLEMENT DETAIL
+
+    public getEntitlementDetail(tenant_guid,user_guid) {
+        return this.entitlementDetailService.getEntitlementList(tenant_guid,user_guid);
     }
 
     //#endregion
@@ -252,7 +264,25 @@ export class UserprofileService {
         }
 
         if(isShowEntitlementData) {
-            userProfileData.entitlementDetail = leaveEntitlementMock;
+
+            // const entitlementData2 = this.entitlementDetailService.getEntitlementList(data.TENANT_GUID,data.USER_GUID);
+
+            // console.log('helloooooooothere');
+            // const entitlementModel = new UserLeaveEntitlementModel();
+            // const entitlementData = new EntitlementDetailDTO();
+            
+            // entitlementData.balanceDays = 1;
+            // entitlementData.entitledDays = 11;
+            // entitlementData.leaveTypeId = 'DEWDH';
+            // entitlementData.leaveTypeName = 'RJE';
+            // entitlementData.pendingDays = 90;
+            // entitlementData.takenDays = 8;
+
+            // userProfileData.entitlementDetail.push(entitlementData);
+            // userProfileData.entitlementDetail = entitlementData;
+            userProfileData.entitlementDetail = [];
+
+            // userProfileData.entitlementDetail = leaveEntitlementMock;
         }
 
         return userProfileData;

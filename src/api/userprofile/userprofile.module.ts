@@ -12,6 +12,7 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { UserprofileDbService } from './db/userprofile.db.service';
 import { EntitlementDetailController } from './controller/entitlement-detail/entitlement-detail.controller';
+import { UserLeaveEntitlementSummaryDbService } from './db/user-leave-summary.db.service';
 import { UserLeaveEntitlementDbService } from './db/user-leave-entitlement.db.service';
 import { UserLeaveEntitlementService } from './service/user-leave-entitlement.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
@@ -28,6 +29,7 @@ import { EntitlementRoundingService } from 'src/common/policy/entitlement-roundi
     QueryParserService,
     XMLParserService,
     AccessLevelValidateService,
+    UserLeaveEntitlementSummaryDbService,
     UserLeaveEntitlementDbService,
     UserLeaveEntitlementService,
     LeavetypeEntitlementDbService,

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserLeaveEntitlementDbService } from "../db/user-leave-entitlement.db.service";
+import { UserLeaveEntitlementSummaryDbService } from "../db/user-leave-summary.db.service";
 import { AssignLeavePolicyDTO } from "../dto/leave-entitlement/assign-leave-policy.dto";
 import { UserprofileDbService } from "../db/userprofile.db.service";
 import { map, filter, switchMap, mergeMap } from "rxjs/operators";
@@ -17,11 +18,13 @@ import { ServiceYearCalc } from "src/common/policy/entitlement-type/services/ser
 import { ProratedDateEndYearService } from "src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service";
 import { ProratedDateCurrentMonthService } from "src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class UserLeaveEntitlementService {
     
     constructor(
+        private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
         private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
         private readonly userDbService: UserprofileDbService,
         private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
@@ -33,10 +36,11 @@ export class UserLeaveEntitlementService {
     ) {}
 
     public getEntitlementList(tenantId: string, userId: string) {
-        
+        console.log('datatatata');
         const userFilter = ['(USER_GUID='+userId+')','(TENANT_GUID='+tenantId+')'];
-
-        return this.userLeaveEntitlementDbService.findByFilterV2([],userFilter);
+        const fields = ['LEAVE_TYPE_GUID','LEAVE_CODE','ENTITLED_DAYS','TOTAL_APPROVED','TOTAL_PENDING','BALANCE_DAYS'];
+        
+        return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields,userFilter);
 
     }
 

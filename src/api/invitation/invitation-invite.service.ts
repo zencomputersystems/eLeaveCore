@@ -32,21 +32,16 @@ export class InvitationInviteService {
         return this.userService.findByFilterV2([],userFilter)
             .pipe(
                 map(res => {
-                    console.log('inmap');
-                    // console.log(res);
                     return this.filterUser(inviteList,res);
                 }),
                 mergeMap(res => {
-                    console.log('inmergemap1');
                     return this.checkInvitationStatus(res,user.TENANT_GUID);
                 }),
                 mergeMap(res => this.saveInvitation(res,user)),
                 mergeMap((res) => {
-                    console.log('inmergemap3');
                     const observableEmail$ = [];
 
                     res.forEach(element => {
-                        console.log(element.email+'-'+element.invitationId);
                         observableEmail$.push(this.sendEmail(element.email,element.invitationId)); 
                     });
 
@@ -60,16 +55,13 @@ export class InvitationInviteService {
         const successList = new Array<EmailList>()
         // check if invitelist user exist in userlist
 
-        for(var i=0;i<inviteList.length;i++){
-            console.log(inviteList[i].id);
-            console.log(userList);
-            let checkUser = userList.find(x=>x.USER_GUID.toString()===inviteList[i].id.toString());
-            console.log(checkUser);
+        for(let i=0;i<inviteList.length;i++){
+            
+            const checkUser = userList.find(x=>x.USER_GUID.toString()===inviteList[i].id.toString());
+            
             if(checkUser) {
-                console.log(checkUser.USER_GUID+'-'+checkUser.EMAIL);
                 successList.push(new EmailList(checkUser.USER_GUID,'',checkUser.EMAIL,checkUser.EMAIL));
             }
-            console.log('yesimhereinfor1');
         }
 
         // inviteList.forEach(element => {
@@ -92,7 +84,7 @@ export class InvitationInviteService {
 
                         const mailList = new Array<EmailList>();
 
-                        for(var i=0;i<inviteList.length;i++){
+                        for(let i=0;i<inviteList.length;i++){
                             const checkInvitation = data.find(x=>x.USER_GUID === inviteList[i].userId);
 
                             if(checkInvitation) {
@@ -102,7 +94,6 @@ export class InvitationInviteService {
                                 // store user into invitation db and send email
                                 mailList.push(inviteList[i]);
                             }
-                            console.log('yesimhereinfor2');
                         }
 
                         // inviteList.forEach(element => {
@@ -129,7 +120,7 @@ export class InvitationInviteService {
         const inviteResourceArray = new Resource(new Array);
         const emailList = new Array<EmailList>();
 
-        for(var i = 0;i<inviteList.length;i++){
+        for(let i = 0;i<inviteList.length;i++){
             if(inviteList[i].invitationId==null||inviteList[i].invitationId=='') {
                 const data = new UserInviteModel();
                 data.INVITATION_GUID = v1();
@@ -144,7 +135,6 @@ export class InvitationInviteService {
             } else {
                 emailList.push(inviteList[i]);
             }
-            console.log('yesimhereinfor3');
         }
 
         // inviteList.forEach(element => {

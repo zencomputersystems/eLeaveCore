@@ -54,12 +54,22 @@ export class InvitationInviteService {
 
         const successList = new Array<EmailList>()
         // check if invitelist user exist in userlist
-        inviteList.forEach(element => {
-            const checkUser = userList.find(x=>x.USER_GUID===element.id);
+
+        for(let i=0;i<inviteList.length;i++){
+            
+            const checkUser = userList.find(x=>x.USER_GUID.toString()===inviteList[i].id.toString());
+            
             if(checkUser) {
                 successList.push(new EmailList(checkUser.USER_GUID,'',checkUser.EMAIL,checkUser.EMAIL));
             }
-        });
+        }
+
+        // inviteList.forEach(element => {
+        //     const checkUser = userList.find(x=>x.USER_GUID===element.id);
+        //     if(checkUser) {
+        //         successList.push(new EmailList(checkUser.USER_GUID,'',checkUser.EMAIL,checkUser.EMAIL));
+        //     }
+        // });
 
         return successList;
     }
@@ -73,17 +83,30 @@ export class InvitationInviteService {
                         const data: Array<UserInviteModel> = res.data.resource;
 
                         const mailList = new Array<EmailList>();
-                        inviteList.forEach(element => {
-                            const checkInvitation = data.find(x=>x.USER_GUID === element.userId);
+
+                        for(let i=0;i<inviteList.length;i++){
+                            const checkInvitation = data.find(x=>x.USER_GUID === inviteList[i].userId);
 
                             if(checkInvitation) {
                                 // resend email to user
                                 mailList.push(new EmailList(checkInvitation.USER_GUID,checkInvitation.INVITATION_GUID,checkInvitation.EMAIL,checkInvitation.EMAIL));
                             } else {
                                 // store user into invitation db and send email
-                                mailList.push(element);
+                                mailList.push(inviteList[i]);
                             }
-                        });
+                        }
+
+                        // inviteList.forEach(element => {
+                        //     const checkInvitation = data.find(x=>x.USER_GUID === element.userId);
+
+                        //     if(checkInvitation) {
+                        //         // resend email to user
+                        //         mailList.push(new EmailList(checkInvitation.USER_GUID,checkInvitation.INVITATION_GUID,checkInvitation.EMAIL,checkInvitation.EMAIL));
+                        //     } else {
+                        //         // store user into invitation db and send email
+                        //         mailList.push(element);
+                        //     }
+                        // });
 
                         return mailList;
                     }
@@ -97,22 +120,39 @@ export class InvitationInviteService {
         const inviteResourceArray = new Resource(new Array);
         const emailList = new Array<EmailList>();
 
-        inviteList.forEach(element => {
-            if(element.invitationId==null||element.invitationId=='') {
+        for(let i = 0;i<inviteList.length;i++){
+            if(inviteList[i].invitationId==null||inviteList[i].invitationId=='') {
                 const data = new UserInviteModel();
                 data.INVITATION_GUID = v1();
                 data.STATUS = 1;
-                data.USER_GUID = element.userId;
+                data.USER_GUID = inviteList[i].userId;
                 data.CREATION_TS = user.USER_GUID;
                 data.TENANT_GUID = user.TENANT_GUID;
                 data.CREATION_TS = new Date().toISOString();
-                data.EMAIL = element.email;
+                data.EMAIL = inviteList[i].email;
                 
                 inviteResourceArray.resource.push(data);
             } else {
-                emailList.push(element);
+                emailList.push(inviteList[i]);
             }
-        });
+        }
+
+        // inviteList.forEach(element => {
+        //     if(element.invitationId==null||element.invitationId=='') {
+        //         const data = new UserInviteModel();
+        //         data.INVITATION_GUID = v1();
+        //         data.STATUS = 1;
+        //         data.USER_GUID = element.userId;
+        //         data.CREATION_TS = user.USER_GUID;
+        //         data.TENANT_GUID = user.TENANT_GUID;
+        //         data.CREATION_TS = new Date().toISOString();
+        //         data.EMAIL = element.email;
+                
+        //         inviteResourceArray.resource.push(data);
+        //     } else {
+        //         emailList.push(element);
+        //     }
+        // });
 
 
         if(inviteResourceArray.resource.length==0) {
@@ -147,7 +187,7 @@ export class InvitationInviteService {
                 template: 'userinvitation.html',
                 context: {  // Data to be sent to template files.
                     email: email,
-                    code: "http://localhost:3000/api/invitation/"+token
+                    code: "http://zencore.zen.com.my:3000/api/invitation/"+token
                 }
             });
     }

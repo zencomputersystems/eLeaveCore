@@ -16,8 +16,8 @@ export class LeaveApplicationValidationService {
     constructor(
         private readonly dateCalculationService: DateCalculationService,
         private readonly balanceValidationService: LeaveBalanceValidationService,
-        private readonly leaveTransactionDbService: LeaveTransactionDbService) {}
-    
+        private readonly leaveTransactionDbService: LeaveTransactionDbService) { }
+
     public validateLeave(
         policy: LeaveTypePropertiesXmlDTO,
         applyLeaveDTO: ApplyLeaveDTO,
@@ -26,75 +26,81 @@ export class LeaveApplicationValidationService {
 
         const validationStatus = new ValidationStatusDTO();
 
-        const startDate = this.convertDateToMoment(applyLeaveDTO.startDate);
-        const endDate = this.convertDateToMoment(applyLeaveDTO.endDate);
 
+        const startDateTemp = applyLeaveDTO.data[0].startDate;
+        const endDatetemp = applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate;
 
-        return this.validateOverlapLeave(applyLeaveDTO.startDate,applyLeaveDTO.endDate)
+        console.log(startDateTemp+' --- '+endDatetemp);
+
+        const startDate = this.convertDateToMoment(startDateTemp);
+        const endDate = this.convertDateToMoment(endDatetemp);
+
+        return this.validateOverlapLeave(startDateTemp, endDatetemp)
             .pipe(
                 map((result: boolean) => {
-                    if(!result) {
+                    if (!result) {
                         validationStatus.message.push("You have applied another leave between this date");
                     }
                 }),
                 mergeMap(res => {
-    
-                    return this.validateBalance(userInfo,applyLeaveDTO,userEntitlement)
-                            .pipe(map((validateBalanceResult: boolean)=> {
-                                if(!validateBalanceResult) {
-                                    validationStatus.message.push("Leave balance not enough");
-                                }
 
-                                if(!this.allowAdvancedLeave(policy,startDate,endDate)) {
-                                    validationStatus.message.push("Cannot apply advanced leave");
+                    return this.validateBalance(userInfo, applyLeaveDTO, userEntitlement)
+                        .pipe(map((validateBalanceResult: boolean) => {
+                            if (!validateBalanceResult) {
+                                validationStatus.message.push("Leave balance not enough");
+                            }
+
+                            if (!this.allowAdvancedLeave(policy, startDate, endDate)) {
+                                validationStatus.message.push("Cannot apply advanced leave");
+                            }
+
+                            if (!this.allowNextYearApplciation(policy, startDate, endDate)) {
+                                validationStatus.message.push("Cannot apply leave on the following year");
+                            }
+
+                            if (!this.allowAfterConfirm(policy, this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
+                                validationStatus.message.push("Cannot apply before confirm");
+                            }
+
+                            if (!this.validateApplyBefore(policy, startDate)) {
+                                validationStatus.message.push("You need to apply " + policy.applyBeforeProperties.numberOfDays + " Days before");
+                            }
+
+                            // apply within will be overwited by apply before properties if available
+                            if (policy.applyBeforeProperties.numberOfDays == 0 || policy.applyBeforeProperties.numberOfDays == null) {
+                                if (!this.validateApplyWithin(policy, endDate)) {
+                                    validationStatus.message.push("You need to apply within " + policy.applyWithinProperties.numberOfDays + " days after leave end");
                                 }
-                        
-                                if(!this.allowNextYearApplciation(policy,startDate,endDate)) {
-                                    validationStatus.message.push("Cannot apply leave on the following year");
-                                }
-                        
-                                if(!this.allowAfterConfirm(policy,this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
-                                    validationStatus.message.push("Cannot apply before confirm");
-                                }
-                        
-                                if(!this.validateApplyBefore(policy, startDate)) {
-                                    validationStatus.message.push("You need to apply "+policy.applyBeforeProperties.numberOfDays+" Days before");
-                                }
-                        
-                                // apply within will be overwited by apply before properties if available
-                                if(policy.applyBeforeProperties.numberOfDays==0||policy.applyBeforeProperties.numberOfDays==null) {
-                                    if(!this.validateApplyWithin(policy,endDate)) {
-                                        validationStatus.message.push("You need to apply within "+policy.applyWithinProperties.numberOfDays+" days after leave end");
-                                    }
-                                }
-                        
-                                if(!this.allowedDay(policy,applyLeaveDTO)) {
-                                    validationStatus.message.push("Leave duration exceed "+policy.maxDayPerLeave+" allowed days");
-                                }
-                        
-                                if(validationStatus.message.length==0) {
-                                    validationStatus.valid = true;
-                                }
-                
-                                return validationStatus;
-                            })
+                            }
+
+                            if (!this.allowedDay(policy, applyLeaveDTO)) {
+                                validationStatus.message.push("Leave duration exceed " + policy.maxDayPerLeave + " allowed days");
+                            }
+
+                            if (validationStatus.message.length == 0) {
+                                validationStatus.valid = true;
+                            }
+
+                            return validationStatus;
+                        })
                         )
-                        })  
-            )         
+                })
+            )
+
     }
 
     private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
-        const balance = this.balanceValidationService.validateLeaveBalance(userInfo,applyLeaveDTO,userEntitlement);
+        const balance = this.balanceValidationService.validateLeaveBalance(userInfo, applyLeaveDTO, userEntitlement);
 
         return balance;
     }
-    
-    // check if employee can apply more than current date
-    private allowAdvancedLeave(policy: LeaveTypePropertiesXmlDTO,startDate: moment.Moment, endDate: moment.Moment): boolean {
 
-        const currentDate = moment(new Date(),'YYYY-MM-DD');
-        
-        if(policy.applyInAdvance||startDate<=currentDate && endDate<=currentDate) {
+    // check if employee can apply more than current date
+    private allowAdvancedLeave(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+
+        const currentDate = moment(new Date(), 'YYYY-MM-DD');
+
+        if (policy.applyInAdvance || startDate <= currentDate && endDate <= currentDate) {
             return true;
         }
 
@@ -104,15 +110,15 @@ export class LeaveApplicationValidationService {
     // check if user can apply next year application
     // if allow advanced leave is false, this parameter by default is false
     private allowNextYearApplciation(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
-        
-        if(!policy.applyInAdvance) {
+
+        if (!policy.applyInAdvance) {
             policy.applyNextYear = false;
         }
 
         // next year 
-        const nextYear = new Date().getFullYear()+1;
-        
-        if(policy.applyNextYear || (startDate.year()<=nextYear && endDate.year()<=nextYear)) {
+        const nextYear = new Date().getFullYear() + 1;
+
+        if (policy.applyNextYear || (startDate.year() <= nextYear && endDate.year() <= nextYear)) {
             return true;
         }
 
@@ -127,17 +133,17 @@ export class LeaveApplicationValidationService {
     // if short notice application is allowed, by default will return true
     private validateApplyBefore(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment): boolean {
 
-        if(policy.applyBeforeProperties.isAllowShortNotice.isCheck) {
+        if (policy.applyBeforeProperties.isAllowShortNotice.isCheck) {
             return true;
         }
-        
-        const currentDate = moment(new Date(),'YYYY-MM-DD').startOf('day');
+
+        const currentDate = moment(new Date(), 'YYYY-MM-DD').startOf('day');
 
         // find the date duration between start date and current date
         // check if rest day and holiday is included or not
-        const dayDifference = this.dateCalculationService.getDayDuration(currentDate,startDate,policy.applyBeforeProperties.excludeDayType.isExcludeHoliday,policy.applyBeforeProperties.excludeDayType.isExcludeRestDay);
+        const dayDifference = this.dateCalculationService.getDayDuration(currentDate, startDate, policy.applyBeforeProperties.excludeDayType.isExcludeHoliday, policy.applyBeforeProperties.excludeDayType.isExcludeRestDay);
 
-        if(dayDifference > policy.applyBeforeProperties.numberOfDays ) {
+        if (dayDifference > policy.applyBeforeProperties.numberOfDays) {
             return true;
         }
 
@@ -146,29 +152,29 @@ export class LeaveApplicationValidationService {
 
     // end date must be within the specified date after leave end otherwise consider as backdated if allowed
     private validateApplyWithin(policy: LeaveTypePropertiesXmlDTO, endDate: moment.Moment): boolean {
-        
-        if(policy.applyWithinProperties.isAllowBackdated.isCheck) {
+
+        if (policy.applyWithinProperties.isAllowBackdated.isCheck) {
             return true;
         }
 
-        const currentDate = moment(new Date(),'YYYY-MM-DD').startOf('day');
-        
-        const dayDifference = this.dateCalculationService.getDayDuration(endDate,currentDate,policy.applyWithinProperties.excludeDayType.isExcludeHoliday,policy.applyWithinProperties.excludeDayType.isExcludeRestDay);
+        const currentDate = moment(new Date(), 'YYYY-MM-DD').startOf('day');
 
-        if(dayDifference <= policy.applyWithinProperties.numberOfDays) {
+        const dayDifference = this.dateCalculationService.getDayDuration(endDate, currentDate, policy.applyWithinProperties.excludeDayType.isExcludeHoliday, policy.applyWithinProperties.excludeDayType.isExcludeRestDay);
+
+        if (dayDifference <= policy.applyWithinProperties.numberOfDays) {
             return true;
         }
 
         return false;
     }
 
-    private allowedDay(policy: LeaveTypePropertiesXmlDTO,applyLeaveDTO: ApplyLeaveDTO): boolean {
-        
+    private allowedDay(policy: LeaveTypePropertiesXmlDTO, applyLeaveDTO: any): boolean {
+
         const maxAllowedDay = policy.maxDayPerLeave;
 
-        const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+        const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate, applyLeaveDTO.endDate, applyLeaveDTO.dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay);
 
-        if(leaveDuration <= maxAllowedDay) {
+        if (leaveDuration <= maxAllowedDay) {
             return true;
         }
 
@@ -179,10 +185,10 @@ export class LeaveApplicationValidationService {
     // based on current date leave applied
     private allowAfterConfirm(policy: LeaveTypePropertiesXmlDTO, confirmDate: moment.Moment): boolean {
 
-        const currentDate = moment(new Date(),'YYYY-MM-DD');
-        
+        const currentDate = moment(new Date(), 'YYYY-MM-DD');
+
         // get the confirmation date
-        if(!policy.isAllowAfterJoinDate && currentDate < confirmDate) {
+        if (!policy.isAllowAfterJoinDate && currentDate < confirmDate) {
             return false;
         }
 
@@ -190,22 +196,22 @@ export class LeaveApplicationValidationService {
     }
 
     private convertDateToMoment(date: Date) {
-        return moment(date,'YYYY-MM-DD');
+        return moment(date, 'YYYY-MM-DD');
     }
 
     // validate if other leave overlap with applied leave
     // except cancelled leave
     public validateOverlapLeave(startDate: Date, endDate: Date) {
-        const filter = ["((START_DATE <= "+startDate+")AND(END_DATE >="+startDate+")OR(START_DATE <= "+endDate+")AND(END_DATE>="+endDate+"))"];
+        const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))"];
 
-        return this.leaveTransactionDbService.findByFilterV2([],filter)
-                .pipe(map(res => {
-                    
-                    if(res.length > 0) {
-                        return false;
-                    }
-                    
-                    return true;
-                }))
+        return this.leaveTransactionDbService.findByFilterV2([], filter)
+            .pipe(map(res => {
+
+                if (res.length > 0) {
+                    return false;
+                }
+
+                return true;
+            }))
     }
 }

@@ -18,6 +18,8 @@ import { LeaveTransactionDbService } from '../db/leave-transaction.db.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 import { ValidationStatusDTO } from 'src/common/policy/leave-application-validation/dto/validation-status.dto';
+import { json } from 'body-parser';
+import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 
 
 @Injectable()
@@ -30,116 +32,109 @@ export class ApplyLeaveService {
         private readonly userInfoService: UserInfoService,
         private readonly leaveTransactionDbService: LeaveTransactionDbService,
         private readonly dateCalculationService: DateCalculationService
-    ) {}
+    ) { }
 
     // process leave application
     public processLeave(applyLeaveDTO: ApplyLeaveDTO, user: any) {
-        
-        //const dayDuration = this.balanceService.getDayDuration(moment(applyLeaveDTO.startDate),moment(applyLeaveDTO.endDate),true,true);
+        let y = applyLeaveDTO;
 
+        return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE'], ['(USER_GUID=' + user.USER_GUID + ')', '(TENANT_GUID=' + user.TENANT_GUID + ')'])
+            .pipe(
+                map(res => {
+                    return res[0];
+                }),
+                mergeMap((userInfo: UserInfoModel) => {
+                    return this.checkUserLeaveEntitlement(y.leaveTypeID, user)
+                        .pipe(
+                            map((userEntitlement: UserLeaveEntitlementModel[]) => {
+                                return { userInfo, userEntitlement };
+                            })
+                        )
+                }),
+                mergeMap((result) => {
+                    // find the parent leave
+                    const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
 
-        // get user info
-        return this.userInfoService.findByFilterV2(['JOIN_DATE','CONFIRMATION_DATE'],['(USER_GUID='+user.USER_GUID+')','(TENANT_GUID='+user.TENANT_GUID+')'])
-                .pipe(
-                    map(res => {
-                        return res[0];
-                    }),
-                    mergeMap((userInfo:UserInfoModel) => {
-                        return this.checkUserLeaveEntitlement(applyLeaveDTO.leaveTypeID,user)
-                                .pipe(
-                                    map((userEntitlement:UserLeaveEntitlementModel[]) => {
-                                        return {userInfo,userEntitlement};
-                                    })
-                                )
+                    if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
+                        const res = new ValidationStatusDTO();
+                        res.valid = false;
+                        res.message.push("Policy Not Found");
+                        throw res;
+                    }
 
-                    }),
-                    mergeMap((result) => {
+                    const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+                    const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
 
-                        //find the parent leave
-                        const parent = result.userEntitlement.filter(x=>x.PARENT_FLAG==1)[0];
+                    return validation.pipe(map((validationResult) => {
+                        return { result, validationResult, policy };
+                    }));
+                }),
+                mergeMap(result => {
+                    if (result.validationResult.valid) {
+                        return of(this.applyLeaveData(result, y, user));
+                    } else {
+                        return of(result.validationResult);
+                    }
+                })
+            )
+    }
 
-                        if(parent.PROPERTIES_XML==null||parent.PROPERTIES_XML==undefined) {
-                            const res = new ValidationStatusDTO();
-                            res.valid = false;
-                            res.message.push("Policy Not Found");
-                            throw res;
-                        }
+    private applyLeaveData(result, y: ApplyLeaveDTO, user) {
+        let resArr = [];
+        let sumDays = 0;
+        for (let i = 0; i < y.data.length; i++) {
+            let leaveDetail = y.data[i];
 
-                        const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+            let msjStatus = "";
+            let noOfDays = this.dateCalculationService.getLeaveDuration(y.data[i].startDate, y.data[i].endDate, y.data[i].dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay);
 
-                        // validate the policy
-                        const validation = this.leaveValidationService.validateLeave(policy,applyLeaveDTO,result.userInfo,result.userEntitlement);
+            if (noOfDays == 0) {
+                msjStatus = leaveDetail.startDate + ' is a leave day';
+            }
+            else {
+                msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days':'day') +'  was send for approval between '+leaveDetail.startDate+' and '+leaveDetail.endDate;
+                this.leaveTransactionDbService.create(y.data[i], result, user, y).pipe(map((res) => {
+                    console.log('pass');
+                    if (res.status != 200) {
+                        result.validationResult.valid = false;
+                    }
 
-                        return validation.pipe(map(validationResult => {
-                            return {result,validationResult,policy};
-                        }));
-
-                    }),
-                    mergeMap(result => {
-                        
-                        if(result.validationResult.valid) {
-                            //start to save leave transaction into db
-                            const leaveData = new LeaveTransactionModel();
-
-                            leaveData.LEAVE_TRANSACTION_GUID = v1();
-                            leaveData.LEAVE_TYPE_GUID = result.result.userEntitlement[0].LEAVE_TYPE_GUID;
-                            leaveData.ENTITLEMENT_GUID = result.result.userEntitlement[0].ENTITLEMENT_GUID;
-                            leaveData.USER_GUID = user.USER_GUID;
-                            leaveData.TENANT_GUID = user.TENANT_GUID;
-                            leaveData.CREATION_USER_GUID = user.USER_GUID;
-                            leaveData.TENANT_COMPANY_GUID = result.result.userInfo.TENANT_COMPANY_GUID==undefined?"":result.result.userInfo.TENANT_COMPANY_GUID;
-                            
-                            leaveData.START_DATE = applyLeaveDTO.startDate;
-                            leaveData.END_DATE = applyLeaveDTO.endDate;
-                            leaveData.REASON = applyLeaveDTO.reason;
-                            leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,result.policy.excludeDayType.isExcludeHoliday,result.policy.excludeDayType.isExcludeRestDay);
-                            leaveData.ENTITLEMENT_XML_SNAPSHOT = this.xmlParserService.convertJsonToXML(result.policy);
-                            leaveData.ACTIVE_FLAG = true;
-
-                            const resource = new Resource(new Array());
-
-                            resource.resource.push(leaveData);
-
-                            return this.leaveTransactionDbService.createByModel(resource,[],[],[])
-                                .pipe(map((res) => {
-
-                                    if(res.status!=200) {
-                                        result.validationResult.valid = false;
-                                    } 
-
-                                    return result.validationResult;
-                                }))
-                        } else {
-                            return of(result.validationResult);
-                        }
-                    })
-                )
+                    return result.validationResult;
+                })).subscribe(data => {
+                    console.log(data);
+                })
+            }
+            resArr.push(msjStatus);
+            sumDays=sumDays+noOfDays;
+        }
+        result.validationResult.message = sumDays + ' ' + (sumDays > 1 ? 'days':'day') +' was send for approval';
+        result.validationResult.details = resArr;
+        return result.validationResult;
     }
 
     // check if leave entitlement policy is available
     private checkUserLeaveEntitlement(leaveTypeId: string, user: any) {
         const filter = [
-            '(LEAVE_TYPE_GUID='+leaveTypeId+')',
-            '(USER_GUID='+user.USER_GUID+')',
-            '(TENANT_GUID='+user.TENANT_GUID+')',
+            '(LEAVE_TYPE_GUID=' + leaveTypeId + ')',
+            '(USER_GUID=' + user.USER_GUID + ')',
+            '(TENANT_GUID=' + user.TENANT_GUID + ')',
             '(ACTIVE_FLAG=1)',
-            '(YEAR='+new Date().getFullYear()+')'
+            '(YEAR=' + new Date().getFullYear() + ')'
         ];
 
+        return this.userLeaveEntitlementDbService.findByFilterV2([], filter)
+            .pipe(
+                map(result => {
+                    if (result.length == 0) {
+                        const res = new ValidationStatusDTO();
+                        res.valid = false;
+                        res.message.push("Leave Entitlement Not Available");
+                        throw res;
+                    }
 
-        return this.userLeaveEntitlementDbService.findByFilterV2([],filter)
-                .pipe(
-                    map(result => {
-                        if(result.length==0) {
-                            const res = new ValidationStatusDTO();
-                            res.valid = false;
-                            res.message.push("Leave Entitlement Not Available");
-                            throw res;
-                        }
-                        
-                        return result;
-                    })
-                )
+                    return result;
+                })
+            )
     }
 
     // get month between 2 date
@@ -149,7 +144,7 @@ export class ApplyLeaveService {
 
         while (endDate > startDate || startDate.format('M') === endDate.format('M')) {
             timeValues.push(startDate.format('YYYY-MM'));
-            startDate.add(1,'month');
+            startDate.add(1, 'month');
         }
 
         return timeValues;
@@ -161,12 +156,9 @@ export class ApplyLeaveService {
 
         while (endDate > startDate || startDate.format('D') === endDate.format('D')) {
             timeValues.push(startDate.format('YYYY-MM-DD'));
-            startDate.add(1,'day');
+            startDate.add(1, 'day');
         }
 
         return timeValues;
     }
-
-
-
 }

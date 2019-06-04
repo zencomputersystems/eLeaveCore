@@ -14,34 +14,47 @@ export class DateCalculationService {
         const mockHoliday = holidayMock;
         const filterRestDay = new Array<any>();
         const filterHoliday = new Array<any>(); // hold the filtered holiday date
-        
+
         // duration between start and end data
         let startEndDuration = 0;
 
-        const copyStartDate = startDate.clone();
-        while(copyStartDate<=endDate) {
-            startEndDuration++; 
+        // console.log(isIncludeHoliday+' - '+startDate+' - '+endDate);
 
-            if(isIncludeRestDay) {
-                if(mockHoliday.rest.find(x=>x.fullname==copyStartDate.format("dddd").toUpperCase())) {
+        const copyStartDate = startDate.clone();
+        while (copyStartDate <= endDate) {
+            startEndDuration++;
+
+            if (!isIncludeRestDay) {
+                if (mockHoliday.rest.find(x => x.fullname == copyStartDate.format("dddd").toUpperCase())) {
+                    // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterRestDay.push(copyStartDate);
                 }
             }
 
-            copyStartDate.add('1','days');
+            if (!isIncludeHoliday) {
+                if (mockHoliday.holiday.find(x => x.date == copyStartDate.format("YYYY-MM-DD"))) {
+                    // console.log(copyStartDate.format("dddd").toUpperCase());
+                    filterHoliday.push(copyStartDate);
+                }
+            }
+
+            copyStartDate.add('1', 'days');
         }
 
 
-    
-        // find holiday between start date and end date
-        if(isIncludeHoliday) {
-            mockHoliday.holiday.forEach(element => {
-                const holidayDate = moment(element.date,'YYYY-MM-DD');
-                holidayDate.startOf('days');
-                
-                // check if holiday overlap with rest day
-                if(holidayDate.isBetween(startDate,endDate)&& filterRestDay.find(x=>x==holidayDate.date())==undefined ) {
 
+        console.log('includeholiday' + isIncludeHoliday);
+        // find holiday between start date and end date
+        if (isIncludeHoliday) {
+            mockHoliday.holiday.forEach(element => {
+
+                console.log('includeholiday' + element.date);
+                const holidayDate = moment(element.date, 'YYYY-MM-DD');
+                holidayDate.startOf('days');
+
+                // check if holiday overlap with rest day
+                if (holidayDate.isBetween(startDate, endDate) && filterRestDay.find(x => x == holidayDate.date()) == undefined) {
+                    console.log('overlap rest day');
                     filterHoliday.push(holidayDate);
                 }
             });
@@ -50,25 +63,32 @@ export class DateCalculationService {
         const holidayAmount = filterHoliday.length;
         const restDayAmount = filterRestDay.length;
 
-        const totalDuration = (startEndDuration-(holidayAmount+restDayAmount));
-        
+        const totalDuration = (startEndDuration - (holidayAmount + restDayAmount));
+
+        // console.log(totalDuration+'-'+holidayAmount+'-'+restDayAmount);
         return totalDuration;
 
     }
 
-    getLeaveDuration(firstDate: Date, secondDate: Date, dayType: number,isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
-        const startDate = moment(firstDate,'YYYY-MM-DD');
-        const endDate = moment(secondDate,'YYYY-MM-DD');
+    getLeaveDuration(firstDate: Date, secondDate: Date, dayType: number, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
+        const startDate = moment(firstDate, 'YYYY-MM-DD');
+        const endDate = moment(secondDate, 'YYYY-MM-DD');
 
-        const duration = this.getDayDuration(startDate,endDate,isIncludeHoliday,isIncludeRestDay);
+        const duration = this.getDayDuration(startDate, endDate, isIncludeHoliday, isIncludeRestDay);
 
-        if(dayType==1) {
-            return (duration-0.5);
+        if (duration <= 0) {
+            return 0;
         }
 
-        if(dayType==2) {
-            return (duration-0.75);
+        if (dayType == 1) {
+            return (duration - 0.5);
         }
+
+        if (dayType == 2) {
+            return (duration - 0.75);
+        }
+
+
 
         return duration;
     }

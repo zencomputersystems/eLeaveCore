@@ -39,13 +39,23 @@ export class LeaveBalanceValidationService {
         const policy:LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
 
         // get leave applied duration
-        const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+        // const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+
+        let sumLeaveDuration = 0
+        for(let i = 0; i< applyLeaveDTO.data.length;i++){
+            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.data[i].startDate,applyLeaveDTO.data[i].endDate,applyLeaveDTO.data[i].dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+            sumLeaveDuration = sumLeaveDuration+leaveDurationTemp;
+        }
+
+        const leaveDuration = sumLeaveDuration;
+
+        
 
         // get all applied leave for this leave type
         const currentDateStartYear = new Date().getFullYear()+"-01-01";
 
 
-        const filter = ["((START_DATE <= "+currentDateStartYear+")OR(END_DATE >="+currentDateStartYear+")AND(START_DATE <= "+applyLeaveDTO.endDate+")OR(END_DATE>="+applyLeaveDTO.endDate+"))"];
+        const filter = ["((START_DATE <= "+currentDateStartYear+")OR(END_DATE >="+currentDateStartYear+")AND(START_DATE <= "+applyLeaveDTO.data[applyLeaveDTO.data.length -1].endDate+")OR(END_DATE>="+applyLeaveDTO.data[applyLeaveDTO.data.length -1].endDate+"))"];
         
         return this.leaveTransactionDbService.findByFilterV2([],filter)
             .pipe(map((leaveTransactions: LeaveTransactionModel[]) => {
@@ -64,7 +74,8 @@ export class LeaveBalanceValidationService {
 
                     if(policy.includeOtherLeaveType!=null||policy.includeOtherLeaveType!="") {
                         // add the applied day into calcuation
-                        if(element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == policy.includeOtherLeaveType) {
+                        console.log(element.LEAVE_TYPE_GUID+" - "+policy.includeOtherLeaveType);
+                        if(element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID != policy.includeOtherLeaveType) {
                             console.log(element.LEAVE_TYPE_GUID+" = "+element.NO_OF_DAYS);
                             counterAppliedDay += element.NO_OF_DAYS;
                         }
@@ -80,7 +91,7 @@ export class LeaveBalanceValidationService {
                 const childBalance = this.getChildBalance(applyLeaveDTO,userEntitlement,policy);
 
                 const balance = ((parentBalance+childBalance) - (leaveDuration+counterAppliedDay));
-
+// console.log(parentBalance+"-"+childBalance+"-"+balance+"-"+counterAppliedDay+" bal");
                 if(balance<0) {
                     return false;
                 } 
@@ -122,8 +133,8 @@ export class LeaveBalanceValidationService {
 
     public getChildBalance(applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[], policy: LeaveTypePropertiesXmlDTO) {
         
-        const startDate = moment(applyLeaveDTO.startDate).startOf('days');
-        const endDate = moment(applyLeaveDTO.endDate).endOf('days');
+        const startDate = moment(applyLeaveDTO.data[0].startDate).startOf('days');
+        const endDate = moment(applyLeaveDTO.data[applyLeaveDTO.data.length -1].endDate).endOf('days');
 
         // CHILD CALCULATION
         const childLeave = userEntitlement.filter(x=>x.PARENT_FLAG==0);
@@ -137,7 +148,16 @@ export class LeaveBalanceValidationService {
 
                 if(expiryDate.isSameOrBefore(endDate)&&expiryDate.isSameOrAfter(startDate)) {
                     // calculate the duration between start date and expiry date
-                    let durationExpiredToStart = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,element.EXPIREDATE,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+                    // let durationExpiredToStart = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,element.EXPIREDATE,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+
+                    let sumLeaveDurTemp = 0
+                    for(let i = 0; i< applyLeaveDTO.data.length;i++){
+                        let leaveDurationTemp = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.data[i].startDate,applyLeaveDTO.data[i].endDate,applyLeaveDTO.data[i].dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+                        sumLeaveDurTemp = sumLeaveDurTemp+leaveDurationTemp;
+                    }
+
+                    let durationExpiredToStart = sumLeaveDurTemp;
+                    
 
                     childLeaveCounter += durationExpiredToStart>element.DAYS_ADDED?element.DAYS_ADDED:durationExpiredToStart;              
                 }

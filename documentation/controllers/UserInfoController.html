@@ -139,14 +139,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:16</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="24"
+                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:24</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Create new user_info API</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -238,14 +240,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="84"
+                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:84</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Get user_info details of current user (API)</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -320,14 +324,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:112</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Get user_info details for specific user (API)</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -411,14 +417,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">src/admin/user-info/user-info.controller.ts:54</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Update user_info API</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -499,15 +507,23 @@ import { ApiBearerAuth } from &#x27;@nestjs/swagger&#x27;;
 export class UserInfoController {
     constructor(private readonly userInfoService: UserInfoService) {}
 
+    /**
+     * Create new user_info API
+     *
+     * @param {CreateUserDTO} createUserDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserInfoController
+     */
     @Post()
-    create(@Body() createUserDTO: CreateUserDTO ,@Req() req, @Res() res) {
-        
-        this.userInfoService.create(req.user,createUserDTO)
+    create(@Body() createUserDTO: CreateUserDTO , @Req() req, @Res() res) {
+
+        this.userInfoService.create(req.user, createUserDTO)
             .subscribe(
                 data &#x3D;&gt; {
-                    if(data.status&#x3D;&#x3D;200)
+                    if (data.status &#x3D;&#x3D;&#x3D; 200) {
                         res.send(data.data.resource[0]);
-                    else {
+                    } else {
                         res.status(data.status);
                         res.send();
                     }
@@ -521,16 +537,24 @@ export class UserInfoController {
 
     }
 
+    /**
+     * Update user_info API
+     *
+     * @param {UpdateUserDTO} updateUserDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserInfoController
+     */
     @Patch()
-    update(@Body() updateUserDTO: UpdateUserDTO,@Req() req, @Res() res) {
-        
+    update(@Body() updateUserDTO: UpdateUserDTO, @Req() req, @Res() res) {
 
-        this.userInfoService.update(req.user,updateUserDTO)
+
+        this.userInfoService.update(req.user, updateUserDTO)
             .subscribe(
                 data &#x3D;&gt; {
-                    if(data.status&#x3D;&#x3D;200)
+                    if (data.status &#x3D;&#x3D;&#x3D; 200) {
                         res.send(data.data.resource[0]);
-                    else {
+                    } else {
                         res.status(data.status);
                         res.send();
                     }
@@ -544,16 +568,21 @@ export class UserInfoController {
 
     }
 
+    /**
+     * Get user_info details of current user (API)
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserInfoController
+     */
     @Get()
-    findAll(@Req() req,@Res() res) {
-        this.userInfoService.findOne(req.user.USER_GUID,req.user.TENANT_GUID)
+    findAll(@Req() req, @Res() res) {
+        this.userInfoService.findOne(req.user.USER_GUID, req.user.TENANT_GUID)
             .subscribe(
                 data &#x3D;&gt; {
-                    if(data.status&#x3D;&#x3D;200)
-                    {
+                    if (data.status &#x3D;&#x3D;&#x3D; 200) {
                         res.send(data.data.resource[0]);
-                    }
-                    else {
+                    } else {
                         res.status(data.status);
                         res.send();
                     }
@@ -566,16 +595,22 @@ export class UserInfoController {
 
     }
 
+    /**
+     * Get user_info details for specific user (API)
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserInfoController
+     */
     @Get(&#x27;:id&#x27;)
-    findOne(@Param(&#x27;id&#x27;) id, @Req() req,@Res() res) {
-        this.userInfoService.findOne(req.user.USER_GUID,req.user.TENANT_GUID)
+    findOne(@Param(&#x27;id&#x27;) id, @Req() req, @Res() res) {
+        this.userInfoService.findOne(req.user.USER_GUID, req.user.TENANT_GUID)
         .subscribe(
             data &#x3D;&gt; {
-                if(data.status&#x3D;&#x3D;200)
-                {
+                if (data.status &#x3D;&#x3D;&#x3D; 200) {
                     res.send(data.data.resource[0]);
-                }
-                else {
+                } else {
                     res.status(data.status);
                     res.send();
                 }

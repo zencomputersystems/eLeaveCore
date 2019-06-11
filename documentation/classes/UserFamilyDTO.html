@@ -63,9 +63,21 @@
             <code>src/admin/user-info/dto/user-family.dto.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>UserFamily DTO - detailing family members</p>
+
+            </p>
 
 
 
+            <p class="comment">
+                <h3>Example</h3>
+            </p>
+            <div class="io-description">
+            </div>
 
             <section>
     <h3 id="index">Index</h3>
@@ -127,13 +139,13 @@
                             <b>Decorators : </b>
                             <br />
                             <code>
-                                @Type(undefined)<br />@ValidateNested()<br />
+                                @ApiModelProperty()<br />@Type(undefined)<br />@ValidateNested()<br />
                             </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/admin/user-info/dto/user-family.dto.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/admin/user-info/dto/user-family.dto.ts:24</a></div>
                             </td>
                         </tr>
 
@@ -163,13 +175,13 @@
                             <b>Decorators : </b>
                             <br />
                             <code>
-                                @Type(undefined)<br />@ValidateNested()<br />
+                                @ApiModelProperty()<br />@Type(undefined)<br />@ValidateNested()<br />
                             </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/admin/user-info/dto/user-family.dto.ts:11</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/admin/user-info/dto/user-family.dto.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -188,18 +200,27 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserSpouseDTO } from &quot;./user-spouse.dto&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserSpouseDTO } from &#x27;./user-spouse.dto&#x27;;
 
-import { UserChildrenDTO } from &quot;./user-children.dto&quot;;
+import { UserChildrenDTO } from &#x27;./user-children.dto&#x27;;
 
-import { IsNotEmpty, ValidateNested } from &quot;class-validator&quot;;
-import { Type } from &quot;class-transformer&quot;;
+import { IsNotEmpty, ValidateNested } from &#x27;class-validator&#x27;;
+import { Type } from &#x27;class-transformer&#x27;;
+import { ApiModelProperty } from &#x27;@nestjs/swagger&#x27;;
 
+/**
+ * UserFamily DTO - detailing family members
+ *
+ * @export
+ * @class UserFamilyDTO
+ */
 export class UserFamilyDTO {
+    @ApiModelProperty()
     @Type(() &#x3D;&gt; UserSpouseDTO)
     @ValidateNested()
     spouse: UserSpouseDTO[];
 
+    @ApiModelProperty()
     @Type(() &#x3D;&gt; UserChildrenDTO)
     @ValidateNested()
     child: UserChildrenDTO[];

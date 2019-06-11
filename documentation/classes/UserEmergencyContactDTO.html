@@ -63,9 +63,21 @@
             <code>src/admin/user-info/dto/user-emergency-contact.dto.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>User&#39;s emergency contact</p>
+
+            </p>
 
 
 
+            <p class="comment">
+                <h3>Example</h3>
+            </p>
+            <div class="io-description">
+            </div>
 
             <section>
     <h3 id="index">Index</h3>
@@ -127,13 +139,13 @@
                             <b>Decorators : </b>
                             <br />
                             <code>
-                                @IsNotEmpty()<br />
+                                @ApiModelProperty()<br />@IsNotEmpty()<br />
                             </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/admin/user-info/dto/user-emergency-contact.dto.ts:8</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/admin/user-info/dto/user-emergency-contact.dto.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -163,13 +175,13 @@
                             <b>Decorators : </b>
                             <br />
                             <code>
-                                @IsNotEmpty()<br />
+                                @ApiModelProperty()<br />@IsNotEmpty()<br />
                             </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">src/admin/user-info/dto/user-emergency-contact.dto.ts:5</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/admin/user-info/dto/user-emergency-contact.dto.ts:13</a></div>
                             </td>
                         </tr>
 
@@ -188,15 +200,25 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { IsNotEmpty } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { IsNotEmpty } from &#x27;class-validator&#x27;;
+import { ApiModelProperty } from &#x27;@nestjs/swagger&#x27;;
 
+/**
+ * User&#x27;s emergency contact
+ *
+ * @export
+ * @class UserEmergencyContactDTO
+ */
 export class UserEmergencyContactDTO {
+    @ApiModelProperty()
     @IsNotEmpty()
     name: string;
-    
+
+    @ApiModelProperty()
     @IsNotEmpty()
     contactNumber: string;
-}</code></pre>
+}
+</code></pre>
     </div>
 </div>
 

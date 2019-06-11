@@ -1,3 +1,9 @@
+/**
+ * User info model
+ *
+ * @export
+ * @class UserInfoModel
+ */
 export class UserInfoModel {
     USER_INFO_GUID: string; //PK
     USER_GUID: string; //FK

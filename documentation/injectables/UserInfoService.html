@@ -269,14 +269,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">src/admin/user-info/user-info.service.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">src/admin/user-info/user-info.service.ts:72</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Create new leavetype entitlement</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -351,8 +353,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="49"
-                            class="link-to-prism">src/admin/user-info/user-info.service.ts:49</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">src/admin/user-info/user-info.service.ts:56</a></div>
                 </td>
             </tr>
 
@@ -421,8 +423,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">src/admin/user-info/user-info.service.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/admin/user-info/user-info.service.ts:59</a></div>
                 </td>
             </tr>
 
@@ -505,14 +507,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="27"
-                            class="link-to-prism">src/admin/user-info/user-info.service.ts:27</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="34"
+                            class="link-to-prism">src/admin/user-info/user-info.service.ts:34</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Find single user</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -589,8 +593,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="90"
-                            class="link-to-prism">src/admin/user-info/user-info.service.ts:90</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="105"
+                            class="link-to-prism">src/admin/user-info/user-info.service.ts:105</a></div>
                 </td>
             </tr>
 
@@ -671,8 +675,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="76"
-                            class="link-to-prism">src/admin/user-info/user-info.service.ts:76</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">src/admin/user-info/user-info.service.ts:91</a></div>
                 </td>
             </tr>
 
@@ -1162,7 +1166,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>&quot;user_info&quot;</code>
+                            <i>Default value : </i><code>&#x27;user_info&#x27;</code>
                         </td>
                     </tr>
                         <tr>
@@ -1388,16 +1392,23 @@ import { IDbService } from &#x27;src/interface/IDbService&#x27;;
 @Injectable()
 export class UserInfoService extends BaseDBService implements IDbService {
 
-    private _tableName &#x3D; &quot;user_info&quot;;
+    private _tableName &#x3D; &#x27;user_info&#x27;;
 
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
         public readonly xmlParserService: XMLParserService){
-            super(httpService,queryService,&quot;user_info&quot;);
+            super(httpService,queryService, &#x27;user_info&#x27;);
         }
 
-    //find single user
+    /**
+     * Find single user
+     *
+     * @param {string} userId
+     * @param {string} tenantId
+     * @returns {Observable&lt;any&gt;}
+     * @memberof UserInfoService
+     */
     public findOne(userId: string, tenantId: string): Observable&lt;any&gt; {
         const fields &#x3D; [
             &#x27;USER_INFO_GUID&#x27;,
@@ -1412,38 +1423,46 @@ export class UserInfoService extends BaseDBService implements IDbService {
             &#x27;EMPLOYEE_STATUS&#x27;,
             &#x27;EMPLOYEE_TYPE&#x27;
         ];
-        const filters &#x3D; [&#x27;(USER_GUID&#x3D;&#x27;+userId+&#x27;)&#x27;];
+        const filters &#x3D; [&#x27;(USER_GUID&#x3D;&#x27;+userId + &#x27;)&#x27;];
 
-        const url &#x3D; this.queryService.generateDbQuery(this._tableName,fields,filters);
+        const url &#x3D; this.queryService.generateDbQuery(this._tableName, fields, filters);
 
         return this.httpService.get(url);
 
     }
 
     findAll(TENANT_GUID: string): Observable&lt;any&gt; {
-        throw new Error(&quot;Method not implemented.&quot;);
+        throw new Error(&#x27;Method not implemented.&#x27;);
     }
     findById(USERINFO_GUID: any, id: string): Observable&lt;any&gt; {
-        throw new Error(&quot;Method not implemented.&quot;);
+        throw new Error(&#x27;Method not implemented.&#x27;);
     }
 
-    //create new leavetype entitlement
+
+    /**
+     * Create new leavetype entitlement
+     *
+     * @param {*} user
+     * @param {CreateUserDTO} d
+     * @returns
+     * @memberof UserInfoService
+     */
     create(user: any, d: CreateUserDTO) {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource &#x3D; new Resource(new Array);
 
-        const data &#x3D; this.mapData(d,user.USER_GUID);
-        
+        const data &#x3D; this.mapData(d, user.USER_GUID);
+
         data.USER_INFO_GUID &#x3D; v1();
         data.CREATION_USER_GUID &#x3D; user.USER_GUID;
         data.CREATION_TS &#x3D; new Date().toISOString();
 
         resource.resource.push(data);
 
-        return this.createByModel(resource,[],[],[]);
-        
+        return this.createByModel(resource, [], [], []);
+
     }
 
 
@@ -1452,26 +1471,26 @@ export class UserInfoService extends BaseDBService implements IDbService {
         //do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource &#x3D; new Resource(new Array);
-        const data &#x3D; this.mapData(d,user.USER_GUID);
-        
+        const data &#x3D; this.mapData(d, user.USER_GUID);
+
         data.USER_INFO_GUID &#x3D; d.id;
-       
+
         resource.resource.push(data);
 
-        return this.updateByModel(resource,[],[],[]);        
+        return this.updateByModel(resource, [], [], []);
     }
 
-    public mapData(d:UserDto,userId: string) {
+    public mapData(d: UserDto, userId: string) {
         const data &#x3D; new UserInfoModel();
-        
+
         data.USER_GUID &#x3D; userId;
 
         data.DESIGNATION &#x3D; d.employmentDetail.designationId;
         data.DEPARTMENT &#x3D; d.employmentDetail.departmentId;
         data.BRANCH &#x3D; d.employmentDetail.branchId;
         data.TENANT_COMPANY_GUID &#x3D; d.employmentDetail.companyId;
-        
-        data.EMPLOYEE_TYPE &#x3D; &quot;Intern&quot;;
+
+        data.EMPLOYEE_TYPE &#x3D; &#x27;Intern&#x27;;
         data.FULLNAME &#x3D; d.employeeName;
         data.JOIN_DATE &#x3D; d.employmentDetail.joinDate; // .toDateString();
         data.CONFIRMATION_DATE &#x3D; d.employmentDetail.confirmationDate; // .toDateString();
@@ -1482,11 +1501,10 @@ export class UserInfoService extends BaseDBService implements IDbService {
         const xmldata &#x3D; d;
         xmldata.employmentDetail &#x3D; null;
         data.PROPERTIES_XML &#x3D; this.xmlParserService.convertJsonToXML(xmldata);
-           
+
         return data;
     }
 }
-
 </code></pre>
     </div>
 

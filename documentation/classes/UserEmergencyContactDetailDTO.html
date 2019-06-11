@@ -63,9 +63,21 @@
             <code>src/admin/user-info/dto/user-emergency-contact-detail.dto.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>User&#39;s emergency contact details</p>
+
+            </p>
 
 
 
+            <p class="comment">
+                <h3>Example</h3>
+            </p>
+            <div class="io-description">
+            </div>
 
             <section>
     <h3 id="index">Index</h3>
@@ -124,13 +136,13 @@
                             <b>Decorators : </b>
                             <br />
                             <code>
-                                @Type(undefined)<br />@ValidateNested()<br />
+                                @ApiModelProperty()<br />@Type(undefined)<br />@ValidateNested()<br />
                             </code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/admin/user-info/dto/user-emergency-contact-detail.dto.ts:9</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/admin/user-info/dto/user-emergency-contact-detail.dto.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -149,12 +161,20 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserEmergencyContactDTO } from &quot;./user-emergency-contact.dto&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import { ValidateNested } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserEmergencyContactDTO } from &#x27;./user-emergency-contact.dto&#x27;;
+import { Type } from &#x27;class-transformer&#x27;;
+import { ValidateNested } from &#x27;class-validator&#x27;;
+import { ApiModelProperty } from &#x27;@nestjs/swagger&#x27;;
 
+/**
+ * User&#x27;s emergency contact details
+ *
+ * @export
+ * @class UserEmergencyContactDetailDTO
+ */
 export class UserEmergencyContactDetailDTO {
 
+    @ApiModelProperty()
     @Type(() &#x3D;&gt; UserEmergencyContactDTO)
     @ValidateNested()
     contact: UserEmergencyContactDTO[];

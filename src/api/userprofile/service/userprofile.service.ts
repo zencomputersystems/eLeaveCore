@@ -15,7 +15,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { PersonalDetailXML } from '../dto/userprofile-detail/personal-detail/xml/personal-detail.xml';
 import { UpdateEmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 import { Access } from 'src/common/dto/access.dto';
-import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service';
+import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { UserLeaveEntitlementModel } from "../model/user-leave-entitlement.model";
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 

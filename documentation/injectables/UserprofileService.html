@@ -1,0 +1,1395 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>leave documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">leave documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>UserprofileService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/api/userprofile/service/userprofile.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildProfileData">buildProfileData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getCertificationDetail">getCertificationDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getDetail">getDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getEmploymentDetail">getEmploymentDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getEntitlementDetail">getEntitlementDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getList">getList</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getPersonalDetail">getPersonalDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#joinText">joinText</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#updateEmploymentDetail">updateEmploymentDetail</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#updatePersonalDetail">updatePersonalDetail</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(userInfoService: <a href="../injectables/UserInfoService.html">UserInfoService</a>, userprofileDBService: <a href="../injectables/UserprofileDbService.html">UserprofileDbService</a>, xmlParserService: <a href="../classes/XMLParserService.html">XMLParserService</a>, entitlementDetailService: <a href="../injectables/UserLeaveEntitlementService.html">UserLeaveEntitlementService</a>, serviceYearCalcService: <a href="../classes/ServiceYearCalc.html">ServiceYearCalc</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:23</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>userInfoService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserInfoService.html" target="_self" >UserInfoService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userprofileDBService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserprofileDbService.html" target="_self" >UserprofileDbService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>xmlParserService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/XMLParserService.html" target="_self" >XMLParserService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>entitlementDetailService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserLeaveEntitlementService.html" target="_self" >UserLeaveEntitlementService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>serviceYearCalcService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/ServiceYearCalc.html" target="_self" >ServiceYearCalc</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildProfileData"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            buildProfileData
+                        </b>
+                        <a href="#buildProfileData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildProfileData(data: <a href="../classes/UserInfoModel.html">UserInfoModel</a>, isShowPersonalData: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, isShowEmploymentData: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, isShowEntitlementData: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, isShowCertData: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="186"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:186</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="../classes/UserInfoModel.html" target="_self" >UserInfoModel</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>isShowPersonalData</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>isShowEmploymentData</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>isShowEntitlementData</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>isShowCertData</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCertificationDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            getCertificationDetail
+                        </b>
+                        <a href="#getCertificationDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCertificationDetail(filters: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="171"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:171</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filters</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            getDetail
+                        </b>
+                        <a href="#getDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDetail(filters: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:60</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filters</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEmploymentDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            getEmploymentDetail
+                        </b>
+                        <a href="#getEmploymentDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEmploymentDetail(filters: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:112</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filters</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEntitlementDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            getEntitlementDetail
+                        </b>
+                        <a href="#getEntitlementDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEntitlementDetail(tenant_guid, user_guid)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="162"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:162</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>tenant_guid</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>user_guid</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getList"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            getList
+                        </b>
+                        <a href="#getList"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getList(filters: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:32</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filters</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPersonalDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            getPersonalDetail
+                        </b>
+                        <a href="#getPersonalDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getPersonalDetail(filters: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:78</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filters</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="joinText"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            joinText
+                        </b>
+                        <a href="#joinText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>joinText(data: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="293"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:293</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateEmploymentDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            updateEmploymentDetail
+                        </b>
+                        <a href="#updateEmploymentDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateEmploymentDetail(data: <a href="../classes/UpdateEmploymentDetailDTO.html">UpdateEmploymentDetailDTO</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:126</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="../classes/UpdateEmploymentDetailDTO.html" target="_self" >UpdateEmploymentDetailDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updatePersonalDetail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            updatePersonalDetail
+                        </b>
+                        <a href="#updatePersonalDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updatePersonalDetail(data: <a href="../classes/UpdatePersonalDetailDTO.html">UpdatePersonalDetailDTO</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/api/userprofile/service/userprofile.service.ts:92</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="../classes/UpdatePersonalDetailDTO.html" target="_self" >UpdatePersonalDetailDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Res, Req } from &#x27;@nestjs/common&#x27;;
+import { map} from &#x27;rxjs/operators&#x27;;
+import { XMLParserService } from &#x27;src/common/helper/xml-parser.service&#x27;;
+import { UserInfoModel } from &#x27;src/admin/user-info/model/user-info.model&#x27;;
+import { UserPersonalDetailDTO } from &#x27;../dto/userprofile-detail/personal-detail/user-personal-detail.dto&#x27;;
+import { UserProfileDTO } from &#x27;../dto/userprofile-detail/userprofile.dto&#x27;;
+import { EmploymentDetailDTO } from &#x27;../dto/userprofile-detail/employment-detail/employment-detail.dto&#x27;;
+import { EntitlementDetailDTO } from &#x27;../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto&#x27;;
+import { leaveEntitlementMock } from &#x27;../mockdata/leave-entitlement&#x27;;
+import { UserprofileListDTO } from &#x27;../dto/userprofile-list/userprofile-list.dto&#x27;;
+import { UserprofileDbService } from &#x27;../db/userprofile.db.service&#x27;;
+import { UpdatePersonalDetailDTO } from &#x27;../dto/userprofile-detail/personal-detail/update-personal-detail.dto&#x27;;
+import { UserInfoService } from &#x27;src/admin/user-info/user-info.service&#x27;;
+import { Resource } from &#x27;src/common/model/resource.model&#x27;;
+import { PersonalDetailXML } from &#x27;../dto/userprofile-detail/personal-detail/xml/personal-detail.xml&#x27;;
+import { UpdateEmploymentDetailDTO } from &#x27;../dto/userprofile-detail/employment-detail/update-employment-detail.dto&#x27;;
+import { Access } from &#x27;src/common/dto/access.dto&#x27;;
+import { ServiceYearCalc } from &#x27;src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service&#x27;;
+import { UserLeaveEntitlementModel } from &quot;../model/user-leave-entitlement.model&quot;;
+import { UserLeaveEntitlementService } from &#x27;./user-leave-entitlement.service&#x27;;
+
+@Injectable()
+export class UserprofileService {
+
+    constructor(
+        private readonly userInfoService: UserInfoService,
+        private readonly userprofileDBService: UserprofileDbService,
+        private readonly xmlParserService: XMLParserService,
+        private readonly entitlementDetailService: UserLeaveEntitlementService,
+        private readonly serviceYearCalcService: ServiceYearCalc) {}
+
+    public getList(filters: string[]) {
+        console.log(&#x27;iamhereinlist&#x27;);
+        return this.userprofileDBService.findByFilterV2([],filters)
+            .pipe(
+                map(res &#x3D;&gt; {
+                    const userArray &#x3D; new Array();
+                        
+                    res.forEach(element &#x3D;&gt; {
+
+                        userArray.push(
+                            new UserprofileListDTO(
+                            element.USER_INFO_GUID,
+                            element.USER_GUID,
+                            element.PERSONAL_ID&#x3D;&#x3D;null?&#x27;&#x27;:element.PERSONAL_ID,
+                            element.FULLNAME,
+                            element.DESIGNATION,
+                            element.EMAIL,
+                            new Access()
+                        ));
+
+                    });
+
+                    return userArray;
+                })
+            );
+    }
+
+    // Get User Detail
+    public getDetail(filters:string[]) {
+console.log(&#x27;iamhereindetail&#x27;);
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res &#x3D;&gt; {
+                        console.log(res);
+                        const data: UserInfoModel &#x3D; res[0];
+
+                        if(data) {
+                            return this.buildProfileData(data,true,true,true,true);
+                        }
+                    })
+                )
+        
+    }
+
+    //#region PERSONAL DETAIL
+
+    public getPersonalDetail(filters:string[]) {
+        console.log(&#x27;iamhereinpersonaldetail&#x27;);
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res &#x3D;&gt; {
+                        const data: UserInfoModel &#x3D; res[0];
+
+                        if(data) {
+                            return this.buildProfileData(data,true,false,false,false);
+                        }
+                    })
+                );
+    }
+
+    public updatePersonalDetail(data: UpdatePersonalDetailDTO,userId: string) {
+
+        const modeldata &#x3D; new UserInfoModel();
+        modeldata.USER_INFO_GUID &#x3D; data.id;
+        modeldata.NICKNAME &#x3D; data.nickname;
+        modeldata.PROPERTIES_XML &#x3D; this.xmlParserService.convertJsonToXML(data);
+        modeldata.UPDATE_TS &#x3D; new Date().toISOString();
+        modeldata.UPDATE_USER_GUID &#x3D; userId;
+
+        const resource &#x3D; new Resource(new Array());
+        resource.resource.push(modeldata);
+
+        return this.userInfoService.updateByModel(resource,[],[],[]);
+    }
+
+    //#endregion
+
+
+    //#region EMPLOYMENT DETAIL
+
+    public getEmploymentDetail(filters:string[]) {
+        console.log(&#x27;iamhereinemploymentdetail&#x27;);
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res &#x3D;&gt; {
+                        const data: UserInfoModel &#x3D; res[0];
+
+                        if(data) {
+                            return this.buildProfileData(data,false,true,false,false);
+                        }
+                    })
+                )
+    }
+
+    public updateEmploymentDetail(data: UpdateEmploymentDetailDTO,userId: string) {
+        const modelData &#x3D; new UserInfoModel();
+
+        modelData.USER_INFO_GUID &#x3D; data.id;
+
+        modelData.PERSONAL_ID &#x3D; data.employeeNumber;
+        modelData.DESIGNATION &#x3D; data.designation;
+        modelData.DEPARTMENT &#x3D; data.department;
+        modelData.BRANCH &#x3D; data.branch;
+        modelData.DIVISION &#x3D; data.division;
+        modelData.MANAGER_USER_GUID &#x3D; data.reportingTo;
+
+        modelData.JOIN_DATE &#x3D; data.dateOfJoin;
+        modelData.RESIGNATION_DATE &#x3D; data.dateOfResign;
+        modelData.CONFIRMATION_DATE &#x3D; data.dateOfConfirmation;
+
+        modelData.EMPLOYEE_STATUS &#x3D; data.employmentStatus;
+        modelData.EMPLOYEE_TYPE &#x3D; data.employmentType;
+
+        modelData.BANK &#x3D; data.bankAccountName;
+        modelData.PR_ACCOUNT_NUMBER &#x3D; data.bankAccountNumber;
+        modelData.PR_EPF_NUMBER &#x3D; data.epfNumber;
+        modelData.PR_INCOMETAX_NUMBER &#x3D; data.incomeTaxNumber;
+        
+        modelData.UPDATE_TS &#x3D; new Date().toISOString();
+        modelData.UPDATE_USER_GUID &#x3D; userId;
+
+        const resource &#x3D; new Resource(new Array());
+
+        resource.resource.push(modelData);
+
+        return this.userInfoService.updateByModel(resource,[],[],[]);
+    }
+
+    //#region ENTITLEMENT DETAIL
+
+    public getEntitlementDetail(tenant_guid,user_guid) {
+        return this.entitlementDetailService.getEntitlementList(tenant_guid,user_guid);
+    }
+
+    //#endregion
+
+
+    //#region CERTIFICATION DETAIL
+
+    public getCertificationDetail(filters:string[]) {
+        return this.userInfoService.findByFilterV2([],filters)
+                .pipe(
+                    map(res &#x3D;&gt; {
+                        const data: UserInfoModel &#x3D; res[0];
+
+                        if(data) {
+                            return this.buildProfileData(data,false,false,false,true);
+                        }
+                    })
+                )
+    }
+
+    //#endregion
+
+    private buildProfileData(
+        data: UserInfoModel,
+        isShowPersonalData: boolean,
+        isShowEmploymentData: boolean,
+        isShowEntitlementData: boolean,
+        isShowCertData: boolean) {
+
+        const userProfileData &#x3D; new UserProfileDTO();
+
+        userProfileData.id &#x3D; data.USER_INFO_GUID;
+        userProfileData.userId &#x3D; data.USER_GUID;
+        userProfileData.employeeName &#x3D; data.FULLNAME;
+        userProfileData.employeeDesignation &#x3D; data.DESIGNATION;
+        userProfileData.employeeLocation &#x3D; data.TENANT_COMPANY_GUID;
+        userProfileData.employeeDepartment &#x3D; data.DEPARTMENT;
+    
+        if(data.PROPERTIES_XML) {
+
+            //process the personal detail
+            const parseXMLtoJSON: PersonalDetailXML&#x3D; this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+
+            if(isShowPersonalData) {
+                const userPersonalDetail &#x3D; new UserPersonalDetailDTO();
+
+                userPersonalDetail.dob &#x3D; parseXMLtoJSON.dob;
+                userPersonalDetail.nric &#x3D; parseXMLtoJSON.nric;
+                userPersonalDetail.nickname &#x3D; parseXMLtoJSON.nickname;
+                userPersonalDetail.emailAddress &#x3D; parseXMLtoJSON.emailAddress;
+                userPersonalDetail.workEmailAddress &#x3D; parseXMLtoJSON.workEmailAddress;
+                userPersonalDetail.gender &#x3D; parseXMLtoJSON.gender&#x3D;&#x3D;1?&quot;Male&quot;:&quot;Female&quot;;
+                userPersonalDetail.maritalStatus &#x3D; parseXMLtoJSON.maritalStatus&#x3D;&#x3D;1?&quot;Married&quot;:&quot;Single&quot;;
+                userPersonalDetail.residentialAddress1 &#x3D; parseXMLtoJSON.address1;
+                userPersonalDetail.residentialAddress2 &#x3D; parseXMLtoJSON.address2;
+                userPersonalDetail.city &#x3D; parseXMLtoJSON.city;
+                userPersonalDetail.postcode &#x3D; parseXMLtoJSON.postcode;
+                userPersonalDetail.state &#x3D; parseXMLtoJSON.state;
+                userPersonalDetail.country &#x3D; parseXMLtoJSON.country;
+                userPersonalDetail.religion &#x3D; parseXMLtoJSON.religion;
+                userPersonalDetail.nationality &#x3D; parseXMLtoJSON.nationality;
+                userPersonalDetail.phoneNumber &#x3D; parseXMLtoJSON.phoneNumber;
+                userPersonalDetail.workPhoneNumber &#x3D; parseXMLtoJSON.workPhoneNumber;
+                userPersonalDetail.race &#x3D; parseXMLtoJSON.race;
+                userPersonalDetail.family &#x3D; parseXMLtoJSON.family;
+                userPersonalDetail.education &#x3D; parseXMLtoJSON.education;
+                userPersonalDetail.emergencyContactNumber &#x3D; parseXMLtoJSON.emergencyContact;
+
+                userProfileData.personalDetail &#x3D; userPersonalDetail;
+            }
+
+            if(isShowCertData) {
+               
+                //userProfileData.awardCertification &#x3D; parseXMLtoJSON.
+                userProfileData.awardCertification &#x3D; [];
+            }
+        }
+
+        if(isShowEmploymentData) {
+            const employmentDetail &#x3D; new EmploymentDetailDTO();
+
+            //process the employment data
+            employmentDetail.department &#x3D; data.DEPARTMENT;
+            employmentDetail.designation &#x3D; data.DESIGNATION;;
+            employmentDetail.workLocation &#x3D; &quot;Kuala Lumpur, Malaysia&quot;
+            employmentDetail.employeeNumber &#x3D; data.PERSONAL_ID;
+            employmentDetail.employmentStatus &#x3D; data.EMPLOYEE_STATUS.toString();
+            employmentDetail.employmentType &#x3D; data.EMPLOYEE_TYPE.toString();
+            employmentDetail.reportingTo &#x3D; data.MANAGER_USER_GUID;
+            employmentDetail.userRole &#x3D; &quot;Employee&quot;;
+            employmentDetail.dateOfJoin &#x3D; data.JOIN_DATE;
+            employmentDetail.dateOfConfirmation &#x3D; data.CONFIRMATION_DATE;
+            employmentDetail.dateOfResign &#x3D; data.RESIGNATION_DATE;
+            employmentDetail.yearOfService &#x3D; this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE))+&quot; Years&quot;;
+            employmentDetail.epfNumber &#x3D; data.PR_EPF_NUMBER;
+            employmentDetail.incomeTaxNumber &#x3D; data.PR_INCOMETAX_NUMBER;
+            employmentDetail.bankAccountName &#x3D; data.BANK;
+            employmentDetail.bankAccountNumber &#x3D; data.PR_ACCOUNT_NUMBER;
+
+            userProfileData.employmentDetail &#x3D; employmentDetail;
+        }
+
+        if(isShowEntitlementData) {
+
+            // const entitlementData2 &#x3D; this.entitlementDetailService.getEntitlementList(data.TENANT_GUID,data.USER_GUID);
+
+            // console.log(&#x27;helloooooooothere&#x27;);
+            // const entitlementModel &#x3D; new UserLeaveEntitlementModel();
+            // const entitlementData &#x3D; new EntitlementDetailDTO();
+            
+            // entitlementData.balanceDays &#x3D; 1;
+            // entitlementData.entitledDays &#x3D; 11;
+            // entitlementData.leaveTypeId &#x3D; &#x27;DEWDH&#x27;;
+            // entitlementData.leaveTypeName &#x3D; &#x27;RJE&#x27;;
+            // entitlementData.pendingDays &#x3D; 90;
+            // entitlementData.takenDays &#x3D; 8;
+
+            // userProfileData.entitlementDetail.push(entitlementData);
+            // userProfileData.entitlementDetail &#x3D; entitlementData;
+            userProfileData.entitlementDetail &#x3D; [];
+
+            // userProfileData.entitlementDetail &#x3D; leaveEntitlementMock;
+        }
+
+        return userProfileData;
+
+    }
+
+
+    private joinText(data: string[]) {
+        return data.join(&quot;,&quot;);
+    }
+
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'UserprofileService.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

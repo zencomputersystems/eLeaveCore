@@ -1,0 +1,979 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>leave documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">leave documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>InvitationInviteService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/api/invitation/invitation-invite.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#httpService">httpService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#queryService">queryService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#checkInvitationStatus">checkInvitationStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#filterUser">filterUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#invite">invite</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#saveInvitation">saveInvitation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#sendEmail">sendEmail</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(inviteDbService: <a href="../injectables/InvitationDbService.html">InvitationDbService</a>, mailerService: MailerService, httpService: HttpService, queryService: <a href="../classes/QueryParserService.html">QueryParserService</a>, userService: <a href="../injectables/UserService.html">UserService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/api/invitation/invitation-invite.service.ts:17</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>inviteDbService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/InvitationDbService.html" target="_self" >InvitationDbService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>mailerService</td>
+                                                  
+                                                        <td>
+                                                                    <code>MailerService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>httpService</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>queryService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/QueryParserService.html" target="_self" >QueryParserService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserService.html" target="_self" >UserService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkInvitationStatus"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            checkInvitationStatus
+                        </b>
+                        <a href="#checkInvitationStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkInvitationStatus(inviteList: <a href="../classes/EmailList.html">Array<EmailList></a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="77"
+                            class="link-to-prism">src/api/invitation/invitation-invite.service.ts:77</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>inviteList</td>
+                                    <td>
+                                                <code><a href="../classes/EmailList.html" target="_self" >Array&lt;EmailList&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>tenantId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterUser"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            filterUser
+                        </b>
+                        <a href="#filterUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>filterUser(inviteList: <a href="../classes/InviteDTO.html">Array<InviteDTO></a>, userList: <a href="../classes/UserModel.html">Array<UserModel></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">src/api/invitation/invitation-invite.service.ts:53</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>inviteList</td>
+                                    <td>
+                                                <code><a href="../classes/InviteDTO.html" target="_self" >Array&lt;InviteDTO&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userList</td>
+                                    <td>
+                                                <code><a href="../classes/UserModel.html" target="_self" >Array&lt;UserModel&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="invite"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            invite
+                        </b>
+                        <a href="#invite"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>invite(inviteList: <a href="../classes/InviteDTO.html">Array<InviteDTO></a>, user: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="28"
+                            class="link-to-prism">src/api/invitation/invitation-invite.service.ts:28</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>inviteList</td>
+                                    <td>
+                                                <code><a href="../classes/InviteDTO.html" target="_self" >Array&lt;InviteDTO&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>user</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveInvitation"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            saveInvitation
+                        </b>
+                        <a href="#saveInvitation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveInvitation(inviteList: <a href="../classes/EmailList.html">Array<EmailList></a>, user: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">src/api/invitation/invitation-invite.service.ts:118</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>inviteList</td>
+                                    <td>
+                                                <code><a href="../classes/EmailList.html" target="_self" >Array&lt;EmailList&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>user</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendEmail"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            sendEmail
+                        </b>
+                        <a href="#sendEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendEmail(email: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="181"
+                            class="link-to-prism">src/api/invitation/invitation-invite.service.ts:181</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>email</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="httpService"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            httpService</b>
+                            <a href="#httpService"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>HttpService</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/api/invitation/invitation-invite.service.ts:22</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="queryService"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            queryService</b>
+                            <a href="#queryService"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/QueryParserService.html" target="_self" >QueryParserService</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/api/invitation/invitation-invite.service.ts:23</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { MailerService } from &quot;@nest-modules/mailer&quot;;
+
+import { HttpService, Injectable } from &quot;@nestjs/common&quot;;
+import { QueryParserService } from &quot;src/common/helper/query-parser.service&quot;;
+import { UserService } from &quot;src/admin/user/user.service&quot;;
+import { InvitationDbService } from &quot;./db/invitation.db.service&quot;;
+import { InviteDTO } from &quot;./dto/invite.dto&quot;;
+import { map, mergeMap} from &quot;rxjs/operators&quot;;
+import { UserModel } from &quot;src/admin/user/model/user.model&quot;;
+import { EmailList } from &quot;./dto/email-list&quot;;
+import { Resource } from &quot;src/common/model/resource.model&quot;;
+import { v1 } from &quot;uuid&quot;;
+import { of, forkJoin} from &quot;rxjs&quot;;
+import { UserInviteModel } from &quot;./model/user-invite.model&quot;;
+
+@Injectable()
+export class InvitationInviteService {
+
+    constructor(
+        private readonly inviteDbService: InvitationDbService,
+        private readonly mailerService: MailerService,
+        public readonly httpService: HttpService,
+        public readonly queryService: QueryParserService,
+        private readonly userService: UserService
+    ){
+    }
+
+    public invite(inviteList: Array&lt;InviteDTO&gt;, user: any) {
+ 
+        const userFilter &#x3D; [&#x27;(TENANT_GUID&#x3D;&#x27;+user.TENANT_GUID+&#x27;)&#x27;,&#x27;(ACTIVATION_FLAG&#x3D;0)&#x27;]
+
+        return this.userService.findByFilterV2([],userFilter)
+            .pipe(
+                map(res &#x3D;&gt; {
+                    return this.filterUser(inviteList,res);
+                }),
+                mergeMap(res &#x3D;&gt; {
+                    return this.checkInvitationStatus(res,user.TENANT_GUID);
+                }),
+                mergeMap(res &#x3D;&gt; this.saveInvitation(res,user)),
+                mergeMap((res) &#x3D;&gt; {
+                    const observableEmail$ &#x3D; [];
+
+                    res.forEach(element &#x3D;&gt; {
+                        observableEmail$.push(this.sendEmail(element.email,element.invitationId)); 
+                    });
+
+                    return forkJoin(observableEmail$);
+                })
+            )
+    }
+
+    private filterUser(inviteList:Array&lt;InviteDTO&gt;,userList: Array&lt;UserModel&gt;) {
+
+        const successList &#x3D; new Array&lt;EmailList&gt;()
+        // check if invitelist user exist in userlist
+
+        for(let i&#x3D;0;i&lt;inviteList.length;i++){
+            
+            const checkUser &#x3D; userList.find(x&#x3D;&gt;x.USER_GUID.toString()&#x3D;&#x3D;&#x3D;inviteList[i].id.toString());
+            
+            if(checkUser) {
+                successList.push(new EmailList(checkUser.USER_GUID,&#x27;&#x27;,checkUser.EMAIL,checkUser.EMAIL));
+            }
+        }
+
+        // inviteList.forEach(element &#x3D;&gt; {
+        //     const checkUser &#x3D; userList.find(x&#x3D;&gt;x.USER_GUID&#x3D;&#x3D;&#x3D;element.id);
+        //     if(checkUser) {
+        //         successList.push(new EmailList(checkUser.USER_GUID,&#x27;&#x27;,checkUser.EMAIL,checkUser.EMAIL));
+        //     }
+        // });
+
+        return successList;
+    }
+
+    private checkInvitationStatus(inviteList: Array&lt;EmailList&gt;,tenantId: string) {
+        
+        return this.inviteDbService.findAll(tenantId)
+            .pipe(
+                map(res &#x3D;&gt; {
+                    if(res.status&#x3D;&#x3D;200) {
+                        const data: Array&lt;UserInviteModel&gt; &#x3D; res.data.resource;
+
+                        const mailList &#x3D; new Array&lt;EmailList&gt;();
+
+                        for(let i&#x3D;0;i&lt;inviteList.length;i++){
+                            const checkInvitation &#x3D; data.find(x&#x3D;&gt;x.USER_GUID &#x3D;&#x3D;&#x3D; inviteList[i].userId);
+
+                            if(checkInvitation) {
+                                // resend email to user
+                                mailList.push(new EmailList(checkInvitation.USER_GUID,checkInvitation.INVITATION_GUID,checkInvitation.EMAIL,checkInvitation.EMAIL));
+                            } else {
+                                // store user into invitation db and send email
+                                mailList.push(inviteList[i]);
+                            }
+                        }
+
+                        // inviteList.forEach(element &#x3D;&gt; {
+                        //     const checkInvitation &#x3D; data.find(x&#x3D;&gt;x.USER_GUID &#x3D;&#x3D;&#x3D; element.userId);
+
+                        //     if(checkInvitation) {
+                        //         // resend email to user
+                        //         mailList.push(new EmailList(checkInvitation.USER_GUID,checkInvitation.INVITATION_GUID,checkInvitation.EMAIL,checkInvitation.EMAIL));
+                        //     } else {
+                        //         // store user into invitation db and send email
+                        //         mailList.push(element);
+                        //     }
+                        // });
+
+                        return mailList;
+                    }
+                })
+            )
+
+    }
+
+    private saveInvitation(inviteList: Array&lt;EmailList&gt;,user: any) {
+        
+        const inviteResourceArray &#x3D; new Resource(new Array);
+        const emailList &#x3D; new Array&lt;EmailList&gt;();
+
+        for(let i &#x3D; 0;i&lt;inviteList.length;i++){
+            if(inviteList[i].invitationId&#x3D;&#x3D;null||inviteList[i].invitationId&#x3D;&#x3D;&#x27;&#x27;) {
+                const data &#x3D; new UserInviteModel();
+                data.INVITATION_GUID &#x3D; v1();
+                data.STATUS &#x3D; 1;
+                data.USER_GUID &#x3D; inviteList[i].userId;
+                data.CREATION_TS &#x3D; user.USER_GUID;
+                data.TENANT_GUID &#x3D; user.TENANT_GUID;
+                data.CREATION_TS &#x3D; new Date().toISOString();
+                data.EMAIL &#x3D; inviteList[i].email;
+                
+                inviteResourceArray.resource.push(data);
+            } else {
+                emailList.push(inviteList[i]);
+            }
+        }
+
+        // inviteList.forEach(element &#x3D;&gt; {
+        //     if(element.invitationId&#x3D;&#x3D;null||element.invitationId&#x3D;&#x3D;&#x27;&#x27;) {
+        //         const data &#x3D; new UserInviteModel();
+        //         data.INVITATION_GUID &#x3D; v1();
+        //         data.STATUS &#x3D; 1;
+        //         data.USER_GUID &#x3D; element.userId;
+        //         data.CREATION_TS &#x3D; user.USER_GUID;
+        //         data.TENANT_GUID &#x3D; user.TENANT_GUID;
+        //         data.CREATION_TS &#x3D; new Date().toISOString();
+        //         data.EMAIL &#x3D; element.email;
+                
+        //         inviteResourceArray.resource.push(data);
+        //     } else {
+        //         emailList.push(element);
+        //     }
+        // });
+
+
+        if(inviteResourceArray.resource.length&#x3D;&#x3D;0) {
+            return of(inviteList);
+        }
+
+        return this.inviteDbService.createByModel(inviteResourceArray,[],[],[&#x27;EMAIL&#x27;,&#x27;INVITATION_GUID&#x27;,&#x27;USER_GUID&#x27;])
+                .pipe(map(res &#x3D;&gt; {
+
+                    if(res.status&#x3D;&#x3D;200) {
+                    
+                        const data &#x3D; res.data.resource;
+
+                        data.forEach(element &#x3D;&gt; {
+                            emailList.push(new EmailList(element.USER_GUID,element.INVITATION_GUID,element.EMAIL,element.EMAIL));
+                        });
+                    
+
+                        return emailList;
+                    }
+                }))
+
+    }
+
+    // send email to user
+    private sendEmail(email: string, token: string) {
+        return this.mailerService
+            .sendMail({
+                to: email, // sender address
+                from: &#x27;wantan.wonderland.2018@gmail.com&#x27;, // list of receivers
+                subject: &#x27;Testing Invitation System ✔&#x27;,
+                template: &#x27;userinvitation.html&#x27;,
+                context: {  // Data to be sent to template files.
+                    email: email,
+                    code: &quot;http://zencore.zen.com.my:3000/api/invitation/&quot;+token
+                }
+            });
+    }
+}</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'InvitationInviteService.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

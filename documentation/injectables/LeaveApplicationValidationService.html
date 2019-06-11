@@ -1,0 +1,1457 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>leave documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">leave documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>LeaveApplicationValidationService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/common/policy/leave-application-validation/services/leave-application-validation.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#allowAdvancedLeave">allowAdvancedLeave</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#allowAfterConfirm">allowAfterConfirm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#allowedDay">allowedDay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#allowNextYearApplciation">allowNextYearApplciation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#convertDateToMoment">convertDateToMoment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validateApplyBefore">validateApplyBefore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validateApplyWithin">validateApplyWithin</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validateAttachment">validateAttachment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validateBalance">validateBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#validateLeave">validateLeave</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#validateOverlapLeave">validateOverlapLeave</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(dateCalculationService: <a href="../injectables/DateCalculationService.html">DateCalculationService</a>, balanceValidationService: <a href="../injectables/LeaveBalanceValidationService.html">LeaveBalanceValidationService</a>, leaveTransactionDbService: <a href="../injectables/LeaveTransactionDbService.html">LeaveTransactionDbService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:14</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>dateCalculationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/DateCalculationService.html" target="_self" >DateCalculationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>balanceValidationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/LeaveBalanceValidationService.html" target="_self" >LeaveBalanceValidationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>leaveTransactionDbService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/LeaveTransactionDbService.html" target="_self" >LeaveTransactionDbService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allowAdvancedLeave"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            allowAdvancedLeave
+                        </b>
+                        <a href="#allowAdvancedLeave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>allowAdvancedLeave(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, startDate: moment.Moment, endDate: moment.Moment)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:99</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>startDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>endDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allowAfterConfirm"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            allowAfterConfirm
+                        </b>
+                        <a href="#allowAfterConfirm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>allowAfterConfirm(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, confirmDate: moment.Moment)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="186"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:186</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>confirmDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allowedDay"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            allowedDay
+                        </b>
+                        <a href="#allowedDay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>allowedDay(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, applyLeaveDTO: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="171"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:171</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>applyLeaveDTO</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allowNextYearApplciation"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            allowNextYearApplciation
+                        </b>
+                        <a href="#allowNextYearApplciation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>allowNextYearApplciation(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, startDate: moment.Moment, endDate: moment.Moment)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:112</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>startDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>endDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="convertDateToMoment"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            convertDateToMoment
+                        </b>
+                        <a href="#convertDateToMoment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>convertDateToMoment(date: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="198"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:198</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>date</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateApplyBefore"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            validateApplyBefore
+                        </b>
+                        <a href="#validateApplyBefore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateApplyBefore(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, startDate: moment.Moment)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:134</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>startDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateApplyWithin"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            validateApplyWithin
+                        </b>
+                        <a href="#validateApplyWithin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateApplyWithin(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, endDate: moment.Moment)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="154"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:154</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>endDate</td>
+                                    <td>
+                                            <code>moment.Moment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateAttachment"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            validateAttachment
+                        </b>
+                        <a href="#validateAttachment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateAttachment(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="128"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:128</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateBalance"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            validateBalance
+                        </b>
+                        <a href="#validateBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateBalance(userInfo: <a href="../classes/UserInfoModel.html">UserInfoModel</a>, applyLeaveDTO: <a href="../classes/ApplyLeaveDTO.html">ApplyLeaveDTO</a>, userEntitlement: <a href="../classes/UserLeaveEntitlementModel.html">UserLeaveEntitlementModel[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:92</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userInfo</td>
+                                    <td>
+                                                <code><a href="../classes/UserInfoModel.html" target="_self" >UserInfoModel</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>applyLeaveDTO</td>
+                                    <td>
+                                                <code><a href="../classes/ApplyLeaveDTO.html" target="_self" >ApplyLeaveDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userEntitlement</td>
+                                    <td>
+                                                <code><a href="../classes/UserLeaveEntitlementModel.html" target="_self" >UserLeaveEntitlementModel[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateLeave"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            validateLeave
+                        </b>
+                        <a href="#validateLeave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateLeave(policy: <a href="../classes/LeaveTypePropertiesXmlDTO.html">LeaveTypePropertiesXmlDTO</a>, applyLeaveDTO: <a href="../classes/ApplyLeaveDTO.html">ApplyLeaveDTO</a>, userInfo: <a href="../classes/UserInfoModel.html">UserInfoModel</a>, userEntitlement: <a href="../classes/UserLeaveEntitlementModel.html">UserLeaveEntitlementModel[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="21"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:21</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>policy</td>
+                                    <td>
+                                                <code><a href="../classes/LeaveTypePropertiesXmlDTO.html" target="_self" >LeaveTypePropertiesXmlDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>applyLeaveDTO</td>
+                                    <td>
+                                                <code><a href="../classes/ApplyLeaveDTO.html" target="_self" >ApplyLeaveDTO</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userInfo</td>
+                                    <td>
+                                                <code><a href="../classes/UserInfoModel.html" target="_self" >UserInfoModel</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>userEntitlement</td>
+                                    <td>
+                                                <code><a href="../classes/UserLeaveEntitlementModel.html" target="_self" >UserLeaveEntitlementModel[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateOverlapLeave"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            validateOverlapLeave
+                        </b>
+                        <a href="#validateOverlapLeave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateOverlapLeave(startDate: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, endDate: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="204"
+                            class="link-to-prism">src/common/policy/leave-application-validation/services/leave-application-validation.service.ts:204</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>startDate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>endDate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
+import { LeaveTypePropertiesXmlDTO } from &quot;src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto&quot;;
+import moment &#x3D; require(&quot;moment&quot;);
+import { ApplyLeaveDTO } from &quot;src/api/leave/dto/apply-leave.dto&quot;;
+import { ValidationStatusDTO } from &quot;../dto/validation-status.dto&quot;;
+import { UserInfoModel } from &quot;src/admin/user-info/model/user-info.model&quot;;
+import { DateCalculationService } from &quot;src/common/calculation/service/date-calculation.service&quot;;
+import { LeaveBalanceValidationService } from &quot;./leave-balance-validation.service&quot;;
+import { UserLeaveEntitlementModel } from &quot;src/api/userprofile/model/user-leave-entitlement.model&quot;;
+import { LeaveTransactionDbService } from &quot;src/api/leave/db/leave-transaction.db.service&quot;;
+import { map, mergeMap } from &quot;rxjs/operators&quot;;
+
+@Injectable()
+export class LeaveApplicationValidationService {
+
+    constructor(
+        private readonly dateCalculationService: DateCalculationService,
+        private readonly balanceValidationService: LeaveBalanceValidationService,
+        private readonly leaveTransactionDbService: LeaveTransactionDbService) { }
+
+    public validateLeave(
+        policy: LeaveTypePropertiesXmlDTO,
+        applyLeaveDTO: ApplyLeaveDTO,
+        userInfo: UserInfoModel,
+        userEntitlement: UserLeaveEntitlementModel[]) {
+
+        const validationStatus &#x3D; new ValidationStatusDTO();
+
+
+        const startDateTemp &#x3D; applyLeaveDTO.data[0].startDate;
+        const endDatetemp &#x3D; applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate;
+
+        console.log(startDateTemp+&#x27; --- &#x27;+endDatetemp);
+
+        const startDate &#x3D; this.convertDateToMoment(startDateTemp);
+        const endDate &#x3D; this.convertDateToMoment(endDatetemp);
+
+        return this.validateOverlapLeave(startDateTemp, endDatetemp)
+            .pipe(
+                map((result: boolean) &#x3D;&gt; {
+                    if (!result) {
+                        validationStatus.message.push(&quot;You have applied another leave between this date&quot;);
+                    }
+                }),
+                mergeMap(res &#x3D;&gt; {
+
+                    return this.validateBalance(userInfo, applyLeaveDTO, userEntitlement)
+                        .pipe(map((validateBalanceResult: boolean) &#x3D;&gt; {
+                            if (!validateBalanceResult) {
+                                validationStatus.message.push(&quot;Leave balance not enough&quot;);
+                            }
+
+                            if (!this.allowAdvancedLeave(policy, startDate, endDate)) {
+                                validationStatus.message.push(&quot;Cannot apply advanced leave&quot;);
+                            }
+
+                            if (!this.allowNextYearApplciation(policy, startDate, endDate)) {
+                                validationStatus.message.push(&quot;Cannot apply leave on the following year&quot;);
+                            }
+
+                            if (!this.allowAfterConfirm(policy, this.convertDateToMoment(new Date(userInfo.CONFIRMATION_DATE)))) {
+                                validationStatus.message.push(&quot;Cannot apply before confirm&quot;);
+                            }
+
+                            if (!this.validateApplyBefore(policy, startDate)) {
+                                validationStatus.message.push(&quot;You need to apply &quot; + policy.applyBeforeProperties.numberOfDays + &quot; Days before&quot;);
+                            }
+
+                            // apply within will be overwited by apply before properties if available
+                            if (policy.applyBeforeProperties.numberOfDays &#x3D;&#x3D; 0 || policy.applyBeforeProperties.numberOfDays &#x3D;&#x3D; null) {
+                                if (!this.validateApplyWithin(policy, endDate)) {
+                                    validationStatus.message.push(&quot;You need to apply within &quot; + policy.applyWithinProperties.numberOfDays + &quot; days after leave end&quot;);
+                                }
+                            }
+
+                            if (!this.allowedDay(policy, applyLeaveDTO)) {
+                                validationStatus.message.push(&quot;Leave duration exceed &quot; + policy.maxDayPerLeave + &quot; allowed days&quot;);
+                            }
+
+                            if (validationStatus.message.length &#x3D;&#x3D; 0) {
+                                validationStatus.valid &#x3D; true;
+                            }
+
+                            return validationStatus;
+                        })
+                        )
+                })
+            )
+
+    }
+
+    private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
+        const balance &#x3D; this.balanceValidationService.validateLeaveBalance(userInfo, applyLeaveDTO, userEntitlement);
+
+        return balance;
+    }
+
+    // check if employee can apply more than current date
+    private allowAdvancedLeave(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+
+        const currentDate &#x3D; moment(new Date(), &#x27;YYYY-MM-DD&#x27;);
+
+        if (policy.applyInAdvance || startDate &lt;&#x3D; currentDate &amp;&amp; endDate &lt;&#x3D; currentDate) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // check if user can apply next year application
+    // if allow advanced leave is false, this parameter by default is false
+    private allowNextYearApplciation(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+
+        if (!policy.applyInAdvance) {
+            policy.applyNextYear &#x3D; false;
+        }
+
+        // next year 
+        const nextYear &#x3D; new Date().getFullYear() + 1;
+
+        if (policy.applyNextYear || (startDate.year() &lt;&#x3D; nextYear &amp;&amp; endDate.year() &lt;&#x3D; nextYear)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private validateAttachment(policy: LeaveTypePropertiesXmlDTO): boolean {
+        return false;
+    }
+
+    // check if date applied if before the policy date
+    // if short notice application is allowed, by default will return true
+    private validateApplyBefore(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment): boolean {
+
+        if (policy.applyBeforeProperties.isAllowShortNotice.isCheck) {
+            return true;
+        }
+
+        const currentDate &#x3D; moment(new Date(), &#x27;YYYY-MM-DD&#x27;).startOf(&#x27;day&#x27;);
+
+        // find the date duration between start date and current date
+        // check if rest day and holiday is included or not
+        const dayDifference &#x3D; this.dateCalculationService.getDayDuration(currentDate, startDate, policy.applyBeforeProperties.excludeDayType.isExcludeHoliday, policy.applyBeforeProperties.excludeDayType.isExcludeRestDay);
+
+        if (dayDifference &gt; policy.applyBeforeProperties.numberOfDays) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // end date must be within the specified date after leave end otherwise consider as backdated if allowed
+    private validateApplyWithin(policy: LeaveTypePropertiesXmlDTO, endDate: moment.Moment): boolean {
+
+        if (policy.applyWithinProperties.isAllowBackdated.isCheck) {
+            return true;
+        }
+
+        const currentDate &#x3D; moment(new Date(), &#x27;YYYY-MM-DD&#x27;).startOf(&#x27;day&#x27;);
+
+        const dayDifference &#x3D; this.dateCalculationService.getDayDuration(endDate, currentDate, policy.applyWithinProperties.excludeDayType.isExcludeHoliday, policy.applyWithinProperties.excludeDayType.isExcludeRestDay);
+
+        if (dayDifference &lt;&#x3D; policy.applyWithinProperties.numberOfDays) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private allowedDay(policy: LeaveTypePropertiesXmlDTO, applyLeaveDTO: any): boolean {
+
+        const maxAllowedDay &#x3D; policy.maxDayPerLeave;
+
+        const leaveDuration &#x3D; this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate, applyLeaveDTO.endDate, applyLeaveDTO.dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay);
+
+        if (leaveDuration &lt;&#x3D; maxAllowedDay) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // allow after confirmation or join date
+    // based on current date leave applied
+    private allowAfterConfirm(policy: LeaveTypePropertiesXmlDTO, confirmDate: moment.Moment): boolean {
+
+        const currentDate &#x3D; moment(new Date(), &#x27;YYYY-MM-DD&#x27;);
+
+        // get the confirmation date
+        if (!policy.isAllowAfterJoinDate &amp;&amp; currentDate &lt; confirmDate) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private convertDateToMoment(date: Date) {
+        return moment(date, &#x27;YYYY-MM-DD&#x27;);
+    }
+
+    // validate if other leave overlap with applied leave
+    // except cancelled leave
+    public validateOverlapLeave(startDate: Date, endDate: Date) {
+        const filter &#x3D; [&quot;((START_DATE &lt;&#x3D; &quot; + startDate + &quot;)AND(END_DATE &gt;&#x3D;&quot; + startDate + &quot;)OR(START_DATE &lt;&#x3D; &quot; + endDate + &quot;)AND(END_DATE&gt;&#x3D;&quot; + endDate + &quot;))&quot;];
+
+        return this.leaveTransactionDbService.findByFilterV2([], filter)
+            .pipe(map(res &#x3D;&gt; {
+
+                if (res.length &gt; 0) {
+                    return false;
+                }
+
+                return true;
+            }))
+    }
+}</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'LeaveApplicationValidationService.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

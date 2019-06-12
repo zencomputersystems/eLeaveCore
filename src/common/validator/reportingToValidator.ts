@@ -1,6 +1,12 @@
-import {ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments} from "class-validator";
-
-@ValidatorConstraint({ name: "reportingToValidator", async: false })
+import {ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments} from 'class-validator';
+/**
+ * Validate reporting structure for an employee
+ *
+ * @export
+ * @class ReportingToValidator
+ * @implements {ValidatorConstraintInterface}
+ */
+@ValidatorConstraint({ name: 'reportingToValidator', async: false })
 export class ReportingToValidator implements ValidatorConstraintInterface {
 
     validate(reportingUserId: string, args: ValidationArguments) {
@@ -12,7 +18,7 @@ export class ReportingToValidator implements ValidatorConstraintInterface {
     }
 
     defaultMessage(args: ValidationArguments) { // here you can provide default error message if validation failed
-        return "Reporting user does not exist";
+        return 'Reporting user does not exist';
     }
 
 }

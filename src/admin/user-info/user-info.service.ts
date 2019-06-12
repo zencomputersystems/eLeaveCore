@@ -14,16 +14,23 @@ import { IDbService } from 'src/interface/IDbService';
 @Injectable()
 export class UserInfoService extends BaseDBService implements IDbService {
 
-    private _tableName = "user_info";
+    private _tableName = 'user_info';
 
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
         public readonly xmlParserService: XMLParserService){
-            super(httpService,queryService,"user_info");
+            super(httpService,queryService, 'user_info');
         }
 
-    //find single user
+    /**
+     * Find single user
+     *
+     * @param {string} userId
+     * @param {string} tenantId
+     * @returns {Observable<any>}
+     * @memberof UserInfoService
+     */
     public findOne(userId: string, tenantId: string): Observable<any> {
         const fields = [
             'USER_INFO_GUID',
@@ -38,38 +45,46 @@ export class UserInfoService extends BaseDBService implements IDbService {
             'EMPLOYEE_STATUS',
             'EMPLOYEE_TYPE'
         ];
-        const filters = ['(USER_GUID='+userId+')'];
+        const filters = ['(USER_GUID='+userId + ')'];
 
-        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
+        const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
 
         return this.httpService.get(url);
 
     }
 
     findAll(TENANT_GUID: string): Observable<any> {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
     findById(USERINFO_GUID: any, id: string): Observable<any> {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
-    //create new leavetype entitlement
+
+    /**
+     * Create new leavetype entitlement
+     *
+     * @param {*} user
+     * @param {CreateUserDTO} d
+     * @returns
+     * @memberof UserInfoService
+     */
     create(user: any, d: CreateUserDTO) {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource = new Resource(new Array);
 
-        const data = this.mapData(d,user.USER_GUID);
-        
+        const data = this.mapData(d, user.USER_GUID);
+
         data.USER_INFO_GUID = v1();
         data.CREATION_USER_GUID = user.USER_GUID;
         data.CREATION_TS = new Date().toISOString();
 
         resource.resource.push(data);
 
-        return this.createByModel(resource,[],[],[]);
-        
+        return this.createByModel(resource, [], [], []);
+
     }
 
 
@@ -78,26 +93,26 @@ export class UserInfoService extends BaseDBService implements IDbService {
         //do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource = new Resource(new Array);
-        const data = this.mapData(d,user.USER_GUID);
-        
+        const data = this.mapData(d, user.USER_GUID);
+
         data.USER_INFO_GUID = d.id;
-       
+
         resource.resource.push(data);
 
-        return this.updateByModel(resource,[],[],[]);        
+        return this.updateByModel(resource, [], [], []);
     }
 
-    public mapData(d:UserDto,userId: string) {
+    public mapData(d: UserDto, userId: string) {
         const data = new UserInfoModel();
-        
+
         data.USER_GUID = userId;
 
         data.DESIGNATION = d.employmentDetail.designationId;
         data.DEPARTMENT = d.employmentDetail.departmentId;
         data.BRANCH = d.employmentDetail.branchId;
         data.TENANT_COMPANY_GUID = d.employmentDetail.companyId;
-        
-        data.EMPLOYEE_TYPE = "Intern";
+
+        data.EMPLOYEE_TYPE = 'Intern';
         data.FULLNAME = d.employeeName;
         data.JOIN_DATE = d.employmentDetail.joinDate; // .toDateString();
         data.CONFIRMATION_DATE = d.employmentDetail.confirmationDate; // .toDateString();
@@ -108,8 +123,7 @@ export class UserInfoService extends BaseDBService implements IDbService {
         const xmldata = d;
         xmldata.employmentDetail = null;
         data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(xmldata);
-           
+
         return data;
     }
 }
-

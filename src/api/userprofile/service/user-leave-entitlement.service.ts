@@ -14,7 +14,7 @@ import * as moment from 'moment';
 import { of } from "rxjs";
 import { UserInfoService } from "src/admin/user-info/user-info.service";
 import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
-import { ServiceYearCalc } from "src/common/policy/entitlement-type/services/service-year-calulation-service/serviceYearCalc.service";
+import { ServiceYearCalc } from "src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service";
 import { ProratedDateEndYearService } from "src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service";
 import { ProratedDateCurrentMonthService } from "src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service";
 import { XMLParserService } from "src/common/helper/xml-parser.service";

@@ -6,7 +6,7 @@ import { UpdateHolidayDTO } from './dto/update-holiday.dto';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { CreateCalendarDTO } from './dto/create-calendar.dto';
-var iso3166 = require('iso3166-2-db');
+// var iso3166 = require('iso3166-2-db');
 
 @Controller('/admin/api/holiday')
 @UseGuards(AuthGuard('jwt'))
@@ -48,14 +48,14 @@ export class HolidayController {
 
     }
 
-    @Get('/countries')
-    @ApiOperation({ title: 'Get country list' })
-    findCountry(@Req() req, @Res() res) {
-        var countries = iso3166;
-        // console.log(countries.findCountryByName('Malaysia'));
-        // const dataCountry = countries.findCountryByName('Malaysia');
-        res.send(countries.getDataSet());
-    }
+    // @Get('/countries')
+    // @ApiOperation({ title: 'Get country list' })
+    // findCountry(@Req() req, @Res() res) {
+    //     var countries = iso3166;
+    //     // console.log(countries.findCountryByName('Malaysia'));
+    //     // const dataCountry = countries.findCountryByName('Malaysia');
+    //     res.send(countries.getDataSet());
+    // }
 
     @Get()
     @ApiOperation({ title: 'Get holiday list' })

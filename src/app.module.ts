@@ -17,6 +17,9 @@ import { InvitationModule } from './api/invitation/invitation.module';
 import { UserprofileModule } from './api/userprofile/userprofile.module';
 import { UserImportModule } from './api/userimport/user-import.module';
 import { LeaveModule } from './api/leave/leave.module';
+import { UserInviteModule } from './admin/user-invite/user-invite.module';
+import { HolidayModule } from './admin/holiday/holiday.module';
+
 
 @Module({
   imports: [
@@ -54,7 +57,9 @@ import { LeaveModule } from './api/leave/leave.module';
     CompanyModule,
     DesignationModule,
     UserprofileModule,
-    LeaveModule
+    LeaveModule,
+    UserInviteModule,
+    HolidayModule
   ],
   controllers: [AppController],
   providers: [

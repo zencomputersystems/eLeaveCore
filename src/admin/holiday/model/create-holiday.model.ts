@@ -1,5 +1,6 @@
 export class CreateHolidayModel {
     CALENDAR_GUID: string;
+    CODE: string;
     PROPERTIES_XML: string;
     UPDATE_USER_GUID: string;
     UPDATE_TS: string;

@@ -26,5 +26,17 @@ export class HolidayDbService extends BaseDBService {
         
     }
 
-    
+    //find all tenant branch
+    public findAllProfile(): Observable<any> {
+
+        const fields = ['CALENDAR_GUID','CODE'];
+        const filters = [];
+       
+        const url = this.queryService.generateDbQueryV2(this._tableName,fields,filters,[]);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+        
+    }
+
 }

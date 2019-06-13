@@ -3,13 +3,45 @@ import { IsNotEmpty, IsString, IsJSON } from "class-validator";
 import { isObject } from "util";
 import { HolidayDataDTO } from "./holiday-data.dto";
 import { RestDataDTO } from "./rest-data.dto";
+import { Type } from "class-transformer";
 
+/**
+ *
+ *
+ * @export
+ * @class CreateCalendarDTO
+ */
 export class CreateCalendarDTO {
-    @ApiModelProperty()
-    @IsNotEmpty()
-    readonly holiday: HolidayDataDTO[];
 
-    @ApiModelProperty()
+    /**
+     *
+     *
+     * @type {string}
+     * @memberof CreateCalendarDTO
+     */
+    @ApiModelProperty({description:'Calendar profile code name',example:'profile 1, profile2, ...'})
     @IsNotEmpty()
-    readonly rest: RestDataDTO[]; 
+    code: string;
+
+    /**
+     *
+     *
+     * @type {HolidayDataDTO[]}
+     * @memberof CreateCalendarDTO
+     */
+    @ApiModelProperty()
+    @Type(() => HolidayDataDTO)
+    @IsNotEmpty()
+    holiday: HolidayDataDTO[];
+
+    /**
+     *
+     *
+     * @type {RestDataDTO[]}
+     * @memberof CreateCalendarDTO
+     */
+    @ApiModelProperty()
+    @Type(() => RestDataDTO)
+    @IsNotEmpty()
+    rest: RestDataDTO[]; 
 }

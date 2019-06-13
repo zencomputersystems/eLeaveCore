@@ -7,6 +7,8 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { HolidayDbService } from './db/holiday.db.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { AssignerDataService } from 'src/common/helper/assigner-data.service';
+import { UserInfoDbService } from './db/user-info.db.service';
 
 @Module({
   modules:[
@@ -17,8 +19,10 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
   providers: [
     QueryParserService,
     HolidayDbService,
+    UserInfoDbService,
     HolidayService,
-    XMLParserService
+    XMLParserService,
+    AssignerDataService
   ],
   controllers: [HolidayController]
 })

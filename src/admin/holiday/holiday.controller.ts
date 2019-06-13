@@ -16,14 +16,20 @@ export class HolidayController {
 
     constructor(private readonly holidayService: HolidayService, private http: HttpService) { }
 
+    /**
+     * list data from calendarific for admin to view and pick
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
     @Get('/calendar')
-    @ApiOperation({ title: 'Get holiday list calendar' })
+    @ApiOperation({ title: 'Get holiday list from calendarific' })
     @ApiImplicitQuery({ name: 'country', description: 'ref : https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes', required: false })
     @ApiImplicitQuery({ name: 'year', description: '2019, 2020, ...', required: false })
     @ApiImplicitQuery({ name: 'location', description: 'my-10, my-09, ...', required: false })
     @ApiImplicitQuery({ name: 'month', description: '1, 2, ...', required: false })
     findHoliday(@Req() req, @Res() res) {
-        // console.log(req.query);
         var dt = new Date();
 
         let countryLink = req.query.country != null ? '&country=' + req.query.country : '&country=my';
@@ -31,10 +37,7 @@ export class HolidayController {
         let locationLink = req.query.location != null ? '&location=' + req.query.location : '';
         let monthLink = req.query.month != null ? '&month=' + req.query.month : '';
 
-        // console.log(countryLink+' '+yearLink+' '+locationLink+' '+Date());
-
         this.http.get('https://calendarific.com/api/v2/holidays?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55' + countryLink + yearLink + locationLink + monthLink).subscribe((response) => {
-            // console.log(response.data);
             res.send(response.data);
         }, err => {
             if (err.response.data) {
@@ -48,23 +51,17 @@ export class HolidayController {
 
     }
 
-    // @Get('/countries')
-    // @ApiOperation({ title: 'Get country list' })
-    // findCountry(@Req() req, @Res() res) {
-    //     var countries = iso3166;
-    //     // console.log(countries.findCountryByName('Malaysia'));
-    //     // const dataCountry = countries.findCountryByName('Malaysia');
-    //     res.send(countries.getDataSet());
-    // }
-
-    @Get()
-    @ApiOperation({ title: 'Get holiday list' })
-    findAll(@Req() req, @Res() res) {
-        console.log(req.user);
-
-        const userinfoid = '3080a2e0-3f24-11e9-a26d-69162988f772';
-
-        this.holidayService.getList(userinfoid).subscribe(
+    /**
+     * list all calendar profile for user admin to assign to employee
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
+    @Get('/calendar_profile')
+    @ApiOperation({ title: 'Get calendar profile list' })
+    findAllCalendar(@Req() req, @Res() res) {
+        this.holidayService.getCalendarProfileList().subscribe(
             data => {
                 res.send(data);
             },
@@ -81,63 +78,23 @@ export class HolidayController {
 
     }
 
-    @UseGuards(ResourceGuard)
-    @Get(':id')
-    @ApiOperation({ title: 'Get holiday list' })
-    @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-    @Roles('ViewProfile', 'ProfileAdmin')
-    findOne(@Req() req, @Res() res) {
-        console.log(req.query.id);
-
-        let dataId = req.query.id;
-        if (dataId == null) {
-            res.status(400);
-            res.send('id not found');
-        }
-
-
-        const userinfoid = '3080a2e0-3f24-11e9-a26d-69162988f772';
-
-        this.holidayService.getList(dataId).subscribe(
-            data => {
-                res.send(data);
-            },
-            err => {
-                if (err.response.data) {
-                    res.status(err.response.data.error.status_code);
-                    res.send(err.response.data.error.message)
-                } else {
-                    res.status(500);
-                    res.send(err);
-                }
-            }
-        );
-
-    }
-
-    @Patch()
-    update(@Body() updateHolidayDTO: UpdateHolidayDTO, @Req() req, @Res() res) {
-        this.holidayService.update(req.user, updateHolidayDTO)
-            .subscribe(
-                data => {
-                    if (data.status == 200)
-                        res.send(data.data);
-                },
-                err => {
-                    res.status(400);
-                    res.send('Fail to update resource');
-                }
-            )
-    }
-
+    /**
+     * create new calendar profile
+     *
+     * @param {CreateCalendarDTO} createCalendarDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
     @Post()
+    @ApiOperation({ title: 'Setup calendar profile' })
     create(@Body() createCalendarDTO: CreateCalendarDTO, @Req() req, @Res() res) {
         this.holidayService.create(req.user, createCalendarDTO)
             .subscribe(
                 data => {
-                    console.log(data);
-                    //   if(data.status==200)
-                    res.send(data);
+                    // console.log(data);
+                    if (data.status == 200)
+                        res.send(data.data.resource);
                 },
                 err => {
                     //   console.log(err);
@@ -147,5 +104,125 @@ export class HolidayController {
                 }
             )
     }
+
+    /**
+     * list holiday from calendar profile id
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
+    @UseGuards(ResourceGuard)
+    @Get(':id')
+    @ApiOperation({ title: 'Get holiday list by calendar profile id' })
+    @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
+    @Roles('ViewProfile', 'ProfileAdmin')
+    findOne(@Req() req, @Res() res) {
+
+        let dataId = req.query.id;
+        if (dataId == null) {
+            res.status(400);
+            res.send('id not found');
+        }
+
+        this.holidayService.getHolidayList(dataId).subscribe(
+            data => {
+                res.send(data);
+            },
+            err => {
+                if (err.response.data) {
+                    res.status(err.response.data.error.status_code);
+                    res.send(err.response.data.error.message)
+                } else {
+                    res.status(500);
+                    res.send(err);
+                }
+            }
+        );
+
+    }
+
+    // @Patch()
+    // updateToEmployee(@Body() updateHolidayDTO: UpdateHolidayDTO, @Req() req, @Res() res) {
+    //     this.holidayService.updateToEmployee(req.user, updateHolidayDTO)
+    //         .subscribe(
+    //             data => {
+    //                 if (data.status == 200)
+    //                     res.send(data.data);
+    //             },
+    //             err => {
+    //                 res.status(400);
+    //                 res.send('Fail to update resource');
+    //             }
+    //         )
+    // }
+
+
+    // /**
+    //  *
+    //  *
+    //  * @param {*} req
+    //  * @param {*} res
+    //  * @memberof HolidayController
+    //  */
+    // @Get()
+    // @ApiOperation({ title: 'Get holiday list' })
+    // findAll(@Req() req, @Res() res) {
+    //     // console.log(req.user);
+
+    //     const userinfoid = '3080a2e0-3f24-11e9-a26d-69162988f772';
+
+    //     this.holidayService.getList(userinfoid).subscribe(
+    //         data => {
+    //             res.send(data);
+    //         },
+    //         err => {
+    //             if (err.response.data) {
+    //                 res.status(err.response.data.error.status_code);
+    //                 res.send(err.response.data.error.message)
+    //             } else {
+    //                 res.status(500);
+    //                 res.send(err);
+    //             }
+    //         }
+    //     );
+
+    // }
+
+
+
+    // /**
+    //  *
+    //  *
+    //  * @param {UpdateHolidayDTO} updateHolidayDTO
+    //  * @param {*} req
+    //  * @param {*} res
+    //  * @memberof HolidayController
+    //  */
+    // @Patch()
+    // update(@Body() updateHolidayDTO: UpdateHolidayDTO, @Req() req, @Res() res) {
+    //     this.holidayService.update(req.user, updateHolidayDTO)
+    //         .subscribe(
+    //             data => {
+    //                 if (data.status == 200)
+    //                     res.send(data.data);
+    //             },
+    //             err => {
+    //                 res.status(400);
+    //                 res.send('Fail to update resource');
+    //             }
+    //         )
+    // }
+
+
+
+    // @Get('/countries')
+    // @ApiOperation({ title: 'Get country list' })
+    // findCountry(@Req() req, @Res() res) {
+    //     var countries = iso3166;
+    //     // console.log(countries.findCountryByName('Malaysia'));
+    //     // const dataCountry = countries.findCountryByName('Malaysia');
+    //     res.send(countries.getDataSet());
+    // }
 
 }

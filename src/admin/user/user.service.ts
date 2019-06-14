@@ -6,6 +6,13 @@ import { v1 } from 'uuid';
 import { Observable } from 'rxjs';
 import { BaseDBService } from 'src/common/base/base-db.service';
 
+/**
+ *
+ *
+ * @export
+ * @class UserService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class UserService extends BaseDBService {
 

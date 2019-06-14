@@ -2,6 +2,12 @@ import { ApiModelProperty } from "@nestjs/swagger";
 
 import { IsNotEmpty } from "class-validator";
 
+/**
+ *
+ *
+ * @export
+ * @class CalendarDTO
+ */
 export class CalendarDTO {
 
     @ApiModelProperty({description:'Calendar profile code name',example:'profile 1, profile2, ...'})

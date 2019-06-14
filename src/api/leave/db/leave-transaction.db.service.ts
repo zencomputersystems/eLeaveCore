@@ -10,6 +10,14 @@ import { ApplyLeaveDTO } from "../dto/apply-leave.dto";
 import { Resource } from "src/common/model/resource.model";
 import { DateCalculationService } from "src/common/calculation/service/date-calculation.service";
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTransactionDbService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class LeaveTransactionDbService extends BaseDBService implements IDbService {
 

@@ -12,6 +12,14 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 import { CreateLeaveEntitlementTypeDTO } from '../dto/create-leavetype_entitlement.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class LeavetypeEntitlementDbService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class LeavetypeEntitlementDbService extends BaseDBService implements IDbService {
     
@@ -27,6 +35,13 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
 
 
     //find all tenant leave definition
+    /**
+     *
+     *
+     * @param {string} tenantid
+     * @returns {Observable<any>}
+     * @memberof LeavetypeEntitlementDbService
+     */
     public findAll(tenantid:string): Observable<any> {
 
         const filters = ['(TENANT_GUID='+tenantid+')'];
@@ -39,6 +54,14 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
     }
 
     //find tenant leave definition by id
+    /**
+     *
+     *
+     * @param {string} tenantid
+     * @param {string} id
+     * @returns {Observable<any>}
+     * @memberof LeavetypeEntitlementDbService
+     */
     public findById(tenantid:string, id: string): Observable<any> {
         
         const fields = ['LEAVE_TYPE_CODE','ENTITLEMENT_GUID','LEAVE_ENTITLEMENT_CODE','DESCRIPTION','PROPERTIES_XML'];
@@ -52,6 +75,14 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
     }
 
     //create new leavetype entitlement
+    /**
+     *
+     *
+     * @param {*} user
+     * @param {CreateLeaveEntitlementTypeDTO} d
+     * @returns {Observable<any>}
+     * @memberof LeavetypeEntitlementDbService
+     */
     create(user: any, d: CreateLeaveEntitlementTypeDTO): Observable<any> {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant
@@ -77,6 +108,14 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
     }
 
     //update new leavetype entitlement
+    /**
+     *
+     *
+     * @param {*} user
+     * @param {UpdateLeaveTypeEntitlementDto} d
+     * @returns {Observable<any>}
+     * @memberof LeavetypeEntitlementDbService
+     */
     update(user: any, d: UpdateLeaveTypeEntitlementDto): Observable<any> {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant

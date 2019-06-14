@@ -1,11 +1,15 @@
+import { CreateUpdateModel } from "src/common/model/create-update.model";
 
-export class CostCentreModel {
+/**
+ *
+ *
+ * @export
+ * @class CostCentreModel
+ * @extends {CreateUpdateModel}
+ */
+export class CostCentreModel extends CreateUpdateModel {
     COST_CENTRE_GUID: string;
     NAME: string;
-    CREATION_TS: string;
-    CREATION_USER_GUID: string;
-    UPDATE_TS: string;
-    UPDATE_USER_GUID: string;
     ACTIVE_FLAG: number;
     TENANT_GUID: string;
     DELETED_AT: string;

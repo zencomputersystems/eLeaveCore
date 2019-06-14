@@ -5,6 +5,12 @@ import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeController
+ */
 @Controller('/api/admin/leavetype')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
@@ -12,6 +18,14 @@ export class LeaveTypeController {
 
   constructor(private readonly leavetypeService: LeavetypeService) {}
 
+  /**
+   *
+   *
+   * @param {CreateLeaveTypeDto} createLeavetypeDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof LeaveTypeController
+   */
   @Post()
   create(@Body() createLeavetypeDTO: CreateLeaveTypeDto,@Req() req, @Res() res) {
 
@@ -30,6 +44,14 @@ export class LeaveTypeController {
     )
   }
 
+  /**
+   *
+   *
+   * @param {UpdateLeaveTypeDto} updateLeaveTypeDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof LeaveTypeController
+   */
   @Patch()
   update(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDto,@Req() req, @Res() res) {
     this.leavetypeService.update(req.user,updateLeaveTypeDTO)
@@ -45,6 +67,13 @@ export class LeaveTypeController {
     )
   }
 
+  /**
+   *
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof LeaveTypeController
+   */
   @Get()
   findAll(@Req() req,@Res() res) {
     this.leavetypeService.findAll(req.user.TENANT_GUID).subscribe(
@@ -59,6 +88,14 @@ export class LeaveTypeController {
 
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} req
+   * @param {*} res
+   * @memberof LeaveTypeController
+   */
   @Get(':id')
   findOne(@Param('id') id, @Req() req,@Res() res) {
     this.leavetypeService.findById(req.user.TENANT_GUID, id).subscribe(

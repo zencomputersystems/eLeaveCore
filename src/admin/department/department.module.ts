@@ -7,6 +7,12 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { DepartmentDbService } from './db/department.db.service';
 
+/**
+ *
+ *
+ * @export
+ * @class DepartmentModule
+ */
 @Module({
   modules:[
     AuthModule,

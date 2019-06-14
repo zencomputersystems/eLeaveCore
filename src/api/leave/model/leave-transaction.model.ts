@@ -1,8 +1,17 @@
 import { STATESDTO } from "src/common/approval/dto/states.dto";
+import { CreateUpdateModel } from "src/common/model/create-update.model";
 
-export class LeaveTransactionModel {
+/**
+ *
+ *
+ * @export
+ * @class LeaveTransactionModel
+ * @extends {CreateUpdateModel}
+ */
+export class LeaveTransactionModel extends CreateUpdateModel {
 
     constructor() {
+        super();
         this.CREATION_TS = new Date().toISOString();
     }
 
@@ -28,10 +37,6 @@ export class LeaveTransactionModel {
     USER_GUID: string;
 
     ACTIVE_FLAG: boolean;
-    CREATION_TS: string;
-    CREATION_USER_GUID: string;
-    UPDATE_TS: string;
-    UPDATE_USER_GUID: string;
     DELETED_AT: string;
 
     //TMP

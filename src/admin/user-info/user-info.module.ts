@@ -7,6 +7,12 @@ import { AuthModule } from 'src/auth/auth.module';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
+/**
+ *
+ *
+ * @export
+ * @class UserInfoModule
+ */
 @Module({
   controllers: [UserInfoController],
   providers: [

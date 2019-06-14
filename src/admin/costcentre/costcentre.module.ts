@@ -6,6 +6,12 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 
+/**
+ *
+ *
+ * @export
+ * @class CostcentreModule
+ */
 @Module({
   controllers: [
     CostcentreController

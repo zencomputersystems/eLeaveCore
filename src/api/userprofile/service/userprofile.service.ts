@@ -19,6 +19,12 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { UserLeaveEntitlementModel } from "../model/user-leave-entitlement.model";
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 
+/**
+ *
+ *
+ * @export
+ * @class UserprofileService
+ */
 @Injectable()
 export class UserprofileService {
 

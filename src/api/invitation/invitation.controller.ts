@@ -8,6 +8,12 @@ import { Roles } from 'src/decorator/resource.decorator';
 import { InvitationInviteService } from './invitation-invite.service';
 import { InviteDTO } from './dto/invite.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class InvitationController
+ */
 @Controller('api/invitation')
 
 export class InvitationController {

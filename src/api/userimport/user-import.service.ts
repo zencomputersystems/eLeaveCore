@@ -12,6 +12,12 @@ import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserImport } from './dto/user-import';
 
 
+/**
+ *
+ *
+ * @export
+ * @class UserImportService
+ */
 @Injectable()
 export class UserImportService {
     public branchData: any;

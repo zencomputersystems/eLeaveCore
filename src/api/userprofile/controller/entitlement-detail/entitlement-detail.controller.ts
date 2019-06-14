@@ -6,6 +6,12 @@ import { AssignLeavePolicyDTO } from '../../dto/leave-entitlement/assign-leave-p
 import { UserLeaveEntitlementService } from '../../service/user-leave-entitlement.service';
 import { AuthGuard } from '@nestjs/passport';
 
+/**
+ *
+ *
+ * @export
+ * @class EntitlementDetailController
+ */
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

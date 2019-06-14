@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class UserInviteModel
+ */
 export class UserInviteModel {
     INVITATION_GUID: string;
     USER_GUID: string;

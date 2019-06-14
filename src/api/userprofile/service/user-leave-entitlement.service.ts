@@ -20,6 +20,12 @@ import { ProratedDateCurrentMonthService } from "src/common/policy/entitlement-t
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { Logger } from '@nestjs/common';
 
+/**
+ *
+ *
+ * @export
+ * @class UserLeaveEntitlementService
+ */
 @Injectable()
 export class UserLeaveEntitlementService {
     

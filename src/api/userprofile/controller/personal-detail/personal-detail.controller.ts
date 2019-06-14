@@ -9,6 +9,12 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
+/**
+ *
+ *
+ * @export
+ * @class PersonalDetailController
+ */
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

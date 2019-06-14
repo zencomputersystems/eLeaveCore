@@ -18,6 +18,12 @@ import { LeaveTransactionDbService } from './db/leave-transaction.db.service';
 import { ApprovedController } from './controller/approval/approval.controller';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveModule
+ */
 @Module({
   modules: [
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),

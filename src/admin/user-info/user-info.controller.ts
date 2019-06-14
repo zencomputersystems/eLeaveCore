@@ -6,6 +6,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 
+/**
+ *
+ *
+ * @export
+ * @class UserInfoController
+ */
 @Controller('api/admin/user-info')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

@@ -13,6 +13,12 @@ import { v1 } from "uuid";
 import { of, forkJoin} from "rxjs";
 import { UserInviteModel } from "./model/user-invite.model";
 
+/**
+ *
+ *
+ * @export
+ * @class InvitationInviteService
+ */
 @Injectable()
 export class InvitationInviteService {
 

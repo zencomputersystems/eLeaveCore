@@ -6,6 +6,12 @@ import { LeaveTransactionModel } from "src/api/leave/model/leave-transaction.mod
 import { STATESDTO } from "../dto/states.dto";
 import { Resource } from "src/common/model/resource.model";
 
+/**
+ *
+ *
+ * @export
+ * @class ApprovalService
+ */
 @Injectable()
 export class ApprovalService {
 

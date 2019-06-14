@@ -4,6 +4,12 @@ import { Type } from "class-transformer";
 import { LeaveTypeServiceYearXmlDTO } from "./leavetype-serviceyear.xml.dto";
 
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeLevelsXmlDTO
+ */
 export class LeaveTypeLevelsXmlDTO {
     @ApiModelProperty({type:LeaveTypeServiceYearXmlDTO})
     @IsNotEmpty()

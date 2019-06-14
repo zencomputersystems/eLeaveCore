@@ -9,6 +9,12 @@ import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 
+/**
+ *
+ *
+ * @export
+ * @class UserImportModule
+ */
 @Module({
   controllers: [UserImportController],
   providers: [

@@ -7,6 +7,14 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
+/**
+ *
+ *
+ * @export
+ * @class CostcentreService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class CostcentreService extends BaseDBService implements IDbService {
     private _tableName = 'main_cost_centre';

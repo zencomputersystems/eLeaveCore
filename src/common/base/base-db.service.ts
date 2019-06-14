@@ -4,6 +4,12 @@ import { Resource } from "../model/resource.model";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
+/**
+ *
+ *
+ * @export
+ * @class BaseDBService
+ */
 export class BaseDBService {
 
     constructor(

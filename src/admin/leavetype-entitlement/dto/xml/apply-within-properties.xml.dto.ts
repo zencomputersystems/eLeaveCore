@@ -4,6 +4,12 @@ import { IsNotEmpty, IsNumber, ValidateNested, IsBoolean } from "class-validator
 import { Type } from "class-transformer";
 import { GeneralPropertiesXmlDTO } from "./general-properties.xml.dto";
 
+/**
+ *
+ *
+ * @export
+ * @class ApplyWithinPropertiesXmlDTO
+ */
 export class ApplyWithinPropertiesXmlDTO {
     
     constructor() {

@@ -9,6 +9,12 @@ import { InvitationDbService } from './db/invitation.db.service';
 import { InvitationController } from './invitation.controller';
 import { InvitationInviteService } from './invitation-invite.service';
 
+/**
+ *
+ *
+ * @export
+ * @class InvitationModule
+ */
 @Module({
   providers: [
     InvitationDbService,

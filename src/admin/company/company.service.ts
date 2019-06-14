@@ -7,6 +7,14 @@ import { CompanyModel } from './model/company.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
+/**
+ *
+ *
+ * @export
+ * @class CompanyService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class CompanyService extends BaseDBService implements IDbService{
 

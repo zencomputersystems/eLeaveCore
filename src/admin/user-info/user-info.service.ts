@@ -11,6 +11,14 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
+/**
+ *
+ *
+ * @export
+ * @class UserInfoService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class UserInfoService extends BaseDBService implements IDbService {
 

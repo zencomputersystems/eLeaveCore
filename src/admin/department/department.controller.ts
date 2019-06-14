@@ -3,6 +3,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { DepartmentService } from './department.service';
 
+/**
+ *
+ *
+ * @export
+ * @class DepartmentController
+ */
 @Controller('/api/department')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

@@ -3,6 +3,12 @@ import { Type } from 'class-transformer';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { LeaveTypePropertiesXmlDTO } from './leavetype-properties.xml.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeEntitlementXmlDTO
+ */
 export class LeaveTypeEntitlementXmlDTO {
 
     constructor() {

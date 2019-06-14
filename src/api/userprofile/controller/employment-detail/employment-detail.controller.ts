@@ -8,6 +8,12 @@ import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class EmploymentDetailController
+ */
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

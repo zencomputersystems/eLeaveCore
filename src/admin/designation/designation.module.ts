@@ -7,6 +7,12 @@ import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 
+/**
+ *
+ *
+ * @export
+ * @class DesignationModule
+ */
 @Module({
   modules:[
     AuthModule,

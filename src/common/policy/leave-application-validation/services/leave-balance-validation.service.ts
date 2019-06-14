@@ -14,6 +14,12 @@ import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db
 import { map } from 'rxjs/operators';
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveBalanceValidationService
+ */
 @Injectable()
 export class LeaveBalanceValidationService {
 

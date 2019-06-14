@@ -5,6 +5,12 @@ import { switchMap } from 'rxjs/operators';
 import { ApplyLeaveService } from '../../service/apply-leave.service';
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class ApplyController
+ */
 @Controller('api')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

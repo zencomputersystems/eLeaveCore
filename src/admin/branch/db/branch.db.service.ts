@@ -3,6 +3,13 @@ import { HttpService, Injectable } from "@nestjs/common";
 import { QueryParserService } from "src/common/helper/query-parser.service";
 import { Observable } from "rxjs";
 
+/**
+ *
+ *
+ * @export
+ * @class BranchDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class BranchDbService extends BaseDBService  {
     

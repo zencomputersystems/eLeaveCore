@@ -66,7 +66,7 @@ export class HolidayController {
      * @param {*} res
      * @memberof HolidayController
      */
-    @Get('/calendar_profile')
+    @Get('/calendar-profile')
     @ApiOperation({ title: 'Get calendar profile list' })
     findAllCalendar(@Req() req, @Res() res) {
         this.holidayService.getCalendarProfileList().subscribe(
@@ -87,6 +87,30 @@ export class HolidayController {
     }
 
     /**
+     * update calendar-profile name n data
+     *
+     * @param {UpdateCalendarDTO} updateCalendarDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
+    @Patch('/calendar-profile')
+    @ApiOperation({ title: 'Edit calendar profile' })
+    updateCalendarProfile(@Body() updateCalendarDTO: UpdateCalendarDTO, @Req() req, @Res() res) {
+        this.holidayService.updateCalendar(req.user, updateCalendarDTO)
+            .subscribe(
+                data => {
+                    if (data.status == 200)
+                        res.send(data.data);
+                },
+                err => {
+                    res.status(400);
+                    res.send('Fail to update resource');
+                }
+            )
+    }
+
+    /**
      * create new calendar profile
      *
      * @param {CreateCalendarDTO} createCalendarDTO
@@ -94,7 +118,7 @@ export class HolidayController {
      * @param {*} res
      * @memberof HolidayController
      */
-    @Post()
+    @Post('/calendar-profile')
     @ApiOperation({ title: 'Setup calendar profile' })
     create(@Body() createCalendarDTO: CreateCalendarDTO, @Req() req, @Res() res) {
         this.holidayService.create(req.user, createCalendarDTO)
@@ -122,7 +146,7 @@ export class HolidayController {
      */
     @UseGuards(ResourceGuard)
     @Get(':id')
-    @ApiOperation({ title: 'Get holiday list by calendar profile id' })
+    @ApiOperation({ title: 'Get holiday list by calendar profile' })
     @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
     findOne(@Req() req, @Res() res) {
@@ -151,6 +175,7 @@ export class HolidayController {
     }
 
     @Patch('/user-calendar')
+    @ApiOperation({ title: 'Assign calendar profile to employee' })
     updateToEmployee(@Body() updateUserCalendarDTO: UpdateUserCalendarDTO, @Req() req, @Res() res) {
         this.holidayService.updateToEmployee(req.user, updateUserCalendarDTO)
             .subscribe(
@@ -200,20 +225,7 @@ export class HolidayController {
 
 
     
-    @Patch('/calendar')
-    updateCalendarProfile(@Body() updateCalendarDTO: UpdateCalendarDTO, @Req() req, @Res() res) {
-        this.holidayService.updateCalendar(req.user, updateCalendarDTO)
-            .subscribe(
-                data => {
-                    if (data.status == 200)
-                        res.send(data.data);
-                },
-                err => {
-                    res.status(400);
-                    res.send('Fail to update resource');
-                }
-            )
-    }
+    
 
 
 

@@ -43,4 +43,6 @@ export class UserInfoModel extends CreateUpdateModel {
     //ACTIVE_FLAG: number;
     TENANT_GUID: string;
     DELETED_AT: string;
+
+    CALENDAR_GUID: string;
 }

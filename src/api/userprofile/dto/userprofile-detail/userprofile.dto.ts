@@ -18,6 +18,9 @@ export class UserProfileDTO {
     userId: string;
 
     @ApiModelProperty()
+    calendarId: string;
+
+    @ApiModelProperty()
     employeeName: string;
 
     @ApiModelProperty()

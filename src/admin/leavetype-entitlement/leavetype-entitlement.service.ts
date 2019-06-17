@@ -5,6 +5,12 @@ import { LeaveTypeEntitlementListDTO } from "./dto/leavetype-entitlement-list.dt
 import { ViewLeaveTypeSetupModel } from "./model/view-leave-type-setup.model";
 import { XMLParserService } from "src/common/helper/xml-parser.service";
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeEntitlementService
+ */
 @Injectable()
 export class LeaveTypeEntitlementService {
     constructor(
@@ -13,6 +19,13 @@ export class LeaveTypeEntitlementService {
 
 
     // return list of entitlement for this filter
+    /**
+     *
+     *
+     * @param {string} tenantId
+     * @returns
+     * @memberof LeaveTypeEntitlementService
+     */
     public getList(tenantId: string) {
         return this.leavetypeEntitlementDbService.findAll(tenantId)
             .pipe(map(res => {
@@ -38,6 +51,14 @@ export class LeaveTypeEntitlementService {
             }))
     }
 
+    /**
+     *
+     *
+     * @param {string} tenantId
+     * @param {string} entitlementId
+     * @returns
+     * @memberof LeaveTypeEntitlementService
+     */
     public getDetail(tenantId:string, entitlementId: string) {
         return this.leavetypeEntitlementDbService.findById(tenantId,entitlementId)
                 .pipe(map(res => {

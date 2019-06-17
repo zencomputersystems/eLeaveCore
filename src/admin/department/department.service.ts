@@ -2,6 +2,12 @@ import { Injectable} from '@nestjs/common';
 import { DepartmentDbService } from './db/department.db.service';
 import { map } from 'rxjs/operators';
 
+/**
+ *
+ *
+ * @export
+ * @class DepartmentService
+ */
 @Injectable()
 export class DepartmentService {
     constructor(private readonly departmentDbService: DepartmentDbService) {}

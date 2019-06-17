@@ -3,6 +3,12 @@ import { DesignationService } from './designation.service';
 import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
+/**
+ *
+ *
+ * @export
+ * @class DesignationController
+ */
 @Controller('/api/designation')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

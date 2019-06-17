@@ -10,6 +10,12 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from './db/user-info.db.service';
 
+/**
+ *
+ *
+ * @export
+ * @class HolidayModule
+ */
 @Module({
   modules:[
     AuthModule,

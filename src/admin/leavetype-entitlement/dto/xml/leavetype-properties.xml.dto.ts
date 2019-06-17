@@ -7,6 +7,12 @@ import { ApplyBeforePropertiesXmlDTO } from './apply-before-properties.xml.dto';
 import { ApplyWithinPropertiesXmlDTO } from './apply-within-properties.xml.dto';
 import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypePropertiesXmlDTO
+ */
 export class LeaveTypePropertiesXmlDTO {
 
     constructor() {

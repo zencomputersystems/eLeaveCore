@@ -1,4 +1,13 @@
-export class LeaveTypeEntitlementModel {
+import { CreateUpdateModel } from "src/common/model/create-update.model";
+
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeEntitlementModel
+ * @extends {CreateUpdateModel}
+ */
+export class LeaveTypeEntitlementModel extends CreateUpdateModel {
     ENTITLEMENT_GUID: string;
     LEAVE_TYPE_GUID: string;
     CODE: string;
@@ -6,10 +15,6 @@ export class LeaveTypeEntitlementModel {
     PROPERTIES_XML: string;
     TENANT_GUID: string;
     TENANT_COMPANY_GUID: string;
-    CREATION_TS: string;
-    CREATION_USER_GUID: string;
-    UPDATE_TS: string;
-    UPDATE_USER_GUID: string;
     ACTIVE_FLAG: number;
 
 } 

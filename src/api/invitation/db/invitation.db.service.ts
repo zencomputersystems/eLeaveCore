@@ -6,6 +6,13 @@ import { Resource } from "src/common/model/resource.model";
 import { v1 } from "uuid";
 import { UserInviteModel } from "../model/user-invite.model";
 
+/**
+ *
+ *
+ * @export
+ * @class InvitationDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class InvitationDbService extends BaseDBService {
     private _tableName = 'l_user_invitation';

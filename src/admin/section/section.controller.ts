@@ -5,6 +5,12 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+/**
+ *
+ *
+ * @export
+ * @class SectionController
+ */
 @Controller('api/admin/section')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
@@ -12,6 +18,14 @@ export class SectionController {
 
     constructor(private readonly sectionService: SectionService) {}
 
+  /**
+   *
+   *
+   * @param {CreateSectionDto} createSectionDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof SectionController
+   */
   @Post()
   create(@Body() createSectionDTO: CreateSectionDto,@Req() req, @Res() res) {
 
@@ -29,6 +43,14 @@ export class SectionController {
     )
   }
 
+  /**
+   *
+   *
+   * @param {UpdateSectionDto} updateSectionDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof SectionController
+   */
   @Patch()
   update(@Body() updateSectionDTO: UpdateSectionDto,@Req() req, @Res() res) {
     this.sectionService.update(req.user,updateSectionDTO)
@@ -44,6 +66,13 @@ export class SectionController {
     )
   }
 
+  /**
+   *
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof SectionController
+   */
   @Get()
   findAll(@Req() req,@Res() res) {
     this.sectionService.findAll(req.user.TENANT_GUID).subscribe(
@@ -59,6 +88,14 @@ export class SectionController {
 
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} req
+   * @param {*} res
+   * @memberof SectionController
+   */
   @Get(':id')
   findOne(@Param('id') id, @Req() req,@Res() res) {
     this.sectionService.findById(req.user.TENANT_GUID, id).subscribe(

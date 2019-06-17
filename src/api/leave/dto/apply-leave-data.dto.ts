@@ -1,12 +1,20 @@
 import { IsISO8601, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { ApiModelProperty } from "@nestjs/swagger";
 
+/**
+ *
+ *
+ * @export
+ * @class ApplyLeaveDataDTO
+ */
 export class ApplyLeaveDataDTO {
 
+    @ApiModelProperty()
     @IsNotEmpty()
     @IsISO8601()
     startDate: Date;
 
+    @ApiModelProperty()
     @IsNotEmpty()
     @IsISO8601()
     endDate: Date;

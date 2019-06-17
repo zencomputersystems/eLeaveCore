@@ -8,6 +8,14 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
+/**
+ *
+ *
+ * @export
+ * @class SectionService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class SectionService extends BaseDBService implements IDbService {
 

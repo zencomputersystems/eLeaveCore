@@ -5,6 +5,12 @@ import parse = require('csv-parse/lib/sync');
 import { UserImportService } from './user-import.service';
 import { UserCsvDto } from './dto/csv/user-csv.dto';
 
+/**
+ *
+ *
+ * @export
+ * @class UserImportController
+ */
 @Controller('api/userimport')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

@@ -2,6 +2,12 @@ import { Injectable} from '@nestjs/common';
 import { BranchDbService } from './db/branch.db.service';
 import { map } from 'rxjs/operators';
 
+/**
+ *
+ *
+ * @export
+ * @class BranchService
+ */
 @Injectable()
 export class BranchService {
     constructor(private readonly branchDbService: BranchDbService) {}

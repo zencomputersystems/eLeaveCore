@@ -1,12 +1,16 @@
+import { CreateUpdateModel } from "src/common/model/create-update.model";
 
-export class LeaveTypeModel {
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeModel
+ * @extends {CreateUpdateModel}
+ */
+export class LeaveTypeModel extends CreateUpdateModel {
     LEAVE_TYPE_GUID: string;
     CODE: string;
     DESCRIPTION: string;
-    CREATION_TS: string;
-    CREATION_USER_GUID: string;
-    UPDATE_TS: string;
-    UPDATE_USER_GUID: string;
     ACTIVE_FLAG: number;
     TENANT_GUID: string;
     TENANT_COMPANY_GUID: string;

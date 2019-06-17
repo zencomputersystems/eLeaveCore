@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class UserImport
+ */
 export class UserImport {
     
     constructor(

@@ -10,6 +10,12 @@ import { UserLeaveEntitlementModel } from "src/api/userprofile/model/user-leave-
 import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
 import { map, mergeMap } from "rxjs/operators";
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveApplicationValidationService
+ */
 @Injectable()
 export class LeaveApplicationValidationService {
 

@@ -3,6 +3,13 @@ import { BaseDBService } from "src/common/base/base-db.service";
 import { QueryParserService } from "src/common/helper/query-parser.service";
 import { Observable } from "rxjs";
 
+/**
+ *
+ *
+ * @export
+ * @class HolidayDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class HolidayDbService extends BaseDBService {
     private _tableName = "l_calendar_profile";

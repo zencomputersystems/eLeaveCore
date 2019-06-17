@@ -3,6 +3,13 @@ import { BaseDBService } from "src/common/base/base-db.service";
 import { QueryParserService } from "src/common/helper/query-parser.service";
 import { Observable } from "rxjs";
 
+/**
+ *
+ *
+ * @export
+ * @class DesignationDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class DesignationDbService extends BaseDBService {
     private _tableName = "view_designations";

@@ -1,10 +1,12 @@
+import { CreateUpdateModel } from "src/common/model/create-update.model";
+
 /**
  * User info model
  *
  * @export
  * @class UserInfoModel
  */
-export class UserInfoModel {
+export class UserInfoModel extends CreateUpdateModel {
     USER_INFO_GUID: string; //PK
     USER_GUID: string; //FK
 
@@ -39,10 +41,6 @@ export class UserInfoModel {
     PR_ACCOUNT_NUMBER: string;
 
     //ACTIVE_FLAG: number;
-    CREATION_TS: string;
-    CREATION_USER_GUID: string;
-    UPDATE_TS: string;
-    UPDATE_USER_GUID: string;
     TENANT_GUID: string;
     DELETED_AT: string;
 }

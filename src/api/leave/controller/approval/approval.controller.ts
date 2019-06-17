@@ -5,6 +5,12 @@ import { ApplyLeaveDTO } from "../../dto/apply-leave.dto";
 import { ApprovalService } from "src/common/approval/service/approval.service";
 import { ApprovedLeaveDTO } from "../../dto/approved-leave.dto";
 
+/**
+ *
+ *
+ * @export
+ * @class ApprovedController
+ */
 @Controller('api')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

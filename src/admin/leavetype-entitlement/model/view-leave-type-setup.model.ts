@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class ViewLeaveTypeSetupModel
+ */
 export class ViewLeaveTypeSetupModel {
     LEAVE_TYPE_GUID: string;
     TENANT_GUID: string;

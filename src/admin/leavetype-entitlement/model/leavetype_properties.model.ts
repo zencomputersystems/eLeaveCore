@@ -1,5 +1,11 @@
 import { LeaveTypeServiceYear } from "./leavetype_serviceyear";
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypePropertiesModel
+ */
 export class LeaveTypePropertiesModel {
     apply_in_advance=false;
     apply_next_year=false;

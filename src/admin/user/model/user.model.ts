@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class UserModel
+ */
 export class UserModel {
    USER_GUID: string;
    TENANT_GUID: string;

@@ -5,6 +5,12 @@ import {CostcentreService} from './costcentre.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+/**
+ *
+ *
+ * @export
+ * @class CostcentreController
+ */
 @Controller('/api/admin/costcentre')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
@@ -12,6 +18,14 @@ export class CostcentreController {
 
   constructor(private readonly costcentreService: CostcentreService) {}
 
+  /**
+   *
+   *
+   * @param {CreateCostCentreDto} createBranchDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof CostcentreController
+   */
   @Post()
   create(@Body() createBranchDTO: CreateCostCentreDto,@Req() req, @Res() res) {
 
@@ -29,6 +43,14 @@ export class CostcentreController {
     )
   }
 
+  /**
+   *
+   *
+   * @param {UpdateCostCentreDto} updateBranchDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof CostcentreController
+   */
   @Patch()
   update(@Body() updateBranchDTO: UpdateCostCentreDto,@Req() req, @Res() res) {
     this.costcentreService.update(req.user,updateBranchDTO)
@@ -44,6 +66,13 @@ export class CostcentreController {
     )
   }
 
+  /**
+   *
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof CostcentreController
+   */
   @Get()
   findAll(@Req() req,@Res() res) {
     this.costcentreService.findAll(req.user.TENANT_GUID).subscribe(
@@ -59,6 +88,14 @@ export class CostcentreController {
 
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} req
+   * @param {*} res
+   * @memberof CostcentreController
+   */
   @Get(':id')
   findOne(@Param('id') id, @Req() req,@Res() res) {
     this.costcentreService.findById(req.user.TENANT_GUID, id).subscribe(

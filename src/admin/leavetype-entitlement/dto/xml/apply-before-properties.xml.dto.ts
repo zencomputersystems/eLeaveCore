@@ -5,6 +5,12 @@ import { Type } from "class-transformer";
 import { GeneralPropertiesXmlDTO } from "./general-properties.xml.dto";
 
 
+/**
+ *
+ *
+ * @export
+ * @class ApplyBeforePropertiesXmlDTO
+ */
 export class ApplyBeforePropertiesXmlDTO {
 
     constructor() {

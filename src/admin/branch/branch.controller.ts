@@ -3,6 +3,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { BranchService } from './branch.service';
 import { ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
 
+/**
+ *
+ *
+ * @export
+ * @class BranchController
+ */
 @Controller('api/branch')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

@@ -8,6 +8,12 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 
+/**
+ *
+ *
+ * @export
+ * @class LeavetypeEntitlementController
+ */
 @Controller('api/leavetype-entitlement')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

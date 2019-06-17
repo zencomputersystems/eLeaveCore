@@ -6,6 +6,13 @@ import { ResourceDecoratorModel } from "src/decorator/resource.decorator.model";
 import { roles } from "./mock/role.mock";
 var jwt = require('jsonwebtoken');
 
+/**
+ *
+ *
+ * @export
+ * @class RolesGuard
+ * @implements {CanActivate}
+ */
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(private readonly reflector: Reflector) {}

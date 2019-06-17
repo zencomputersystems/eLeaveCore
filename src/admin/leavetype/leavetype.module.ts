@@ -6,6 +6,12 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { LeaveTypeController } from './leavetype.controller';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 
+/**
+ *
+ *
+ * @export
+ * @class LeavetypeModule
+ */
 @Module({
   controllers: [LeaveTypeController],
   modules:[

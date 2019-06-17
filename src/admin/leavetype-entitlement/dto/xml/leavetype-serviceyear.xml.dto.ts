@@ -1,6 +1,12 @@
 import { IsNotEmpty, IsNumber } from "class-validator";
 import { ApiModelProperty } from "@nestjs/swagger";
 
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeServiceYearXmlDTO
+ */
 export class LeaveTypeServiceYearXmlDTO {
 
     @ApiModelProperty({description:'Id for service year'})

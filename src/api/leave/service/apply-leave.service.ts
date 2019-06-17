@@ -22,6 +22,12 @@ import { json } from 'body-parser';
 import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 
 
+/**
+ *
+ *
+ * @export
+ * @class ApplyLeaveService
+ */
 @Injectable()
 export class ApplyLeaveService {
 

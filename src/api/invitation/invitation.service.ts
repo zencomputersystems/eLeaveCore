@@ -7,6 +7,12 @@ import { UserModel } from 'src/admin/user/model/user.model';
 import { ActivatedResultDTO } from './dto/activated-result.dto';
 import { InvitationDbService } from './db/invitation.db.service';
 
+/**
+ *
+ *
+ * @export
+ * @class InvitationService
+ */
 @Injectable()
 export class InvitationService {
 

@@ -7,6 +7,12 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
 
+/**
+ *
+ *
+ * @export
+ * @class CertificationDetailController
+ */
 @Controller('api/userprofile')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()

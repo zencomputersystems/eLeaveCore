@@ -2,12 +2,20 @@ import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpSer
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { HolidayService } from './holiday.service';
-import { UpdateHolidayDTO } from './dto/update-holiday.dto';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { CreateCalendarDTO } from './dto/create-calendar.dto';
+import { UpdateCalendarDTO } from './dto/update-calendar.dto';
+import { CalendarDTO } from './dto/calendar.dto';
+import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 // var iso3166 = require('iso3166-2-db');
 
+/**
+ *
+ *
+ * @export
+ * @class HolidayController
+ */
 @Controller('/admin/api/holiday')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
@@ -142,20 +150,20 @@ export class HolidayController {
 
     }
 
-    // @Patch()
-    // updateToEmployee(@Body() updateHolidayDTO: UpdateHolidayDTO, @Req() req, @Res() res) {
-    //     this.holidayService.updateToEmployee(req.user, updateHolidayDTO)
-    //         .subscribe(
-    //             data => {
-    //                 if (data.status == 200)
-    //                     res.send(data.data);
-    //             },
-    //             err => {
-    //                 res.status(400);
-    //                 res.send('Fail to update resource');
-    //             }
-    //         )
-    // }
+    @Patch('/user-calendar')
+    updateToEmployee(@Body() updateUserCalendarDTO: UpdateUserCalendarDTO, @Req() req, @Res() res) {
+        this.holidayService.updateToEmployee(req.user, updateUserCalendarDTO)
+            .subscribe(
+                data => {
+                    if (data.status == 200)
+                        res.send(data.data);
+                },
+                err => {
+                    res.status(400);
+                    res.send('Fail to update resource');
+                }
+            )
+    }
 
 
     // /**
@@ -191,28 +199,21 @@ export class HolidayController {
 
 
 
-    // /**
-    //  *
-    //  *
-    //  * @param {UpdateHolidayDTO} updateHolidayDTO
-    //  * @param {*} req
-    //  * @param {*} res
-    //  * @memberof HolidayController
-    //  */
-    // @Patch()
-    // update(@Body() updateHolidayDTO: UpdateHolidayDTO, @Req() req, @Res() res) {
-    //     this.holidayService.update(req.user, updateHolidayDTO)
-    //         .subscribe(
-    //             data => {
-    //                 if (data.status == 200)
-    //                     res.send(data.data);
-    //             },
-    //             err => {
-    //                 res.status(400);
-    //                 res.send('Fail to update resource');
-    //             }
-    //         )
-    // }
+    
+    @Patch('/calendar')
+    updateCalendarProfile(@Body() updateCalendarDTO: UpdateCalendarDTO, @Req() req, @Res() res) {
+        this.holidayService.updateCalendar(req.user, updateCalendarDTO)
+            .subscribe(
+                data => {
+                    if (data.status == 200)
+                        res.send(data.data);
+                },
+                err => {
+                    res.status(400);
+                    res.send('Fail to update resource');
+                }
+            )
+    }
 
 
 

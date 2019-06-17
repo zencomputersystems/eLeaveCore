@@ -1,3 +1,11 @@
+import { ApiModelProperty } from "@nestjs/swagger";
+
+/**
+ *
+ *
+ * @export
+ * @class LeaveEntitlementDTO
+ */
 export class LeaveEntitlementDTO {
 
     constructor() {
@@ -8,9 +16,18 @@ export class LeaveEntitlementDTO {
         this.leaveBalance = 0
     }
 
+    @ApiModelProperty()
     leaveType: string;
+
+    @ApiModelProperty()
     entitledDays: number;
+
+    @ApiModelProperty()
     leaveTaken: number;
+
+    @ApiModelProperty()
     leavePending: number;
+
+    @ApiModelProperty()
     leaveBalance: number;
 }

@@ -8,6 +8,12 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 
+/**
+ *
+ *
+ * @export
+ * @class LeavetypeEntitlementModule
+ */
 @Module({
   controllers: [LeavetypeEntitlementController],
   modules: [

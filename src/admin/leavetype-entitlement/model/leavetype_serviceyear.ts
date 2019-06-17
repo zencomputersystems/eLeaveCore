@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class LeaveTypeServiceYear
+ */
 export class LeaveTypeServiceYear {
     id: string;
     service_year_from: number;

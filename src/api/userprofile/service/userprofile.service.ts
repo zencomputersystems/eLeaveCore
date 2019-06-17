@@ -208,6 +208,7 @@ export class UserprofileService {
         userProfileData.employeeDesignation = data.DESIGNATION;
         userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
         userProfileData.employeeDepartment = data.DEPARTMENT;
+        userProfileData.calendarId = data.CALENDAR_GUID;
 
         if (data.PROPERTIES_XML) {
 
@@ -224,11 +225,11 @@ export class UserprofileService {
                     var sub_key = j;
                     var sub_val = parseXMLtoJSON[j];
                     // let lwrCseKey = sub_key.toLowerCase();
-                    if (sub_key == 'gender') { sub_val = sub_val == 1 ? "Male" : "Female"; }
-                    if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? "Married" : "Single"; }
-                    if (sub_key == 'address1') { sub_key = "residentialAddress1"; }
-                    if (sub_key == 'address2') { sub_key = "residentialAddress2"; }
-                    if (sub_key == 'emergencyContact') { sub_key = "emergencyContactNumber"; }
+                    if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; }
+                    if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; }
+                    if (sub_key == 'address1') { sub_key = 'residentialAddress1'; }
+                    if (sub_key == 'address2') { sub_key = 'residentialAddress2'; }
+                    if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; }
                     if (sub_key == 'id') { continue; }
                     userPersonalDetail[sub_key] = sub_val;
                     // console.log(sub_key + " - " + sub_val);

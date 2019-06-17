@@ -55,6 +55,7 @@ export class UserprofileController {
     @Roles('ViewProfile', 'ProfileAdmin')
     findOne(@Param('id') id, @Req() req, @Res() res) {
 
+        // console.log(req.query.id);
         if (id == null) {
             res.status(400);
             res.send('id not found');
@@ -62,7 +63,7 @@ export class UserprofileController {
         //get the requesting user
         const user = req.user;
 
-        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
+        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + req.query.id + ')'])
             .pipe(
                 switchMap(filter => {
                     return this.userprofileService.getDetail(filter);
@@ -70,31 +71,32 @@ export class UserprofileController {
             )
             .subscribe(
                 data1 => {
-                    this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
-                        data => {
-                            let leaveData = [];
-                            for (let i = 0; i < data.length; i++) {
-                                let tempObj = new EntitlementDetailDTO;
-                                tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
-                                tempObj.leaveTypeName = data[i].LEAVE_CODE;
-                                tempObj.entitledDays = data[i].ENTITLED_DAYS;
-                                tempObj.pendingDays = data[i].TOTAL_PENDING;
-                                tempObj.takenDays = data[i].TOTAL_APPROVED;
-                                tempObj.balanceDays = data[i].BALANCE_DAYS;
-                                leaveData.push(tempObj);
-                            }
-                            data1.entitlementDetail = leaveData;
-                            res.send(data1);
-                        },
-                        err => {
-                            res.status(500);
-                            if (err.response) {
-                                res.send(err.response.data.error)
-                            } else {
-                                res.send(err);
-                            }
-                        }
-                    )
+                    this.getEntitlementProcess(data1, res, user);
+                    // this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
+                    //     data => {
+                    //         let leaveData = [];
+                    //         for (let i = 0; i < data.length; i++) {
+                    //             let tempObj = new EntitlementDetailDTO;
+                    //             tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
+                    //             tempObj.leaveTypeName = data[i].LEAVE_CODE;
+                    //             tempObj.entitledDays = data[i].ENTITLED_DAYS;
+                    //             tempObj.pendingDays = data[i].TOTAL_PENDING;
+                    //             tempObj.takenDays = data[i].TOTAL_APPROVED;
+                    //             tempObj.balanceDays = data[i].BALANCE_DAYS;
+                    //             leaveData.push(tempObj);
+                    //         }
+                    //         data1.entitlementDetail = leaveData;
+                    //         res.send(data1);
+                    //     },
+                    //     err => {
+                    //         res.status(500);
+                    //         if (err.response) {
+                    //             res.send(err.response.data.error)
+                    //         } else {
+                    //             res.send(err);
+                    //         }
+                    //     }
+                    // )
 
                 },
                 err => {
@@ -121,32 +123,33 @@ export class UserprofileController {
         this.userprofileService.getDetail(filters)
             .subscribe(
                 data1 => {
-                    this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
-                        data => {
-                            let leaveData = [];
-                            for (let i = 0; i < data.length; i++) {
-                                let tempObj = new EntitlementDetailDTO;
-                                console.log(data[i].LEAVE_TYPE_GUID);
-                                tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
-                                tempObj.leaveTypeName = data[i].LEAVE_CODE;
-                                tempObj.entitledDays = data[i].ENTITLED_DAYS;
-                                tempObj.pendingDays = data[i].TOTAL_PENDING;
-                                tempObj.takenDays = data[i].TOTAL_APPROVED;
-                                tempObj.balanceDays = data[i].BALANCE_DAYS;
-                                leaveData.push(tempObj);
-                            }
-                            data1.entitlementDetail = leaveData;
-                            res.send(data1);
-                        },
-                        err => {
-                            res.status(500);
-                            if (err.response) {
-                                res.send(err.response.data.error)
-                            } else {
-                                res.send(err);
-                            }
-                        }
-                    )
+                    this.getEntitlementProcess(data1, res, user);
+                    // this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
+                    //     data => {
+                    //         let leaveData = [];
+                    //         for (let i = 0; i < data.length; i++) {
+                    //             let tempObj = new EntitlementDetailDTO;
+                    //             console.log(data[i].LEAVE_TYPE_GUID);
+                    //             tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
+                    //             tempObj.leaveTypeName = data[i].LEAVE_CODE;
+                    //             tempObj.entitledDays = data[i].ENTITLED_DAYS;
+                    //             tempObj.pendingDays = data[i].TOTAL_PENDING;
+                    //             tempObj.takenDays = data[i].TOTAL_APPROVED;
+                    //             tempObj.balanceDays = data[i].BALANCE_DAYS;
+                    //             leaveData.push(tempObj);
+                    //         }
+                    //         data1.entitlementDetail = leaveData;
+                    //         res.send(data1);
+                    //     },
+                    //     err => {
+                    //         res.status(500);
+                    //         if (err.response) {
+                    //             res.send(err.response.data.error)
+                    //         } else {
+                    //             res.send(err);
+                    //         }
+                    //     }
+                    // )
                 },
                 err => {
 
@@ -159,6 +162,35 @@ export class UserprofileController {
                 }
             )
 
+    }
+
+    public getEntitlementProcess(data1, res, user) {
+        this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
+            data => {
+                let leaveData = [];
+                for (let i = 0; i < data.length; i++) {
+                    let tempObj = new EntitlementDetailDTO;
+                    // console.log(data[i].LEAVE_TYPE_GUID);
+                    tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
+                    tempObj.leaveTypeName = data[i].LEAVE_CODE;
+                    tempObj.entitledDays = data[i].ENTITLED_DAYS;
+                    tempObj.pendingDays = data[i].TOTAL_PENDING;
+                    tempObj.takenDays = data[i].TOTAL_APPROVED;
+                    tempObj.balanceDays = data[i].BALANCE_DAYS;
+                    leaveData.push(tempObj);
+                }
+                data1.entitlementDetail = leaveData;
+                res.send(data1);
+            },
+            err => {
+                res.status(500);
+                if (err.response) {
+                    res.send(err.response.data.error)
+                } else {
+                    res.send(err);
+                }
+            }
+        )
     }
 
 }

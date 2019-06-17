@@ -51,7 +51,8 @@ export class UserInfoService extends BaseDBService implements IDbService {
             'CONFIRMATION_DATE',
             'RESIGNATION_DATE',
             'EMPLOYEE_STATUS',
-            'EMPLOYEE_TYPE'
+            'EMPLOYEE_TYPE',
+            'CALENDAR_GUID'
         ];
         const filters = ['(USER_GUID='+userId + ')'];
 

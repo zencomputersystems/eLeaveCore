@@ -87,53 +87,56 @@ export class UserLeaveEntitlementService {
                         }))
                 }),
                 mergeMap((res) => {
-
-                    const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
-                    // get the service year
-                    const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
-
-                    const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
-
-                    // //get the entitlement days
-                    const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
-
-                    if (entitlementDay == 0 || entitlementDay == undefined) {
-                        return of(null);
-                    }
-
-                    // assign new policy to user
-                    const entitlementModel = new UserLeaveEntitlementModel();
-                    entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
-                    entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
-                    entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
-                    entitlementModel.USER_GUID = data.userId;
-
-                    entitlementModel.PARENT_FLAG = 1;
-                    entitlementModel.CF_FLAG = 0;
-                    entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
-                    entitlementModel.YEAR = moment().year();
-                    entitlementModel.REMARKS = 'this is remark';
-                    entitlementModel.ACTIVE_FLAG = 1;
-
-                    entitlementModel.TENANT_GUID = user.TENANT_GUID;
-                    entitlementModel.CREATION_USER_GUID = user.USER_GUID;
-
-                    entitlementModel.DAYS_ADDED = entitlementDay;
-
-                    const resource = new Resource(new Array());
-
-                    resource.resource.push(entitlementModel);
-
-                    return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
-                        .pipe(map(res => {
-                            if (res.status == 200) {
-                                return res.data.resource[0];
-                            }
-                        }))
+                    return this.assignPolicyProcess(res, user, data);
 
                 })
             )
 
+    }
+
+    public assignPolicyProcess(res, user, data) {
+        const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
+        // get the service year
+        const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
+
+        const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
+
+        // //get the entitlement days
+        const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
+
+        if (entitlementDay == 0 || entitlementDay == undefined) {
+            return of(null);
+        }
+
+        // assign new policy to user
+        const entitlementModel = new UserLeaveEntitlementModel();
+        entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+        entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
+        entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
+        entitlementModel.USER_GUID = data.userId;
+
+        entitlementModel.PARENT_FLAG = 1;
+        entitlementModel.CF_FLAG = 0;
+        entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
+        entitlementModel.YEAR = moment().year();
+        entitlementModel.REMARKS = 'this is remark';
+        entitlementModel.ACTIVE_FLAG = 1;
+
+        entitlementModel.TENANT_GUID = user.TENANT_GUID;
+        entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+
+        entitlementModel.DAYS_ADDED = entitlementDay;
+
+        const resource = new Resource(new Array());
+
+        resource.resource.push(entitlementModel);
+
+        return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
+            .pipe(map(res => {
+                if (res.status == 200) {
+                    return res.data.resource[0];
+                }
+            }))
     }
 
     private dbSearch(IDbService: IDbService, filter: string[]) {

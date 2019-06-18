@@ -37,28 +37,28 @@ export class UserprofileService {
 
     public getList(filters: string[]) {
         return this.userprofileDBService.findByFilterV2([], filters)
-            .pipe(
-                map(res => {
-                    const userArray = new Array();
+        .pipe(
+            map(res => {
+                const userArray = new Array();
 
-                    res.forEach(element => {
+                res.forEach(element => {
 
-                        userArray.push(
-                            new UserprofileListDTO(
-                                element.USER_INFO_GUID,
-                                element.USER_GUID,
-                                element.PERSONAL_ID == null ? '' : element.PERSONAL_ID,
-                                element.FULLNAME,
-                                element.DESIGNATION,
-                                element.EMAIL,
-                                new Access()
-                            ));
+                    userArray.push(
+                        new UserprofileListDTO(
+                            element.USER_INFO_GUID,
+                            element.USER_GUID,
+                            element.PERSONAL_ID == null ? '' : element.PERSONAL_ID,
+                            element.FULLNAME,
+                            element.DESIGNATION,
+                            element.EMAIL,
+                            new Access()
+                        ));
 
-                    });
+                });
 
-                    return userArray;
-                })
-            );
+                return userArray;
+            })
+        );
     }
 
     // Get User Detail
@@ -211,62 +211,7 @@ export class UserprofileService {
         userProfileData.calendarId = data.CALENDAR_GUID;
 
         if (data.PROPERTIES_XML) {
-
-            //process the personal detail
-            const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
-
-            if (isShowPersonalData) {
-                const userPersonalDetail = new UserPersonalDetailDTO();
-
-
-                // public assignOneData(val:any,dataModel:any){
-                // let inputData = new dataModel;
-                for (var j in parseXMLtoJSON) {
-                    var sub_key = j;
-                    var sub_val = parseXMLtoJSON[j];
-                    // let lwrCseKey = sub_key.toLowerCase();
-                    if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; }
-                    if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; }
-                    if (sub_key == 'address1') { sub_key = 'residentialAddress1'; }
-                    if (sub_key == 'address2') { sub_key = 'residentialAddress2'; }
-                    if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; }
-                    if (sub_key == 'id') { continue; }
-                    userPersonalDetail[sub_key] = sub_val;
-                    // console.log(sub_key + " - " + sub_val);
-                }
-                // return inputData;
-                // }
-
-                // userPersonalDetail.dob = parseXMLtoJSON.dob;
-                // userPersonalDetail.nric = parseXMLtoJSON.nric;
-                // userPersonalDetail.nickname = parseXMLtoJSON.nickname;
-                // userPersonalDetail.emailAddress = parseXMLtoJSON.emailAddress;
-                // userPersonalDetail.workEmailAddress = parseXMLtoJSON.workEmailAddress;
-                // userPersonalDetail.gender = parseXMLtoJSON.gender==1?"Male":"Female";
-                // userPersonalDetail.maritalStatus = parseXMLtoJSON.maritalStatus==1?"Married":"Single";
-                // userPersonalDetail.residentialAddress1 = parseXMLtoJSON.address1;
-                // userPersonalDetail.residentialAddress2 = parseXMLtoJSON.address2;
-                // userPersonalDetail.city = parseXMLtoJSON.city;
-                // userPersonalDetail.postcode = parseXMLtoJSON.postcode;
-                // userPersonalDetail.state = parseXMLtoJSON.state;
-                // userPersonalDetail.country = parseXMLtoJSON.country;
-                // userPersonalDetail.religion = parseXMLtoJSON.religion;
-                // userPersonalDetail.nationality = parseXMLtoJSON.nationality;
-                // userPersonalDetail.phoneNumber = parseXMLtoJSON.phoneNumber;
-                // userPersonalDetail.workPhoneNumber = parseXMLtoJSON.workPhoneNumber;
-                // userPersonalDetail.race = parseXMLtoJSON.race;
-                // userPersonalDetail.family = parseXMLtoJSON.family;
-                // userPersonalDetail.education = parseXMLtoJSON.education;
-                // userPersonalDetail.emergencyContactNumber = parseXMLtoJSON.emergencyContact;
-
-                userProfileData.personalDetail = userPersonalDetail;
-            }
-
-            if (isShowCertData) {
-
-                //userProfileData.awardCertification = parseXMLtoJSON.
-                userProfileData.awardCertification = [];
-            }
+            this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData);
         }
 
         if (isShowEmploymentData) {
@@ -294,34 +239,55 @@ export class UserprofileService {
         }
 
         if (isShowEntitlementData) {
-
-            // const entitlementData2 = this.entitlementDetailService.getEntitlementList(data.TENANT_GUID,data.USER_GUID);
-
-            // console.log('helloooooooothere');
-            // const entitlementModel = new UserLeaveEntitlementModel();
-            // const entitlementData = new EntitlementDetailDTO();
-
-            // entitlementData.balanceDays = 1;
-            // entitlementData.entitledDays = 11;
-            // entitlementData.leaveTypeId = 'DEWDH';
-            // entitlementData.leaveTypeName = 'RJE';
-            // entitlementData.pendingDays = 90;
-            // entitlementData.takenDays = 8;
-
-            // userProfileData.entitlementDetail.push(entitlementData);
-            // userProfileData.entitlementDetail = entitlementData;
             userProfileData.entitlementDetail = [];
-
-            // userProfileData.entitlementDetail = leaveEntitlementMock;
         }
 
         return userProfileData;
 
     }
 
+    public personaldetailProcess(data: UserInfoModel, isShowPersonalData: boolean, isShowCertData: boolean, userProfileData) {
+        //process the personal detail
+        const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+
+        if (isShowPersonalData) {
+            this.personaldataProcess(parseXMLtoJSON, userProfileData);
+        }
+
+        if (isShowCertData) {
+            userProfileData.awardCertification = [];
+        }
+    }
+
+    //loop data for personal detail
+    public personaldataProcess(parseXMLtoJSON, userProfileData) {
+        const userPersonalDetail = new UserPersonalDetailDTO();
+        for (var j in parseXMLtoJSON) {
+            var sub_key = j;
+            var sub_val = parseXMLtoJSON[j];
+
+            if (sub_key == 'id') { continue; }
+
+            this.doProcess(sub_key, sub_val, userPersonalDetail);
+        }
+        userProfileData.personalDetail = userPersonalDetail;
+    }
+
+    //change key or substitute value for personaldata
+    public doProcess(sub_key, sub_val, userPersonalDetail) {
+        if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; }
+        if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; }
+        if (sub_key == 'address1') { sub_key = 'residentialAddress1'; }
+        if (sub_key == 'address2') { sub_key = 'residentialAddress2'; }
+        if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; }
+
+        userPersonalDetail[sub_key] = sub_val;
+    }
 
     private joinText(data: string[]) {
         return data.join(",");
     }
+
+
 
 }

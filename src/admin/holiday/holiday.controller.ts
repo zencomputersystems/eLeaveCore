@@ -150,7 +150,7 @@ export class HolidayController {
     @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
     findOne(@Req() req, @Res() res) {
-
+        console.log(req);
         let dataId = req.query.id;
         if (dataId == null) {
             res.status(400);

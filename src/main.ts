@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { logger } from './common/middleware/logger.middleware';
 
 /**
  * Bootstrap the application
@@ -25,9 +26,10 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-
+  app.use(logger);
+  
   SwaggerModule.setup('api/docs', app, document);
-
+  
   await app.listen(3000);
 }
 bootstrap();

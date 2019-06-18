@@ -16,7 +16,7 @@ import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
  * @export
  * @class HolidayController
  */
-@Controller('/admin/api/holiday')
+@Controller('/api/admin/holiday')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class HolidayController {
@@ -149,14 +149,14 @@ export class HolidayController {
     @ApiOperation({ title: 'Get holiday list by calendar profile' })
     @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
-    findOne(@Req() req, @Res() res,@Param('id') id) {
-        console.log(id);
-        console.log(req);
+    findOne(@Req() req, @Res() res, @Param('id') id) {
+        // console.log(id);
+        // console.log(req);
         let dataId = null;
         let dataIdParam = req.query.id;
-        if(dataIdParam == null){
+        if (dataIdParam == null) {
             dataId = id;
-        }else{
+        } else {
             dataId = dataIdParam;
         }
         if (dataId == null) {
@@ -231,8 +231,8 @@ export class HolidayController {
 
 
 
-    
-    
+
+
 
 
 

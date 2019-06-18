@@ -11,7 +11,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       usernameField: 'email',
       passReqToCallback: false
     });
-    console.log('sss');
+    // console.log('sss');
   }
 
   async validate(email, password, done: Function) {

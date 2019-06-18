@@ -55,15 +55,22 @@ export class UserprofileController {
     @Roles('ViewProfile', 'ProfileAdmin')
     findOne(@Param('id') id, @Req() req, @Res() res) {
 
+        let dataId = null;
+        let dataIdTemp = req.query.id;
+        if(dataIdTemp == null){
+            dataId = id;
+        }else{
+            dataId = dataIdTemp;
+        }
         // console.log(req.query.id);
-        if (id == null) {
+        if (dataId == null) {
             res.status(400);
             res.send('id not found');
         }
         //get the requesting user
         const user = req.user;
 
-        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + req.query.id + ')'])
+        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + dataId + ')'])
             .pipe(
                 switchMap(filter => {
                     return this.userprofileService.getDetail(filter);

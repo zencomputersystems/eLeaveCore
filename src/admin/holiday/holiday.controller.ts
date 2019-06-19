@@ -109,8 +109,7 @@ export class HolidayController {
                         res.send(data.data);
                 },
                 err => {
-                    res.status(400);
-                    res.send('Fail to update resource');
+                    this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
                 }
             )
     }
@@ -197,8 +196,7 @@ export class HolidayController {
                         res.send(data.data);
                 },
                 err => {
-                    res.status(400);
-                    res.send('Fail to update resource');
+                    this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
                 }
             )
     }

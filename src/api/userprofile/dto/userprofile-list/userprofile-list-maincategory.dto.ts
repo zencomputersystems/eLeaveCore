@@ -1,4 +1,4 @@
-import { UserprofileListSubCategoty } from "./userprofile-list-subcategory.dto";
+import { UserprofileListSubCategoty } from './userprofile-list-subcategory.dto';
 
 /**
  *

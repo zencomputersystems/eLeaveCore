@@ -1,6 +1,6 @@
-import { Injectable, HttpService } from "@nestjs/common";
-import { BaseDBService } from "src/common/base/base-db.service";
-import { QueryParserService } from "src/common/helper/query-parser.service";
+import { Injectable, HttpService } from '@nestjs/common';
+import { BaseDBService } from 'src/common/base/base-db.service';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 /**
  *
@@ -15,8 +15,8 @@ export class UserInfoDbService extends BaseDBService {
 
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService){
-            super(httpService,queryService,"user_info");
-        }
+        public readonly queryService: QueryParserService) {
+        super(httpService, queryService, "user_info");
+    }
 
 }

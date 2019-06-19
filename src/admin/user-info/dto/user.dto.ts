@@ -1,7 +1,7 @@
 import { UserEmployeeDTO } from './user-employee.dto';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserEducationDetailDTO } from './user-education-detail.dto';
+import { UserEducationDetailDTO } from 'src/api/userprofile/dto/userprofile-detail/personal-detail/xml/user-education-detail.dto';
 import { UserCertificationDetailDTO } from './user-certification-detail.dto';
 import { UserEmergencyContactDetailDTO } from './user-emergency-contact-detail.dto';
 import { ApiModelProperty } from '@nestjs/swagger';

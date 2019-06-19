@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsNumber, IsString, ValidateNested, IsISO8601 } from "class-validator";
-import { Type } from "class-transformer";
-import { UserEmergencyContactDetailDTO } from "./user-emergency-contact-detail.dto";
-import { UserEducationDetailDTO } from "./user-education-detail.dto";
-import { UserFamilyDTO } from "./user-family.dto";
-import { UserCertificationDetailDTO } from "../../employment-detail/xml/user-certification-detail.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
-import { type } from "os";
+import { IsNotEmpty, IsNumber, IsString, ValidateNested, IsISO8601 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { UserEmergencyContactDetailDTO } from './user-emergency-contact-detail.dto';
+import { UserEducationDetailDTO } from './user-education-detail.dto';
+import { UserFamilyDTO } from './user-family.dto';
+import { UserCertificationDetailDTO } from '../../employment-detail/xml/user-certification-detail.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
+import { type } from 'os';
 
 
 /**

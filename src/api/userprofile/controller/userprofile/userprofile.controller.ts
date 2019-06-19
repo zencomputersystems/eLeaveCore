@@ -172,7 +172,7 @@ export class UserprofileController {
     }
 
     public getEntitlementProcess(data1, res, user) {
-        this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
+        this.userprofileService.getEntitlementDetail(data1.tenantId, data1.userId).subscribe(
             data => {
                 let leaveData = [];
                 for (let i = 0; i < data.length; i++) {

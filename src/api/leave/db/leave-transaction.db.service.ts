@@ -1,14 +1,14 @@
-import { BaseDBService } from "src/common/base/base-db.service";
-import { IDbService } from "src/interface/IDbService";
-import { Injectable, HttpService } from "@nestjs/common";
-import { QueryParserService } from "src/common/helper/query-parser.service";
-import { XMLParserService } from "src/common/helper/xml-parser.service";
-import { LeaveTransactionModel } from "../model/leave-transaction.model";
-import { v1 } from "uuid";
-import { ApplyLeaveDataDTO } from "../dto/apply-leave-data.dto";
-import { ApplyLeaveDTO } from "../dto/apply-leave.dto";
-import { Resource } from "src/common/model/resource.model";
-import { DateCalculationService } from "src/common/calculation/service/date-calculation.service";
+import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
+import { Injectable, HttpService } from '@nestjs/common';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { LeaveTransactionModel } from '../model/leave-transaction.model';
+import { v1 } from 'uuid';
+import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
+import { ApplyLeaveDTO } from '../dto/apply-leave.dto';
+import { Resource } from 'src/common/model/resource.model';
+import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 
 /**
  *
@@ -29,7 +29,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         super(httpService, queryService, "l_main_leave_transaction");
     }
 
-    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result:any, user: any,y:ApplyLeaveDTO) {
+    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO) {
 
         // const data = new LeaveTransactionModel();
 
@@ -70,7 +70,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 
         resource.resource.push(leaveData);
 
-        return this.createByModel(resource,[],[],[]);
+        return this.createByModel(resource, [], [], []);
     }
 
 }

@@ -1,4 +1,4 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *
@@ -17,7 +17,7 @@ export class LeaveTypeEntitlementListDTO {
     leaveEntitlementId: string;
 
     @ApiModelProperty()
-    leaveEntitlementCode:string;
+    leaveEntitlementCode: string;
 
     @ApiModelProperty()
     leaveEntitlementDescription: string;

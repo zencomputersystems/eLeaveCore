@@ -1,5 +1,5 @@
-import { IsBoolean, IsString, IsNotEmpty, ValidateIf } from "class-validator";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { IsBoolean, IsString, IsNotEmpty, ValidateIf } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  * general propertiesxmldto

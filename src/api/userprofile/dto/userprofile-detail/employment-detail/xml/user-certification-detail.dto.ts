@@ -1,7 +1,7 @@
-import { UserCertificationDTO } from "./user-certification.dto";
-import { ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { UserCertificationDTO } from './user-certification.dto';
+import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *

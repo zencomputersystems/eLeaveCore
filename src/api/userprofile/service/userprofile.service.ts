@@ -16,7 +16,7 @@ import { PersonalDetailXML } from '../dto/userprofile-detail/personal-detail/xml
 import { UpdateEmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
 import { Access } from 'src/common/dto/access.dto';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
-import { UserLeaveEntitlementModel } from "../model/user-leave-entitlement.model";
+import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 
 /**
@@ -37,28 +37,28 @@ export class UserprofileService {
 
     public getList(filters: string[]) {
         return this.userprofileDBService.findByFilterV2([], filters)
-        .pipe(
-            map(res => {
-                const userArray = new Array();
+            .pipe(
+                map(res => {
+                    const userArray = new Array();
 
-                res.forEach(element => {
+                    res.forEach(element => {
 
-                    userArray.push(
-                        new UserprofileListDTO(
-                            element.USER_INFO_GUID,
-                            element.USER_GUID,
-                            element.PERSONAL_ID == null ? '' : element.PERSONAL_ID,
-                            element.FULLNAME,
-                            element.DESIGNATION,
-                            element.EMAIL,
-                            new Access()
-                        ));
+                        userArray.push(
+                            new UserprofileListDTO(
+                                element.USER_INFO_GUID,
+                                element.USER_GUID,
+                                element.PERSONAL_ID == null ? '' : element.PERSONAL_ID,
+                                element.FULLNAME,
+                                element.DESIGNATION,
+                                element.EMAIL,
+                                new Access()
+                            ));
 
-                });
+                    });
 
-                return userArray;
-            })
-        );
+                    return userArray;
+                })
+            );
     }
 
     // Get User Detail
@@ -209,6 +209,7 @@ export class UserprofileService {
         userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
         userProfileData.employeeDepartment = data.DEPARTMENT;
         userProfileData.calendarId = data.CALENDAR_GUID;
+        userProfileData.tenantId = data.TENANT_GUID;
 
         if (data.PROPERTIES_XML) {
             this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData);

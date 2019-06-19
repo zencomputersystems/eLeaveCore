@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsEmail } from "class-validator";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsEmail } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *
@@ -8,10 +8,10 @@ import { ApiModelProperty } from "@nestjs/swagger";
  * @class UserCsvDto
  */
 export class UserCsvDto {
-    
+
     @ApiModelProperty()
     ID: string;
-    
+
     @ApiModelProperty()
     @IsNotEmpty()
     @IsEmail()

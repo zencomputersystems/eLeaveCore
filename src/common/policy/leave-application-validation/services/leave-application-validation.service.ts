@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { LeaveTypePropertiesXmlDTO } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto";
+import { Injectable } from '@nestjs/common';
+import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 import moment = require("moment");
-import { ApplyLeaveDTO } from "src/api/leave/dto/apply-leave.dto";
-import { ValidationStatusDTO } from "../dto/validation-status.dto";
-import { UserInfoModel } from "src/admin/user-info/model/user-info.model";
-import { DateCalculationService } from "src/common/calculation/service/date-calculation.service";
-import { LeaveBalanceValidationService } from "./leave-balance-validation.service";
-import { UserLeaveEntitlementModel } from "src/api/userprofile/model/user-leave-entitlement.model";
-import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
-import { map, mergeMap } from "rxjs/operators";
+import { ApplyLeaveDTO } from 'src/api/leave/dto/apply-leave.dto';
+import { ValidationStatusDTO } from '../dto/validation-status.dto';
+import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
+import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { LeaveBalanceValidationService } from './leave-balance-validation.service';
+import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-entitlement.model';
+import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
+import { map, mergeMap } from 'rxjs/operators';
 
 /**
  *
@@ -36,7 +36,7 @@ export class LeaveApplicationValidationService {
         const startDateTemp = applyLeaveDTO.data[0].startDate;
         const endDatetemp = applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate;
 
-        console.log(startDateTemp+' --- '+endDatetemp);
+        console.log(startDateTemp + ' --- ' + endDatetemp);
 
         const startDate = this.convertDateToMoment(startDateTemp);
         const endDate = this.convertDateToMoment(endDatetemp);

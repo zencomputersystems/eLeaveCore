@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 /**
  * function to remove hardcode duplicate 
@@ -16,10 +16,10 @@ export class AssignerDataService {
      * @returns
      * @memberof AssignerDataService
      */
-    public assignArrayData(jsonData:any,dataModel:any){
+    public assignArrayData(jsonData: any, dataModel: any) {
         let dataList = [];
-        for(var i in jsonData){
-            let tempData = this.assignOneData(jsonData[i],dataModel);
+        for (var i in jsonData) {
+            let tempData = this.assignOneData(jsonData[i], dataModel);
             dataList.push(tempData);
         }
         return dataList;
@@ -33,14 +33,14 @@ export class AssignerDataService {
      * @returns
      * @memberof AssignerDataService
      */
-    public assignOneData(val:any,dataModel:any){
+    public assignOneData(val: any, dataModel: any) {
         let inputData = new dataModel;
-            for(var j in val){
-                var sub_key = j;
-                var sub_val = val[j];
-                let lwrCseKey = sub_key.toLowerCase();
-                inputData[lwrCseKey] = sub_val;
-            }
-            return inputData;
+        for (var j in val) {
+            var sub_key = j;
+            var sub_val = val[j];
+            let lwrCseKey = sub_key.toLowerCase();
+            inputData[lwrCseKey] = sub_val;
+        }
+        return inputData;
     }
 }

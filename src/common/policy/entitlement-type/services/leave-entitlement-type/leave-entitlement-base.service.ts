@@ -1,8 +1,8 @@
-import { Moment } from "moment";
-import { LeaveTypePropertiesXmlDTO } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto";
+import { Moment } from 'moment';
+import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
 export class LeaveEntitlementBaseService {
-    
+
     protected getEntitlementFromPolicy(leavePolicy: any, yearOfService: number) {
 
         // Check if leave entitlement is an array or not
@@ -10,11 +10,11 @@ export class LeaveEntitlementBaseService {
 
         let entitledDay;
 
-        if(checkArray) {
+        if (checkArray) {
             //find the entitle day for this service year
-            entitledDay = leavePolicy.levels.leaveEntitlement.find(x=>yearOfService>=x.serviceYearFrom&&yearOfService<=x.serviceYearTo);
+            entitledDay = leavePolicy.levels.leaveEntitlement.find(x => yearOfService >= x.serviceYearFrom && yearOfService <= x.serviceYearTo);
         } else {
-            if(yearOfService>=leavePolicy.levels.leaveEntitlement.serviceYearFrom&&yearOfService<=leavePolicy.levels.leaveEntitlement.serviceYearTo) {
+            if (yearOfService >= leavePolicy.levels.leaveEntitlement.serviceYearFrom && yearOfService <= leavePolicy.levels.leaveEntitlement.serviceYearTo) {
                 entitledDay = leavePolicy.levels.leaveEntitlement;
             }
         }
@@ -22,20 +22,20 @@ export class LeaveEntitlementBaseService {
         return entitledDay.entitledDays;
     }
 
-    protected getEntitlementPerDay(date: Moment, entitlementPerMonth: number,option: string) {
+    protected getEntitlementPerDay(date: Moment, entitlementPerMonth: number, option: string) {
 
         let monthWorkingDay = 0;
 
-        if(option === "START") {
+        if (option === "START") {
             // get the first part month workingday
             monthWorkingDay = date.date();
 
         } else {
-            
-            monthWorkingDay = (date.daysInMonth()+1)-date.date();
+
+            monthWorkingDay = (date.daysInMonth() + 1) - date.date();
         }
 
-        return ((entitlementPerMonth/date.daysInMonth())*monthWorkingDay);
+        return ((entitlementPerMonth / date.daysInMonth()) * monthWorkingDay);
     }
 
     protected calculateEntitlement(
@@ -44,20 +44,20 @@ export class LeaveEntitlementBaseService {
         yearOfService: number,
         monthFullEntitlement: number,
         option: string
-        ) {
-            
+    ) {
+
         // current service year entitlement
-        const yearTotalEntitlement = this.getEntitlementFromPolicy(policyJson,yearOfService);
-        const entitlementPerMonth = yearTotalEntitlement/12;
+        const yearTotalEntitlement = this.getEntitlementFromPolicy(policyJson, yearOfService);
+        const entitlementPerMonth = yearTotalEntitlement / 12;
 
         // get the first/end month workingday
-        const monthEntitlement = this.getEntitlementPerDay(date,entitlementPerMonth,option);
+        const monthEntitlement = this.getEntitlementPerDay(date, entitlementPerMonth, option);
 
         // find leave entitlement for other month
-        const monthlyTotalEntitlement = monthFullEntitlement*entitlementPerMonth;
+        const monthlyTotalEntitlement = monthFullEntitlement * entitlementPerMonth;
 
-        return (monthlyTotalEntitlement+monthEntitlement);
-        
+        return (monthlyTotalEntitlement + monthEntitlement);
+
     }
 
 }

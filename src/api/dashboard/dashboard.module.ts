@@ -1,9 +1,9 @@
-import { Module, HttpModule } from "@nestjs/common";
-import { AuthModule } from "src/auth/auth.module";
-import { PassportModule } from "@nestjs/passport";
-import { DreamFactory } from "src/config/dreamfactory";
-import { DashboardController } from "./dashboard.controller";
-import { ResultStatusService } from "src/common/helper/result-status.service";
+import { Module, HttpModule } from '@nestjs/common';
+import { AuthModule } from 'src/auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
+import { DreamFactory } from 'src/config/dreamfactory';
+import { DashboardController } from './dashboard.controller';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 @Module({
     modules: [

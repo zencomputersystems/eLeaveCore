@@ -1,4 +1,4 @@
-import { DepartmentDTO } from "./department.dto";
+import { DepartmentDTO } from './department.dto';
 
 /**
  *

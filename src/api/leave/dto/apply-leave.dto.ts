@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsISO8601, IsString, IsNumber, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { ApplyLeaveDataDTO } from "./apply-leave-data.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsISO8601, IsString, IsNumber, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApplyLeaveDataDTO } from './apply-leave-data.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *
@@ -19,7 +19,7 @@ export class ApplyLeaveDTO {
     @IsNotEmpty()
     reason: string;
 
-    @ApiModelProperty({type:ApplyLeaveDataDTO})
+    @ApiModelProperty({ type: ApplyLeaveDataDTO })
     @Type(() => ApplyLeaveDataDTO)
     @ValidateNested()
     data: ApplyLeaveDataDTO[];

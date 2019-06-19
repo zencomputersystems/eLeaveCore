@@ -6,6 +6,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { BranchService } from './branch.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BranchDbService } from './db/branch.db.service';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -23,7 +24,8 @@ import { BranchDbService } from './db/branch.db.service';
     providers: [
       BranchDbService,
       BranchService,
-      QueryParserService
+      QueryParserService,
+      ResultStatusService
     ]
 })
 export class BranchModule {}

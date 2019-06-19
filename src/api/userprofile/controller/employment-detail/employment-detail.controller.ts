@@ -7,6 +7,7 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -20,7 +21,8 @@ import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employme
 export class EmploymentDetailController {
     constructor(
         private readonly userprofileService: UserprofileService,
-        private readonly accessLevelValidationService: AccessLevelValidateService) {}
+        private readonly accessLevelValidationService: AccessLevelValidateService,
+        private readonly resultStatusService: ResultStatusService) {}
 
     @UseGuards(ResourceGuard)
     @Get('employment-detail/:id')
@@ -39,13 +41,14 @@ export class EmploymentDetailController {
                     res.send(data);
                 },
                 err => {
-                    if(err.response.data) {
-                        res.status(err.response.data.error.context.resource[0].status_code);
-                        res.send(err.response.data.error.context.resource[0].message)
-                    } else {
-                        res.status(500);
-                        res.send(err);
-                    }
+                    this.resultStatusService.sendError(err,res);
+                    // if(err.response.data) {
+                    //     res.status(err.response.data.error.context.resource[0].status_code);
+                    //     res.send(err.response.data.error.context.resource[0].message)
+                    // } else {
+                    //     res.status(500);
+                    //     res.send(err);
+                    // }
                 }
             )
     }

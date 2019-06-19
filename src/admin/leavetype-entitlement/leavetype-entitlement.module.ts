@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -25,7 +26,8 @@ import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
     LeaveTypeEntitlementService,
     LeavetypeEntitlementDbService,
     QueryParserService,
-    XMLParserService
+    XMLParserService,
+    ResultStatusService
   ]
 })
 export class LeavetypeEntitlementModule {}

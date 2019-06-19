@@ -21,17 +21,17 @@ export class CertificationDetailController {
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly resultStatusService: ResultStatusService) {}
+        private readonly resultStatusService: ResultStatusService) { }
 
     @UseGuards(ResourceGuard)
     @Get('certification-detail/:id')
-    @Roles('EditProfile','ProfileAdmin')
-    @ApiOperation({title: 'Get certification detail for requested user'})
+    @Roles('EditProfile', 'ProfileAdmin')
+    @ApiOperation({ title: 'Get certification detail for requested user' })
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-    findOne(@Param('id') id,@Req() req,@Res() res) {
+    findOne(@Param('id') id, @Req() req, @Res() res) {
 
         const user = req.user;
-        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID,user.USER_GUID,req.accessLevel,['(USER_INFO_GUID='+id+')'])
+        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
             .pipe(switchMap(filter => {
                 return this.userprofileService.getCertificationDetail(filter);
             }))
@@ -40,7 +40,7 @@ export class CertificationDetailController {
                     res.send(data);
                 },
                 err => {
-                    this.resultStatusService.sendError(err,res);
+                    this.resultStatusService.sendError(err, res);
                     // if(err.response.data) {
                     //     res.status(err.response.data.error.context.resource[0].status_code);
                     //     res.send(err.response.data.error.context.resource[0].message)
@@ -55,8 +55,8 @@ export class CertificationDetailController {
     @UseGuards(ResourceGuard)
     @Patch('certification-detail')
     @Roles('ProfileAdmin')
-    @ApiOperation({title: 'Update certification detail for this user profile'})
-    update(@Body() updateCertificationDetailDTO,@Req() req, @Res() res) {
+    @ApiOperation({ title: 'Update certification detail for this user profile' })
+    update(@Body() updateCertificationDetailDTO, @Req() req, @Res() res) {
         console.log(updateCertificationDetailDTO);
 
         res.send(updateCertificationDetailDTO);

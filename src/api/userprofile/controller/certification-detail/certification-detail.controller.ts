@@ -6,6 +6,7 @@ import { switchMap } from 'rxjs/operators';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -19,7 +20,8 @@ import { AuthGuard } from '@nestjs/passport';
 export class CertificationDetailController {
     constructor(
         private readonly userprofileService: UserprofileService,
-        private readonly accessLevelValidationService: AccessLevelValidateService) {}
+        private readonly accessLevelValidationService: AccessLevelValidateService,
+        private readonly resultStatusService: ResultStatusService) {}
 
     @UseGuards(ResourceGuard)
     @Get('certification-detail/:id')
@@ -38,13 +40,14 @@ export class CertificationDetailController {
                     res.send(data);
                 },
                 err => {
-                    if(err.response.data) {
-                        res.status(err.response.data.error.context.resource[0].status_code);
-                        res.send(err.response.data.error.context.resource[0].message)
-                    } else {
-                        res.status(500);
-                        res.send(err);
-                    }
+                    this.resultStatusService.sendError(err,res);
+                    // if(err.response.data) {
+                    //     res.status(err.response.data.error.context.resource[0].status_code);
+                    //     res.send(err.response.data.error.context.resource[0].message)
+                    // } else {
+                    //     res.status(500);
+                    //     res.send(err);
+                    // }
                 }
             )
     }

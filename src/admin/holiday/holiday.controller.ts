@@ -8,6 +8,7 @@ import { CreateCalendarDTO } from './dto/create-calendar.dto';
 import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { CalendarDTO } from './dto/calendar.dto';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 // var iso3166 = require('iso3166-2-db');
 
 /**
@@ -22,7 +23,9 @@ import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 export class HolidayController {
 
 
-    constructor(private readonly holidayService: HolidayService, private http: HttpService) { }
+    constructor(private readonly holidayService: HolidayService,
+        private http: HttpService,
+        private readonly resultStatusService: ResultStatusService) { }
 
     /**
      * list data from calendarific for admin to view and pick
@@ -48,13 +51,14 @@ export class HolidayController {
         this.http.get('https://calendarific.com/api/v2/holidays?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55' + countryLink + yearLink + locationLink + monthLink).subscribe((response) => {
             res.send(response.data);
         }, err => {
-            if (err.response.data) {
-                res.status(err.response.data.error.status_code);
-                res.send(err.response.data.error.message)
-            } else {
-                res.status(500);
-                res.send(err);
-            }
+            this.resultStatusService.sendError(err,res);
+            // if (err.response.data) {
+            //     res.status(err.response.data.error.status_code);
+            //     res.send(err.response.data.error.message)
+            // } else {
+            //     res.status(500);
+            //     res.send(err);
+            // }
         });
 
     }
@@ -74,13 +78,14 @@ export class HolidayController {
                 res.send(data);
             },
             err => {
-                if (err.response.data) {
-                    res.status(err.response.data.error.status_code);
-                    res.send(err.response.data.error.message)
-                } else {
-                    res.status(500);
-                    res.send(err);
-                }
+                this.resultStatusService.sendError(err,res);
+                // if (err.response.data) {
+                //     res.status(err.response.data.error.status_code);
+                //     res.send(err.response.data.error.message)
+                // } else {
+                //     res.status(500);
+                //     res.send(err);
+                // }
             }
         );
 
@@ -169,13 +174,14 @@ export class HolidayController {
                 res.send(data);
             },
             err => {
-                if (err.response.data) {
-                    res.status(err.response.data.error.status_code);
-                    res.send(err.response.data.error.message)
-                } else {
-                    res.status(500);
-                    res.send(err);
-                }
+                this.resultStatusService.sendError(err,res);
+                // if (err.response.data) {
+                //     res.status(err.response.data.error.status_code);
+                //     res.send(err.response.data.error.message)
+                // } else {
+                //     res.status(500);
+                //     res.send(err);
+                // }
             }
         );
 

@@ -23,58 +23,48 @@ export class SectionService extends BaseDBService implements IDbService {
 
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService){
-            super(httpService,queryService,"main_section");
-        }
+        public readonly queryService: QueryParserService) {
+        super(httpService, queryService, "main_section");
+    }
 
     //find all tenant branch
-    public findAll(tenantid:string): Observable<any> {
+    public findAll(tenantid: string): Observable<any> {
 
-        const fields = ['SECTION_GUID','NAME'];
-        const filters = ['(TENANT_GUID='+tenantid+')'];
-       
-        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
+        const fields = ['SECTION_GUID', 'NAME'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')'];
+
+        const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
 
         //call DF to validate the user
         return this.httpService.get(url);
-        
+
     }
 
     //find tenant branch by id
-    public findById(tenantid:string, id: string): Observable<any> {
-       
-        const fields = ['SECTION_GUID','NAME'];
-        const filters = ['(TENANT_GUID='+tenantid+')','(SECTION_GUID='+id+')'];
-       
-        const url = this.queryService.generateDbQuery(this._tableName,fields,filters);
-        
+    public findById(tenantid: string, id: string): Observable<any> {
+
+        const fields = ['SECTION_GUID', 'NAME'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')', '(SECTION_GUID=' + id + ')'];
+
+        const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
+
         //call DF to validate the user
         return this.httpService.get(url);
     }
 
     //create new branch
     create(user: any, name: string) {
-
-        const resource = new Resource(new Array);
         const data = new SectionModel();
-
         data.SECTION_GUID = v1();
-        data.CREATION_TS = new Date().toISOString();
-        data.CREATION_USER_GUID = user.USER_GUID;
-        data.ACTIVE_FLAG = 1;
-        data.NAME = name;
-        data.TENANT_GUID = user.TENANT_GUID;
-
-        resource.resource.push(data);
-
-       return this.createByModel(resource,[],[],[]);
+        let resourceData = this.createProcess(user, name, data);
+        return this.createByModel(resourceData, [], [], []);
     }
 
     //update existing branch
-    update(user:any, d: any) {
+    update(user: any, d: any) {
 
         // do a checking first to determine this data belong to user
-        
+
         const resource = new Resource(new Array);
         const data = new SectionModel()
 
@@ -86,7 +76,23 @@ export class SectionService extends BaseDBService implements IDbService {
 
         resource.resource.push(data);
 
-        return this.updateByModel(resource,[],[],[]);
+        return this.updateByModel(resource, [], [], []);
 
     }
+
+    public createProcess(user, name, data) {
+        const resource = new Resource(new Array);
+
+        data.CREATION_TS = new Date().toISOString();
+        data.CREATION_USER_GUID = user.USER_GUID;
+        data.ACTIVE_FLAG = 1;
+        data.NAME = name;
+        data.TENANT_GUID = user.TENANT_GUID;
+
+        resource.resource.push(data);
+
+        return resource;
+
+    }
+
 }

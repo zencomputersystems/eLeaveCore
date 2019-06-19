@@ -2,6 +2,7 @@ import { Controller,Get,UseGuards, Req, Res} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BranchService } from './branch.service';
 import { ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -14,7 +15,7 @@ import { ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
 @ApiBearerAuth()
 export class BranchController {
 
-    constructor(private readonly branchService: BranchService) {}
+    constructor(private readonly branchService: BranchService,private readonly resultStatusService: ResultStatusService) {}
 
     @Get()
     @ApiOperation({title: 'Get branch list'})
@@ -25,13 +26,7 @@ export class BranchController {
           res.send(data);
         },
         err => {
-          if(err.response.data) {
-            res.status(err.response.data.error.status_code);
-            res.send(err.response.data.error.message)
-          } else {
-              res.status(500);
-              res.send(err);
-          }
+          this.resultStatusService.sendError(err,res);
         }
       )
 

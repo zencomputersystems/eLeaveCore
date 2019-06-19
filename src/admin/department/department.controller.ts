@@ -2,6 +2,7 @@ import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch } from '
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { DepartmentService } from './department.service';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -14,7 +15,8 @@ import { DepartmentService } from './department.service';
 @ApiBearerAuth()
 export class DepartmentController {
 
-    constructor(private readonly departmentService: DepartmentService) {}
+    constructor(private readonly departmentService: DepartmentService,
+        private readonly resultStatusService: ResultStatusService) {}
 
     @Get()
     @ApiOperation({title: 'Get department list'})
@@ -24,13 +26,14 @@ export class DepartmentController {
             res.send(data);
         },
         err => {
-            if(err.response.data) {
-                res.status(err.response.data.error.status_code);
-                res.send(err.response.data.error.message)
-            } else {
-                  res.status(500);
-                  res.send(err);
-            }
+            this.resultStatusService.sendError(err,res);
+            // if(err.response.data) {
+            //     res.status(err.response.data.error.status_code);
+            //     res.send(err.response.data.error.message)
+            // } else {
+            //       res.status(500);
+            //       res.send(err);
+            // }
         }
         );
 

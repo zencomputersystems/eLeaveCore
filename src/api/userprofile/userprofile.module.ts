@@ -20,6 +20,7 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 @Module({
   providers: [
@@ -36,7 +37,8 @@ import { EntitlementRoundingService } from 'src/common/policy/entitlement-roundi
     EntitlementRoundingService,
     ServiceYearCalc,
     ProratedDateEndYearService,
-    ProratedDateCurrentMonthService
+    ProratedDateCurrentMonthService,
+    ResultStatusService
   ],
   modules:[
     HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),

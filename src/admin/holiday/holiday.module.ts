@@ -9,6 +9,7 @@ import { HolidayDbService } from './db/holiday.db.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from './db/user-info.db.service';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -28,7 +29,8 @@ import { UserInfoDbService } from './db/user-info.db.service';
     UserInfoDbService,
     HolidayService,
     XMLParserService,
-    AssignerDataService
+    AssignerDataService,
+    ResultStatusService
   ],
   controllers: [HolidayController]
 })

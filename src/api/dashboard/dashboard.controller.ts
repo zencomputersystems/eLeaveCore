@@ -3,17 +3,19 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { DreamFactory } from 'src/config/dreamfactory';
 
-//http://api.zen.com.my/api/v2/zcs_dev/_proc/dashboard_onleave(58a035ca-b22f-1b4e-79c6-7e13ec15d2d2,2019-08-20,2019-08-20)
-
-//let url = DreamFactory.df_host_proc+tableName+"?";
-
+/**
+ * All dashboard api
+ *
+ * @export
+ * @class DashboardController
+ */
 @Controller('/api')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class DashboardController {
     constructor(private http: HttpService) { }
 
-    @Get('/employee_status')
+    @Get('/employee/status-onleave')
     @ApiOperation({ title: 'Get total employee' })
     @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
     @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
@@ -23,7 +25,7 @@ export class DashboardController {
         this.runService(url,res);
     }
 
-    @Get('/employee_leave_list')
+    @Get('/employee/leave-list')
     @ApiOperation({ title: 'Get total employee' })
     @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
     @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })

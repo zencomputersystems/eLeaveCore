@@ -1,8 +1,8 @@
-import { UserSpouseDTO } from "./user-spouse.dto"
-import { UserChildrenDTO } from "./user-children.dto";
-import { ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { UserSpouseDTO } from './user-spouse.dto';
+import { UserChildrenDTO } from './user-children.dto';
+import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  * UserFamily DTO - detailing family members

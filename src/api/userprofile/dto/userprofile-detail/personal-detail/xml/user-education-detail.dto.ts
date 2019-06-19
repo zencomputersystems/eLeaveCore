@@ -1,10 +1,10 @@
-import { Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
-import { UserEducationDTO } from "./user-education.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
+import { UserEducationDTO } from './user-education.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
- *
+ * User education details DTO
  *
  * @export
  * @class UserEducationDetailDTO

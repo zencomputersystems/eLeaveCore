@@ -1,10 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
-import { Reflector } from "@nestjs/core";
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class ResourceGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) { }
 
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
@@ -17,11 +17,11 @@ export class ResourceGuard implements CanActivate {
 
     // check user permission list
     const isInPermisson = true;
-   
-    if(isInPermisson) {
-        request.accessLevel = "all";
 
-        return true;
+    if (isInPermisson) {
+      request.accessLevel = "all";
+
+      return true;
     }
     return false;
   }

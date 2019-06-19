@@ -1,4 +1,4 @@
-import { Access } from "src/common/dto/access.dto";
+import { Access } from 'src/common/dto/access.dto';
 
 /**
  *

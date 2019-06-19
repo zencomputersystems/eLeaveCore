@@ -1,7 +1,7 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsNotEmpty, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { LeaveTypeServiceYearXmlDTO } from "./leavetype-serviceyear.xml.dto";
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { LeaveTypeServiceYearXmlDTO } from './leavetype-serviceyear.xml.dto';
 
 
 /**
@@ -11,7 +11,7 @@ import { LeaveTypeServiceYearXmlDTO } from "./leavetype-serviceyear.xml.dto";
  * @class LeaveTypeLevelsXmlDTO
  */
 export class LeaveTypeLevelsXmlDTO {
-    @ApiModelProperty({type:LeaveTypeServiceYearXmlDTO})
+    @ApiModelProperty({ type: LeaveTypeServiceYearXmlDTO })
     @IsNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => LeaveTypeServiceYearXmlDTO)

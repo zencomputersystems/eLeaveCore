@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import moment = require("moment");
-import { holidayMock } from "../mock/holiday.mock";
+import { holidayMock } from '../mock/holiday.mock';
 
 @Injectable()
 export class DateCalculationService {

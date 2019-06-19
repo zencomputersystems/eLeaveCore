@@ -1,4 +1,4 @@
-import { LeaveTypePropertiesXmlDTO } from "src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto";
+import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
 export interface ILeaveEntitlementType {
     // taken from policy: Leave entitlement type

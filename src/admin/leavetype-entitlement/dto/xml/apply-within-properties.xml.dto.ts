@@ -1,8 +1,8 @@
-import { ExcludeDayTypeXmlDTO } from "./exclude-day-type.xml.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, ValidateNested, IsBoolean } from "class-validator";
-import { Type } from "class-transformer";
-import { GeneralPropertiesXmlDTO } from "./general-properties.xml.dto";
+import { ExcludeDayTypeXmlDTO } from './exclude-day-type.xml.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, ValidateNested, IsBoolean } from 'class-validator';
+import { Type } from 'class-transformer';
+import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
 
 /**
  *
@@ -11,20 +11,20 @@ import { GeneralPropertiesXmlDTO } from "./general-properties.xml.dto";
  * @class ApplyWithinPropertiesXmlDTO
  */
 export class ApplyWithinPropertiesXmlDTO {
-    
+
     constructor() {
         this.numberOfDays = 0;
         this.isAllowBackdated = new GeneralPropertiesXmlDTO();
         this.excludeDayType = new ExcludeDayTypeXmlDTO();
     }
 
-    @ApiModelProperty({description:'Number of day required for backdated leave submission.'})
+    @ApiModelProperty({ description: 'Number of day required for backdated leave submission.' })
     @IsNotEmpty()
     @IsNumber()
     numberOfDays: number;
-    
+
     @ApiModelProperty({
-        type:ExcludeDayTypeXmlDTO,description:'Excluded Day Type from leave calculation'
+        type: ExcludeDayTypeXmlDTO, description: 'Excluded Day Type from leave calculation'
     })
     @ValidateNested({ each: true })
     @Type(() => ExcludeDayTypeXmlDTO)
@@ -32,10 +32,10 @@ export class ApplyWithinPropertiesXmlDTO {
 
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description:'Allow employee apply leave although didn’t follow rule in Apply Within'
+        description: 'Allow employee apply leave although didn’t follow rule in Apply Within'
     })
     @IsNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => GeneralPropertiesXmlDTO)
-    isAllowBackdated: GeneralPropertiesXmlDTO; 
+    isAllowBackdated: GeneralPropertiesXmlDTO;
 }

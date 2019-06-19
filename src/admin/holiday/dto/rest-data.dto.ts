@@ -1,6 +1,6 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, IsJSON } from "class-validator";
-import { isObject } from "util";
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsJSON } from 'class-validator';
+import { isObject } from 'util';
 
 /**
  *
@@ -15,5 +15,5 @@ export class RestDataDTO {
 
     @ApiModelProperty()
     @IsNotEmpty()
-    readonly fullname: string; 
+    readonly fullname: string;
 }

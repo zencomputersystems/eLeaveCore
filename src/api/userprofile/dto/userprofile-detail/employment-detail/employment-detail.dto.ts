@@ -1,5 +1,5 @@
-import { IsString, IsISO8601 } from "class-validator";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { IsString, IsISO8601 } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *

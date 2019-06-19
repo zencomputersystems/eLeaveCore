@@ -1,8 +1,8 @@
-import { UserEmergencyContactDetailDTO } from "./xml/user-emergency-contact-detail.dto";
-import { UserEducationDetailDTO } from "./xml/user-education-detail.dto";
-import { UserFamilyDTO } from "./xml/user-family.dto";
-import { IsNotEmpty, IsISO8601 } from "class-validator";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { UserEmergencyContactDetailDTO } from './xml/user-emergency-contact-detail.dto';
+import { UserEducationDetailDTO } from './xml/user-education-detail.dto';
+import { UserFamilyDTO } from './xml/user-family.dto';
+import { IsNotEmpty, IsISO8601 } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *

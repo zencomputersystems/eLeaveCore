@@ -1,8 +1,8 @@
-import { UserPersonalDetailDTO } from "./personal-detail/user-personal-detail.dto";
-import { EmploymentDetailDTO } from "./employment-detail/employment-detail.dto";
-import { EntitlementDetailDTO } from "./entitlement-detail/entitlement-detail.dto";
-import { CertificationDetailDTO } from "./certification-detail/certificationDetail.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { UserPersonalDetailDTO } from './personal-detail/user-personal-detail.dto';
+import { EmploymentDetailDTO } from './employment-detail/employment-detail.dto';
+import { EntitlementDetailDTO } from './entitlement-detail/entitlement-detail.dto';
+import { CertificationDetailDTO } from './certification-detail/certificationDetail.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *
@@ -19,6 +19,9 @@ export class UserProfileDTO {
 
     @ApiModelProperty()
     calendarId: string;
+
+    @ApiModelProperty()
+    tenantId: string;
 
     @ApiModelProperty()
     employeeName: string;

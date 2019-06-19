@@ -1,4 +1,4 @@
-import { UserprofileListDTO } from "./userprofile-list.dto";
+import { UserprofileListDTO } from './userprofile-list.dto';
 
 /**
  *

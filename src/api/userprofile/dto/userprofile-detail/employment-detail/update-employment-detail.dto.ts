@@ -1,6 +1,6 @@
-import { IsString, IsNotEmpty, IsNumber, IsISO8601, ValidateIf, Validate } from "class-validator";
-import { ReportingToValidator } from "src/common/validator/reportingToValidator";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { IsString, IsNotEmpty, IsNumber, IsISO8601, ValidateIf, Validate } from 'class-validator';
+import { ReportingToValidator } from 'src/common/validator/reportingToValidator';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *

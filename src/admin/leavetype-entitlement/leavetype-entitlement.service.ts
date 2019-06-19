@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { LeavetypeEntitlementDbService } from "./db/leavetype-entitlement.db.service";
-import { map } from "rxjs/operators";
-import { LeaveTypeEntitlementListDTO } from "./dto/leavetype-entitlement-list.dto";
-import { ViewLeaveTypeSetupModel } from "./model/view-leave-type-setup.model";
-import { XMLParserService } from "src/common/helper/xml-parser.service";
+import { Injectable } from '@nestjs/common';
+import { LeavetypeEntitlementDbService } from './db/leavetype-entitlement.db.service';
+import { map } from 'rxjs/operators';
+import { LeaveTypeEntitlementListDTO } from './dto/leavetype-entitlement-list.dto';
+import { ViewLeaveTypeSetupModel } from './model/view-leave-type-setup.model';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 /**
  *
@@ -15,7 +15,7 @@ import { XMLParserService } from "src/common/helper/xml-parser.service";
 export class LeaveTypeEntitlementService {
     constructor(
         private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-        private readonly xmlParserService: XMLParserService) {}
+        private readonly xmlParserService: XMLParserService) { }
 
 
     // return list of entitlement for this filter
@@ -29,7 +29,7 @@ export class LeaveTypeEntitlementService {
     public getList(tenantId: string) {
         return this.leavetypeEntitlementDbService.findAll(tenantId)
             .pipe(map(res => {
-                if(res.status==200) {
+                if (res.status == 200) {
                     const data = res.data.resource;
 
                     const entitlementList = new Array<LeaveTypeEntitlementListDTO>();
@@ -59,19 +59,19 @@ export class LeaveTypeEntitlementService {
      * @returns
      * @memberof LeaveTypeEntitlementService
      */
-    public getDetail(tenantId:string, entitlementId: string) {
-        return this.leavetypeEntitlementDbService.findById(tenantId,entitlementId)
-                .pipe(map(res => {
+    public getDetail(tenantId: string, entitlementId: string) {
+        return this.leavetypeEntitlementDbService.findById(tenantId, entitlementId)
+            .pipe(map(res => {
 
-                    if(res.status==200) {
-                        if(res.data.resource.length > 0) {
-                            const data: ViewLeaveTypeSetupModel = res.data.resource[0];
+                if (res.status == 200) {
+                    if (res.data.resource.length > 0) {
+                        const data: ViewLeaveTypeSetupModel = res.data.resource[0];
 
-                            data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
-                            
-                            return data;
-                        }
+                        data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+
+                        return data;
                     }
-                }))
+                }
+            }))
     }
 }

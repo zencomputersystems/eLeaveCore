@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { of } from "rxjs";
-import { map, mergeMap, filter } from "rxjs/operators";
-import { LeaveTransactionDbService } from "src/api/leave/db/leave-transaction.db.service";
-import { LeaveTransactionModel } from "src/api/leave/model/leave-transaction.model";
-import { STATESDTO } from "../dto/states.dto";
-import { Resource } from "src/common/model/resource.model";
+import { Injectable } from '@nestjs/common';
+import { of } from 'rxjs';
+import { map, mergeMap, filter } from 'rxjs/operators';
+import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
+import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
+import { STATESDTO } from '../dto/states.dto';
+import { Resource } from 'src/common/model/resource.model';
 
 /**
  *
@@ -15,7 +15,7 @@ import { Resource } from "src/common/model/resource.model";
 @Injectable()
 export class ApprovalService {
 
-    constructor(private leaveTransactionService: LeaveTransactionDbService) {}
+    constructor(private leaveTransactionService: LeaveTransactionDbService) { }
 
     // get tenant company approval policy
     // 3 type
@@ -23,10 +23,10 @@ export class ApprovalService {
     // 2 = Everyone in herarchy (EVERYONE)
     // 3 = Superior
     getApprovalPolicy() {
-        
+
         return of({
-            "approvalType":"EVERYONE",
-            "approvalLevel":2
+            "approvalType": "EVERYONE",
+            "approvalLevel": 2
         })
 
     }
@@ -34,83 +34,83 @@ export class ApprovalService {
     // get leave applied states
     getAppliedLeaveDetail(leaveTransactionId: string, tenantId: string) {
 
-        const filter = ["(LEAVE_TRANSACTION_GUID="+leaveTransactionId+")","(TENANT_GUID="+tenantId+")"]
-        
-        return this.leaveTransactionService.findByFilterV2([],filter);
+        const filter = ["(LEAVE_TRANSACTION_GUID=" + leaveTransactionId + ")", "(TENANT_GUID=" + tenantId + ")"]
+
+        return this.leaveTransactionService.findByFilterV2([], filter);
     }
 
     // trigger when approval policy change
     // only for EVERYONE and level deducted
-    onPolicyChanged(policyType: string, policyLevel: number,tenantId: string) {
-        
+    onPolicyChanged(policyType: string, policyLevel: number, tenantId: string) {
+
         //get current policy
         return this.getApprovalPolicy()
             .pipe(
                 mergeMap(currentPolicy => {
 
-                // check if current policy is bigger than policy level
-                if(policyType === "EVERYONE" && currentPolicy.approvalLevel>policyLevel) {
-                    // find all leave with policy == policyLevel and is pending
-                    const filter = ["(TENANT_GUID="+tenantId+")","(CURRENT_APPROVAL_LEVEL="+policyLevel+")","(STATUS=PENDING)"]
+                    // check if current policy is bigger than policy level
+                    if (policyType === "EVERYONE" && currentPolicy.approvalLevel > policyLevel) {
+                        // find all leave with policy == policyLevel and is pending
+                        const filter = ["(TENANT_GUID=" + tenantId + ")", "(CURRENT_APPROVAL_LEVEL=" + policyLevel + ")", "(STATUS=PENDING)"]
 
-                    return this.leaveTransactionService.findByFilterV2([],filter);
-                }
-            }),
-            filter(x=>x.length>0),
-            mergeMap((leaveTransaction:LeaveTransactionModel[])=> {
+                        return this.leaveTransactionService.findByFilterV2([], filter);
+                    }
+                }),
+                filter(x => x.length > 0),
+                mergeMap((leaveTransaction: LeaveTransactionModel[]) => {
 
-                console.log(leaveTransaction);
-                const resource = new Resource(new Array());
-                leaveTransaction.forEach(element => {
-                    element.STATUS = "APPROVED";
+                    console.log(leaveTransaction);
+                    const resource = new Resource(new Array());
+                    leaveTransaction.forEach(element => {
+                        element.STATUS = "APPROVED";
 
-                    resource.resource.push(element);
-                });
+                        resource.resource.push(element);
+                    });
 
-                if(resource.resource.length > 0) {
-                    return this.leaveTransactionService.updateByModel(resource,[],[],[])
-                        .pipe(
-                            map(data => {
-                                if(data.status!=200) {
-                                    throw "Update error";
-                                }
-                                return data.data.resource;
-                            })
-                        )
-                }
-            })
-        )
+                    if (resource.resource.length > 0) {
+                        return this.leaveTransactionService.updateByModel(resource, [], [], [])
+                            .pipe(
+                                map(data => {
+                                    if (data.status != 200) {
+                                        throw "Update error";
+                                    }
+                                    return data.data.resource;
+                                })
+                            )
+                    }
+                })
+            )
     }
-    
+
 
     onApproveReject(leaveTransactionId: string, tenantId: string, approverUserId: string, isApprove: boolean) {
 
-        return this.getAppliedLeaveDetail(leaveTransactionId,tenantId)
+        return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
             .pipe(
                 mergeMap((leaveDetail: LeaveTransactionModel[]) => {
-                    if(leaveDetail.length==0) {
+                    if (leaveDetail.length == 0) {
                         throw "Leave detail not found";
                     }
 
                     const leave = leaveDetail[0];
 
-                    if(leave.STATUS !== "PENDING") {
+                    if (leave.STATUS !== "PENDING") {
                         throw "Invalid Leave";
                     }
 
                     return this.getApprovalPolicy()
                         .pipe(
                             map(currentPolicy => {
-                                return {currentPolicy,leave}
+                                return { currentPolicy, leave }
                             })
                         )
                 }),
                 mergeMap(result => {
 
-                    if(result.currentPolicy.approvalType.toUpperCase() === "EVERYONE") {
-                        result.leave = this.verticalLevel(result.leave,approverUserId,isApprove,result.currentPolicy.approvalLevel);
+                    if (result.currentPolicy.approvalType.toUpperCase() === "EVERYONE") {
+                        result.leave = this.verticalLevel(result.leave, approverUserId, isApprove, result.currentPolicy.approvalLevel);
                     } else {
-                        result.leave = this.horizontalLevel(result.leave,approverUserId,isApprove);
+                        result.leave = this.horizontalLevel(result.leave, approverUserId, isApprove);
                     }
 
                     result.leave.UPDATE_USER_GUID = approverUserId;
@@ -119,36 +119,36 @@ export class ApprovalService {
 
                     resource.resource.push(result.leave);
 
-                    return this.leaveTransactionService.updateByModel(resource,[],[],[])
+                    return this.leaveTransactionService.updateByModel(resource, [], [], [])
                         .pipe(map(res => {
-                            if(res.status!=200) {
+                            if (res.status != 200) {
                                 throw "Fail to Update Leave Transaction";
                             }
 
                             return res.data.resource;
                         }))
-                    
+
                 })
             )
-        
+
     }
 
-    private verticalLevel(leave: LeaveTransactionModel,approverUserId: string,isApprove: boolean,currentPolicyLevel: number) {
-        leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL+1);
+    private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {
+        leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL + 1);
 
-        if(leave.STATES==null||leave.STATES=='') {
-            leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL,approverUserId)));
+        if (leave.STATES == null || leave.STATES == '') {
+            leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId)));
         } else {
             const currentStates = JSON.parse(leave.STATES);
-            currentStates.push(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL,approverUserId));
+            currentStates.push(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId));
 
             leave.STATES = JSON.stringify(currentStates);
         }
 
-        if(isApprove) {
-            if(leave.CURRENT_APPROVAL_LEVEL == currentPolicyLevel) {
+        if (isApprove) {
+            if (leave.CURRENT_APPROVAL_LEVEL == currentPolicyLevel) {
                 leave.STATUS = "APPROVED";
-            } else {       
+            } else {
                 leave.STATUS = "PENDING";
             }
         } else {
@@ -156,16 +156,16 @@ export class ApprovalService {
         }
 
         return leave;
-        
+
     }
 
-    private horizontalLevel(leave: LeaveTransactionModel,approverUserId: string,isApprove: boolean) {
+    private horizontalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean) {
         // only 1 level vertically
         leave.CURRENT_APPROVAL_LEVEL = 1;
 
-        leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL,approverUserId)));
+        leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId)));
 
-        if(isApprove) {
+        if (isApprove) {
             leave.STATUS = "APPROVED";
         } else {
             leave.STATUS = "REJECTED";

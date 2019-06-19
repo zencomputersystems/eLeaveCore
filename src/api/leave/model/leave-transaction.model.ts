@@ -1,5 +1,5 @@
-import { STATESDTO } from "src/common/approval/dto/states.dto";
-import { CreateUpdateModel } from "src/common/model/create-update.model";
+import { STATESDTO } from 'src/common/approval/dto/states.dto';
+import { CreateUpdateModel } from 'src/common/model/create-update.model';
 
 /**
  *
@@ -42,5 +42,5 @@ export class LeaveTransactionModel extends CreateUpdateModel {
     //TMP
     STATES: string;
     CURRENT_APPROVAL_LEVEL: number;
-    
+
 }

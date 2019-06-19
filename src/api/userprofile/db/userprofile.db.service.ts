@@ -1,8 +1,8 @@
-import { BaseDBService } from "src/common/base/base-db.service";
-import { IDbService } from "src/interface/IDbService";
-import { HttpService, Injectable } from "@nestjs/common";
-import { QueryParserService } from "src/common/helper/query-parser.service";
-import { Observable } from "rxjs";
+import { BaseDBService } from 'src/common/base/base-db.service';
+import { IDbService } from 'src/interface/IDbService';
+import { HttpService, Injectable } from '@nestjs/common';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { Observable } from 'rxjs';
 
 /**
  *

@@ -1,5 +1,5 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsBoolean } from "class-validator";
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsBoolean } from 'class-validator';
 
 /**
  *
@@ -14,12 +14,12 @@ export class ExcludeDayTypeXmlDTO {
         this.isExcludeRestDay = false;
     }
 
-    @ApiModelProperty({description:'Exclude Holidays from calculation'})
+    @ApiModelProperty({ description: 'Exclude Holidays from calculation' })
     @IsBoolean()
-    isExcludeHoliday:boolean;
+    isExcludeHoliday: boolean;
 
-    @ApiModelProperty({description:'Exclude Rest Days from calculation'})
+    @ApiModelProperty({ description: 'Exclude Rest Days from calculation' })
     @IsBoolean()
-    isExcludeRestDay:boolean;
+    isExcludeRestDay: boolean;
 
 }

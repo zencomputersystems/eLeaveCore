@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString} from "class-validator";
-import { PersonalDetailXML } from "./xml/personal-detail.xml";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from 'class-validator';
+import { PersonalDetailXML } from './xml/personal-detail.xml';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  *

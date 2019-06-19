@@ -22,17 +22,17 @@ export class EmploymentDetailController {
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly resultStatusService: ResultStatusService) {}
+        private readonly resultStatusService: ResultStatusService) { }
 
     @UseGuards(ResourceGuard)
     @Get('employment-detail/:id')
-    @Roles('EditProfile','ProfileAdmin')
-    @ApiOperation({title: 'Get employment detail to edit for requested user'})
+    @Roles('EditProfile', 'ProfileAdmin')
+    @ApiOperation({ title: 'Get employment detail to edit for requested user' })
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-    findOne(@Param('id') id,@Req() req,@Res() res) {
+    findOne(@Param('id') id, @Req() req, @Res() res) {
 
         const user = req.user;
-        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID,user.USER_GUID,req.accessLevel,['(USER_INFO_GUID='+id+')'])
+        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
             .pipe(switchMap(filter => {
                 return this.userprofileService.getEmploymentDetail(filter);
             }))
@@ -41,7 +41,7 @@ export class EmploymentDetailController {
                     res.send(data);
                 },
                 err => {
-                    this.resultStatusService.sendError(err,res);
+                    this.resultStatusService.sendError(err, res);
                     // if(err.response.data) {
                     //     res.status(err.response.data.error.context.resource[0].status_code);
                     //     res.send(err.response.data.error.context.resource[0].message)
@@ -56,16 +56,16 @@ export class EmploymentDetailController {
     @UseGuards(ResourceGuard)
     @Patch('employment-detail')
     @Roles('ProfileAdmin')
-    @ApiOperation({title: 'Update employment detail for this user profile'})
-    update(@Body() updateEmploymentDetailDTO: UpdateEmploymentDetailDTO,@Req() req, @Res() res) {
+    @ApiOperation({ title: 'Update employment detail for this user profile' })
+    update(@Body() updateEmploymentDetailDTO: UpdateEmploymentDetailDTO, @Req() req, @Res() res) {
 
-        this.userprofileService.updateEmploymentDetail(updateEmploymentDetailDTO,req.user.USER_GUID)
+        this.userprofileService.updateEmploymentDetail(updateEmploymentDetailDTO, req.user.USER_GUID)
             .subscribe(
                 data => {
                     res.send(data.data.resource);
                 },
                 err => {
-                    if(err.response.data) {
+                    if (err.response.data) {
                         res.status(err.response.data.error.context.resource[0].status_code);
                         res.send(err.response.data.error.context.resource[0].message)
                     } else {

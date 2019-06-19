@@ -6,6 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { SectionService } from '../section/section.service';
+import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
  *
@@ -25,7 +26,8 @@ import { SectionService } from '../section/section.service';
   providers: [
     QueryParserService,
     CostcentreService,
-    SectionService
+    SectionService,
+    ResultStatusService
   ]
 })
 export class CostcentreModule {}

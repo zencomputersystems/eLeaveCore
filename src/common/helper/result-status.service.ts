@@ -12,4 +12,9 @@ export class ResultStatusService {
             res.send(err);
         }
     }
+
+    public sendErrorV2(res, code, msg) {
+        res.status(code);
+        res.send(msg);
+    }
 }

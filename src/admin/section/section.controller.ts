@@ -88,7 +88,7 @@ export class SectionController {
   }
 
   /**
-   *
+   * get one section by id
    *
    * @param {*} id
    * @param {*} req

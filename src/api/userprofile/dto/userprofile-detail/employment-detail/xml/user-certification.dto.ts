@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
- *
+ * User certification dto
  *
  * @export
  * @class UserCertificationDTO

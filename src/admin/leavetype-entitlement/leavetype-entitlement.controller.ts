@@ -38,15 +38,7 @@ export class LeavetypeEntitlementController {
                 res.send(data);
             },
             err => {
-                console.log(err);
-                // if(err.response.data) {
-                //     res.status(err.response.data.error.status_code);
-                //     res.send(err.response.data.error.message)
-                // } else {
-                //     res.status(500);
-                //     res.send(err);
-                // }
-                res.send();
+                this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
             }
         );
     }
@@ -72,16 +64,11 @@ export class LeavetypeEntitlementController {
         this.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO)
             .subscribe(
                 data => {
-                    if (data.status == 200)
-                        res.send(data.data.resource[0]);
-                    else {
-                        res.status(data.status);
-                        res.send();
-                    }
+                    this.sendDataSuccess(data, res);
                 },
                 err => {
                     console.log(err.response.data.error.context.resource);
-                    this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
+                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
                 }
             )
     }
@@ -91,20 +78,22 @@ export class LeavetypeEntitlementController {
         this.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO)
             .subscribe(
                 data => {
-                    if (data.status == 200)
-                        res.send(data.data.resource[0]);
-                    else {
-                        res.status(data.status);
-                        res.send();
-                    }
+                    this.sendDataSuccess(data, res);
                 },
                 err => {
                     console.log(err.response.data.error.context);
-                    this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
+                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
 
                 }
             )
     }
 
-
+    public sendDataSuccess(data, res) {
+        if (data.status == 200)
+            res.send(data.data.resource[0]);
+        else {
+            res.status(data.status);
+            res.send();
+        }
+    }
 }

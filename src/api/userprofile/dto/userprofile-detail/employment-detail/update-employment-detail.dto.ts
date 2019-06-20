@@ -1,6 +1,7 @@
 import { IsString, IsNotEmpty, IsNumber, IsISO8601, ValidateIf, Validate } from 'class-validator';
 import { ReportingToValidator } from 'src/common/validator/reportingToValidator';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { EmploymentDetailBase } from './employment-detail-base.dto';
 
 /**
  *
@@ -8,7 +9,7 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @export
  * @class UpdateEmploymentDetailDTO
  */
-export class UpdateEmploymentDetailDTO {
+export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
     @ApiModelProperty()
     @IsNotEmpty()
     @IsString()
@@ -23,27 +24,6 @@ export class UpdateEmploymentDetailDTO {
     @IsNotEmpty()
     @IsString()
     designation: string;
-
-    @ApiModelProperty()
-    @IsString()
-    workLocation: string;
-
-    @ApiModelProperty()
-    @IsString()
-    department: string;
-
-    @ApiModelProperty()
-    @IsString()
-    branch: string;
-
-    @ApiModelProperty()
-    @IsString()
-    division: string;
-
-    @ApiModelProperty()
-    @IsString()
-    //@Validate(ReportingToValidator)
-    reportingTo: string;
 
     @ApiModelProperty()
     @IsNotEmpty()
@@ -70,19 +50,4 @@ export class UpdateEmploymentDetailDTO {
     @IsISO8601()
     dateOfResign: Date;
 
-    @ApiModelProperty()
-    @IsString()
-    bankAccountName: string;
-
-    @ApiModelProperty()
-    @IsString()
-    bankAccountNumber: string;
-
-    @ApiModelProperty()
-    @IsString()
-    epfNumber: string;
-
-    @ApiModelProperty()
-    @IsString()
-    incomeTaxNumber: string;
 }

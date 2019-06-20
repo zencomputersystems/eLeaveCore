@@ -63,7 +63,7 @@ export class LeaveTypeController {
             res.send(data.data);
         },
         err => {
-          this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
+          this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
         }
       )
   }

@@ -62,7 +62,7 @@ export class CostcentreController {
             res.send(data.data);
         },
         err => {
-          this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
+          this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
         }
       )
   }
@@ -81,7 +81,7 @@ export class CostcentreController {
         res.send(data.data.resource);
       },
       err => {
-        console.log(err.response.data.error);
+        // console.log(err.response.data.error);
         this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
@@ -89,7 +89,7 @@ export class CostcentreController {
   }
 
   /**
-   *
+   * get one cpstcenter by id
    *
    * @param {*} id
    * @param {*} req

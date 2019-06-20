@@ -51,7 +51,7 @@ export class HolidayController {
         this.http.get('https://calendarific.com/api/v2/holidays?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55' + countryLink + yearLink + locationLink + monthLink).subscribe((response) => {
             res.send(response.data);
         }, err => {
-            this.resultStatusService.sendError(err,res);
+            this.resultStatusService.sendError(err, res);
             // if (err.response.data) {
             //     res.status(err.response.data.error.status_code);
             //     res.send(err.response.data.error.message)
@@ -78,7 +78,7 @@ export class HolidayController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err,res);
+                this.resultStatusService.sendError(err, res);
                 // if (err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)
@@ -109,7 +109,7 @@ export class HolidayController {
                         res.send(data.data);
                 },
                 err => {
-                    this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
+                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
                 }
             )
     }
@@ -173,7 +173,7 @@ export class HolidayController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err,res);
+                this.resultStatusService.sendError(err, res);
                 // if (err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)
@@ -196,7 +196,7 @@ export class HolidayController {
                         res.send(data.data);
                 },
                 err => {
-                    this.resultStatusService.sendErrorV2(res,400,'Fail to update resource');
+                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
                 }
             )
     }

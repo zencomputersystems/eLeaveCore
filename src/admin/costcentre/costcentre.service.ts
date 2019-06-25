@@ -9,7 +9,7 @@ import { IDbService } from 'src/interface/IDbService';
 import { SectionService } from '../section/section.service';
 
 /**
- *
+ * Service for cost centre
  *
  * @export
  * @class CostcentreService
@@ -27,7 +27,13 @@ export class CostcentreService extends BaseDBService implements IDbService {
         super(httpService, queryService, "main_cost_centre");
     }
 
-    //find all tenant branch
+    /**
+     * Find all cost centre by tenant id
+     *
+     * @param {string} TENANT_GUID
+     * @returns {Observable<any>}
+     * @memberof CostcentreService
+     */
     public findAll(TENANT_GUID: string): Observable<any> {
 
         const fields = ['COST_CENTRE_GUID', 'NAME'];
@@ -40,7 +46,14 @@ export class CostcentreService extends BaseDBService implements IDbService {
 
     }
 
-    //find tenant branch by id
+    /**
+     * Find one cost centre by tenant id and id
+     *
+     * @param {string} TENANT_GUID
+     * @param {string} id
+     * @returns {Observable<any>}
+     * @memberof CostcentreService
+     */
     public findById(TENANT_GUID: string, id: string): Observable<any> {
         const fields = ['COST_CENTRE_GUID', 'NAME'];
         const filters = ['(COST_CENTRE_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
@@ -52,7 +65,14 @@ export class CostcentreService extends BaseDBService implements IDbService {
         return this.httpService.get(url);
     }
 
-    //create new branch
+    /**
+     * Create new cost centre
+     *
+     * @param {*} user
+     * @param {string} name
+     * @returns
+     * @memberof CostcentreService
+     */
     create(user: any, name: string) {
         const data = new CostCentreModel();
         data.COST_CENTRE_GUID = v1();
@@ -60,7 +80,14 @@ export class CostcentreService extends BaseDBService implements IDbService {
         return this.createByModel(resourceData, [], [], []);
     }
 
-    //update existing branch
+    /**
+     * Update existing cost centre
+     *
+     * @param {*} user
+     * @param {*} d
+     * @returns
+     * @memberof CostcentreService
+     */
     update(user: any, d: any) {
 
         // do a checking first to determine this data belong to user

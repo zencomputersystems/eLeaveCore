@@ -8,7 +8,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
 /**
- *
+ * Service for company
  *
  * @export
  * @class CompanyService
@@ -16,46 +16,66 @@ import { IDbService } from 'src/interface/IDbService';
  * @implements {IDbService}
  */
 @Injectable()
-export class CompanyService extends BaseDBService implements IDbService{
+export class CompanyService extends BaseDBService implements IDbService {
 
     private _tableName = "tenant_company";
 
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService){
-            super(httpService,queryService,"tenant_company");
-        }
-
-
-     //find all tenant company
-     public findAll(TENANT_GUID: string): Observable<any> {
-
-        const fields = ['TENANT_COMPANY_GUID','NAME'];
-        const filters = ['(TENANT_COMPANY_GUID='+TENANT_GUID+')'];
-
-        //url
-        const url = this.queryService.generateDbQueryV2(this._tableName,fields,filters,[]);
- 
-        //call DF to validate the user
-        return this.httpService.get(url);
-        
+        public readonly queryService: QueryParserService) {
+        super(httpService, queryService, "tenant_company");
     }
 
-    //find tenant company by id
+    /**
+     * find all tenant company
+     *
+     * @param {string} TENANT_GUID
+     * @returns {Observable<any>}
+     * @memberof CompanyService
+     */
+    public findAll(TENANT_GUID: string): Observable<any> {
+
+        const fields = ['TENANT_COMPANY_GUID', 'NAME'];
+        const filters = ['(TENANT_COMPANY_GUID=' + TENANT_GUID + ')'];
+
+        //url
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+
+    }
+
+    /**
+     * find tenant company by id
+     *
+     * @param {*} TENANT_GUID
+     * @param {string} id
+     * @returns {Observable<any>}
+     * @memberof CompanyService
+     */
     public findById(TENANT_GUID: any, id: string): Observable<any> {
 
-        const fields = ['BRANCH_GUID','NAME'];
-        const filters = ['(BRANCH_GUID='+id+')','(TENANT_GUID='+TENANT_GUID+')'];
+        const fields = ['BRANCH_GUID', 'NAME'];
+        const filters = ['(BRANCH_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
 
         //url
-        const url = this.queryService.generateDbQueryV2(this._tableName,fields,filters,[]);
-        
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
         //call DF to validate the user
         return this.httpService.get(url);
     }
 
 
-    //create new branch
+
+    /**
+     * create new branch
+     *
+     * @param {*} user
+     * @param {string} name
+     * @returns
+     * @memberof CompanyService
+     */
     create(user: any, name: string) {
 
         const resource = new Resource(new Array);
@@ -70,13 +90,19 @@ export class CompanyService extends BaseDBService implements IDbService{
 
         resource.resource.push(data);
 
-        return this.createByModel(resource,[],[],[]);
+        return this.createByModel(resource, [], [], []);
 
     }
 
-
-    //update existing branch
-    update(user:any, d: any) {
+    /**
+     * update existing branch
+     *
+     * @param {*} user
+     * @param {*} d
+     * @returns
+     * @memberof CompanyService
+     */
+    update(user: any, d: any) {
 
         const resource = new Resource(new Array);
         const data = new CompanyModel();
@@ -88,7 +114,7 @@ export class CompanyService extends BaseDBService implements IDbService{
 
         resource.resource.push(data);
 
-        return this.updateByModel(resource,[],[],[]);
+        return this.updateByModel(resource, [], [], []);
     }
 
 }

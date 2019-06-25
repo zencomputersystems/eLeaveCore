@@ -12,7 +12,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 // var iso3166 = require('iso3166-2-db');
 
 /**
- *
+ * Controller for Holiday
  *
  * @export
  * @class HolidayController
@@ -28,7 +28,7 @@ export class HolidayController {
         private readonly resultStatusService: ResultStatusService) { }
 
     /**
-     * list data from calendarific for admin to view and pick
+     * List data from calendarific for admin to view and pick
      *
      * @param {*} req
      * @param {*} res
@@ -64,7 +64,7 @@ export class HolidayController {
     }
 
     /**
-     * list all calendar profile for user admin to assign to employee
+     * List all calendar profile for user admin to assign to employee
      *
      * @param {*} req
      * @param {*} res
@@ -92,7 +92,7 @@ export class HolidayController {
     }
 
     /**
-     * update calendar-profile name n data
+     * Update calendar-profile name and data
      *
      * @param {UpdateCalendarDTO} updateCalendarDTO
      * @param {*} req
@@ -115,7 +115,7 @@ export class HolidayController {
     }
 
     /**
-     * create new calendar profile
+     * Create new calendar profile
      *
      * @param {CreateCalendarDTO} createCalendarDTO
      * @param {*} req
@@ -142,7 +142,7 @@ export class HolidayController {
     }
 
     /**
-     * list holiday from calendar profile id
+     * List holiday from calendar profile id
      *
      * @param {*} req
      * @param {*} res
@@ -186,6 +186,14 @@ export class HolidayController {
 
     }
 
+    /**
+     * Assign calendar to employee user info
+     *
+     * @param {UpdateUserCalendarDTO} updateUserCalendarDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
     @Patch('/user-calendar')
     @ApiOperation({ title: 'Assign calendar profile to employee' })
     updateToEmployee(@Body() updateUserCalendarDTO: UpdateUserCalendarDTO, @Req() req, @Res() res) {

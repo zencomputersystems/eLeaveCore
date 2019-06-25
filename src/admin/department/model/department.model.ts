@@ -1,10 +1,10 @@
 /**
- *
+ * Model for department
  *
  * @export
  * @class DepartmentModel
  */
 export class DepartmentModel {
-    DEPARTMENT;  
+    DEPARTMENT;
     TENANT_GUID: string;
 }

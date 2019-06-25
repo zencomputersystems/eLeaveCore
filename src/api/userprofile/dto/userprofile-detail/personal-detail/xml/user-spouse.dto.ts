@@ -8,10 +8,22 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @class UserSpouseDTO
  */
 export class UserSpouseDTO {
+    /**
+     * Data user spouse - name
+     *
+     * @type {string}
+     * @memberof UserSpouseDTO
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     spouseName: string;
 
+    /**
+     * Data user spouse - ic number
+     *
+     * @type {string}
+     * @memberof UserSpouseDTO
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     spouseIdentificationNumber: string;

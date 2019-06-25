@@ -3,7 +3,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 /**
- *
+ * DB Service for user info to update calendar
  *
  * @export
  * @class UserInfoDbService

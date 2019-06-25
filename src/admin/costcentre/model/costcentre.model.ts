@@ -1,7 +1,7 @@
 import { CreateUpdateModel } from 'src/common/model/create-update.model';
 
 /**
- *
+ * Model for cost centre
  *
  * @export
  * @class CostCentreModel

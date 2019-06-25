@@ -1,7 +1,7 @@
 
 import { CostCentreDto } from './costcentre.dto';
 /**
- *
+ * Data to create cost centre
  *
  * @export
  * @class CreateCostCentreDto

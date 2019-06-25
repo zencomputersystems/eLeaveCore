@@ -4,7 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
 
 /**
- *
+ * DB Service for designation
  *
  * @export
  * @class DesignationDbService
@@ -20,7 +20,13 @@ export class DesignationDbService extends BaseDBService {
         super(httpService, queryService, "view_designations");
     }
 
-    //find all tenant branch
+    /**
+     * Find all designation by tenant id
+     *
+     * @param {string} tenantid
+     * @returns {Observable<any>}
+     * @memberof DesignationDbService
+     */
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['DESIGNATION'];

@@ -12,17 +12,17 @@ import { UserInfoDbService } from './db/user-info.db.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Module for holiday
  *
  * @export
  * @class HolidayModule
  */
 @Module({
-  modules:[
+  modules: [
     AuthModule,
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
-  ],    
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
+  ],
   providers: [
     QueryParserService,
     HolidayDbService,
@@ -34,4 +34,4 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
   ],
   controllers: [HolidayController]
 })
-export class HolidayModule {}
+export class HolidayModule { }

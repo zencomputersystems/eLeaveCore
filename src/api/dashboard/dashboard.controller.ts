@@ -16,6 +16,13 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 export class DashboardController {
     constructor(private http: HttpService, private resultStatusService: ResultStatusService) { }
 
+    /**
+     * Get total employee and onleave count
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
     @Get('/employee/status-onleave')
     @ApiOperation({ title: 'Get total employee' })
     @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
@@ -25,6 +32,13 @@ export class DashboardController {
         this.runService(req, res, 'dashboard_onleave');
     }
 
+    /**
+     * Get employee onleave (name and designation)
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
     @Get('/employee/leave-list')
     @ApiOperation({ title: 'Get total employee' })
     @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
@@ -34,6 +48,14 @@ export class DashboardController {
         this.runService(req, res, 'employee_leave_list');
     }
 
+    /**
+     * Function refactor run service 
+     *
+     * @param {*} req
+     * @param {*} res
+     * @param {*} method_procedure
+     * @memberof DashboardController
+     */
     public runService(req, res, method_procedure) {
         let url = DreamFactory.df_host_proc + `${method_procedure}(${req.query.tenantguid},${req.query.startdate},${req.query.enddate})`;
         this.http.get(url).subscribe(data => {

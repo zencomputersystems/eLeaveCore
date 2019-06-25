@@ -11,7 +11,13 @@ import { ApiModelProperty } from '@nestjs/swagger';
  */
 export class UpdateLeaveTypeDto extends LeaveTypeDto {
 
-    @ApiModelProperty({description:'Leavetype GUID',example:'85747738-66bf-8cb1-768a-d73319c61759'})
+    /**
+     * Data update leavetype - id 
+     *
+     * @type {string}
+     * @memberof UpdateLeaveTypeDto
+     */
+    @ApiModelProperty({ description: 'Leavetype GUID', example: '85747738-66bf-8cb1-768a-d73319c61759' })
     @IsNotEmpty()
-    readonly id: string; 
+    readonly id: string;
 } 

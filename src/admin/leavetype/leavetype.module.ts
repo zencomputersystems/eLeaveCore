@@ -8,22 +8,22 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Module for leavetype
  *
  * @export
  * @class LeavetypeModule
  */
 @Module({
   controllers: [LeaveTypeController],
-  modules:[
+  modules: [
     AuthModule,
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
-  ],   
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
+  ],
   providers: [
     LeavetypeService,
     QueryParserService,
     ResultStatusService
   ]
 })
-export class LeavetypeModule {}
+export class LeavetypeModule { }

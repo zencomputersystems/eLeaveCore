@@ -10,7 +10,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 
 /**
- *
+ * Module for user import
  *
  * @export
  * @class UserImportModule
@@ -25,16 +25,16 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
     XMLParserService
   ],
   modules: [
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
     MulterModule.register({
-      fileFilter : function fileFilter(req, file, cb) {
-        if(file.mimetype!="text/csv")
-          return cb(new BadRequestException('Only CSV are allowed'),false);
+      fileFilter: function fileFilter(req, file, cb) {
+        if (file.mimetype != "text/csv")
+          return cb(new BadRequestException('Only CSV are allowed'), false);
         else
           cb(null, true);
       }
     })
   ]
 })
-export class UserImportModule {}
+export class UserImportModule { }

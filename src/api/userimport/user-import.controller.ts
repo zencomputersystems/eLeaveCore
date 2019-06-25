@@ -6,7 +6,7 @@ import { UserImportService } from './user-import.service';
 import { UserCsvDto } from './dto/csv/user-csv.dto';
 
 /**
- *
+ * Controller for user import
  *
  * @export
  * @class UserImportController
@@ -16,31 +16,52 @@ import { UserCsvDto } from './dto/csv/user-csv.dto';
 @ApiBearerAuth()
 export class UserImportController {
 
-    constructor(private readonly userImportService: UserImportService) {}
-    
+    /**
+     *Creates an instance of UserImportController.
+     * @param {UserImportService} userImportService
+     * @memberof UserImportController
+     */
+    constructor(private readonly userImportService: UserImportService) { }
+
+    /**
+     *create user import
+     *
+     * @param {[UserCsvDto]} userInviteDto
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserImportController
+     */
     @Post()
-    create(@Body() userInviteDto: [UserCsvDto],@Req() req, @Res() res) {
+    create(@Body() userInviteDto: [UserCsvDto], @Req() req, @Res() res) {
 
     }
 
+    /**
+     * import csv user import
+     *
+     * @param {*} file
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserImportController
+     */
     @Post('csv')
     @UseInterceptors(FileInterceptor('file'))
-    @ApiOperation({title: 'Import user from CSV list'})
+    @ApiOperation({ title: 'Import user from CSV list' })
     importCSV(@UploadedFile() file, @Req() req, @Res() res) {
 
-        if(!req.file) {
+        if (!req.file) {
             res.status(400);
             res.send("File is null");
         }
-        
+
         const records = parse(file.buffer, {
             columns: true,
             skip_empty_lines: true
-          })
+        })
 
-        this.userImportService.processImportData(req.user,records)
+        this.userImportService.processImportData(req.user, records)
             .subscribe(
-                data=>{
+                data => {
                     res.send(data);
                 },
                 err => {
@@ -48,7 +69,7 @@ export class UserImportController {
                     res.send("fail to process data");
                 }
             )
-        
+
     }
 
 }

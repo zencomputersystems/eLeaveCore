@@ -8,9 +8,10 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { InvitationDbService } from './db/invitation.db.service';
 import { InvitationController } from './invitation.controller';
 import { InvitationInviteService } from './invitation-invite.service';
+import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 
 /**
- *
+ * Module invitation
  *
  * @export
  * @class InvitationModule
@@ -21,14 +22,15 @@ import { InvitationInviteService } from './invitation-invite.service';
     InvitationService,
     InvitationInviteService,
     UserService,
-    QueryParserService
+    QueryParserService,
+    EmailNodemailerService
   ],
   modules: [
     AuthModule,
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
 
   ],
   controllers: [InvitationController]
 })
-export class InvitationModule {}
+export class InvitationModule { }

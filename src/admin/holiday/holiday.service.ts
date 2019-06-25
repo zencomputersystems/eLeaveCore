@@ -15,7 +15,7 @@ import { UserInfoDbService } from './db/user-info.db.service';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 
 /**
- *
+ * Service for holiday
  *
  * @export
  * @class HolidayService
@@ -28,7 +28,7 @@ export class HolidayService {
         private readonly assignerDataService: AssignerDataService) { }
 
     /**
-     * list holiday for selected calendar by calendar guid
+     * List holiday for selected calendar by calendar guid
      *
      * @param {string} calendarId
      * @returns
@@ -45,7 +45,7 @@ export class HolidayService {
     }
 
     /**
-     * list all calendar that has been created
+     * List all existing calendar
      *
      * @returns
      * @memberof HolidayService
@@ -62,7 +62,7 @@ export class HolidayService {
     }
 
     /**
-     * assign calendar to employee user info table
+     * Assign calendar to employee user info table
      *
      * @param {*} user
      * @param {*} d
@@ -83,7 +83,7 @@ export class HolidayService {
     }
 
     /**
-     * update existing calendar
+     * Update existing calendar by calendar id
      *
      * @param {*} user
      * @param {UpdateCalendarDTO} d
@@ -105,7 +105,7 @@ export class HolidayService {
     }
 
     /**
-     * setup new calendar profile using data from calendarific
+     * Setup new calendar profile using data from calendarific
      *
      * @param {*} user
      * @param {CreateCalendarDTO} data

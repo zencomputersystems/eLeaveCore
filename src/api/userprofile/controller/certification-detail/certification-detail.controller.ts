@@ -9,7 +9,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Controller for certification detail
  *
  * @export
  * @class CertificationDetailController
@@ -18,11 +18,26 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class CertificationDetailController {
+    /**
+     *Creates an instance of CertificationDetailController.
+     * @param {UserprofileService} userprofileService
+     * @param {AccessLevelValidateService} accessLevelValidationService
+     * @param {ResultStatusService} resultStatusService
+     * @memberof CertificationDetailController
+     */
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
         private readonly resultStatusService: ResultStatusService) { }
 
+    /**
+     * Find certification detail by id
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof CertificationDetailController
+     */
     @UseGuards(ResourceGuard)
     @Get('certification-detail/:id')
     @Roles('EditProfile', 'ProfileAdmin')
@@ -52,6 +67,14 @@ export class CertificationDetailController {
             )
     }
 
+    /**
+     * Update certificatio detail
+     *
+     * @param {*} updateCertificationDetailDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof CertificationDetailController
+     */
     @UseGuards(ResourceGuard)
     @Patch('certification-detail')
     @Roles('ProfileAdmin')

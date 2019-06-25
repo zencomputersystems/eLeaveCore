@@ -5,6 +5,12 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { DashboardController } from './dashboard.controller';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
+/**
+ * Module for dashboard
+ *
+ * @export
+ * @class DashboardModule
+ */
 @Module({
     modules: [
         AuthModule,

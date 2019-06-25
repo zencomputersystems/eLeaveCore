@@ -11,7 +11,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 
 /**
- *
+ * DB Service for leave transaction
  *
  * @export
  * @class LeaveTransactionDbService
@@ -21,6 +21,14 @@ import { DateCalculationService } from 'src/common/calculation/service/date-calc
 @Injectable()
 export class LeaveTransactionDbService extends BaseDBService implements IDbService {
 
+    /**
+     *Creates an instance of LeaveTransactionDbService.
+     * @param {HttpService} httpService
+     * @param {XMLParserService} xmlParserService
+     * @param {DateCalculationService} dateCalculationService
+     * @param {QueryParserService} queryService
+     * @memberof LeaveTransactionDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         private readonly xmlParserService: XMLParserService,
@@ -29,6 +37,16 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         super(httpService, queryService, "l_main_leave_transaction");
     }
 
+    /**
+     * Create new leave transaction 
+     *
+     * @param {ApplyLeaveDataDTO} applyLeaveDataDTO
+     * @param {*} result
+     * @param {*} user
+     * @param {ApplyLeaveDTO} y
+     * @returns
+     * @memberof LeaveTransactionDbService
+     */
     public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO) {
 
         // const data = new LeaveTransactionModel();

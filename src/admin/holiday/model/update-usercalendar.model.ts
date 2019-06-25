@@ -1,5 +1,5 @@
 /**
- *
+ * Model to update user calendar
  *
  * @export
  * @class UpdateUserCalendarModel

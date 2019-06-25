@@ -2,7 +2,7 @@ import { STATESDTO } from 'src/common/approval/dto/states.dto';
 import { CreateUpdateModel } from 'src/common/model/create-update.model';
 
 /**
- *
+ * Model for leave transaction
  *
  * @export
  * @class LeaveTransactionModel
@@ -10,6 +10,10 @@ import { CreateUpdateModel } from 'src/common/model/create-update.model';
  */
 export class LeaveTransactionModel extends CreateUpdateModel {
 
+    /**
+     *Creates an instance of LeaveTransactionModel.
+     * @memberof LeaveTransactionModel
+     */
     constructor() {
         super();
         this.CREATION_TS = new Date().toISOString();

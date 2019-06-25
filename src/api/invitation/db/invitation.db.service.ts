@@ -7,7 +7,7 @@ import { v1 } from 'uuid';
 import { UserInviteModel } from '../model/user-invite.model';
 
 /**
- *
+ * DB Service for invitation
  *
  * @export
  * @class InvitationDbService
@@ -17,6 +17,12 @@ import { UserInviteModel } from '../model/user-invite.model';
 export class InvitationDbService extends BaseDBService {
     private _tableName = 'l_user_invitation';
 
+    /**
+     *Creates an instance of InvitationDbService.
+     * @param {HttpService} httpService
+     * @param {QueryParserService} queryService
+     * @memberof InvitationDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService
@@ -24,7 +30,13 @@ export class InvitationDbService extends BaseDBService {
         super(httpService, queryService, "l_user_invitation");
     }
 
-    //find all tenant branch
+    /**
+     * Find all invitaion by tenantid
+     *
+     * @param {string} tenantid
+     * @returns {Observable<any>}
+     * @memberof InvitationDbService
+     */
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['INVITATION_GUID', 'EMAIL', 'USER_GUID'];
@@ -37,7 +49,13 @@ export class InvitationDbService extends BaseDBService {
 
     }
 
-    //find all tenant branch
+    /**
+     * Find one invitation
+     *
+     * @param {string[]} filters
+     * @returns {Observable<any>}
+     * @memberof InvitationDbService
+     */
     public findOne(filters: string[]): Observable<any> {
 
         const fields = ['INVITATION_GUID', 'EMAIL', 'USER_GUID', 'STATUS'];
@@ -50,6 +68,15 @@ export class InvitationDbService extends BaseDBService {
 
     }
 
+    /**
+     * Create new invitation data
+     *
+     * @param {string} userId
+     * @param {string} email
+     * @param {*} user
+     * @returns
+     * @memberof InvitationDbService
+     */
     create(userId: string, email: string, user: any) {
         const resource = new Resource(new Array());
         const invitationModel = new UserInviteModel();
@@ -66,6 +93,14 @@ export class InvitationDbService extends BaseDBService {
         return this.createByModel(resource, [], [], ['INVITATION_GUID,EMAIL']);
     }
 
+    /**
+     * Update existing invitation data status
+     *
+     * @param {string} id
+     * @param {number} status
+     * @returns
+     * @memberof InvitationDbService
+     */
     update(id: string, status: number) {
         const resource = new Resource(new Array());
 

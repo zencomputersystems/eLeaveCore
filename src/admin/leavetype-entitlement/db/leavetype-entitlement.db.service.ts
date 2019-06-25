@@ -1,5 +1,5 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import {parse} from 'fast-xml-parser'; 
+import { parse } from 'fast-xml-parser';
 import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from '../model/leavetype_entitlement.model';
 import { v1 } from 'uuid';
@@ -13,7 +13,7 @@ import { IDbService } from 'src/interface/IDbService';
 import { CreateLeaveEntitlementTypeDTO } from '../dto/create-leavetype_entitlement.dto';
 
 /**
- *
+ * DB Service for leavetype entitlement
  *
  * @export
  * @class LeavetypeEntitlementDbService
@@ -22,61 +22,57 @@ import { CreateLeaveEntitlementTypeDTO } from '../dto/create-leavetype_entitleme
  */
 @Injectable()
 export class LeavetypeEntitlementDbService extends BaseDBService implements IDbService {
-    
+
     private _tableName = "l_leavetype_entitlement_def";
     private _viewTableName = 'view_leave_type_setup';
 
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
-        private readonly xmlParserService: XMLParserService){
-            super(httpService,queryService,"l_leavetype_entitlement_def");
-        }
+        private readonly xmlParserService: XMLParserService) {
+        super(httpService, queryService, "l_leavetype_entitlement_def");
+    }
 
-
-    //find all tenant leave definition
     /**
-     *
+     * Find all tenant leave definition
      *
      * @param {string} tenantid
      * @returns {Observable<any>}
      * @memberof LeavetypeEntitlementDbService
      */
-    public findAll(tenantid:string): Observable<any> {
+    public findAll(tenantid: string): Observable<any> {
 
-        const filters = ['(TENANT_GUID='+tenantid+')'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')'];
         //url
-        const url = this.queryService.generateDbQueryV2(this._viewTableName,[],filters,[]);
- 
+        const url = this.queryService.generateDbQueryV2(this._viewTableName, [], filters, []);
+
         //call DF to validate the user
         return this.httpService.get(url);
-        
+
     }
 
-    //find tenant leave definition by id
     /**
-     *
+     * Find tenant leave definition by id
      *
      * @param {string} tenantid
      * @param {string} id
      * @returns {Observable<any>}
      * @memberof LeavetypeEntitlementDbService
      */
-    public findById(tenantid:string, id: string): Observable<any> {
-        
-        const fields = ['LEAVE_TYPE_CODE','ENTITLEMENT_GUID','LEAVE_ENTITLEMENT_CODE','DESCRIPTION','PROPERTIES_XML'];
-        const filters = ['(ENTITLEMENT_GUID='+id+')','(TENANT_GUID='+tenantid+')'];
-       
-        const url = this.queryService.generateDbQuery(this._viewTableName,fields,filters);
+    public findById(tenantid: string, id: string): Observable<any> {
+
+        const fields = ['LEAVE_TYPE_CODE', 'ENTITLEMENT_GUID', 'LEAVE_ENTITLEMENT_CODE', 'DESCRIPTION', 'PROPERTIES_XML'];
+        const filters = ['(ENTITLEMENT_GUID=' + id + ')', '(TENANT_GUID=' + tenantid + ')'];
+
+        const url = this.queryService.generateDbQuery(this._viewTableName, fields, filters);
 
 
         //call DF to validate the user
         return this.httpService.get(url);
     }
 
-    //create new leavetype entitlement
     /**
-     *
+     * Create new leavetype entitlement
      *
      * @param {*} user
      * @param {CreateLeaveEntitlementTypeDTO} d
@@ -89,7 +85,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
 
         const resource = new Resource(new Array);
         const data = new LeaveTypeEntitlementModel();
-        
+
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
         data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
@@ -103,13 +99,12 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         data.ACTIVE_FLAG = 1;
 
         resource.resource.push(data);
-        
-        return this.createByModel(resource,[],[],[]);
+
+        return this.createByModel(resource, [], [], []);
     }
 
-    //update new leavetype entitlement
     /**
-     *
+     * Update existing leavetype entitlement
      *
      * @param {*} user
      * @param {UpdateLeaveTypeEntitlementDto} d
@@ -122,7 +117,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
 
         const resource = new Resource(new Array);
         const data = new LeaveTypeEntitlementModel();
-        
+
         data.ENTITLEMENT_GUID = d.id;
         data.TENANT_GUID = user.TENANT_GUID;
         data.CODE = d.code;
@@ -131,11 +126,11 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;
-        
+
         resource.resource.push(data);
 
-        return this.updateByModel(resource,[],[],[]);
-        
+        return this.updateByModel(resource, [], [], []);
+
     }
 
 

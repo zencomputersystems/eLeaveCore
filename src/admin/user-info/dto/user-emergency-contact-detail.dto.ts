@@ -11,6 +11,12 @@ import { ApiModelProperty } from '@nestjs/swagger';
  */
 export class UserEmergencyContactDetailDTO {
 
+    /**
+     * Data user emergency contact - contact detail
+     *
+     * @type {UserEmergencyContactDTO[]}
+     * @memberof UserEmergencyContactDetailDTO
+     */
     @ApiModelProperty()
     @Type(() => UserEmergencyContactDTO)
     @ValidateNested()

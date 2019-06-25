@@ -1,5 +1,5 @@
 /**
- *
+ * Model for leavetype service year
  *
  * @export
  * @class LeaveTypeServiceYear

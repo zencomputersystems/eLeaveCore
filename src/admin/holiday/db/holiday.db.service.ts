@@ -4,7 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
 
 /**
- *
+ * DB Service for holiday
  *
  * @export
  * @class HolidayDbService
@@ -20,7 +20,13 @@ export class HolidayDbService extends BaseDBService {
         super(httpService, queryService, "l_calendar_profile");
     }
 
-    //find all tenant branch
+    /**
+     * Find all holiday by calendar profile id
+     *
+     * @param {string} calendarProfileId
+     * @returns {Observable<any>}
+     * @memberof HolidayDbService
+     */
     public findAll(calendarProfileId: string): Observable<any> {
 
         const fields = ['PROPERTIES_XML'];
@@ -33,7 +39,12 @@ export class HolidayDbService extends BaseDBService {
 
     }
 
-    //find all tenant branch
+    /**
+     * Find all calendar profile
+     *
+     * @returns {Observable<any>}
+     * @memberof HolidayDbService
+     */
     public findAllProfile(): Observable<any> {
 
         const fields = ['CALENDAR_GUID', 'CODE'];

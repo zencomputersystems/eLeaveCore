@@ -1,5 +1,5 @@
 /**
- *
+ * Model for view leavetype setup
  *
  * @export
  * @class ViewLeaveTypeSetupModel

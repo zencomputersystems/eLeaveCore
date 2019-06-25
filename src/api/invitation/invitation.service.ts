@@ -8,7 +8,7 @@ import { ActivatedResultDTO } from './dto/activated-result.dto';
 import { InvitationDbService } from './db/invitation.db.service';
 
 /**
- *
+ * Service for invitation
  *
  * @export
  * @class InvitationService
@@ -16,71 +16,100 @@ import { InvitationDbService } from './db/invitation.db.service';
 @Injectable()
 export class InvitationService {
 
+    /**
+     *Creates an instance of InvitationService.
+     * @param {InvitationDbService} inviteDbService
+     * @param {UserService} userService
+     * @memberof InvitationService
+     */
     constructor(
         private readonly inviteDbService: InvitationDbService,
         private readonly userService: UserService
-        ) {}
+    ) { }
 
     // user accept an invitation
+    /**
+     * Method to accept invitation
+     *
+     * @param {string} token
+     * @returns
+     * @memberof InvitationService
+     */
     public acceptInvitation(token: string) {
 
         // check the invitation table
         // we only allow invitation with status = 1
-        const filters = ['(INVITATION_GUID='+token+')','(STATUS=1)'];
+        const filters = ['(INVITATION_GUID=' + token + ')', '(STATUS=1)'];
         return this.inviteDbService.findOne(filters)
-                .pipe(
-                    flatMap(res => this.validateInvitedUser(res.data.resource[0])),
-                    flatMap(res => {
-                        
-                        if(res.status==false) {
-                            return of(res);
-                        } else {
-                            return this.authMethodPicker(res);
-                        }
-                        
-                    })
-                )
+            .pipe(
+                flatMap(res => this.validateInvitedUser(res.data.resource[0])),
+                flatMap(res => {
+
+                    if (res.status == false) {
+                        return of(res);
+                    } else {
+                        return this.authMethodPicker(res);
+                    }
+
+                })
+            )
 
     }
 
     // for DB user, once set, activate the user
-    public setNewUserPassword(invitationId: string,password: string) {
+    /**
+     * Method to set new password
+     *
+     * @param {string} invitationId
+     * @param {string} password
+     * @returns
+     * @memberof InvitationService
+     */
+    public setNewUserPassword(invitationId: string, password: string) {
         // hash the password
 
         //const filters = ['(USER_GUID='+token+')','(STATUS=1)'];
 
         //get the user detail
-        const filters = ['(INVITATION_GUID='+invitationId+')','(STATUS=1)'];
+        const filters = ['(INVITATION_GUID=' + invitationId + ')', '(STATUS=1)'];
         return this.inviteDbService.findOne(filters)
-                .pipe(
-                    flatMap(res => this.validateInvitedUser(res.data.resource[0])),
-                    flatMap(res => {
+            .pipe(
+                flatMap(res => this.validateInvitedUser(res.data.resource[0])),
+                flatMap(res => {
 
-                        if(res.status==false) {
-                            return of(res);
-                        }
-                        // set user model data to update user password
-                        const userData = new UserModel();
-                        userData.USER_GUID = res.userId;
-                        userData.PASSWORD = password;
-                        userData.ACTIVATION_FLAG = 1
+                    if (res.status == false) {
+                        return of(res);
+                    }
+                    // set user model data to update user password
+                    const userData = new UserModel();
+                    userData.USER_GUID = res.userId;
+                    userData.PASSWORD = password;
+                    userData.ACTIVATION_FLAG = 1
 
 
-                        return this.activateValidatedUser(res.invitationId,userData)
-                                    .pipe(map(()=>{
-                                        return res;
-                                    }));
-                    })
-                )
+                    return this.activateValidatedUser(res.invitationId, userData)
+                        .pipe(map(() => {
+                            return res;
+                        }));
+                })
+            )
     }
 
     // Validate the invited user
+    /**
+     * Method validate invite user
+     *
+     * @private
+     * @param {*} invitationData
+     * @returns
+     * @memberof InvitationService
+     */
     private validateInvitedUser(invitationData: any) {
 
         const activatedResult = new ActivatedResultDTO();
 
         //validated the invitation data
-        if(invitationData==null||invitationData==undefined) {
+        if (invitationData == null || invitationData == undefined) {
             activatedResult.message = "Invalid User";
             activatedResult.status = false;
 
@@ -88,15 +117,15 @@ export class InvitationService {
         }
 
         // validate the user data
-        const filters = ['(USER_GUID='+invitationData.USER_GUID+')','(ACTIVATION_FLAG=0)'];
+        const filters = ['(USER_GUID=' + invitationData.USER_GUID + ')', '(ACTIVATION_FLAG=0)'];
 
-        return this.userService.findByFilterV2([],filters)
+        return this.userService.findByFilterV2([], filters)
             .pipe(
                 map(res => {
 
                     const result = res[0];
 
-                    if(result==null) {
+                    if (result == null) {
                         activatedResult.message = "Invalid User";
                         activatedResult.status = false;
 
@@ -116,21 +145,30 @@ export class InvitationService {
 
     // For AD, activate automatically once validated
     // For DB, user need to update their password before activated. They need extra step
+    /**
+     * For AD, activate automatically once validated
+     * For DB, user need to update their password before activated. They need extra step
+     *
+     * @private
+     * @param {ActivatedResultDTO} data
+     * @returns
+     * @memberof InvitationService
+     */
     private authMethodPicker(data: ActivatedResultDTO) {
         let companyLoginSetting = "AD";
-        
+
         data.authMethod = companyLoginSetting;
 
         // activate the user if AD
-        if(companyLoginSetting==="AD") {
+        if (companyLoginSetting === "AD") {
 
             // build the user model data to update
             const userData = new UserModel();
             userData.USER_GUID = data.userId;
             userData.ACTIVATION_FLAG = 1;
 
-            return this.activateValidatedUser(data.invitationId,userData)
-                .pipe(map(()=>{
+            return this.activateValidatedUser(data.invitationId, userData)
+                .pipe(map(() => {
                     return data;
                 }));
         } else {
@@ -140,17 +178,26 @@ export class InvitationService {
     }
 
     // activate user that has been validated
+    /**
+     * Method activate validated user 
+     *
+     * @private
+     * @param {string} invitationId
+     * @param {UserModel} userData
+     * @returns
+     * @memberof InvitationService
+     */
     private activateValidatedUser(invitationId: string, userData: UserModel) {
 
-        return this.inviteDbService.update(invitationId,2)
-                .pipe(switchMap(() => {
+        return this.inviteDbService.update(invitationId, 2)
+            .pipe(switchMap(() => {
 
-                    const resource = new Resource(new Array);
-                    resource.resource.push(userData);
+                const resource = new Resource(new Array);
+                resource.resource.push(userData);
 
-                    return this.userService.updateByModel(resource,[],[],[]);
-                }));
+                return this.userService.updateByModel(resource, [], [], []);
+            }));
     }
 
-    
+
 }

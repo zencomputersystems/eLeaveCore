@@ -7,7 +7,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Controller for cost centre
  *
  * @export
  * @class CostcentreController
@@ -21,7 +21,7 @@ export class CostcentreController {
     private readonly resultStatusService: ResultStatusService) { }
 
   /**
-   *
+   * Create new cost centre
    *
    * @param {CreateCostCentreDto} createBranchDTO
    * @param {*} req
@@ -46,7 +46,7 @@ export class CostcentreController {
   }
 
   /**
-   *
+   * Update existing cost centre
    *
    * @param {UpdateCostCentreDto} updateBranchDTO
    * @param {*} req
@@ -68,7 +68,7 @@ export class CostcentreController {
   }
 
   /**
-   *
+   * Get all list of cost centre
    *
    * @param {*} req
    * @param {*} res
@@ -81,7 +81,7 @@ export class CostcentreController {
         res.send(data.data.resource);
       },
       err => {
-        // console.log(err.response.data.error);
+        console.log(err.response.data.error);
         this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
@@ -89,7 +89,7 @@ export class CostcentreController {
   }
 
   /**
-   * get one cpstcenter by id
+   * Get one data cost centre by id
    *
    * @param {*} id
    * @param {*} req

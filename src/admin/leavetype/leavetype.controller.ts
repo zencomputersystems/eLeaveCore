@@ -7,7 +7,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Leavetype controller
  *
  * @export
  * @class LeaveTypeController
@@ -21,7 +21,7 @@ export class LeaveTypeController {
     private readonly resultStatusService: ResultStatusService) { }
 
   /**
-   *
+   * Create new leavetype
    *
    * @param {CreateLeaveTypeDto} createLeavetypeDTO
    * @param {*} req
@@ -47,7 +47,7 @@ export class LeaveTypeController {
   }
 
   /**
-   *
+   * Update existing leavetype
    *
    * @param {UpdateLeaveTypeDto} updateLeaveTypeDTO
    * @param {*} req
@@ -69,7 +69,7 @@ export class LeaveTypeController {
   }
 
   /**
-   *
+   * Get all leavetype
    *
    * @param {*} req
    * @param {*} res
@@ -89,7 +89,7 @@ export class LeaveTypeController {
   }
 
   /**
-   *
+   * Find one leavetype by id
    *
    * @param {*} id
    * @param {*} req

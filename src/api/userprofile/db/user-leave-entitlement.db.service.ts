@@ -4,7 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { IDbService } from 'src/interface/IDbService';
 
 /**
- *
+ * DB Service for user leave entitlement
  *
  * @export
  * @class UserLeaveEntitlementDbService
@@ -15,6 +15,12 @@ import { IDbService } from 'src/interface/IDbService';
 export class UserLeaveEntitlementDbService extends BaseDBService implements IDbService {
     private _table = 'l_main_user_leave_entitlement';
 
+    /**
+     *Creates an instance of UserLeaveEntitlementDbService.
+     * @param {HttpService} httpService
+     * @param {QueryParserService} queryService
+     * @memberof UserLeaveEntitlementDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

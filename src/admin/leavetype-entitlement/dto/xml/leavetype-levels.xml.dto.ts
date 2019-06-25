@@ -3,14 +3,19 @@ import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LeaveTypeServiceYearXmlDTO } from './leavetype-serviceyear.xml.dto';
 
-
 /**
- *
+ * Data XML for leavetype levels
  *
  * @export
  * @class LeaveTypeLevelsXmlDTO
  */
 export class LeaveTypeLevelsXmlDTO {
+    /**
+     * Data elavetype level - leave entitlement data
+     *
+     * @type {LeaveTypeServiceYearXmlDTO[]}
+     * @memberof LeaveTypeLevelsXmlDTO
+     */
     @ApiModelProperty({ type: LeaveTypeServiceYearXmlDTO })
     @IsNotEmpty()
     @ValidateNested({ each: true })

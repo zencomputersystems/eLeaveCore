@@ -10,7 +10,7 @@ import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Module for leavetype entitlement
  *
  * @export
  * @class LeavetypeEntitlementModule
@@ -19,8 +19,8 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
   controllers: [LeavetypeEntitlementController],
   modules: [
     AuthModule,
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
   ],
   providers: [
     LeaveTypeEntitlementService,
@@ -30,4 +30,4 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     ResultStatusService
   ]
 })
-export class LeavetypeEntitlementModule {}
+export class LeavetypeEntitlementModule { }

@@ -1,7 +1,7 @@
 import { CreateUpdateModel } from 'src/common/model/create-update.model';
 
 /**
- *
+ * Model to create holiday
  *
  * @export
  * @class CreateHolidayModel

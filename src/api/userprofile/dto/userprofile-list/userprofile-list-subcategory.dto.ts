@@ -1,7 +1,7 @@
 import { UserprofileListDTO } from './userprofile-list.dto';
 
 /**
- *
+ * Data user profile list sub category
  *
  * @export
  * @class UserprofileListSubCategoty

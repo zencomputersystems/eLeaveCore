@@ -4,7 +4,7 @@ import { Controller, UseGuards } from '@nestjs/common';
 
 
 /**
- *
+ * Controller for user
  *
  * @export
  * @class UserController

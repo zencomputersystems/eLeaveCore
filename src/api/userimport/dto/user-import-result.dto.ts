@@ -1,7 +1,7 @@
 import { UserImport } from './user-import';
 
 /**
- *
+ * Data user import result
  *
  * @export
  * @class UserImportResult

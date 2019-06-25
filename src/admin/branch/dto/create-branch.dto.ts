@@ -1,6 +1,6 @@
 import { BranchDto } from './branch.dto';
 /**
- *
+ * Data to create branch
  *
  * @export
  * @class CreateBranchDto

@@ -8,6 +8,12 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @class SectionDto
  */
 export class SectionDto {
+    /**
+     * Data for section - name
+     *
+     * @type {string}
+     * @memberof SectionDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     readonly name: string;

@@ -1,7 +1,7 @@
 import { LeaveTypeServiceYear } from './leavetype_serviceyear';
 
 /**
- *
+ * Model for leave type properties
  *
  * @export
  * @class LeaveTypePropertiesModel

@@ -1,5 +1,5 @@
 /**
- *
+ * Model for user
  *
  * @export
  * @class UserModel

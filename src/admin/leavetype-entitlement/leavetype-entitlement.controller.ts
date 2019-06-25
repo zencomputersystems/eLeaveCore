@@ -10,7 +10,7 @@ import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Controller for leavetype entitlement
  *
  * @export
  * @class LeavetypeEntitlementController
@@ -26,6 +26,14 @@ export class LeavetypeEntitlementController {
         private readonly resultStatusService: ResultStatusService
     ) { }
 
+    /**
+     * Find one leavetype entitlement by id
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
     @UseGuards(ResourceGuard)
     @Roles('LeaveSetup')
     @ApiOperation({ title: 'Get leave entitlement for this tenant' })
@@ -43,6 +51,13 @@ export class LeavetypeEntitlementController {
         );
     }
 
+    /**
+     * Find all leavetype entitlement for current tenant
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
     @UseGuards(ResourceGuard)
     @Roles('LeaveSetup')
     @ApiOperation({ title: 'Get list of leave entitlement for this tenant' })
@@ -58,6 +73,14 @@ export class LeavetypeEntitlementController {
         )
     }
 
+    /**
+     * Create leavetype entitlement 
+     *
+     * @param {CreateLeaveEntitlementTypeDTO} createLeaveEntitlementDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
     @Post()
     create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDTO, @Req() req, @Res() res) {
 
@@ -73,6 +96,14 @@ export class LeavetypeEntitlementController {
             )
     }
 
+    /**
+     * Update existing leavetype entitlement
+     *
+     * @param {UpdateLeaveTypeEntitlementDto} updateLeaveTypeEntitlementDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
     @Patch()
     update(@Body() updateLeaveTypeEntitlementDTO: UpdateLeaveTypeEntitlementDto, @Req() req, @Res() res) {
         this.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO)
@@ -88,6 +119,13 @@ export class LeavetypeEntitlementController {
             )
     }
 
+    /**
+     * Method refactor data success
+     *
+     * @param {*} data
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
     public sendDataSuccess(data, res) {
         if (data.status == 200)
             res.send(data.data.resource[0]);

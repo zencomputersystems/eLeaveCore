@@ -6,7 +6,7 @@ import { ApplyLeaveService } from '../../service/apply-leave.service';
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 
 /**
- *
+ * Controller for apply leave
  *
  * @export
  * @class ApplyController
@@ -16,13 +16,26 @@ import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 @ApiBearerAuth()
 export class ApplyController {
 
-    constructor(private readonly applyLeaveService: ApplyLeaveService){}
+    /**
+     *Creates an instance of ApplyController.
+     * @param {ApplyLeaveService} applyLeaveService
+     * @memberof ApplyController
+     */
+    constructor(private readonly applyLeaveService: ApplyLeaveService) { }
 
+    /**
+     * Method apply leave
+     *
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof ApplyController
+     */
     @Post('leave/apply')
-    @ApiOperation({title: 'Apply leave'})
-    findAll(@Body() applyLeaveDTO: ApplyLeaveDTO,@Req() req, @Res() res) {
+    @ApiOperation({ title: 'Apply leave' })
+    findAll(@Body() applyLeaveDTO: ApplyLeaveDTO, @Req() req, @Res() res) {
 
-        this.applyLeaveService.processLeave(applyLeaveDTO,req.user)
+        this.applyLeaveService.processLeave(applyLeaveDTO, req.user)
             .subscribe(
                 data => {
                     res.send(data);

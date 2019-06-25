@@ -4,7 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
 
 /**
- *
+ * table setup and function service for branch
  *
  * @export
  * @class BranchDbService
@@ -22,7 +22,14 @@ export class BranchDbService extends BaseDBService {
         super(httpService, queryService, "view_branches");
     }
 
-    //find all tenant branch
+
+    /**
+     * find all tenant branch
+     *
+     * @param {string} TENANT_GUID
+     * @returns {Observable<any>}
+     * @memberof BranchDbService
+     */
     public findAll(TENANT_GUID: string): Observable<any> {
 
         const fields = ['BRANCH'];
@@ -36,7 +43,15 @@ export class BranchDbService extends BaseDBService {
 
     }
 
-    //find tenant branch by name
+
+    /**
+     * find tenant branch by name
+     *
+     * @param {string} name
+     * @param {string} TENANT_GUID
+     * @returns {Observable<any>}
+     * @memberof BranchDbService
+     */
     public findByName(name: string, TENANT_GUID: string): Observable<any> {
 
         const fields = ['BRANCH'];

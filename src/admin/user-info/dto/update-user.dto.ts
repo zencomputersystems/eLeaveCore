@@ -10,6 +10,12 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @extends {UserDto}
  */
 export class UpdateUserDTO extends UserDto {
+    /**
+     * Data update user - id
+     *
+     * @type {string}
+     * @memberof UpdateUserDTO
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     id: string;

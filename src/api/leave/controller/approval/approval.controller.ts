@@ -6,7 +6,7 @@ import { ApprovalService } from 'src/common/approval/service/approval.service';
 import { ApprovedLeaveDTO } from '../../dto/approved-leave.dto';
 
 /**
- *
+ * Controller for approve leave
  *
  * @export
  * @class ApprovedController
@@ -16,8 +16,20 @@ import { ApprovedLeaveDTO } from '../../dto/approved-leave.dto';
 @ApiBearerAuth()
 export class ApprovedController {
 
+    /**
+     *Creates an instance of ApprovedController.
+     * @param {ApprovalService} approvedService
+     * @memberof ApprovedController
+     */
     constructor(private readonly approvedService: ApprovalService) { }
 
+    /**
+     * Approved leave policy change
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof ApprovedController
+     */
     @Post('leave/policy')
     @ApiOperation({ title: 'Approved Leave' })
     policyChange(@Req() req, @Res() res) {
@@ -36,6 +48,14 @@ export class ApprovedController {
             )
     }
 
+    /**
+     * Approved leave
+     *
+     * @param {ApprovedLeaveDTO} approvedLeaveDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof ApprovedController
+     */
     @Post('leave/approved')
     @ApiOperation({ title: 'Approved Leave' })
     approved(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
@@ -53,6 +73,14 @@ export class ApprovedController {
 
     }
 
+    /**
+     * Rejected leave
+     *
+     * @param {ApprovedLeaveDTO} approvedLeaveDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof ApprovedController
+     */
     @Post('leave/rejected')
     @ApiOperation({ title: 'Approved Leave' })
     rejected(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { BaseDBService } from 'src/common/base/base-db.service';
 
 /**
- *
+ * Service for user
  *
  * @export
  * @class UserService
@@ -19,48 +19,69 @@ export class UserService extends BaseDBService {
     private table_name = 'user_main';
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService){
-            super(httpService,queryService,"user_main")
-        }
+        public readonly queryService: QueryParserService) {
+        super(httpService, queryService, "user_main")
+    }
 
-    //find single user
-    public async findOne(email: string,password: string): Promise<any> {
+    /**
+     * Find single user
+     *
+     * @param {string} email
+     * @param {string} password
+     * @returns {Promise<any>}
+     * @memberof UserService
+     */
+    public async findOne(email: string, password: string): Promise<any> {
 
-        const fields = ['USER_GUID','EMAIL','TENANT_GUID'];
+        const fields = ['USER_GUID', 'EMAIL', 'TENANT_GUID'];
         //const filters = ['(EMAIL='+email+')','(PASSWORD='+CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex)+')'];
-        const filters = ['(EMAIL='+email+')','(PASSWORD='+password+')'];
+        const filters = ['(EMAIL=' + email + ')', '(PASSWORD=' + password + ')'];
 
         console.log(filters);
 
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
-  
+        const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
+
         //call DF to validate the user
         return this.httpService.get(url).toPromise();
-        
+
     }
 
     // // pass list of filter and get the data
     // public findByFilter(filters: Array<string>): Observable<any> {
 
     //     const fields = ['USER_GUID','EMAIL','TENANT_GUID','ACTIVATION_FLAG'];
-       
+
     //     const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
-  
+
     //     //call DF to validate the user
     //     return this.httpService.get(url);
     // }
 
+    /**
+     * FindOne user ByPayload
+     *
+     * @param {*} payload
+     * @returns {Promise<any>}
+     * @memberof UserService
+     */
     public async findOneByPayload(payload): Promise<any> {
-        const fields = ['USER_GUID','EMAIL','TENANT_GUID'];
-        const filters = ['(EMAIL='+payload.email+')','(TENANT_GUID='+payload.tenantId+')']
-       
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
-  
+        const fields = ['USER_GUID', 'EMAIL', 'TENANT_GUID'];
+        const filters = ['(EMAIL=' + payload.email + ')', '(TENANT_GUID=' + payload.tenantId + ')']
+
+        const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
+
         //call DF to validate the user
         return this.httpService.get(url).toPromise();
     }
 
-    //create new user
+    /**
+     * Create new user
+     *
+     * @param {*} user
+     * @param {*} d
+     * @returns
+     * @memberof UserService
+     */
     public create(user: any, d: any) {
 
         const data = new UserModel();
@@ -72,7 +93,7 @@ export class UserService extends BaseDBService {
         const resource = new Resource(new Array);
         resource.resource.push(data);
 
-        return this.createByModel(resource,[],[],[]);
+        return this.createByModel(resource, [], [], []);
 
     }
 

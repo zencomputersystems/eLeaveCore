@@ -4,7 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
 
 /**
- *
+ * DB Service for department
  *
  * @export
  * @class DepartmentDbService
@@ -20,7 +20,13 @@ export class DepartmentDbService extends BaseDBService {
         super(httpService, queryService, "view_departments");
     }
 
-    //find all tenant branch
+    /**
+     * Find all department by tenant id
+     *
+     * @param {string} tenantid
+     * @returns {Observable<any>}
+     * @memberof DepartmentDbService
+     */
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['DEPARTMENT'];

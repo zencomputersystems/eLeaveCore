@@ -9,7 +9,7 @@ import { InvitationInviteService } from './invitation-invite.service';
 import { InviteDTO } from './dto/invite.dto';
 
 /**
- *
+ *  Controller for invitation
  *
  * @export
  * @class InvitationController
@@ -18,25 +18,38 @@ import { InviteDTO } from './dto/invite.dto';
 
 export class InvitationController {
 
+    /**
+     *Creates an instance of InvitationController.
+     * @param {InvitationService} invitationService
+     * @param {InvitationInviteService} invitationInviteService
+     * @memberof InvitationController
+     */
     constructor(
         private readonly invitationService: InvitationService,
-        private readonly invitationInviteService: InvitationInviteService) {}
+        private readonly invitationInviteService: InvitationInviteService) { }
 
-    @ApiOperation({title: 'Accept Invitation sent by admin'})
+    /**
+     * Accept Invitation sent by admin
+     *
+     * @param {string} token
+     * @param {*} res
+     * @memberof InvitationController
+     */
+    @ApiOperation({ title: 'Accept Invitation sent by admin' })
     @ApiImplicitQuery({ name: 'token', description: 'token used to validate user invitation identity', required: true })
     @Get('/:token')
-    accept(@Param('token') token: string,@Res() res) {
-        
+    accept(@Param('token') token: string, @Res() res) {
+
         this.invitationService.acceptInvitation(token)
             .subscribe(
                 data => {
-                    if(!data.status) {
+                    if (!data.status) {
                         res.status(401);
                         return res.send(data);
-                    } 
+                    }
 
                     return res.send(data);
-                    
+
                 },
                 err => {
                     res.status(500);
@@ -45,11 +58,18 @@ export class InvitationController {
             )
     }
 
-    @ApiOperation({title: 'Update user password for first time'})
+    /**
+     * Update user password for first time
+     *
+     * @param {ActivatedByPassword} activateByPasswordDTO
+     * @param {*} res
+     * @memberof InvitationController
+     */
+    @ApiOperation({ title: 'Update user password for first time' })
     @Patch()
-    activate(@Body() activateByPasswordDTO: ActivatedByPassword,@Res() res) {
-        
-        this.invitationService.setNewUserPassword(activateByPasswordDTO.id,activateByPasswordDTO.password)
+    activate(@Body() activateByPasswordDTO: ActivatedByPassword, @Res() res) {
+
+        this.invitationService.setNewUserPassword(activateByPasswordDTO.id, activateByPasswordDTO.password)
             .subscribe(
                 data => {
                     res.send(data);
@@ -62,24 +82,35 @@ export class InvitationController {
             )
     }
 
+    /**
+     * Sent invitation to user
+     *
+     * @param {[InviteDTO]} inviteListDto
+     * @param {*} req
+     * @param {*} res
+     * @memberof InvitationController
+     */
     @UseGuards(AuthGuard('jwt'))
     @ApiBearerAuth()
     @UseGuards(ResourceGuard)
-    @ApiOperation({title: 'Sent invitation to user'})
+    @ApiOperation({ title: 'Sent invitation to user' })
     @Roles('ProfileAdmin')
     @Post()
-    invite(@Body() inviteListDto: [InviteDTO],@Req() req, @Res() res) {
-        this.invitationInviteService.invite(inviteListDto,req.user)
+    invite(@Body() inviteListDto: [InviteDTO], @Req() req, @Res() res) {
+        this.invitationInviteService.invite(inviteListDto, req.user)
             .subscribe(
-                result => {     
+                result => {
+                    let respon = '{"status":"Email send"}';
+                    console.log(result);
                     res.status(200);
-                    res.send(result);
+                    // res.send(result);
+                    res.send(respon);
                 },
                 err => {
                     console.log(err);
                     res.status(400);
                     res.send("fail to send invitation");
                 }
-            )            
+            )
     }
 }

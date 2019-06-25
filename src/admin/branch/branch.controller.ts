@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Controller for branch
  *
  * @export
  * @class BranchController
@@ -17,6 +17,13 @@ export class BranchController {
 
     constructor(private readonly branchService: BranchService,private readonly resultStatusService: ResultStatusService) {}
 
+    /**
+     * Get all branch list
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof BranchController
+     */
     @Get()
     @ApiOperation({title: 'Get branch list'})
     findAll(@Req() req,@Res() res) {

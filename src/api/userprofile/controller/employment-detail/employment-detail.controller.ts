@@ -10,7 +10,7 @@ import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employme
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Controller for employment detail
  *
  * @export
  * @class EmploymentDetailController
@@ -19,11 +19,26 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class EmploymentDetailController {
+    /**
+     *Creates an instance of EmploymentDetailController.
+     * @param {UserprofileService} userprofileService
+     * @param {AccessLevelValidateService} accessLevelValidationService
+     * @param {ResultStatusService} resultStatusService
+     * @memberof EmploymentDetailController
+     */
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
         private readonly resultStatusService: ResultStatusService) { }
 
+    /**
+     * Get employment detail to edit for requested user
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof EmploymentDetailController
+     */
     @UseGuards(ResourceGuard)
     @Get('employment-detail/:id')
     @Roles('EditProfile', 'ProfileAdmin')
@@ -53,6 +68,14 @@ export class EmploymentDetailController {
             )
     }
 
+    /**
+     * Update employment detail for this user profile
+     *
+     * @param {UpdateEmploymentDetailDTO} updateEmploymentDetailDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof EmploymentDetailController
+     */
     @UseGuards(ResourceGuard)
     @Patch('employment-detail')
     @Roles('ProfileAdmin')

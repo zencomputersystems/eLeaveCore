@@ -7,7 +7,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Controller for section
  *
  * @export
  * @class SectionController
@@ -21,7 +21,7 @@ export class SectionController {
     private readonly resultStatusService: ResultStatusService) { }
 
   /**
-   *
+   * Create new section
    *
    * @param {CreateSectionDto} createSectionDTO
    * @param {*} req
@@ -46,7 +46,7 @@ export class SectionController {
   }
 
   /**
-   *
+   * Update existing section
    *
    * @param {UpdateSectionDto} updateSectionDTO
    * @param {*} req
@@ -68,7 +68,7 @@ export class SectionController {
   }
 
   /**
-   *
+   * Get all section
    *
    * @param {*} req
    * @param {*} res

@@ -1,5 +1,5 @@
 /**
- *
+ * Model for holiday
  *
  * @export
  * @class HolidayModel

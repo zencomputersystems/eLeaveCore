@@ -11,6 +11,12 @@ import { ApiModelProperty } from '@nestjs/swagger';
  */
 export class UserEducationDetailDTO {
 
+    /**
+     *Data user education detail - education detail
+     *
+     * @type {UserEducationDTO[]}
+     * @memberof UserEducationDetailDTO
+     */
     @ApiModelProperty({ type: UserEducationDTO })
     @Type(() => UserEducationDTO)
     @ValidateNested()

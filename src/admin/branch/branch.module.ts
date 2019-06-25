@@ -9,7 +9,7 @@ import { BranchDbService } from './db/branch.db.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Module for branch
  *
  * @export
  * @class BranchModule

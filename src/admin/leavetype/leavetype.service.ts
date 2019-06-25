@@ -8,7 +8,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
 /**
- *
+ * Service for leavetype
  *
  * @export
  * @class LeavetypeService
@@ -17,43 +17,66 @@ import { IDbService } from 'src/interface/IDbService';
  */
 @Injectable()
 export class LeavetypeService extends BaseDBService implements IDbService {
-    
+
     private table_name = "l_main_leavetype";
 
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService){
-            super(httpService,queryService,"l_main_leavetype");
-        }
-
-    //find all tenant leavetype
-    public findAll(tenantid:string): Observable<any> {
-
-        const fields = ['LEAVE_TYPE_GUID','CODE','DESCRIPTION'];
-        const filters = ['(TENANT_GUID='+tenantid+')'];
-        //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
- 
-        //call DF to validate the user
-        return this.httpService.get(url);
-        
+        public readonly queryService: QueryParserService) {
+        super(httpService, queryService, "l_main_leavetype");
     }
 
-    //find tenant leavetype by id
-    public findById(tenantid:string, id: string): Observable<any> {
-        
-        const fields = ['LEAVE_TYPE_GUID','CODE','DESCRIPTION'];
-        const filters = ['(TENANT_GUID='+tenantid+')','(LEAVE_TYPE_GUID='+id+')'];
+
+    /**
+     * Find all tenant leavetype
+     *
+     * @param {string} tenantid
+     * @returns {Observable<any>}
+     * @memberof LeavetypeService
+     */
+    public findAll(tenantid: string): Observable<any> {
+
+        const fields = ['LEAVE_TYPE_GUID', 'CODE', 'DESCRIPTION'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')'];
         //url
-        const url = this.queryService.generateDbQuery(this.table_name,fields,filters);
- 
+        const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
 
         //call DF to validate the user
         return this.httpService.get(url);
+
     }
 
+
+    /**
+     * Find tenant leavetype by id
+     *
+     * @param {string} tenantid
+     * @param {string} id
+     * @returns {Observable<any>}
+     * @memberof LeavetypeService
+     */
+    public findById(tenantid: string, id: string): Observable<any> {
+
+        const fields = ['LEAVE_TYPE_GUID', 'CODE', 'DESCRIPTION'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')', '(LEAVE_TYPE_GUID=' + id + ')'];
+        //url
+        const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
+
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+    }
+
+    /**
+     * Create new leavetype
+     *
+     * @param {*} user
+     * @param {*} data
+     * @returns
+     * @memberof LeavetypeService
+     */
     create(user: any, data: any) {
-        
+
         const resource = new Resource(new Array);
         const modelData = new LeaveTypeModel()
 
@@ -69,14 +92,21 @@ export class LeavetypeService extends BaseDBService implements IDbService {
         resource.resource.push(modelData);
 
         console.log(resource);
-        return this.createByModel(resource,[],[],[]);
+        return this.createByModel(resource, [], [], []);
     }
 
-    //update existing branch
-    update(user:any, d: any) {
+    /**
+     * Update existing leavetype
+     *
+     * @param {*} user
+     * @param {*} d
+     * @returns
+     * @memberof LeavetypeService
+     */
+    update(user: any, d: any) {
 
         // do a checking first to determine this data belong to user
-        
+
         const resource = new Resource(new Array);
         const data = new LeaveTypeModel()
 
@@ -89,7 +119,7 @@ export class LeavetypeService extends BaseDBService implements IDbService {
 
         resource.resource.push(data);
 
-        return this.updateByModel(resource,[],[],[]);
+        return this.updateByModel(resource, [], [], []);
 
     }
 }

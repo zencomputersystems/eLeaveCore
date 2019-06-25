@@ -6,7 +6,7 @@ import { RestDataDTO } from './rest-data.dto';
 import { Type } from 'class-transformer';
 
 /**
- *
+ * Data to create calendar
  *
  * @export
  * @class CreateCalendarDTO
@@ -14,7 +14,7 @@ import { Type } from 'class-transformer';
 export class CreateCalendarDTO {
 
     /**
-     *
+     * Data calendar code (calendar name)
      *
      * @type {string}
      * @memberof CreateCalendarDTO
@@ -24,7 +24,7 @@ export class CreateCalendarDTO {
     code: string;
 
     /**
-     *
+     * Data calendar holiday day detail
      *
      * @type {HolidayDataDTO[]}
      * @memberof CreateCalendarDTO
@@ -35,7 +35,7 @@ export class CreateCalendarDTO {
     holiday: HolidayDataDTO[];
 
     /**
-     *
+     * Data calendar rest day detail
      *
      * @type {RestDataDTO[]}
      * @memberof CreateCalendarDTO

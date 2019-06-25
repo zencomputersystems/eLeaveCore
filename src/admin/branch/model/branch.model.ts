@@ -1,6 +1,6 @@
 
 /**
- *
+ * Model for Branch
  *
  * @export
  * @class BranchModel

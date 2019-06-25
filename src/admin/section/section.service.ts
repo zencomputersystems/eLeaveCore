@@ -9,7 +9,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
 /**
- *
+ * Service for section
  *
  * @export
  * @class SectionService
@@ -27,7 +27,13 @@ export class SectionService extends BaseDBService implements IDbService {
         super(httpService, queryService, "main_section");
     }
 
-    //find all tenant branch
+    /**
+     * Find all section
+     *
+     * @param {string} tenantid
+     * @returns {Observable<any>}
+     * @memberof SectionService
+     */
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['SECTION_GUID', 'NAME'];
@@ -40,7 +46,14 @@ export class SectionService extends BaseDBService implements IDbService {
 
     }
 
-    //find tenant branch by id
+    /**
+     * Find section by id
+     *
+     * @param {string} tenantid
+     * @param {string} id
+     * @returns {Observable<any>}
+     * @memberof SectionService
+     */
     public findById(tenantid: string, id: string): Observable<any> {
 
         const fields = ['SECTION_GUID', 'NAME'];
@@ -52,7 +65,14 @@ export class SectionService extends BaseDBService implements IDbService {
         return this.httpService.get(url);
     }
 
-    //create new branch
+    /**
+     * Create new section
+     *
+     * @param {*} user
+     * @param {string} name
+     * @returns
+     * @memberof SectionService
+     */
     create(user: any, name: string) {
         const data = new SectionModel();
         data.SECTION_GUID = v1();
@@ -60,7 +80,14 @@ export class SectionService extends BaseDBService implements IDbService {
         return this.createByModel(resourceData, [], [], []);
     }
 
-    //update existing branch
+    /**
+     * Update existing section
+     *
+     * @param {*} user
+     * @param {*} d
+     * @returns
+     * @memberof SectionService
+     */
     update(user: any, d: any) {
 
         // do a checking first to determine this data belong to user
@@ -80,6 +107,15 @@ export class SectionService extends BaseDBService implements IDbService {
 
     }
 
+    /**
+     * Process to create new data
+     *
+     * @param {*} user
+     * @param {*} name
+     * @param {*} data
+     * @returns
+     * @memberof SectionService
+     */
     public createProcess(user, name, data) {
         const resource = new Resource(new Array);
 

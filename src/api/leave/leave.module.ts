@@ -19,16 +19,16 @@ import { ApprovedController } from './controller/approval/approval.controller';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 
 /**
- *
+ * Module for leave
  *
  * @export
  * @class LeaveModule
  */
 @Module({
   modules: [
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
   ],
-  controllers: [ApplyController,ApprovedController],
+  controllers: [ApplyController, ApprovedController],
   providers: [
     ApplyLeaveService,
     QueryParserService,
@@ -47,4 +47,4 @@ import { ApprovalService } from 'src/common/approval/service/approval.service';
     ApprovalService
   ],
 })
-export class LeaveModule {}
+export class LeaveModule { }

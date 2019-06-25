@@ -8,7 +8,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 /**
- *
+ * Module for user-info
  *
  * @export
  * @class UserInfoModule
@@ -22,8 +22,8 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
   ],
   modules: [
     AuthModule,
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
   ]
 })
-export class UserInfoModule {}
+export class UserInfoModule { }

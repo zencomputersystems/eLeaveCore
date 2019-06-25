@@ -5,7 +5,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
 
 /**
- *
+ * DB Service for user profile
  *
  * @export
  * @class UserprofileDbService
@@ -16,6 +16,12 @@ export class UserprofileDbService extends BaseDBService {
 
     private _tableName = "l_view_user_profile_list";
 
+    /**
+     *Creates an instance of UserprofileDbService.
+     * @param {HttpService} httpService
+     * @param {QueryParserService} queryService
+     * @memberof UserprofileDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

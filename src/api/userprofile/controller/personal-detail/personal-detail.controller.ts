@@ -10,7 +10,7 @@ import { Roles } from 'src/decorator/resource.decorator';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 /**
- *
+ * Controller for personal detail
  *
  * @export
  * @class PersonalDetailController
@@ -19,20 +19,34 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class PersonalDetailController {
-    
+
+    /**
+     *Creates an instance of PersonalDetailController.
+     * @param {UserprofileService} userprofileService
+     * @param {AccessLevelValidateService} accessLevelValidationService
+     * @param {XMLParserService} xmlParserService
+     * @memberof PersonalDetailController
+     */
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly xmlParserService: XMLParserService) {}
+        private readonly xmlParserService: XMLParserService) { }
 
 
+    /**
+     * Get personal detail to edit for this user
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof PersonalDetailController
+     */
     @Get('personal-detail')
-    @ApiOperation({title: 'Get personal detail to edit for this user'})
-    findOwn(@Req() req,@Res() res) {
+    @ApiOperation({ title: 'Get personal detail to edit for this user' })
+    findOwn(@Req() req, @Res() res) {
         //get the requesting user
         const user = req.user;
 
-        const filters = ['(TENANT_GUID='+user.TENANT_GUID+')','(USER_GUID='+user.USER_GUID+')'];
+        const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID=' + user.USER_GUID + ')'];
 
         this.userprofileService.getPersonalDetail(filters)
             .subscribe(
@@ -47,15 +61,23 @@ export class PersonalDetailController {
             )
     }
 
+    /**
+     * Get personal detail to edit for requested user
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof PersonalDetailController
+     */
     @UseGuards(ResourceGuard)
     @Get('personal-detail/:id')
-    @Roles('EditProfile','ProfileAdmin')
-    @ApiOperation({title: 'Get personal detail to edit for requested user'})
+    @Roles('EditProfile', 'ProfileAdmin')
+    @ApiOperation({ title: 'Get personal detail to edit for requested user' })
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-    findOne(@Param('id') id,@Req() req,@Res() res) {
+    findOne(@Param('id') id, @Req() req, @Res() res) {
 
         const user = req.user;
-        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID,user.USER_GUID,req.accessLevel,['(USER_INFO_GUID='+id+')'])
+        this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
             .pipe(switchMap(filter => {
                 return this.userprofileService.getPersonalDetail(filter);
             }))
@@ -70,20 +92,29 @@ export class PersonalDetailController {
             )
     }
 
+    /**
+     * Update userprofile
+     *
+     * @param {UpdatePersonalDetailDTO} updatePersonalDetailDTO
+     * @param {*} req
+     * @param {*} res
+     * @returns
+     * @memberof PersonalDetailController
+     */
     @UseGuards(ResourceGuard)
     @Patch('personal-detail')
-    @Roles('EditProfile','ProfileAdmin')
-    @ApiOperation({title: 'Update userprofile'})
-    update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO,@Req() req, @Res() res) {
-        
-        return this.userprofileService.updatePersonalDetail(updatePersonalDetailDTO,req.USER_GUID)
+    @Roles('EditProfile', 'ProfileAdmin')
+    @ApiOperation({ title: 'Update userprofile' })
+    update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO, @Req() req, @Res() res) {
+
+        return this.userprofileService.updatePersonalDetail(updatePersonalDetailDTO, req.USER_GUID)
             .subscribe(
                 data => {
                     res.send(data.data.resource);
                 },
                 err => {
                     res.status(500);
-                    if(err.response.data) {
+                    if (err.response.data) {
                         res.send(err.response.data.error)
                     } else {
                         res.send(err);

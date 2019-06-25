@@ -7,7 +7,7 @@ import { ApiBearerAuth, ApiImplicitQuery } from '@nestjs/swagger';
 
 
 /**
- *
+ * Controller for user-info
  *
  * @export
  * @class UserInfoController

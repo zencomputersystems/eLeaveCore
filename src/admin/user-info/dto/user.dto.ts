@@ -15,61 +15,150 @@ import { UserFamilyDTO } from 'src/api/userprofile/dto/userprofile-detail/person
  */
 export class UserDto {
 
+    /**
+     * Data user dto - employee id
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     employeeId: string;
 
+    /**
+     * Data user dto - employee name
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     employeeName: string;
 
+    /**
+     * Data user dto - phone number
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     phoneNumber: string;
 
+    /**
+     * Data user dto - company number
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     companyNumber: string;
 
+    /**
+     * Data user dto - marital status
+     *
+     * @type {number}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     maritalStatus: number;
 
+    /**
+     * Data user dto - ic number
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     icNumber: string;
 
+    /**
+     * Data user dto - dob
+     *
+     * @type {Date}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     dob: Date;
 
+    /**
+     * Data user dto - gender
+     *
+     * @type {number}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     gender: number;
 
+    /**
+     * Data user dto - email
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     email: string;
 
-    // residential address info
+    /**
+     * Residential address info
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     address1: string;
 
+    /**
+     * Residential address info 2
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     address2: string;
 
+    /**
+     * Data user dto - city
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     city: string;
 
+    /**
+     * Data user dto - postcode
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     postcode: string;
 
+    /**
+     * Data user dto - state
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     state: string;
 
+    /**
+     * Data user dto - country
+     *
+     * @type {string}
+     * @memberof UserDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     country: string;

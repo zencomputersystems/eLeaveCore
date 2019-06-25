@@ -5,16 +5,19 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserService } from 'src/admin/user/user.service';
 import { InvitationDbService } from './db/invitation.db.service';
 import { InviteDTO } from './dto/invite.dto';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, exhaustMap } from 'rxjs/operators';
 import { UserModel } from 'src/admin/user/model/user.model';
 import { EmailList } from './dto/email-list';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { of, forkJoin } from 'rxjs';
 import { UserInviteModel } from './model/user-invite.model';
+import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
+import { validate } from 'class-validator';
+import { setTimeout } from 'timers';
 
 /**
- *
+ * Service for invitation invite
  *
  * @export
  * @class InvitationInviteService
@@ -22,40 +25,82 @@ import { UserInviteModel } from './model/user-invite.model';
 @Injectable()
 export class InvitationInviteService {
 
+    /**
+     *Creates an instance of InvitationInviteService.
+     * @param {InvitationDbService} inviteDbService
+     * @param {MailerService} mailerService
+     * @param {HttpService} httpService
+     * @param {QueryParserService} queryService
+     * @param {UserService} userService
+     * @param {EmailNodemailerService} emailNodemailerService
+     * @memberof InvitationInviteService
+     */
     constructor(
         private readonly inviteDbService: InvitationDbService,
         private readonly mailerService: MailerService,
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly emailNodemailerService: EmailNodemailerService
     ) {
     }
 
+    /**
+     * Method invite
+     *
+     * @param {Array<InviteDTO>} inviteList
+     * @param {*} user
+     * @returns
+     * @memberof InvitationInviteService
+     */
     public invite(inviteList: Array<InviteDTO>, user: any) {
 
         const userFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(ACTIVATION_FLAG=0)']
-
+        // setTimeout(function () {
         return this.userService.findByFilterV2([], userFilter)
             .pipe(
                 map(res => {
+                    console.log('filter user');
                     return this.filterUser(inviteList, res);
                 }),
                 mergeMap(res => {
+                    console.log('check invite');
                     return this.checkInvitationStatus(res, user.TENANT_GUID);
                 }),
-                mergeMap(res => this.saveInvitation(res, user)),
+                mergeMap(res => {
+                    console.log('save invite');
+                    return this.saveInvitation(res, user);
+                }),
                 mergeMap((res) => {
+                    console.log('send email');
                     const observableEmail$ = [];
 
                     res.forEach(element => {
-                        observableEmail$.push(this.sendEmail(element.email, element.invitationId));
+                        observableEmail$.push(this.sendEmailV2(element.email, element.invitationId));
+                        console.log(observableEmail$);
                     });
 
-                    return forkJoin(observableEmail$);
+                    console.log(observableEmail$);
+                    const tempVar = forkJoin(observableEmail$);
+                    // setTimeout(function () {
+                    //     tempVar.subscribe(val => { console.log(val); });
+
+                    // }, 6000);
+                    return tempVar;
                 })
             )
+        // }, 6000);
     }
 
+    /**
+     * Method filter user
+     *
+     * @private
+     * @param {Array<InviteDTO>} inviteList
+     * @param {Array<UserModel>} userList
+     * @returns
+     * @memberof InvitationInviteService
+     */
     private filterUser(inviteList: Array<InviteDTO>, userList: Array<UserModel>) {
 
         const successList = new Array<EmailList>()
@@ -80,6 +125,15 @@ export class InvitationInviteService {
         return successList;
     }
 
+    /**
+     * Method check invitation status
+     *
+     * @private
+     * @param {Array<EmailList>} inviteList
+     * @param {string} tenantId
+     * @returns
+     * @memberof InvitationInviteService
+     */
     private checkInvitationStatus(inviteList: Array<EmailList>, tenantId: string) {
 
         return this.inviteDbService.findAll(tenantId)
@@ -121,6 +175,15 @@ export class InvitationInviteService {
 
     }
 
+    /**
+     * Method save invitation
+     *
+     * @private
+     * @param {Array<EmailList>} inviteList
+     * @param {*} user
+     * @returns
+     * @memberof InvitationInviteService
+     */
     private saveInvitation(inviteList: Array<EmailList>, user: any) {
 
         const inviteResourceArray = new Resource(new Array);
@@ -132,7 +195,7 @@ export class InvitationInviteService {
                 data.INVITATION_GUID = v1();
                 data.STATUS = 1;
                 data.USER_GUID = inviteList[i].userId;
-                data.CREATION_TS = user.USER_GUID;
+                data.CREATION_USER_GUID = user.USER_GUID;
                 data.TENANT_GUID = user.TENANT_GUID;
                 data.CREATION_TS = new Date().toISOString();
                 data.EMAIL = inviteList[i].email;
@@ -184,8 +247,17 @@ export class InvitationInviteService {
     }
 
     // send email to user
+    /**
+     * Method send mail using gmail service
+     *
+     * @private
+     * @param {string} email
+     * @param {string} token
+     * @returns
+     * @memberof InvitationInviteService
+     */
     private sendEmail(email: string, token: string) {
-        return this.mailerService
+        let results = this.mailerService
             .sendMail({
                 to: email, // sender address
                 from: 'wantan.wonderland.2018@gmail.com', // list of receivers
@@ -196,5 +268,26 @@ export class InvitationInviteService {
                     code: "http://zencore.zen.com.my:3000/api/invitation/" + token
                 }
             });
+
+        console.log(results);
+        return results;
     }
+
+    /**
+     * Method send email using nodemailer
+     *
+     * @private
+     * @param {string} email
+     * @param {string} token
+     * @returns
+     * @memberof InvitationInviteService
+     */
+    private sendEmailV2(email: string, token: string) {
+        console.log('before function');
+        let results = this.emailNodemailerService.mailProcess(email, token);
+        console.log('after function');
+        console.log(results);
+        return results;
+    }
+
 }

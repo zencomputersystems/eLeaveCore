@@ -12,11 +12,23 @@ export class GeneralPropertiesXmlDTO {
         this.isCheck = false;
     }
 
+    /**
+     * Data for general properties - isCheck
+     *
+     * @type {boolean}
+     * @memberof GeneralPropertiesXmlDTO
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     @IsBoolean()
     isCheck: boolean;
 
+    /**
+     * Data for general properties - text value
+     *
+     * @type {string}
+     * @memberof GeneralPropertiesXmlDTO
+     */
     @ApiModelProperty()
     @ValidateIf(o => o.isCheck == true)
     @IsNotEmpty()

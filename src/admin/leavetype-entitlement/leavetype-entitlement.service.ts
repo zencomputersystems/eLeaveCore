@@ -6,7 +6,7 @@ import { ViewLeaveTypeSetupModel } from './model/view-leave-type-setup.model';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 /**
- *
+ * Service for leavetype entitlement
  *
  * @export
  * @class LeaveTypeEntitlementService
@@ -17,10 +17,8 @@ export class LeaveTypeEntitlementService {
         private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
         private readonly xmlParserService: XMLParserService) { }
 
-
-    // return list of entitlement for this filter
     /**
-     *
+     * return list of entitlement for this filter
      *
      * @param {string} tenantId
      * @returns
@@ -52,7 +50,7 @@ export class LeaveTypeEntitlementService {
     }
 
     /**
-     *
+     * Find leavetype entitlement by id
      *
      * @param {string} tenantId
      * @param {string} entitlementId

@@ -9,7 +9,7 @@ import { SectionService } from '../section/section.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Module for cost centre
  *
  * @export
  * @class CostcentreModule
@@ -18,11 +18,11 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
   controllers: [
     CostcentreController
   ],
-  modules:[
+  modules: [
     AuthModule,
-    PassportModule.register({session: false}),
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
-  ],    
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
+  ],
   providers: [
     QueryParserService,
     CostcentreService,
@@ -30,4 +30,4 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     ResultStatusService
   ]
 })
-export class CostcentreModule {}
+export class CostcentreModule { }

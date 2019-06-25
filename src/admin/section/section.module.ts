@@ -8,7 +8,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
 /**
- *
+ * Module for section
  *
  * @export
  * @class SectionModule

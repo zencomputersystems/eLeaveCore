@@ -1,5 +1,5 @@
 /**
- *
+ * Model for user invite
  *
  * @export
  * @class UserInviteModel

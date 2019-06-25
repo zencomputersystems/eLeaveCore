@@ -12,7 +12,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 
 /**
- *
+ * Service for user-info
  *
  * @export
  * @class UserInfoService
@@ -27,9 +27,9 @@ export class UserInfoService extends BaseDBService implements IDbService {
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
-        public readonly xmlParserService: XMLParserService){
-            super(httpService,queryService, 'user_info');
-        }
+        public readonly xmlParserService: XMLParserService) {
+        super(httpService, queryService, 'user_info');
+    }
 
     /**
      * Find single user
@@ -54,7 +54,7 @@ export class UserInfoService extends BaseDBService implements IDbService {
             'EMPLOYEE_TYPE',
             'CALENDAR_GUID'
         ];
-        const filters = ['(USER_GUID='+userId + ')'];
+        const filters = ['(USER_GUID=' + userId + ')'];
 
         const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
 
@@ -62,16 +62,31 @@ export class UserInfoService extends BaseDBService implements IDbService {
 
     }
 
+    /**
+     * Find all user-info
+     *
+     * @param {string} TENANT_GUID
+     * @returns {Observable<any>}
+     * @memberof UserInfoService
+     */
     findAll(TENANT_GUID: string): Observable<any> {
         throw new Error('Method not implemented.');
     }
+
+    /**
+     * Find user info by id
+     *
+     * @param {*} USERINFO_GUID
+     * @param {string} id
+     * @returns {Observable<any>}
+     * @memberof UserInfoService
+     */
     findById(USERINFO_GUID: any, id: string): Observable<any> {
         throw new Error('Method not implemented.');
     }
 
-
     /**
-     * Create new leavetype entitlement
+     * Create new user info
      *
      * @param {*} user
      * @param {CreateUserDTO} d
@@ -79,8 +94,6 @@ export class UserInfoService extends BaseDBService implements IDbService {
      * @memberof UserInfoService
      */
     create(user: any, d: CreateUserDTO) {
-
-        //do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource = new Resource(new Array);
 
@@ -97,6 +110,14 @@ export class UserInfoService extends BaseDBService implements IDbService {
     }
 
 
+    /**
+     * Update existing user-info
+     *
+     * @param {*} user
+     * @param {UpdateUserDTO} d
+     * @returns
+     * @memberof UserInfoService
+     */
     update(user: any, d: UpdateUserDTO) {
 
         //do a leavetype checking to validate leave_type_guid belong to this tenant
@@ -111,6 +132,14 @@ export class UserInfoService extends BaseDBService implements IDbService {
         return this.updateByModel(resource, [], [], []);
     }
 
+    /**
+     * Method to map data input and database table
+     *
+     * @param {UserDto} d
+     * @param {string} userId
+     * @returns
+     * @memberof UserInfoService
+     */
     public mapData(d: UserDto, userId: string) {
         const data = new UserInfoModel();
 

@@ -23,7 +23,7 @@ import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 
 
 /**
- *
+ * Service for apply leave
  *
  * @export
  * @class ApplyLeaveService
@@ -31,6 +31,16 @@ import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 @Injectable()
 export class ApplyLeaveService {
 
+    /**
+     *Creates an instance of ApplyLeaveService.
+     * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+     * @param {XMLParserService} xmlParserService
+     * @param {LeaveApplicationValidationService} leaveValidationService
+     * @param {UserInfoService} userInfoService
+     * @param {LeaveTransactionDbService} leaveTransactionDbService
+     * @param {DateCalculationService} dateCalculationService
+     * @memberof ApplyLeaveService
+     */
     constructor(
         private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
         private readonly xmlParserService: XMLParserService,
@@ -41,6 +51,14 @@ export class ApplyLeaveService {
     ) { }
 
     // process leave application
+    /**
+     * process leave application
+     *
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {*} user
+     * @returns
+     * @memberof ApplyLeaveService
+     */
     public processLeave(applyLeaveDTO: ApplyLeaveDTO, user: any) {
         let y = applyLeaveDTO;
 
@@ -85,6 +103,16 @@ export class ApplyLeaveService {
             )
     }
 
+    /**
+     * Process apply leave data
+     *
+     * @private
+     * @param {*} result
+     * @param {ApplyLeaveDTO} y
+     * @param {*} user
+     * @returns
+     * @memberof ApplyLeaveService
+     */
     private applyLeaveData(result, y: ApplyLeaveDTO, user) {
         let resArr = [];
         let sumDays = 0;
@@ -98,7 +126,7 @@ export class ApplyLeaveService {
                 msjStatus = leaveDetail.startDate + ' is a leave day';
             }
             else {
-                msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days':'day') +'  was send for approval between '+leaveDetail.startDate+' and '+leaveDetail.endDate;
+                msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days' : 'day') + '  was send for approval between ' + leaveDetail.startDate + ' and ' + leaveDetail.endDate;
                 this.leaveTransactionDbService.create(y.data[i], result, user, y).pipe(map((res) => {
                     console.log('pass');
                     if (res.status != 200) {
@@ -111,14 +139,23 @@ export class ApplyLeaveService {
                 })
             }
             resArr.push(msjStatus);
-            sumDays=sumDays+noOfDays;
+            sumDays = sumDays + noOfDays;
         }
-        result.validationResult.message = sumDays + ' ' + (sumDays > 1 ? 'days':'day') +' was send for approval';
+        result.validationResult.message = sumDays + ' ' + (sumDays > 1 ? 'days' : 'day') + ' was send for approval';
         result.validationResult.details = resArr;
         return result.validationResult;
     }
 
     // check if leave entitlement policy is available
+    /**
+     * Method check user leave entitlement 
+     *
+     * @private
+     * @param {string} leaveTypeId
+     * @param {*} user
+     * @returns
+     * @memberof ApplyLeaveService
+     */
     private checkUserLeaveEntitlement(leaveTypeId: string, user: any) {
         const filter = [
             '(LEAVE_TYPE_GUID=' + leaveTypeId + ')',
@@ -145,6 +182,14 @@ export class ApplyLeaveService {
 
     // get month between 2 date
     // return array of month
+    /**
+     * Method get month
+     *
+     * @param {Moment} startDate
+     * @param {Moment} endDate
+     * @returns
+     * @memberof ApplyLeaveService
+     */
     getMonths(startDate: Moment, endDate: Moment) {
         var timeValues = [];
 
@@ -157,6 +202,14 @@ export class ApplyLeaveService {
     }
 
     // get day list between 2 date
+    /**
+     * Method get days between two dates
+     *
+     * @param {Moment} startDate
+     * @param {Moment} endDate
+     * @returns
+     * @memberof ApplyLeaveService
+     */
     getDays(startDate: Moment, endDate: Moment) {
         var timeValues = [];
 

@@ -10,6 +10,12 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @extends {SectionDto}
  */
 export class UpdateSectionDto extends SectionDto {
+    /**
+     * Data update section - id
+     *
+     * @type {string}
+     * @memberof UpdateSectionDto
+     */
     @ApiModelProperty()
     @IsNotEmpty()
     readonly id: string;

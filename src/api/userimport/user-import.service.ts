@@ -13,7 +13,7 @@ import { UserImport } from './dto/user-import';
 
 
 /**
- *
+ * Service for user import
  *
  * @export
  * @class UserImportService
@@ -26,37 +26,59 @@ export class UserImportService {
     public departmentData: any;
     public importResult = new Array<UserImportResult>();
 
+    /**
+     *Creates an instance of UserImportService.
+     * @param {UserService} userService
+     * @param {UserInfoService} userInfoService
+     * @memberof UserImportService
+     */
     constructor(
         private readonly userService: UserService,
         private readonly userInfoService: UserInfoService
-    ) {}
+    ) { }
 
-    // proess the imported user data
-    public processImportData(user: any,importData: [UserCsvDto]) {
+    /**
+     * Proess the imported user data
+     *
+     * @param {*} user
+     * @param {[UserCsvDto]} importData
+     * @returns
+     * @memberof UserImportService
+     */
+    public processImportData(user: any, importData: [UserCsvDto]) {
 
 
         //get all the the user for this tenant
-        return this.userService.findByFilterV2([],['(TENANT_GUID='+user.TENANT_GUID+')'])
+        return this.userService.findByFilterV2([], ['(TENANT_GUID=' + user.TENANT_GUID + ')'])
             .pipe(
-               map(res => {
+                map(res => {
                     const existingUsers: UserModel[] = res;
                     return existingUsers;
-               }),
-               map(res => this.filterData(importData,res,'Existing User','EMAIL','STAFF_EMAIL')),
-               map(res => this.filterDuplicateUser(res)),
-               mergeMap(successUser => this.saveImportList(successUser,user)),
-               mergeMap(successUser => this.saveInfoDataList(successUser,user))
+                }),
+                map(res => this.filterData(importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL')),
+                map(res => this.filterDuplicateUser(res)),
+                mergeMap(successUser => this.saveImportList(successUser, user)),
+                mergeMap(successUser => this.saveInfoDataList(successUser, user))
 
             )
     }
 
-    private saveImportList(importData: Array<UserCsvDto>,user: any) {
+    /**
+     * Method save import list
+     *
+     * @private
+     * @param {Array<UserCsvDto>} importData
+     * @param {*} user
+     * @returns
+     * @memberof UserImportService
+     */
+    private saveImportList(importData: Array<UserCsvDto>, user: any) {
 
-        if(importData.length==0) {
+        if (importData.length == 0) {
             return of(importData);
         }
         const userResourceArray = new Resource(new Array);
-        
+
         importData.forEach(element => {
             const userModel = new UserModel();
 
@@ -72,18 +94,27 @@ export class UserImportService {
             userResourceArray.resource.push(userModel);
         });
 
-        return this.userService.createByModel(userResourceArray,[],[],['EMAIL,USER_GUID'])
+        return this.userService.createByModel(userResourceArray, [], [], ['EMAIL,USER_GUID'])
             .pipe(map(res => {
-                if(res.status==200) {
-                    const saveUser =  res.data.resource;
-                    return this.filterData(importData,saveUser,'Fail','EMAIL','STAFF_EMAIL')
+                if (res.status == 200) {
+                    const saveUser = res.data.resource;
+                    return this.filterData(importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL')
                 }
             }))
 
     }
 
-    private saveInfoDataList(importData: Array<UserCsvDto>,user:any) {
-        if(importData.length==0) {
+    /**
+     * Method save info data list
+     *
+     * @private
+     * @param {Array<UserCsvDto>} importData
+     * @param {*} user
+     * @returns
+     * @memberof UserImportService
+     */
+    private saveInfoDataList(importData: Array<UserCsvDto>, user: any) {
+        if (importData.length == 0) {
             return of(this.importResult);
         }
 
@@ -91,39 +122,51 @@ export class UserImportService {
 
         importData.forEach(element => {
 
-            if(element.ID!=null||element.ID!='') {
+            if (element.ID != null || element.ID != '') {
                 const userInfoModel = new UserInfoModel();
                 userInfoModel.USER_INFO_GUID = v1();
                 userInfoModel.USER_GUID = element.ID;
                 userInfoModel.TENANT_GUID = user.TENANT_GUID;
                 userInfoModel.CREATION_USER_GUID = user.USER_GUID;
                 userInfoModel.CREATION_TS = new Date().toISOString();
-                
+
                 userInfoModel.FULLNAME = element.FULLNAME;
 
                 userInfoModel.DEPARTMENT = element.DEPARTMENT;
                 userInfoModel.BRANCH = element.BRANCH;
                 userInfoModel.DESIGNATION = element.DESIGNATION;
-                
+
                 userInfoModel.JOIN_DATE = new Date(element.JOIN_DATE);
                 userInfoModel.CONFIRMATION_DATE = new Date(element.CONFIRMATION_DATE);
                 userInfoModel.RESIGNATION_DATE = new Date(element.RESIGNATION_DATE);
-                
+
                 userInfoResourceArray.resource.push(userInfoModel);
             }
-            
+
         })
 
-        return this.userInfoService.createByModel(userInfoResourceArray,[],[],['USER_INFO_GUID','USER_GUID'])
+        return this.userInfoService.createByModel(userInfoResourceArray, [], [], ['USER_INFO_GUID', 'USER_GUID'])
             .pipe(map(res => {
-                if(res.status==200) {
-                    const saveUser =  res.data.resource;
+                if (res.status == 200) {
+                    const saveUser = res.data.resource;
 
-                    return this.filterSaveUserByID(saveUser,importData);
+                    return this.filterSaveUserByID(saveUser, importData);
                 }
             }))
     }
 
+    /**
+     * Method to filter data
+     *
+     * @private
+     * @param {Array<UserCsvDto>} importData
+     * @param {*} checkModelArray
+     * @param {string} categoryName
+     * @param {*} findElement
+     * @param {*} findItem
+     * @returns
+     * @memberof UserImportService
+     */
     private filterData(
         importData: Array<UserCsvDto>,
         checkModelArray: any,
@@ -139,8 +182,8 @@ export class UserImportService {
         // remove existing users from csv list
         importData.forEach(element => {
 
-            if(checkModelArray.find(x=>x[findElement].toUpperCase()===element[findItem].toUpperCase())) {
-                data.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
+            if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
+                data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
             } else {
                 successList.push(element);
             }
@@ -152,6 +195,14 @@ export class UserImportService {
         return successList;
     }
 
+    /**
+     * Method to filter duplicate user
+     *
+     * @private
+     * @param {Array<UserCsvDto>} importData
+     * @returns
+     * @memberof UserImportService
+     */
     private filterDuplicateUser(importData: Array<UserCsvDto>) {
         const duplicateUser = new UserImportResult();
         duplicateUser.category = "Duplicate";
@@ -161,8 +212,8 @@ export class UserImportService {
         // remove existing users from csv list
         importData.forEach(element => {
 
-            if(successList.find(x=>x.STAFF_EMAIL.toUpperCase()===element.STAFF_EMAIL.toUpperCase())) {
-                duplicateUser.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
+            if (successList.find(x => x.STAFF_EMAIL.toUpperCase() === element.STAFF_EMAIL.toUpperCase())) {
+                duplicateUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
             } else {
                 successList.push(element);
             }
@@ -174,6 +225,15 @@ export class UserImportService {
         return successList;
     }
 
+    /**
+     * Method filter save user by id
+     *
+     * @private
+     * @param {*} saveUser
+     * @param {Array<UserCsvDto>} importData
+     * @returns
+     * @memberof UserImportService
+     */
     private filterSaveUserByID(saveUser: any, importData: Array<UserCsvDto>) {
         const failUser = new UserImportResult();
         failUser.category = "Fail";
@@ -186,15 +246,14 @@ export class UserImportService {
         // remove existing users from csv list
         importData.forEach(element => {
 
-            const checkUser = saveUser.find(x=>x.USER_GUID.toUpperCase()===element.ID.toUpperCase())
-            if(checkUser) {
+            const checkUser = saveUser.find(x => x.USER_GUID.toUpperCase() === element.ID.toUpperCase())
+            if (checkUser) {
                 element.ID = checkUser.USER_GUID;
                 successList.push(element);
-                successUser.data.push(new UserImport(checkUser.USER_GUID,element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
-
+                successUser.data.push(new UserImport(checkUser.USER_GUID, element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
 
             } else {
-                failUser.data.push(new UserImport('',element.STAFF_EMAIL,element.STAFF_ID,element.FULLNAME));
+                failUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
             }
 
         });

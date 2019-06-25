@@ -9,7 +9,7 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
 
 /**
- *
+ * Controller for user profile
  *
  * @export
  * @class UserprofileController
@@ -19,10 +19,23 @@ import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-d
 @ApiBearerAuth()
 export class UserprofileController {
 
+    /**
+     *Creates an instance of UserprofileController.
+     * @param {UserprofileService} userprofileService
+     * @param {AccessLevelValidateService} accessLevelValidationService
+     * @memberof UserprofileController
+     */
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService) { }
 
+    /**
+     * Find all user profile
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserprofileController
+     */
     @UseGuards(ResourceGuard)
     @Get('/users')
     @ApiOperation({ title: 'Get list of employee' })
@@ -48,6 +61,14 @@ export class UserprofileController {
             )
     }
 
+    /**
+     * Find one user profile using parameter id
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserprofileController
+     */
     @UseGuards(ResourceGuard)
     @Get('userprofile/:id')
     @ApiOperation({ title: 'Get profile detail for requested user' })
@@ -57,9 +78,9 @@ export class UserprofileController {
 
         let dataId = null;
         let dataIdTemp = req.query.id;
-        if(dataIdTemp == null){
+        if (dataIdTemp == null) {
             dataId = id;
-        }else{
+        } else {
             dataId = dataIdTemp;
         }
         // console.log(req.query.id);
@@ -118,6 +139,13 @@ export class UserprofileController {
             )
     }
 
+    /**
+     * Get profile detail for requesting user
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserprofileController
+     */
     @Get('userprofile')
     @ApiOperation({ title: 'Get profile detail for requesting user' })
     findOwn(@Req() req, @Res() res) {
@@ -171,6 +199,14 @@ export class UserprofileController {
 
     }
 
+    /**
+     * Method get entitlement process
+     *
+     * @param {*} data1
+     * @param {*} res
+     * @param {*} user
+     * @memberof UserprofileController
+     */
     public getEntitlementProcess(data1, res, user) {
         this.userprofileService.getEntitlementDetail(data1.tenantId, data1.userId).subscribe(
             data => {

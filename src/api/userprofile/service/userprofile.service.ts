@@ -20,7 +20,7 @@ import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 
 /**
- *
+ * Service for user profile
  *
  * @export
  * @class UserprofileService
@@ -28,6 +28,15 @@ import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 @Injectable()
 export class UserprofileService {
 
+    /**
+     *Creates an instance of UserprofileService.
+     * @param {UserInfoService} userInfoService
+     * @param {UserprofileDbService} userprofileDBService
+     * @param {XMLParserService} xmlParserService
+     * @param {UserLeaveEntitlementService} entitlementDetailService
+     * @param {ServiceYearCalc} serviceYearCalcService
+     * @memberof UserprofileService
+     */
     constructor(
         private readonly userInfoService: UserInfoService,
         private readonly userprofileDBService: UserprofileDbService,
@@ -35,6 +44,13 @@ export class UserprofileService {
         private readonly entitlementDetailService: UserLeaveEntitlementService,
         private readonly serviceYearCalcService: ServiceYearCalc) { }
 
+    /**
+     * Get user profile list
+     *
+     * @param {string[]} filters
+     * @returns
+     * @memberof UserprofileService
+     */
     public getList(filters: string[]) {
         return this.userprofileDBService.findByFilterV2([], filters)
             .pipe(
@@ -64,6 +80,7 @@ export class UserprofileService {
     // Get User Detail
     /**
      * usage : userprofile service get by id or own
+     * Get User Detail
      *
      * @param {string[]} filters
      * @returns
@@ -86,6 +103,13 @@ export class UserprofileService {
 
     //#region PERSONAL DETAIL
 
+    /**
+     * Get personal detail
+     *
+     * @param {string[]} filters
+     * @returns
+     * @memberof UserprofileService
+     */
     public getPersonalDetail(filters: string[]) {
         return this.userInfoService.findByFilterV2([], filters)
             .pipe(
@@ -99,6 +123,14 @@ export class UserprofileService {
             );
     }
 
+    /**
+     * Update personal detail
+     *
+     * @param {UpdatePersonalDetailDTO} data
+     * @param {string} userId
+     * @returns
+     * @memberof UserprofileService
+     */
     public updatePersonalDetail(data: UpdatePersonalDetailDTO, userId: string) {
 
         const modeldata = new UserInfoModel();
@@ -119,6 +151,13 @@ export class UserprofileService {
 
     //#region EMPLOYMENT DETAIL
 
+    /**
+     * get employment detail
+     *
+     * @param {string[]} filters
+     * @returns
+     * @memberof UserprofileService
+     */
     public getEmploymentDetail(filters: string[]) {
         return this.userInfoService.findByFilterV2([], filters)
             .pipe(
@@ -132,6 +171,14 @@ export class UserprofileService {
             )
     }
 
+    /**
+     * update employmemnt detail
+     *
+     * @param {UpdateEmploymentDetailDTO} data
+     * @param {string} userId
+     * @returns
+     * @memberof UserprofileService
+     */
     public updateEmploymentDetail(data: UpdateEmploymentDetailDTO, userId: string) {
         console.log('this is employment update');
         const modelData = new UserInfoModel();
@@ -169,6 +216,14 @@ export class UserprofileService {
 
     //#region ENTITLEMENT DETAIL
 
+    /**
+     * get entitlement detail
+     *
+     * @param {*} tenant_guid
+     * @param {*} user_guid
+     * @returns
+     * @memberof UserprofileService
+     */
     public getEntitlementDetail(tenant_guid, user_guid) {
         return this.entitlementDetailService.getEntitlementList(tenant_guid, user_guid);
     }
@@ -178,6 +233,13 @@ export class UserprofileService {
 
     //#region CERTIFICATION DETAIL
 
+    /**
+     * Get certification detail
+     *
+     * @param {string[]} filters
+     * @returns
+     * @memberof UserprofileService
+     */
     public getCertificationDetail(filters: string[]) {
         return this.userInfoService.findByFilterV2([], filters)
             .pipe(
@@ -193,6 +255,18 @@ export class UserprofileService {
 
     //#endregion
 
+    /**
+     * Build profile data json
+     *
+     * @private
+     * @param {UserInfoModel} data
+     * @param {boolean} isShowPersonalData
+     * @param {boolean} isShowEmploymentData
+     * @param {boolean} isShowEntitlementData
+     * @param {boolean} isShowCertData
+     * @returns
+     * @memberof UserprofileService
+     */
     private buildProfileData(
         data: UserInfoModel,
         isShowPersonalData: boolean,
@@ -247,6 +321,15 @@ export class UserprofileService {
 
     }
 
+    /**
+     * get personal detail refactor
+     *
+     * @param {UserInfoModel} data
+     * @param {boolean} isShowPersonalData
+     * @param {boolean} isShowCertData
+     * @param {*} userProfileData
+     * @memberof UserprofileService
+     */
     public personaldetailProcess(data: UserInfoModel, isShowPersonalData: boolean, isShowCertData: boolean, userProfileData) {
         //process the personal detail
         const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
@@ -261,6 +344,13 @@ export class UserprofileService {
     }
 
     //loop data for personal detail
+    /**
+     * Loop data for personal detail
+     *
+     * @param {*} parseXMLtoJSON
+     * @param {*} userProfileData
+     * @memberof UserprofileService
+     */
     public personaldataProcess(parseXMLtoJSON, userProfileData) {
         const userPersonalDetail = new UserPersonalDetailDTO();
         for (var j in parseXMLtoJSON) {
@@ -275,6 +365,14 @@ export class UserprofileService {
     }
 
     //change key or substitute value for personaldata
+    /**
+     * change key or substitute value for personaldata
+     *
+     * @param {*} sub_key
+     * @param {*} sub_val
+     * @param {*} userPersonalDetail
+     * @memberof UserprofileService
+     */
     public doProcess(sub_key, sub_val, userPersonalDetail) {
         if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; }
         if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; }

@@ -21,10 +21,14 @@ export class RolesGuard implements CanActivate {
 
         // get the resource name
         const resource = this.reflector.get<ResourceDecoratorModel>('resources', context.getHandler());
-
+        console.log('is in role');
+        console.log(resource);
         // we need to check if current user has access to this operation on this resource
         const resourceName = resource.resourceName;
         const operation = resource.resourceOperation;
+
+        console.log(resourceName);
+        console.log(operation);
 
         const request = context.switchToHttp().getRequest();
         const user = request.user;
@@ -33,7 +37,7 @@ export class RolesGuard implements CanActivate {
 
         // find permission
         const getPermissionLevel = permissionList.Properties.find(x => x.ResourceName === resourceName);
-
+console.log(getPermissionLevel);
         if (getPermissionLevel) {
             const getPermissiomOperation = getPermissionLevel.Operation.find(x => x.name == operation);
 

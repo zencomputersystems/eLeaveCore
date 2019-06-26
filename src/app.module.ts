@@ -19,6 +19,7 @@ import { UserImportModule } from './api/userimport/user-import.module';
 import { LeaveModule } from './api/leave/leave.module';
 import { HolidayModule } from './admin/holiday/holiday.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
+import { RoleModule } from './admin/role/role.module';
 
 @Module({
   imports: [
@@ -58,7 +59,8 @@ import { DashboardModule } from './api/dashboard/dashboard.module';
     UserprofileModule,
     LeaveModule,
     HolidayModule,
-    DashboardModule
+    DashboardModule,
+    RoleModule
   ],
   controllers: [AppController],
   providers: [

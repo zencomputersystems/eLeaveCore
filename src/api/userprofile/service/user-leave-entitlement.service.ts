@@ -20,7 +20,7 @@ import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-t
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 /**
- *
+ * Service for user leave entitlement
  *
  * @export
  * @class UserLeaveEntitlementService
@@ -28,6 +28,18 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 @Injectable()
 export class UserLeaveEntitlementService {
 
+    /**
+     *Creates an instance of UserLeaveEntitlementService.
+     * @param {UserLeaveEntitlementSummaryDbService} userLeaveEntitlementSummaryDbService
+     * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+     * @param {UserprofileDbService} userDbService
+     * @param {LeavetypeEntitlementDbService} leaveEntitlementDbService
+     * @param {UserInfoService} userInfoDbService
+     * @param {ServiceYearCalc} serviceYearCalcService
+     * @param {ProratedDateEndYearService} proratedMonthEndYearService
+     * @param {XMLParserService} xmlParserService
+     * @memberof UserLeaveEntitlementService
+     */
     constructor(
         private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
         private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
@@ -40,6 +52,14 @@ export class UserLeaveEntitlementService {
         private readonly xmlParserService: XMLParserService
     ) { }
 
+    /**
+     * Method get entitlement list
+     *
+     * @param {string} tenantId
+     * @param {string} userId
+     * @returns
+     * @memberof UserLeaveEntitlementService
+     */
     public getEntitlementList(tenantId: string, userId: string) {
         const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')'];
         const fields = ['LEAVE_TYPE_GUID', 'LEAVE_CODE', 'ENTITLED_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
@@ -48,6 +68,15 @@ export class UserLeaveEntitlementService {
     }
 
     // in one time, only 1 policy can active for each type of main leave
+    /**
+     * Method to assign entitlement
+     * In one time, only 1 policy can active for each type of main leave
+     *
+     * @param {*} user
+     * @param {AssignLeavePolicyDTO} data
+     * @returns
+     * @memberof UserLeaveEntitlementService
+     */
     public assignEntitlement(user: any, data: AssignLeavePolicyDTO) {
 
         //check if the user belong to this tenant
@@ -94,6 +123,15 @@ export class UserLeaveEntitlementService {
 
     }
 
+    /**
+     * Method assign policy process
+     *
+     * @param {*} res
+     * @param {*} user
+     * @param {*} data
+     * @returns
+     * @memberof UserLeaveEntitlementService
+     */
     public assignPolicyProcess(res, user, data) {
         const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
         // get the service year
@@ -139,6 +177,15 @@ export class UserLeaveEntitlementService {
             }))
     }
 
+    /**
+     * Method db search
+     *
+     * @private
+     * @param {IDbService} IDbService
+     * @param {string[]} filter
+     * @returns
+     * @memberof UserLeaveEntitlementService
+     */
     private dbSearch(IDbService: IDbService, filter: string[]) {
         return IDbService.findByFilterV2([], filter)
             .pipe(

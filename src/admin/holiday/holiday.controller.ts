@@ -4,11 +4,14 @@ import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { HolidayService } from './holiday.service';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
+import { Resources } from 'src/decorator/resource.decorator';
 import { CreateCalendarDTO } from './dto/create-calendar.dto';
 import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { CalendarDTO } from './dto/calendar.dto';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { RolesGuard } from 'src/guard/role.guard';
+import { Resource } from 'src/common/model/resource.model';
 // var iso3166 = require('iso3166-2-db');
 
 /**
@@ -153,6 +156,7 @@ export class HolidayController {
     @ApiOperation({ title: 'Get holiday list by calendar profile' })
     @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
+    // @Resources({resourceName:'ViewProfile',resourceOperation:'GETALL'})
     findOne(@Req() req, @Res() res, @Param('id') id) {
         // console.log(id);
         // console.log(req);

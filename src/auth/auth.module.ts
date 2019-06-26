@@ -9,10 +9,16 @@ import { UserModule } from 'src/admin/user/user.module';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { ActiveDirectoryStrategy } from './passport/ad.strategy';
 
+/**
+ * Module for auth
+ *
+ * @export
+ * @class AuthModule
+ */
 @Module({
     providers: [
         QueryParserService,
-        AuthService, 
+        AuthService,
         UserService,
         LocalStrategy,
         ActiveDirectoryStrategy,
@@ -21,8 +27,8 @@ import { ActiveDirectoryStrategy } from './passport/ad.strategy';
         AuthController
     ],
     imports: [
-        PassportModule.register({session: false}),
+        PassportModule.register({ session: false }),
         UserModule
     ]
-  })
-export class AuthModule {}
+})
+export class AuthModule { }

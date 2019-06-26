@@ -76,10 +76,18 @@ export class HolidayService {
         data.CALENDAR_GUID = d.calendar_guid;
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
+        let userList = '';
+        for (let i = 0; i < d.user_guid.length; i++) {
+            if (userList == '') {
+                userList = '"' + d.user_guid[i] + '"';
+            } else {
+                userList = userList + ',"' + d.user_guid[i] + '"';
+            }
+        }
 
         resource.resource.push(data);
 
-        return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID=' + d.user_guid + ')'], []);
+        return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
     }
 
     /**

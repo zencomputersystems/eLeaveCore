@@ -8,12 +8,16 @@ export class ResourceGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    // console.log(roles);
+    // console.log('in resource guard');
     if (!roles) {
       return false;
     }
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    // console.log(request);
+    // console.log('is request');
 
     // check user permission list
     const isInPermisson = true;

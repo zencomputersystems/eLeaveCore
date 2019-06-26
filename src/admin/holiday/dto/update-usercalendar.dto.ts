@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 
 /**
  * Data update user calendar to assign calendar 
@@ -15,9 +15,9 @@ export class UpdateUserCalendarDTO {
      * @memberof UpdateUserCalendarDTO
      */
     @ApiModelProperty({ description: 'User guid for selected user', example: 'b022d1b1-ff12-9cdf-2272-8c01cb75fbe0' })
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    user_guid: string;
+    user_guid: string[];
 
     /**
      * Data for update user calendar - calendar guid to assign

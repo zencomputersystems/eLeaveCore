@@ -22,6 +22,12 @@ import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-t
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { ResultStatusService } from 'src/common/helper/result-status.service';
 
+/**
+ * Module for user profile
+ *
+ * @export
+ * @class UserprofileModule
+ */
 @Module({
   providers: [
     UserprofileService,
@@ -40,8 +46,8 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     ProratedDateCurrentMonthService,
     ResultStatusService
   ],
-  modules:[
-    HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}}),
+  modules: [
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
   ],
   controllers: [
     PersonalDetailController,
@@ -51,4 +57,4 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     UserprofileController,
     EntitlementDetailController],
 })
-export class UserprofileModule {}
+export class UserprofileModule { }

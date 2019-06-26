@@ -11,6 +11,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 import { RoleDbService } from './db/role.db.service';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 /**
  * Module for role
@@ -30,7 +31,9 @@ import { RoleDbService } from './db/role.db.service';
         AssignerDataService,
         ResultStatusService,
         RoleService,
-        RoleDbService
+        RoleDbService,
+        AssignerDataService,
+        UserInfoDbService
     ],
     controllers: [RoleController]
 })

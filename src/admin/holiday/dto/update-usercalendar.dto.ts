@@ -14,7 +14,7 @@ export class UpdateUserCalendarDTO {
      * @type {string}
      * @memberof UpdateUserCalendarDTO
      */
-    @ApiModelProperty({ description: 'User guid for selected user', example: 'b022d1b1-ff12-9cdf-2272-8c01cb75fbe0' })
+    @ApiModelProperty({ description: 'User guid for selected user', example: '["b022d1b1-ff12-9cdf-2272-8c01cb75fbe0"]' })
     @IsArray()
     @IsNotEmpty()
     user_guid: string[];

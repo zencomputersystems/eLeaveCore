@@ -1,14 +1,65 @@
 import { BaseDBService } from "src/common/base/base-db.service";
 import { HttpService, Injectable } from "@nestjs/common";
 import { QueryParserService } from "src/common/helper/query-parser.service";
+import { Observable } from "rxjs";
 
+/**
+ * DB service for role
+ *
+ * @export
+ * @class RoleDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class RoleDbService extends BaseDBService {
     private _tableName = "l_role_profile";
 
+    /**
+     *Creates an instance of RoleDbService.
+     * @param {HttpService} httpService
+     * @param {QueryParserService} queryService
+     * @memberof RoleDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {
         super(httpService, queryService, "l_role_profile");
+    }
+
+    /**
+     * Method find all role - list all role profile
+     *
+     * @returns {Observable<any>}
+     * @memberof RoleDbService
+     */
+    public findAllRoleProfile(): Observable<any> {
+
+        const fields = ['ROLE_GUID', 'CODE', 'DESCRIPTION'];
+        const filters = [];
+
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+
+    }
+
+    /**
+     * Method find all role detail
+     *
+     * @param {string} roleProfileId
+     * @returns {Observable<any>}
+     * @memberof RoleDbService
+     */
+    public findAll(roleProfileId: string): Observable<any> {
+
+        const fields = ['PROPERTIES_XML'];
+        const filters = ['(ROLE_GUID=' + roleProfileId + ')'];
+
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+
     }
 }

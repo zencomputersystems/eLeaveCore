@@ -1,18 +1,32 @@
 import { map } from 'rxjs/operators';
 
 export class CommonFunctionService {
-
+    //general get function
     public runGetService(method, res) {
         this.getResults(method, res, 'Fail to fetch resource');
     }
 
+    //general create function
     public runCreateService(method, res) {
         this.getResults(method, res, 'Fail to create resource');
     }
 
+    //general update function
     public runUpdateService(method, res) {
         this.getResults(method, res, 'Fail to update resource');
     }
+
+    //calendar profile n role profile list
+    public runGetServiceV2(method,res){
+        method.subscribe(
+            data => { this.sendResSuccessV3(data, res); },
+            err => { this.sendResError('Fail to fetch resource', res); }
+        );
+    }
+
+
+
+
 
     public getResults(method, res, message) {
         method.subscribe(
@@ -20,6 +34,10 @@ export class CommonFunctionService {
             err => { this.sendResError(message, res); }
         );
     }
+
+
+
+
 
     // success
 
@@ -35,6 +53,13 @@ export class CommonFunctionService {
     public sendResSuccessV2(data, res) { //sendSuccess
         res.send(data.data);
     }
+
+    public sendResSuccessV3(data, res) {
+        res.send(data);
+    }
+
+
+
 
 
     //failed
@@ -72,5 +97,6 @@ export class CommonFunctionService {
             return res.data.resource;
         }
     }
+
 
 }

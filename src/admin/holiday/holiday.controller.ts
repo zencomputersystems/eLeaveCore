@@ -50,19 +50,23 @@ export class HolidayController {
         let yearLink = req.query.year != null ? '&year=' + req.query.year : '&year=' + dt.getFullYear();
         let locationLink = req.query.location != null ? '&location=' + req.query.location : '';
         let monthLink = req.query.month != null ? '&month=' + req.query.month : '';
+        let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
+        let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
+        let calendarFullURL = calendarBaseUrl + calendarApiKey;
 
-        this.http.get('https://calendarific.com/api/v2/holidays?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55' + countryLink + yearLink + locationLink + monthLink).subscribe((response) => {
-            res.send(response.data);
-        }, err => {
-            this.commonFunctionService.sendResErrorV3(err, res);
-            // if (err.response.data) {
-            //     res.status(err.response.data.error.status_code);
-            //     res.send(err.response.data.error.message)
-            // } else {
-            //     res.status(500);
-            //     res.send(err);
-            // }
-        });
+        this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink)
+            .subscribe((response) => {
+                res.send(response.data);
+            }, err => {
+                this.commonFunctionService.sendResErrorV3(err, res);
+                // if (err.response.data) {
+                //     res.status(err.response.data.error.status_code);
+                //     res.send(err.response.data.error.message)
+                // } else {
+                //     res.status(500);
+                //     res.send(err);
+                // }
+            });
 
     }
 
@@ -76,21 +80,22 @@ export class HolidayController {
     @Get('/calendar-profile')
     @ApiOperation({ title: 'Get calendar profile list' })
     findAllCalendar(@Req() req, @Res() res) {
-        this.holidayService.getCalendarProfileList().subscribe(
-            data => {
-                res.send(data);
-            },
-            err => {
-                this.commonFunctionService.sendResErrorV3(err, res);
-                // if (err.response.data) {
-                //     res.status(err.response.data.error.status_code);
-                //     res.send(err.response.data.error.message)
-                // } else {
-                //     res.status(500);
-                //     res.send(err);
-                // }
-            }
-        );
+        this.commonFunctionService.runGetServiceV2(this.holidayService.getCalendarProfileList(), res);
+        // this.holidayService.getCalendarProfileList().subscribe(
+        //     data => {
+        //         res.send(data);
+        //     },
+        //     err => {
+        //         this.commonFunctionService.sendResErrorV3(err, res);
+        //         // if (err.response.data) {
+        //         //     res.status(err.response.data.error.status_code);
+        //         //     res.send(err.response.data.error.message)
+        //         // } else {
+        //         //     res.status(500);
+        //         //     res.send(err);
+        //         // }
+        //     }
+        // );
 
     }
 
@@ -129,20 +134,21 @@ export class HolidayController {
     @Post('/calendar-profile')
     @ApiOperation({ title: 'Setup calendar profile' })
     create(@Body() createCalendarDTO: CreateCalendarDTO, @Req() req, @Res() res) {
-        this.holidayService.create(req.user, createCalendarDTO)
-            .subscribe(
-                data => {
-                    // console.log(data);
-                    if (data.status == 200)
-                        res.send(data.data.resource);
-                },
-                err => {
-                    //   console.log(err);
-                    res.status(400);
-                    res.send(err);
-                    //console.log(err.response.data.error.context);
-                }
-            )
+        this.commonFunctionService.runCreateService(this.holidayService.create(req.user, createCalendarDTO), res);
+        // this.holidayService.create(req.user, createCalendarDTO)
+        //     .subscribe(
+        //         data => {
+        //             // console.log(data);
+        //             if (data.status == 200)
+        //                 res.send(data.data.resource);
+        //         },
+        //         err => {
+        //             //   console.log(err);
+        //             res.status(400);
+        //             res.send(err);
+        //             //console.log(err.response.data.error.context);
+        //         }
+        //     )
     }
 
     /**
@@ -173,21 +179,22 @@ export class HolidayController {
             res.send('id not found');
         }
 
-        this.holidayService.getHolidayList(dataId).subscribe(
-            data => {
-                res.send(data);
-            },
-            err => {
-                this.commonFunctionService.sendResErrorV3(err, res);
-                // if (err.response.data) {
-                //     res.status(err.response.data.error.status_code);
-                //     res.send(err.response.data.error.message)
-                // } else {
-                //     res.status(500);
-                //     res.send(err);
-                // }
-            }
-        );
+        this.commonFunctionService.runGetServiceV2(this.holidayService.getHolidayList(dataId), res);
+        // this.holidayService.getHolidayList(dataId).subscribe(
+        //     data => {
+        //         res.send(data);
+        //     },
+        //     err => {
+        //         this.commonFunctionService.sendResErrorV3(err, res);
+        //         // if (err.response.data) {
+        //         //     res.status(err.response.data.error.status_code);
+        //         //     res.send(err.response.data.error.message)
+        //         // } else {
+        //         //     res.status(500);
+        //         //     res.send(err);
+        //         // }
+        //     }
+        // );
 
     }
 

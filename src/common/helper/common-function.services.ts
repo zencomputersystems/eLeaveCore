@@ -1,4 +1,5 @@
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export class CommonFunctionService {
     //general get function
@@ -98,5 +99,17 @@ export class CommonFunctionService {
         }
     }
 
+    public findAllList(fields,tenantId,queryService,httpService,tableName): Observable<any> {
+
+        // const fields = ['BRANCH'];
+        const filters = ['(TENANT_GUID=' + tenantId + ')'];
+
+        //url
+        const url = queryService.generateDbQueryV2(tableName, fields, filters, []);
+
+        //call DF to validate the user
+        return httpService.get(url);
+
+    }
 
 }

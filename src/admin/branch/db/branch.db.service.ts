@@ -2,6 +2,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { HttpService, Injectable } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * table setup and function service for branch
@@ -17,7 +18,8 @@ export class BranchDbService extends BaseDBService {
 
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService) {
+        public readonly queryService: QueryParserService,
+        public readonly commonFunctionService: CommonFunctionService) {
 
         super(httpService, queryService, "view_branches");
     }
@@ -33,13 +35,14 @@ export class BranchDbService extends BaseDBService {
     public findAll(TENANT_GUID: string): Observable<any> {
 
         const fields = ['BRANCH'];
-        const filters = ['(TENANT_GUID=' + TENANT_GUID + ')'];
+        return this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
+        // const filters = ['(TENANT_GUID=' + TENANT_GUID + ')'];
 
-        //url
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        // //url
+        // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
-        //call DF to validate the user
-        return this.httpService.get(url);
+        // //call DF to validate the user
+        // return this.httpService.get(url);
 
     }
 

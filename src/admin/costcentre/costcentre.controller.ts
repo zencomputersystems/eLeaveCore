@@ -4,7 +4,7 @@ import { UpdateCostCentreDto } from './dto/update-costcentre.dto';
 import { CostcentreService } from './costcentre.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for cost centre
@@ -18,7 +18,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 export class CostcentreController {
 
   constructor(private readonly costcentreService: CostcentreService,
-    private readonly resultStatusService: ResultStatusService) { }
+    private readonly commonFunctionService: CommonFunctionService) { }
 
   /**
    * Create new cost centre
@@ -62,7 +62,7 @@ export class CostcentreController {
             res.send(data.data);
         },
         err => {
-          this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
+          this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
         }
       )
   }
@@ -82,7 +82,7 @@ export class CostcentreController {
       },
       err => {
         console.log(err.response.data.error);
-        this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
 
@@ -103,7 +103,7 @@ export class CostcentreController {
         res.send(data.data.resource[0]);
       },
       err => {
-        this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
   }

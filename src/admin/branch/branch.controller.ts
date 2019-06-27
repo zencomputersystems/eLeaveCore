@@ -1,8 +1,8 @@
-import { Controller,Get,UseGuards, Req, Res} from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BranchService } from './branch.service';
-import { ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for branch
@@ -15,28 +15,28 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @ApiBearerAuth()
 export class BranchController {
 
-    constructor(private readonly branchService: BranchService,private readonly resultStatusService: ResultStatusService) {}
+  constructor(private readonly branchService: BranchService, private readonly commonFunctionService: CommonFunctionService) { }
 
-    /**
-     * Get all branch list
-     *
-     * @param {*} req
-     * @param {*} res
-     * @memberof BranchController
-     */
-    @Get()
-    @ApiOperation({title: 'Get branch list'})
-    findAll(@Req() req,@Res() res) {
+  /**
+   * Get all branch list
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof BranchController
+   */
+  @Get()
+  @ApiOperation({ title: 'Get branch list' })
+  findAll(@Req() req, @Res() res) {
 
-      this.branchService.getList(req.user.TENANT_GUID).subscribe(
-        data => {
-          res.send(data);
-        },
-        err => {
-          this.resultStatusService.sendError(err,res);
-        }
-      )
+    this.branchService.getList(req.user.TENANT_GUID).subscribe(
+      data => {
+        res.send(data);
+      },
+      err => {
+        this.commonFunctionService.sendResErrorV3(err, res);
+      }
+    )
 
-    }
-  
+  }
+
 }

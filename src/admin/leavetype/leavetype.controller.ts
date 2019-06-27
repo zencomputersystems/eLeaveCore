@@ -4,7 +4,7 @@ import { LeavetypeService } from './leavetype.service';
 import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Leavetype controller
@@ -18,7 +18,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 export class LeaveTypeController {
 
   constructor(private readonly leavetypeService: LeavetypeService,
-    private readonly resultStatusService: ResultStatusService) { }
+    private readonly commonFunctionService: CommonFunctionService) { }
 
   /**
    * Create new leavetype
@@ -63,7 +63,7 @@ export class LeaveTypeController {
             res.send(data.data);
         },
         err => {
-          this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
+          this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
         }
       )
   }
@@ -82,7 +82,7 @@ export class LeaveTypeController {
         res.send(data.data.resource);
       },
       err => {
-        this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
 
@@ -103,7 +103,7 @@ export class LeaveTypeController {
         res.send(data.data.resource[0]);
       },
       err => {
-        this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
   }

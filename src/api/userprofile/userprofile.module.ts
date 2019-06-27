@@ -20,7 +20,7 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for user profile
@@ -44,7 +44,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     ServiceYearCalc,
     ProratedDateEndYearService,
     ProratedDateCurrentMonthService,
-    ResultStatusService
+    CommonFunctionService
   ],
   modules: [
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),

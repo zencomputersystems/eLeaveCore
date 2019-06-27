@@ -6,7 +6,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { BranchService } from './branch.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BranchDbService } from './db/branch.db.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for branch
@@ -15,17 +15,17 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
  * @class BranchModule
  */
 @Module({
-    controllers: [BranchController],
-    modules:[
-        AuthModule,
-        PassportModule.register({session: false}),
-        HttpModule.register({headers:{'Content-Type':'application/json','X-Dreamfactory-API-Key':DreamFactory.df_key}})
-      ],
-    providers: [
-      BranchDbService,
-      BranchService,
-      QueryParserService,
-      ResultStatusService
-    ]
+  controllers: [BranchController],
+  modules: [
+    AuthModule,
+    PassportModule.register({ session: false }),
+    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
+  ],
+  providers: [
+    BranchDbService,
+    BranchService,
+    QueryParserService,
+    CommonFunctionService
+  ]
 })
-export class BranchModule {}
+export class BranchModule { }

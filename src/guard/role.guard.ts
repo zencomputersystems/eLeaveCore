@@ -37,7 +37,7 @@ export class RolesGuard implements CanActivate {
 
         // find permission
         const getPermissionLevel = permissionList.Properties.find(x => x.ResourceName === resourceName);
-console.log(getPermissionLevel);
+        console.log(getPermissionLevel);
         if (getPermissionLevel) {
             const getPermissiomOperation = getPermissionLevel.Operation.find(x => x.name == operation);
 

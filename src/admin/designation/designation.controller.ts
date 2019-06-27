@@ -2,7 +2,7 @@ import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { DesignationService } from './designation.service';
 import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for dessignation
@@ -15,7 +15,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @ApiBearerAuth()
 export class DesignationController {
     constructor(private readonly designationService: DesignationService,
-        private readonly resultStatusService: ResultStatusService) { }
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * Find all designation by tenant id
@@ -32,7 +32,7 @@ export class DesignationController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err, res);
+                this.commonFunctionService.sendResErrorV3(err, res);
                 // if(err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)

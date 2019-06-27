@@ -2,7 +2,7 @@ import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch } from '
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { DepartmentService } from './department.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for department
@@ -16,7 +16,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 export class DepartmentController {
 
     constructor(private readonly departmentService: DepartmentService,
-        private readonly resultStatusService: ResultStatusService) { }
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * Find all department 
@@ -33,7 +33,7 @@ export class DepartmentController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err, res);
+                this.commonFunctionService.sendResErrorV3(err, res);
                 // if(err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)

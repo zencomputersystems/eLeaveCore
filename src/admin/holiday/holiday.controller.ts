@@ -9,9 +9,9 @@ import { CreateCalendarDTO } from './dto/create-calendar.dto';
 import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { CalendarDTO } from './dto/calendar.dto';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
 import { RolesGuard } from 'src/guard/role.guard';
 import { Resource } from 'src/common/model/resource.model';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 // var iso3166 = require('iso3166-2-db');
 
 /**
@@ -28,7 +28,7 @@ export class HolidayController {
 
     constructor(private readonly holidayService: HolidayService,
         private http: HttpService,
-        private readonly resultStatusService: ResultStatusService) { }
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * List data from calendarific for admin to view and pick
@@ -54,7 +54,7 @@ export class HolidayController {
         this.http.get('https://calendarific.com/api/v2/holidays?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55' + countryLink + yearLink + locationLink + monthLink).subscribe((response) => {
             res.send(response.data);
         }, err => {
-            this.resultStatusService.sendError(err, res);
+            this.commonFunctionService.sendResErrorV3(err, res);
             // if (err.response.data) {
             //     res.status(err.response.data.error.status_code);
             //     res.send(err.response.data.error.message)
@@ -81,7 +81,7 @@ export class HolidayController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err, res);
+                this.commonFunctionService.sendResErrorV3(err, res);
                 // if (err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)
@@ -105,16 +105,17 @@ export class HolidayController {
     @Patch('/calendar-profile')
     @ApiOperation({ title: 'Edit calendar profile' })
     updateCalendarProfile(@Body() updateCalendarDTO: UpdateCalendarDTO, @Req() req, @Res() res) {
-        this.holidayService.updateCalendar(req.user, updateCalendarDTO)
-            .subscribe(
-                data => {
-                    if (data.status == 200)
-                        res.send(data.data);
-                },
-                err => {
-                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
-                }
-            )
+        this.commonFunctionService.runUpdateService(this.holidayService.updateCalendar(req.user, updateCalendarDTO), res);
+        // this.holidayService.updateCalendar(req.user, updateCalendarDTO)
+        //     .subscribe(
+        //         data => {
+        //             if (data.status == 200)
+        //                 res.send(data.data);
+        //         },
+        //         err => {
+        //             this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
+        //         }
+        //     )
     }
 
     /**
@@ -177,7 +178,7 @@ export class HolidayController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err, res);
+                this.commonFunctionService.sendResErrorV3(err, res);
                 // if (err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)
@@ -201,16 +202,17 @@ export class HolidayController {
     @Patch('/user-calendar')
     @ApiOperation({ title: 'Assign calendar profile to employee' })
     updateToEmployee(@Body() updateUserCalendarDTO: UpdateUserCalendarDTO, @Req() req, @Res() res) {
-        this.holidayService.updateToEmployee(req.user, updateUserCalendarDTO)
-            .subscribe(
-                data => {
-                    if (data.status == 200)
-                        res.send(data.data);
-                },
-                err => {
-                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
-                }
-            )
+        this.commonFunctionService.runUpdateService(this.holidayService.updateToEmployee(req.user, updateUserCalendarDTO), res);
+        // this.holidayService.updateToEmployee(req.user, updateUserCalendarDTO)
+        //     .subscribe(
+        //         data => {
+        //             if (data.status == 200)
+        //                 res.send(data.data);
+        //         },
+        //         err => {
+        //             this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
+        //         }
+        //     )
     }
 
 

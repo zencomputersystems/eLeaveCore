@@ -6,7 +6,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for designation
@@ -24,7 +24,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     DesignationService,
     DesignationDbService,
     QueryParserService,
-    ResultStatusService
+    CommonFunctionService
   ],
   controllers: [DesignationController]
 })

@@ -2,7 +2,7 @@ import { Controller, UseGuards, HttpService, Get, Req, Res } from '@nestjs/commo
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { DreamFactory } from 'src/config/dreamfactory';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * All dashboard api
@@ -14,7 +14,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class DashboardController {
-    constructor(private http: HttpService, private resultStatusService: ResultStatusService) { }
+    constructor(private http: HttpService, private commonFunctionService: CommonFunctionService) { }
 
     /**
      * Get total employee and onleave count
@@ -59,9 +59,9 @@ export class DashboardController {
     public runService(req, res, method_procedure) {
         let url = DreamFactory.df_host_proc + `${method_procedure}(${req.query.tenantguid},${req.query.startdate},${req.query.enddate})`;
         this.http.get(url).subscribe(data => {
-            this.resultStatusService.sendSuccess(data, res);
+            this.commonFunctionService.sendResSuccessV2(data, res);
         }, err => {
-            this.resultStatusService.sendError(err, res);
+            this.commonFunctionService.sendResErrorV3(err, res);
         });
     }
 

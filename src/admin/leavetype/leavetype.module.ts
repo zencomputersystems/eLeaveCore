@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { LeaveTypeController } from './leavetype.controller';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for leavetype
@@ -23,7 +23,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
   providers: [
     LeavetypeService,
     QueryParserService,
-    ResultStatusService
+    CommonFunctionService
   ]
 })
 export class LeavetypeModule { }

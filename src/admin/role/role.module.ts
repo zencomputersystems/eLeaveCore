@@ -7,11 +7,11 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 import { RoleDbService } from './db/role.db.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for role
@@ -29,11 +29,11 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
         QueryParserService,
         XMLParserService,
         AssignerDataService,
-        ResultStatusService,
         RoleService,
         RoleDbService,
         AssignerDataService,
-        UserInfoDbService
+        UserInfoDbService,
+        CommonFunctionService
     ],
     controllers: [RoleController]
 })

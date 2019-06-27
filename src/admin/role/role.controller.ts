@@ -3,9 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { RoleDTO } from './dto/role.dto';
 import { RoleService } from './role.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
 import { UpdateRoleDTO } from './dto/update-role.dto';
 import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for role
@@ -17,15 +17,16 @@ import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class RoleController {
+    
     /**
      *Creates an instance of RoleController.
      * @param {RoleService} roleService
-     * @param {ResultStatusService} resultStatusService
+     * @param {CommonFunctionService} commonFunctionService
      * @memberof RoleController
      */
     constructor(
         private readonly roleService: RoleService,
-        private readonly resultStatusService: ResultStatusService
+        private readonly commonFunctionService: CommonFunctionService
     ) { }
 
     /**
@@ -43,7 +44,7 @@ export class RoleController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err, res);
+                this.commonFunctionService.sendResErrorV3(err, res);
             }
         );
 
@@ -84,16 +85,17 @@ export class RoleController {
     @Patch('/role-profile')
     @ApiOperation({ title: 'Edit role profile' })
     updateRolerProfile(@Body() updateRoleDTO: UpdateRoleDTO, @Req() req, @Res() res) {
-        this.roleService.updateRole(req.user, updateRoleDTO)
-            .subscribe(
-                data => {
-                    if (data.status == 200)
-                        res.send(data.data);
-                },
-                err => {
-                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
-                }
-            )
+        this.commonFunctionService.runUpdateService(this.roleService.updateRole(req.user, updateRoleDTO), res);
+        // this.roleService.updateRole(req.user, updateRoleDTO)
+        // .subscribe(
+        //     data => {
+        //         if (data.status == 200)
+        //             res.send(data.data);
+        //     },
+        //     err => {
+        //         this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
+        //     }
+        // )
     }
 
     /**
@@ -128,7 +130,7 @@ export class RoleController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendError(err, res);
+                this.commonFunctionService.sendResErrorV3(err, res);
             }
         );
 
@@ -145,15 +147,17 @@ export class RoleController {
     @Patch('/user-role')
     @ApiOperation({ title: 'Assign role profile to employee' })
     updateToEmployee(@Body() updateUserRoleDTO: UpdateUserRoleDTO, @Req() req, @Res() res) {
-        this.roleService.updateToEmployee(req.user, updateUserRoleDTO)
-            .subscribe(
-                data => {
-                    if (data.status == 200)
-                        res.send(data.data);
-                },
-                err => {
-                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
-                }
-            )
+        this.commonFunctionService.runUpdateService(this.roleService.updateToEmployee(req.user, updateUserRoleDTO), res);
+
+        // this.roleService.updateToEmployee(req.user, updateUserRoleDTO)
+        //     .subscribe(
+        //         data => {
+        //             if (data.status == 200)
+        //                 res.send(data.data);
+        //         },
+        //         err => {
+        //             this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
+        //         }
+        //     )
     }
 }

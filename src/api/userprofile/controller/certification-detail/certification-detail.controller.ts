@@ -6,7 +6,7 @@ import { switchMap } from 'rxjs/operators';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for certification detail
@@ -18,17 +18,18 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class CertificationDetailController {
+
     /**
      *Creates an instance of CertificationDetailController.
      * @param {UserprofileService} userprofileService
      * @param {AccessLevelValidateService} accessLevelValidationService
-     * @param {ResultStatusService} resultStatusService
+     * @param {CommonFunctionService} commonFunctionService
      * @memberof CertificationDetailController
      */
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly resultStatusService: ResultStatusService) { }
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * Find certification detail by id
@@ -55,7 +56,7 @@ export class CertificationDetailController {
                     res.send(data);
                 },
                 err => {
-                    this.resultStatusService.sendError(err, res);
+                    this.commonFunctionService.sendResErrorV3(err, res);
                     // if(err.response.data) {
                     //     res.status(err.response.data.error.context.resource[0].status_code);
                     //     res.send(err.response.data.error.context.resource[0].message)

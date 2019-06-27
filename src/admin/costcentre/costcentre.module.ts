@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { SectionService } from '../section/section.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for cost centre
@@ -27,7 +27,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     QueryParserService,
     CostcentreService,
     SectionService,
-    ResultStatusService
+    CommonFunctionService
   ]
 })
 export class CostcentreModule { }

@@ -7,7 +7,7 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateEmploymentDetailDTO } from '../../dto/userprofile-detail/employment-detail/update-employment-detail.dto';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for employment detail
@@ -19,17 +19,11 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class EmploymentDetailController {
-    /**
-     *Creates an instance of EmploymentDetailController.
-     * @param {UserprofileService} userprofileService
-     * @param {AccessLevelValidateService} accessLevelValidationService
-     * @param {ResultStatusService} resultStatusService
-     * @memberof EmploymentDetailController
-     */
+
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly resultStatusService: ResultStatusService) { }
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * Get employment detail to edit for requested user
@@ -56,7 +50,7 @@ export class EmploymentDetailController {
                     res.send(data);
                 },
                 err => {
-                    this.resultStatusService.sendError(err, res);
+                    this.commonFunctionService.sendResErrorV3(err, res);
                     // if(err.response.data) {
                     //     res.status(err.response.data.error.context.resource[0].status_code);
                     //     res.send(err.response.data.error.context.resource[0].message)

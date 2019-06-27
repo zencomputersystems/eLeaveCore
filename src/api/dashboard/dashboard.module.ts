@@ -3,7 +3,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { DashboardController } from './dashboard.controller';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for dashboard
@@ -18,7 +18,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
         HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
     ],
     providers: [
-        ResultStatusService
+        CommonFunctionService
     ],
     controllers: [DashboardController]
 })

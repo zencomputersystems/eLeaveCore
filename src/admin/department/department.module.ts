@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { DepartmentDbService } from './db/department.db.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for department
@@ -24,7 +24,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
     QueryParserService,
     DepartmentDbService,
     DepartmentService,
-    ResultStatusService
+    CommonFunctionService
   ],
   controllers: [DepartmentController]
 })

@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for section
@@ -18,7 +18,7 @@ import { ResultStatusService } from 'src/common/helper/result-status.service';
 export class SectionController {
 
   constructor(private readonly sectionService: SectionService,
-    private readonly resultStatusService: ResultStatusService) { }
+    private readonly commonFunctionService: CommonFunctionService) { }
 
   /**
    * Create new section
@@ -62,7 +62,7 @@ export class SectionController {
             res.send(data.data);
         },
         err => {
-          this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
+          this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
         }
       )
   }
@@ -81,7 +81,7 @@ export class SectionController {
         res.send(data.data.resource);
       },
       err => {
-        this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
 
@@ -102,7 +102,7 @@ export class SectionController {
         res.send(data.data.resource[0]);
       },
       err => {
-        this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
       }
     );
   }

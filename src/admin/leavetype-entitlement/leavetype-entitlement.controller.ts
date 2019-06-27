@@ -7,7 +7,7 @@ import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
-import { ResultStatusService } from 'src/common/helper/result-status.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller for leavetype entitlement
@@ -23,7 +23,7 @@ export class LeavetypeEntitlementController {
     constructor(
         private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
         private readonly leavetypeEntitlementService: LeaveTypeEntitlementService,
-        private readonly resultStatusService: ResultStatusService
+        private readonly commonFunctionService: CommonFunctionService
     ) { }
 
     /**
@@ -46,7 +46,7 @@ export class LeavetypeEntitlementController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+                this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
             }
         );
     }
@@ -68,7 +68,7 @@ export class LeavetypeEntitlementController {
                 res.send(data);
             },
             err => {
-                this.resultStatusService.sendErrorV2(res, 400, 'Fail to fetch resource');
+                this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
             }
         )
     }
@@ -91,7 +91,7 @@ export class LeavetypeEntitlementController {
                 },
                 err => {
                     console.log(err.response.data.error.context.resource);
-                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
+                    this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
                 }
             )
     }
@@ -113,7 +113,7 @@ export class LeavetypeEntitlementController {
                 },
                 err => {
                     console.log(err.response.data.error.context);
-                    this.resultStatusService.sendErrorV2(res, 400, 'Fail to update resource');
+                    this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
 
                 }
             )

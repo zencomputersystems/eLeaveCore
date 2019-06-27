@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DesignationDbService } from './db/designation.db.service';
 import { map } from 'rxjs/operators';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Service for designation
@@ -10,7 +11,8 @@ import { map } from 'rxjs/operators';
  */
 @Injectable()
 export class DesignationService {
-    constructor(private readonly designationDbService: DesignationDbService) { }
+    constructor(private readonly designationDbService: DesignationDbService,
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * Get all list for designation
@@ -20,11 +22,12 @@ export class DesignationService {
      * @memberof DesignationService
      */
     public getList(tenantId: string) {
-        return this.designationDbService.findAll(tenantId)
-            .pipe(map(res => {
-                if (res.status == 200) {
-                    return res.data.resource;
-                }
-            }))
+        return this.commonFunctionService.getListData(this.designationDbService.findAll(tenantId));
+        // return this.designationDbService.findAll(tenantId)
+        //     .pipe(map(res => {
+        //         if (res.status == 200) {
+        //             return res.data.resource;
+        //         }
+        //     }))
     }
 }

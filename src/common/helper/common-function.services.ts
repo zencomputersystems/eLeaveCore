@@ -1,3 +1,5 @@
+import { map } from 'rxjs/operators';
+
 export class CommonFunctionService {
 
     public runGetService(method, res) {
@@ -57,5 +59,18 @@ export class CommonFunctionService {
     }
 
 
+
+
+    public getListData(method) {
+        return method.pipe(map(res => {
+            return this.getResData(res);
+        }))
+    }
+
+    public getResData(res) {
+        if (res.status == 200) {
+            return res.data.resource;
+        }
+    }
 
 }

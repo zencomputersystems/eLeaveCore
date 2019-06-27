@@ -96,7 +96,7 @@ export class RoleService {
         modelData.DESCRIPTION = data.description;
 
         resource.resource.push(modelData);
-        console.log(resource)
+        // console.log(resource)
 
         return this.roleDbService.createByModel(resource, [], [], []);
     }

@@ -1,4 +1,4 @@
-import { Access } from 'src/common/dto/access.dto';
+import { Access } from "src/common/dto/access.dto";
 
 /**
  * Data user profile list
@@ -10,18 +10,28 @@ export class UserprofileListDTO {
 
     /**
      *Creates an instance of UserprofileListDTO.
-     * @param {string} id
-     * @param {string} userId
-     * @param {string} staffNumber
-     * @param {string} employeeName
-     * @param {string} designation
-     * @param {string} email
-     * @param {Access} access
+     * @param {*} element
+     * @param {Access} accessData
      * @memberof UserprofileListDTO
      */
-    constructor(public id: string, public userId: string, public staffNumber: string, public employeeName: string, public designation: string, public email: string, public access: Access) {
-
+    constructor(element: any, accessData: Access) {
+        this.id = element.USER_INFO_GUID;
+        this.userId = element.USER_GUID;
+        this.staffNumber = element.PERSONAL_ID == null ? '' : element.PERSONAL_ID;
+        this.employeeName = element.FULLNAME;
+        this.designation = element.DESIGNATION;
+        this.email = element.EMAIL;
+        this.access = accessData;
     }
+
+    public id: string;
+    public userId: string;
+    public staffNumber: string;
+    public employeeName: string;
+    public designation: string;
+    public email: string;
+    public access: Access;
+
     // id: string; //userinfo GUID
     // userId: string;
     // staffId: string;

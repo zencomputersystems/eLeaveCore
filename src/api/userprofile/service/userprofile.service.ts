@@ -60,15 +60,7 @@ export class UserprofileService {
                     res.forEach(element => {
 
                         userArray.push(
-                            new UserprofileListDTO(
-                                element.USER_INFO_GUID,
-                                element.USER_GUID,
-                                element.PERSONAL_ID == null ? '' : element.PERSONAL_ID,
-                                element.FULLNAME,
-                                element.DESIGNATION,
-                                element.EMAIL,
-                                new Access()
-                            ));
+                            new UserprofileListDTO(element, new Access()));
 
                     });
 

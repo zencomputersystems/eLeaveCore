@@ -20,6 +20,7 @@ export class UserprofileListDTO {
         this.staffNumber = element.PERSONAL_ID == null ? '' : element.PERSONAL_ID;
         this.employeeName = element.FULLNAME;
         this.designation = element.DESIGNATION;
+        this.department = element.DEPARTMENT;
         this.email = element.EMAIL;
         this.access = accessData;
     }
@@ -29,6 +30,7 @@ export class UserprofileListDTO {
     public staffNumber: string;
     public employeeName: string;
     public designation: string;
+    public department: string;
     public email: string;
     public access: Access;
 

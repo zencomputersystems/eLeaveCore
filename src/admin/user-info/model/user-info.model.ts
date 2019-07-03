@@ -44,5 +44,6 @@ export class UserInfoModel extends CreateUpdateModel {
     TENANT_GUID: string;
     DELETED_AT: string;
 
+    ROLE_GUID: string;
     CALENDAR_GUID: string;
 }

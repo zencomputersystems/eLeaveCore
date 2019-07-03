@@ -86,7 +86,7 @@ export class RoleService {
         const resource = new Resource(new Array);
         const modelData = new CreateRoleModel();
 
-        modelData.CODE = data.roleName;
+        modelData.CODE = data.code;
         modelData.ROLE_GUID = v1();
         modelData.CREATION_TS = new Date().toISOString();
         modelData.CREATION_USER_GUID = user.USER_GUID;
@@ -114,7 +114,7 @@ export class RoleService {
         const data = new UpdateRoleModel();
 
         data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
-        data.CODE = d.data.roleName;
+        data.CODE = d.data.code;
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
         data.DESCRIPTION = d.data.description;

@@ -18,7 +18,7 @@ export class RoleDTO {
      */
     @ApiModelProperty()
     @IsString()
-    roleName: string;
+    code: string;
 
     /**
      * Data role description

@@ -30,26 +30,27 @@ export class LeaveBalanceValidationService {
         private readonly proratedDateEndYearService: ProratedDateEndYearService,
         private readonly workingYearService: ServiceYearCalc,
         private readonly xmlParserService: XMLParserService,
-        private readonly leaveTransactionDbService: LeaveTransactionDbService) {}
+        private readonly leaveTransactionDbService: LeaveTransactionDbService) { }
 
     // validate if the balance is enough
-    public validateLeaveBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO,userEntitlement: UserLeaveEntitlementModel[]) {
+    public validateLeaveBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
 
         // get policy
-        const parent = userEntitlement.filter(x=>x.PARENT_FLAG == 1)[0];
+        const parent = userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
 
-        if(parent.PROPERTIES_XML==null || parent.PROPERTIES_XML == undefined) {
+        if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
             throw 'Policy Not Found';
         }
 
-        const policy:LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+        const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
 
+        // console.log(policy);
         // get leave applied duration
         // const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 
         let sumLeaveDuration = 0
-        for (let i = 0; i < applyLeaveDTO.data.length; i++){
-            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.data[i].startDate,applyLeaveDTO.data[i].endDate,applyLeaveDTO.data[i].dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+        for (let i = 0; i < applyLeaveDTO.data.length; i++) {
+            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay);
             sumLeaveDuration = sumLeaveDuration + leaveDurationTemp;
         }
 
@@ -61,7 +62,7 @@ export class LeaveBalanceValidationService {
         const currentDateStartYear = new Date().getFullYear() + '-01-01';
 
 
-        const filter = ['((START_DATE <= '+currentDateStartYear+')OR(END_DATE >=' +currentDateStartYear+')AND(START_DATE <= ' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + ')OR(END_DATE>=' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + '))'];
+        const filter = ['((START_DATE <= ' + currentDateStartYear + ')OR(END_DATE >=' + currentDateStartYear + ')AND(START_DATE <= ' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + ')OR(END_DATE>=' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + '))AND(USER_GUID = '+userInfo.USER_GUID+')'];
 
         return this.leaveTransactionDbService.findByFilterV2([], filter)
             .pipe(map((leaveTransactions: LeaveTransactionModel[]) => {
@@ -72,20 +73,27 @@ export class LeaveBalanceValidationService {
                 //      hospitaliation leave calculation:
                 //      Actual Entitlement = (( Available Hospitalization - Used Hospitalization) - Used Medical)
                 let counterAppliedDay = 0;
+                // console.log('MMMMMMMM'+leaveTransactions);
                 leaveTransactions.forEach(element => {
-
+                    // console.log('a - '+element.LEAVE_TYPE_GUID);
+                    // console.log('b - '+policy.includeOtherLeaveType);
+                    // console.log('c - '+parent.LEAVE_TYPE_GUID);
                     if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == parent.LEAVE_TYPE_GUID) {
                         counterAppliedDay += element.NO_OF_DAYS;
+                        // console.log(counterAppliedDay);
                     }
-
+                    // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
                     if (policy.includeOtherLeaveType != null || policy.includeOtherLeaveType != '') {
                         // add the applied day into calcuation
-                        console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
-                        if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID != policy.includeOtherLeaveType) {
-                            console.log(element.LEAVE_TYPE_GUID + ' = ' + element.NO_OF_DAYS);
+                        // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
+                        if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == policy.includeOtherLeaveType) {
+                            // console.log(element.LEAVE_TYPE_GUID + ' = ' + element.NO_OF_DAYS);
                             counterAppliedDay += element.NO_OF_DAYS;
+                            // console.log(counterAppliedDay);
                         }
                     }
+
+                    // console.log(counterAppliedDay);
                 });
 
                 // calculate all available leave
@@ -97,7 +105,7 @@ export class LeaveBalanceValidationService {
                 const childBalance = this.getChildBalance(applyLeaveDTO, userEntitlement, policy);
 
                 const balance = ((parentBalance + childBalance) - (leaveDuration + counterAppliedDay));
-// console.log(parentBalance+"-"+childBalance+"-"+balance+"-"+counterAppliedDay+" bal");
+                // console.log(parentBalance + "-" + childBalance + "-" + balance + "-" + counterAppliedDay + " bal");
                 if (balance < 0) {
                     return false;
                 }

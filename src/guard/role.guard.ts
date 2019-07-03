@@ -21,38 +21,99 @@ export class RolesGuard implements CanActivate {
 
         // get the resource name
         const resource = this.reflector.get<ResourceDecoratorModel>('resources', context.getHandler());
-        console.log('is in role');
-        console.log(resource);
+        // console.log('is in role');
+        // console.log(resource);
         // we need to check if current user has access to this operation on this resource
         const resourceName = resource.resourceName;
-        const operation = resource.resourceOperation;
+        const resourceRef = resource.resourceRef;
+        // const resourceData = resource.resourceData;
+        // const operation = resource.resourceOperation;
 
-        console.log(resourceName);
-        console.log(operation);
+        // console.log(resourceName);
+        // console.log(resourceData);
+        // console.log(operation);
 
         const request = context.switchToHttp().getRequest();
         const user = request.user;
+        // , operation
+        const permissionList = this.getRole(user.USER_GUID, user.TENANT_GUID);
+        // console.log(permissionList.properties[resourceRef]);
+        if (permissionList.properties[resourceRef][resourceName].value) {
+            // console.log(permissionList.properties[resourceRef][resourceName].value);
+            request.accessLevel = permissionList.properties[resourceRef][resourceName].level;
+            return true;
+        }
+        // // find permission
+        // const getPermissionLevel = permissionList.properties.find(x => x.ResourceName === resourceName);
+        // console.log(getPermissionLevel);
+        // if (getPermissionLevel) {
+        //     const getPermissiomOperation = getPermissionLevel.Operation.find(x => x.name == operation);
 
-        const permissionList = this.getRole(user.USER_GUID, resourceName, operation);
+        //     if (getPermissiomOperation) {
+        //         // add level to request object
+        //         request.accessLevel = getPermissionLevel.Level;
+        //         return true;
+        //     }
+        // }
+
+
 
         // find permission
-        const getPermissionLevel = permissionList.Properties.find(x => x.ResourceName === resourceName);
-        console.log(getPermissionLevel);
-        if (getPermissionLevel) {
-            const getPermissiomOperation = getPermissionLevel.Operation.find(x => x.name == operation);
+        //  const getPermissionLevel = permissionList.properties. .resourceName;
+        //  console.log(getPermissionLevel);
+        //  console.log('in hereeeeeee');
+        //  if (getPermissionLevel) {
+        //      const getPermissiomOperation = getPermissionLevel.Operation.find(x => x.name == operation);
 
-            if (getPermissiomOperation) {
-                // add level to request object
-                request.accessLevel = getPermissionLevel.Level;
-                return true;
-            }
-        }
+        //      if (getPermissiomOperation) {
+        //          // add level to request object
+        //          request.accessLevel = getPermissionLevel.Level;
+        //          return true;
+        //      }
+        //  }
 
         return false;
 
     }
+    // , OPERATION: string
+    getRole(USER_GUID: string, TENANT_GUID: string) {
+        // console.log(USER_GUID);
+        // const checkUser = userList.find(x => x.USER_GUID.toString() === USER_GUID.toString());
+        // this.roleGuardService.getRole(USER_GUID, TENANT_GUID).subscribe(
+            // data => {
+                //         console.log(data);
+                // const roleId = "7ed41000-98aa-11e9-b9d9-0901b57c06f4";
+                // this.roleGuardService.getRoleDetail(USER_GUID,TENANT_GUID).subscribe(
+                //     data=>{
+                //         console.log(data.data.resource);
+                //     },err=>{
 
-    getRole(USER_GUID: string, RESOURCE_NAME: string, OPERATION: string) {
+                //     }
+                // )
+                //         return data;
+            // }, err => {
+
+            // }
+        // );
+        // let infoUser = this.userInfoServices.findOne(USER_GUID,TENANT_GUID).subscribe(
+        //     data=>{
+        //         console.log(data.data.resource[0].ROLE_GUID);
+        // const roleId = "7ed41000-98aa-11e9-b9d9-0901b57c06f4";
+        //         this.roleService.getRoleDetail(roleId).subscribe(
+        //             data=>{
+        //                 console.log(data.data.resource);
+        //             },err=>{
+
+        //             }
+        //         )
+        // return data.data.resource[0].ROLE_GUID;
+        // },err =>{
+
+        //     }
+        // );
+        // console.log('detect here');
+        // console.log(infoUser);
+
         // query db
         const accessProperties = roles;
 

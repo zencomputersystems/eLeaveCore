@@ -30,7 +30,7 @@ export class LeaveTransactionModel extends CreateUpdateModel {
     STATUS: string;
     REASON: string;
     ENTITLEMENT_XML_SNAPSHOT: string;
-    Is_Half_Day: true;
+    Is_Half_Day: boolean;
     Half_Date: Date;
     AM_PM: string;
 

@@ -17,6 +17,7 @@ import { EntitlementRoundingService } from 'src/common/policy/entitlement-roundi
 import { LeaveTransactionDbService } from './db/leave-transaction.db.service';
 import { ApprovedController } from './controller/approval/approval.controller';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
+import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 
 /**
  * Module for leave
@@ -44,7 +45,8 @@ import { ApprovalService } from 'src/common/approval/service/approval.service';
     ProratedDateEndYearService,
     ServiceYearCalc,
     EntitlementRoundingService,
-    ApprovalService
+    ApprovalService,
+    AccessLevelValidateService
   ],
 })
 export class LeaveModule { }

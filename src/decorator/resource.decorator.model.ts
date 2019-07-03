@@ -1,4 +1,4 @@
 export class ResourceDecoratorModel {
-
-    constructor(public resourceName: string, public resourceOperation: string) {}
+    //, public resourceOperation: string
+    constructor(public resourceRef: string, public resourceName: string) { }
 }

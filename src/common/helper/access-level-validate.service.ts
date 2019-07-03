@@ -31,6 +31,7 @@ export class AccessLevelValidateService {
                         const buildFilter = new Array<string>();
 
                         filterLevel.forEach(element => {
+                            // console.log(element+' - '+res[0][element]);
                             buildFilter.push('(' + element + '=' + res[0][element] + ')');
                         });
 

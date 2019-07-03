@@ -36,12 +36,15 @@ export class LeaveApplicationValidationService {
         const startDateTemp = applyLeaveDTO.data[0].startDate;
         const endDatetemp = applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate;
 
-        console.log(startDateTemp + ' --- ' + endDatetemp);
+        // console.log(startDateTemp + ' --- ' + endDatetemp);
 
         const startDate = this.convertDateToMoment(startDateTemp);
         const endDate = this.convertDateToMoment(endDatetemp);
 
-        return this.validateOverlapLeave(startDateTemp, endDatetemp)
+        // console.log(userInfo);
+        // console.log(applyLeaveDTO);
+
+        return this.validateOverlapLeave(startDateTemp, endDatetemp, userInfo)
             .pipe(
                 map((result: boolean) => {
                     if (!result) {
@@ -207,8 +210,9 @@ export class LeaveApplicationValidationService {
 
     // validate if other leave overlap with applied leave
     // except cancelled leave
-    public validateOverlapLeave(startDate: Date, endDate: Date) {
-        const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))"];
+    public validateOverlapLeave(startDate: Date, endDate: Date, userInfo: UserInfoModel) {
+        // console.log(userInfo.USER_GUID);
+        const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")"];
 
         return this.leaveTransactionDbService.findByFilterV2([], filter)
             .pipe(map(res => {

@@ -111,8 +111,8 @@ export class RoleController {
     @Get(':id')
     @ApiOperation({ title: 'Get role detail by role profile guid' })
     @ApiImplicitQuery({
-        name: 'id', description: 'Filter by ROLE_GUID', required: true,
-        enum: ['3d0458f0-9725-11e9-95ae-0f5d05c199b7', '7ed41000-98aa-11e9-b9d9-0901b57c06f4', '86bedde0-97d3-11e9-b12e-11cd8f889ff1']
+        name: 'id', description: 'Filter by ROLE_GUID', required: true
+        // ,enum: ['3d0458f0-9725-11e9-95ae-0f5d05c199b7', '7ed41000-98aa-11e9-b9d9-0901b57c06f4', '86bedde0-97d3-11e9-b12e-11cd8f889ff1']
     })
     // @Resources({resourceName:'ViewProfile',resourceOperation:'GETALL'})
     findOne(@Req() req, @Res() res, @Param('id') id) {

@@ -47,8 +47,9 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
      * @returns
      * @memberof LeaveTransactionDbService
      */
-    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO) {
+    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO, applyOnBehalf:boolean) {
 
+        // let applyOnBehalf = true;
         // const data = new LeaveTransactionModel();
 
         // data.LEAVE_TRANSACTION_GUID = v1();
@@ -61,12 +62,15 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 
         let leaveData = new LeaveTransactionModel();
 
-
         leaveData.LEAVE_TRANSACTION_GUID = v1();
         leaveData.LEAVE_TYPE_GUID = result.result.userEntitlement[0].LEAVE_TYPE_GUID;
         leaveData.ENTITLEMENT_GUID = result.result.userEntitlement[0].ENTITLEMENT_GUID;
-        leaveData.USER_GUID = user.USER_GUID;
-        leaveData.TENANT_GUID = user.TENANT_GUID;
+
+        // leaveData.USER_GUID = user.USER_GUID;
+        // leaveData.TENANT_GUID = user.TENANT_GUID;
+
+        leaveData.USER_GUID = result.result.userInfo.USER_GUID;
+        leaveData.TENANT_GUID = result.result.userInfo.TENANT_GUID;
         leaveData.CREATION_USER_GUID = user.USER_GUID;
         leaveData.TENANT_COMPANY_GUID = result.result.userInfo.TENANT_COMPANY_GUID == undefined ? "" : result.result.userInfo.TENANT_COMPANY_GUID;
         leaveData.START_DATE = applyLeaveDataDTO.startDate;
@@ -81,6 +85,9 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         leaveData.AM_PM = applyLeaveDataDTO.slot || null;
         leaveData.CURRENT_APPROVAL_LEVEL = 0;
         leaveData.Half_Date = applyLeaveDataDTO.dayType == 1 ? applyLeaveDataDTO.startDate : null;
+        leaveData.APPLIED_ON_BEHALF = applyOnBehalf;
+        leaveData.Is_Half_Day = applyLeaveDataDTO.slot != "" ? true : null;
+
 
         let resource = new Resource(new Array());
 

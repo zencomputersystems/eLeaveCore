@@ -21,6 +21,8 @@ export class UserprofileListDTO {
         this.employeeName = element.FULLNAME;
         this.designation = element.DESIGNATION;
         this.department = element.DEPARTMENT;
+        this.branch = element.BRANCH;
+        this.companyId = element.TENANT_COMPANY_GUID;
         this.email = element.EMAIL;
         this.access = accessData;
     }
@@ -31,6 +33,8 @@ export class UserprofileListDTO {
     public employeeName: string;
     public designation: string;
     public department: string;
+    public branch: string;
+    public companyId: string;
     public email: string;
     public access: Access;
 

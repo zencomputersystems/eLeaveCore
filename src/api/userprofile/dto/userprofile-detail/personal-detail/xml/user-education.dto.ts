@@ -39,13 +39,13 @@ export class UserEducationDTO {
     university: string;
 
     /**
-     * Data user education - year
      *
-     * @type {number}
+     *
+     * @type {string}
      * @memberof UserEducationDTO
      */
     @ApiModelProperty()
     @IsNotEmpty()
     @IsNumber()
-    year: number;
+    year: string;
 }

@@ -4,13 +4,12 @@ import { IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
 /**
- * Role for allow leave setup
+ * Data to allow setup leave
  *
  * @export
  * @class AllowLeaveSetupDTO
- * @extends {StatusPermissionDTO}
  */
-export class AllowLeaveSetupDTO extends StatusPermissionDTO {
+export class AllowLeaveSetupDTO {
     /**
      * Allow setup leavetype
      *

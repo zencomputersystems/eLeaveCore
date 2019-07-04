@@ -5,13 +5,12 @@ import { IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
 /**
- * Data allow profile management
+ *
  *
  * @export
  * @class AllowProfileManagementSetupDTO
- * @extends {StatusPermissionDTO}
  */
-export class AllowProfileManagementSetupDTO extends StatusPermissionDTO {
+export class AllowProfileManagementSetupDTO {
     /**
      * Data allow view profile
      *

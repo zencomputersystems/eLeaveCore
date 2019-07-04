@@ -46,6 +46,5 @@ export class UserEducationDTO {
      */
     @ApiModelProperty()
     @IsNotEmpty()
-    @IsNumber()
     year: string;
 }

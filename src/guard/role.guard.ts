@@ -38,9 +38,9 @@ export class RolesGuard implements CanActivate {
         // , operation
         const permissionList = this.getRole(user.USER_GUID, user.TENANT_GUID);
         // console.log(permissionList.properties[resourceRef]);
-        if (permissionList.properties[resourceRef][resourceName].value) {
+        if (permissionList.property[resourceRef][resourceName].value) {
             // console.log(permissionList.properties[resourceRef][resourceName].value);
-            request.accessLevel = permissionList.properties[resourceRef][resourceName].level;
+            request.accessLevel = permissionList.property[resourceRef][resourceName].level;
             return true;
         }
         // // find permission

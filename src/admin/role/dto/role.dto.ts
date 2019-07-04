@@ -39,6 +39,6 @@ export class RoleDTO {
     @ApiModelProperty({ description: 'Properties role', type: RolePropertiesDTO, example: 'data example' })
     @IsNotEmpty()
     @Type(() => RolePropertiesDTO)
-    properties: RolePropertiesDTO;
+    property: RolePropertiesDTO;
 
 }

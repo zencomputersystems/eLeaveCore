@@ -47,7 +47,7 @@ export class UserImportService {
      */
     public processImportData(user: any, importData: [UserCsvDto]) {
         // console.log(importData);
-
+        this.importResult = new Array<UserImportResult>();
         //get all the the user for this tenant
         return this.userService.findByFilterV2([], ['(TENANT_GUID=' + user.TENANT_GUID + ')'])
             .pipe(

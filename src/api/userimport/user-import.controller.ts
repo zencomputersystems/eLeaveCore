@@ -34,6 +34,18 @@ export class UserImportController {
     @Post()
     create(@Body() userInviteDto: [UserCsvDto], @Req() req, @Res() res) {
 
+        // res.send(userInviteDto);
+
+        this.userImportService.processImportData(req.user, userInviteDto)
+            .subscribe(
+                data => {
+                    res.send(data);
+                },
+                err => {
+                    res.status(400);
+                    res.send("fail to process data");
+                }
+            )
     }
 
     /**
@@ -59,6 +71,7 @@ export class UserImportController {
             skip_empty_lines: true
         })
 
+        console.log(records);
         this.userImportService.processImportData(req.user, records)
             .subscribe(
                 data => {

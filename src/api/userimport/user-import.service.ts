@@ -46,7 +46,7 @@ export class UserImportService {
      * @memberof UserImportService
      */
     public processImportData(user: any, importData: [UserCsvDto]) {
-
+        // console.log(importData);
 
         //get all the the user for this tenant
         return this.userService.findByFilterV2([], ['(TENANT_GUID=' + user.TENANT_GUID + ')'])
@@ -73,7 +73,7 @@ export class UserImportService {
      * @memberof UserImportService
      */
     private saveImportList(importData: Array<UserCsvDto>, user: any) {
-
+        // console.log(importData)
         if (importData.length == 0) {
             return of(importData);
         }
@@ -98,7 +98,9 @@ export class UserImportService {
             .pipe(map(res => {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
+                    // console.log(saveUser);
                     return this.filterData(importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL')
+                    // return importData;
                 }
             }))
 
@@ -114,9 +116,12 @@ export class UserImportService {
      * @memberof UserImportService
      */
     private saveInfoDataList(importData: Array<UserCsvDto>, user: any) {
+        // console.log(importData);
+        // console.log('in here');
         if (importData.length == 0) {
             return of(this.importResult);
         }
+
 
         const userInfoResourceArray = new Resource(new Array);
 
@@ -132,23 +137,24 @@ export class UserImportService {
 
                 userInfoModel.FULLNAME = element.FULLNAME;
 
-                userInfoModel.DEPARTMENT = element.DEPARTMENT;
-                userInfoModel.BRANCH = element.BRANCH;
+                userInfoModel.DEPARTMENT = element.DEPARTMENT || null;
+                userInfoModel.BRANCH = element.BRANCH || null;
                 userInfoModel.DESIGNATION = element.DESIGNATION;
 
                 userInfoModel.JOIN_DATE = new Date(element.JOIN_DATE);
-                userInfoModel.CONFIRMATION_DATE = new Date(element.CONFIRMATION_DATE);
-                userInfoModel.RESIGNATION_DATE = new Date(element.RESIGNATION_DATE);
+                userInfoModel.CONFIRMATION_DATE = new Date(element.CONFIRMATION_DATE) || null;
+                userInfoModel.RESIGNATION_DATE = new Date(element.RESIGNATION_DATE) || null;
 
                 userInfoResourceArray.resource.push(userInfoModel);
             }
 
         })
-
+        // console.log(userInfoResourceArray);
         return this.userInfoService.createByModel(userInfoResourceArray, [], [], ['USER_INFO_GUID', 'USER_GUID'])
             .pipe(map(res => {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
+                    // console.log(saveUser);
 
                     return this.filterSaveUserByID(saveUser, importData);
                 }
@@ -174,6 +180,11 @@ export class UserImportService {
         findElement: any,
         findItem: any) {
 
+        // console.log(importData);
+        // console.log(checkModelArray[0]);
+
+
+        // this.filterData(importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL')),
         const data = new UserImportResult();
         data.category = categoryName;
 
@@ -182,15 +193,36 @@ export class UserImportService {
         // remove existing users from csv list
         importData.forEach(element => {
 
+            // checkModelArray.find(x => {
+            //     x[findElement].toUpperCase() === element[findItem].toUpperCase();
+            //     console.log(element.STAFF_EMAIL + ' - ' + x[findElement]);
+            // });
+
+
             if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
                 data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
+                if (data.category == 'Fail') {
+                    let userTemp = checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase());
+                    if (userTemp) {
+                        // console.log(userTemp.USER_GUID);
+                        element.ID = userTemp.USER_GUID;
+                        // console.log(element);
+                        successList.push(element);
+                        // return successList;
+                    }
+                }
+                // console.log('in 1');
             } else {
                 successList.push(element);
+                // console.log('in 2');
             }
 
         });
+        // console.log('existing');
+        // console.log(data);
+        if (data.category == 'Existing User')
+            this.importResult.push(data);
 
-        this.importResult.push(data);
 
         return successList;
     }
@@ -214,12 +246,16 @@ export class UserImportService {
 
             if (successList.find(x => x.STAFF_EMAIL.toUpperCase() === element.STAFF_EMAIL.toUpperCase())) {
                 duplicateUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
+                // console.log('dup in 1');
             } else {
                 successList.push(element);
+                // console.log('dup in 2');
             }
 
         });
 
+        // console.log('duplicatee');
+        // console.log(duplicateUser);
         this.importResult.push(duplicateUser);
 
         return successList;
@@ -258,6 +294,9 @@ export class UserImportService {
 
         });
 
+        // console.log('doubles');
+        // console.log(successUser);
+        // console.log(failUser);
         this.importResult.push(successUser);
         this.importResult.push(failUser);
 

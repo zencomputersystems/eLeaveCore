@@ -19,8 +19,20 @@ import { IDbService } from 'src/interface/IDbService';
 @Injectable()
 export class SectionService extends BaseDBService implements IDbService {
 
+    /**
+     * Declare tablename main_section
+     *
+     * @private
+     * @memberof SectionService
+     */
     private _tableName = "main_section";
 
+    /**
+     *Creates an instance of SectionService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @memberof SectionService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

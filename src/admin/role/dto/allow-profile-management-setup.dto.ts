@@ -5,7 +5,7 @@ import { IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
 /**
- *
+ * Data for allow profile management setup
  *
  * @export
  * @class AllowProfileManagementSetupDTO

@@ -10,6 +10,13 @@ import moment = require('moment');
  */
 export class ServiceYearCalc implements IServiceYearCalc {
 
+    /**
+     * Method to calculate employee service year
+     *
+     * @param {Date} dateOfJoin
+     * @returns {number}
+     * @memberof ServiceYearCalc
+     */
     calculateEmployeeServiceYear(dateOfJoin: Date): number {
 
         let now = moment();

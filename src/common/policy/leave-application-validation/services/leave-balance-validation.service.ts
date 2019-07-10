@@ -15,7 +15,7 @@ import { map } from 'rxjs/operators';
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
 
 /**
- *
+ * Service for leave balance validation
  *
  * @export
  * @class LeaveBalanceValidationService
@@ -23,6 +23,17 @@ import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.mod
 @Injectable()
 export class LeaveBalanceValidationService {
 
+    /**
+     *Creates an instance of LeaveBalanceValidationService.
+     * @param {DateCalculationService} dateCalculationService
+     * @param {EntitledFullService} entitledInFullService
+     * @param {ProratedDateCurrentMonthService} proratedDateMonthService
+     * @param {ProratedDateEndYearService} proratedDateEndYearService
+     * @param {ServiceYearCalc} workingYearService
+     * @param {XMLParserService} xmlParserService
+     * @param {LeaveTransactionDbService} leaveTransactionDbService
+     * @memberof LeaveBalanceValidationService
+     */
     constructor(
         private readonly dateCalculationService: DateCalculationService,
         private readonly entitledInFullService: EntitledFullService,
@@ -32,7 +43,17 @@ export class LeaveBalanceValidationService {
         private readonly xmlParserService: XMLParserService,
         private readonly leaveTransactionDbService: LeaveTransactionDbService) { }
 
-    // validate if the balance is enough
+
+    /**
+     * Method validate leave balance
+     * Validate if the balance is enough
+     *
+     * @param {UserInfoModel} userInfo
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {UserLeaveEntitlementModel[]} userEntitlement
+     * @returns
+     * @memberof LeaveBalanceValidationService
+     */
     public validateLeaveBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
 
         // get policy
@@ -62,7 +83,7 @@ export class LeaveBalanceValidationService {
         const currentDateStartYear = new Date().getFullYear() + '-01-01';
 
 
-        const filter = ['((START_DATE <= ' + currentDateStartYear + ')OR(END_DATE >=' + currentDateStartYear + ')AND(START_DATE <= ' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + ')OR(END_DATE>=' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + '))AND(USER_GUID = '+userInfo.USER_GUID+')'];
+        const filter = ['((START_DATE <= ' + currentDateStartYear + ')OR(END_DATE >=' + currentDateStartYear + ')AND(START_DATE <= ' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + ')OR(END_DATE>=' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + '))AND(USER_GUID = ' + userInfo.USER_GUID + ')'];
 
         return this.leaveTransactionDbService.findByFilterV2([], filter)
             .pipe(map((leaveTransactions: LeaveTransactionModel[]) => {
@@ -116,6 +137,14 @@ export class LeaveBalanceValidationService {
 
     }
 
+    /**
+     * Method get parent balance
+     *
+     * @param {UserInfoModel} userInfo
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @returns
+     * @memberof LeaveBalanceValidationService
+     */
     public getParentBalance(userInfo: UserInfoModel, policy: LeaveTypePropertiesXmlDTO) {
         // PARENT CALCULATION
         let parentBalance = 0;
@@ -145,6 +174,15 @@ export class LeaveBalanceValidationService {
         return parentBalance;
     }
 
+    /**
+     * Method get child balance
+     *
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {UserLeaveEntitlementModel[]} userEntitlement
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @returns
+     * @memberof LeaveBalanceValidationService
+     */
     public getChildBalance(applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[], policy: LeaveTypePropertiesXmlDTO) {
 
         const startDate = moment(applyLeaveDTO.data[0].startDate).startOf('days');

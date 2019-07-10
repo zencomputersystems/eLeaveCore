@@ -9,6 +9,10 @@ import { IsBoolean } from 'class-validator';
  */
 export class ExcludeDayTypeXmlDTO {
 
+    /**
+     *Creates an instance of ExcludeDayTypeXmlDTO.
+     * @memberof ExcludeDayTypeXmlDTO
+     */
     constructor() {
         this.isExcludeHoliday = false;
         this.isExcludeRestDay = false;

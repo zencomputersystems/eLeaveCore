@@ -18,8 +18,20 @@ import { IDbService } from 'src/interface/IDbService';
 @Injectable()
 export class CompanyService extends BaseDBService implements IDbService {
 
+    /**
+     * Declare table name tenant_company
+     *
+     * @private
+     * @memberof CompanyService
+     */
     private _tableName = "tenant_company";
 
+    /**
+     *Creates an instance of CompanyService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @memberof CompanyService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

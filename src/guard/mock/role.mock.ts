@@ -1,3 +1,6 @@
+/**
+    * rolesMock
+    */
 export const roles = {
   "code": "Super Admin",
   "description": "Super Admin for all staff",

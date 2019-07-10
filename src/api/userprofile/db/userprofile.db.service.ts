@@ -14,12 +14,18 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class UserprofileDbService extends BaseDBService {
 
+    /**
+     * Declare table view profile list
+     *
+     * @private
+     * @memberof UserprofileDbService
+     */
     private _tableName = "l_view_user_profile_list";
 
     /**
      *Creates an instance of UserprofileDbService.
-     * @param {HttpService} httpService
-     * @param {QueryParserService} queryService
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
      * @memberof UserprofileDbService
      */
     constructor(

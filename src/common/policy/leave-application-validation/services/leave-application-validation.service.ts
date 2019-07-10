@@ -11,7 +11,7 @@ import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db
 import { map, mergeMap } from 'rxjs/operators';
 
 /**
- *
+ * Service for leave application validation
  *
  * @export
  * @class LeaveApplicationValidationService
@@ -19,11 +19,28 @@ import { map, mergeMap } from 'rxjs/operators';
 @Injectable()
 export class LeaveApplicationValidationService {
 
+    /**
+     *Creates an instance of LeaveApplicationValidationService.
+     * @param {DateCalculationService} dateCalculationService
+     * @param {LeaveBalanceValidationService} balanceValidationService
+     * @param {LeaveTransactionDbService} leaveTransactionDbService
+     * @memberof LeaveApplicationValidationService
+     */
     constructor(
         private readonly dateCalculationService: DateCalculationService,
         private readonly balanceValidationService: LeaveBalanceValidationService,
         private readonly leaveTransactionDbService: LeaveTransactionDbService) { }
 
+    /**
+     * Method validate leave
+     *
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {UserInfoModel} userInfo
+     * @param {UserLeaveEntitlementModel[]} userEntitlement
+     * @returns
+     * @memberof LeaveApplicationValidationService
+     */
     public validateLeave(
         policy: LeaveTypePropertiesXmlDTO,
         applyLeaveDTO: ApplyLeaveDTO,
@@ -98,6 +115,16 @@ export class LeaveApplicationValidationService {
 
     }
 
+    /**
+     * Method validate balance
+     *
+     * @private
+     * @param {UserInfoModel} userInfo
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {UserLeaveEntitlementModel[]} userEntitlement
+     * @returns
+     * @memberof LeaveApplicationValidationService
+     */
     private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
         const balance = this.balanceValidationService.validateLeaveBalance(userInfo, applyLeaveDTO, userEntitlement);
 
@@ -105,6 +132,17 @@ export class LeaveApplicationValidationService {
     }
 
     // check if employee can apply more than current date
+    /**
+     * Method allow advance leave
+     * check if employee can apply more than current date
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {moment.Moment} startDate
+     * @param {moment.Moment} endDate
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private allowAdvancedLeave(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
 
         const currentDate = moment(new Date(), 'YYYY-MM-DD');
@@ -118,6 +156,18 @@ export class LeaveApplicationValidationService {
 
     // check if user can apply next year application
     // if allow advanced leave is false, this parameter by default is false
+    /**
+     * Method allow next year application
+     * check if user can apply next year application
+     * if allow advanced leave is false, this parameter by default is false
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {moment.Moment} startDate
+     * @param {moment.Moment} endDate
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private allowNextYearApplciation(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
 
         if (!policy.applyInAdvance) {
@@ -134,12 +184,31 @@ export class LeaveApplicationValidationService {
         return false;
     }
 
+    /**
+     * Method validate attachment
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private validateAttachment(policy: LeaveTypePropertiesXmlDTO): boolean {
         return false;
     }
 
     // check if date applied if before the policy date
     // if short notice application is allowed, by default will return true
+    /**
+     * Method validate apply before
+     * check if date applied if before the policy date
+     * if short notice application is allowed, by default will return true
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {moment.Moment} startDate
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private validateApplyBefore(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment): boolean {
 
         if (policy.applyBeforeProperties.isAllowShortNotice.isCheck) {
@@ -160,6 +229,16 @@ export class LeaveApplicationValidationService {
     }
 
     // end date must be within the specified date after leave end otherwise consider as backdated if allowed
+    /**
+     * method validate apply within
+     * end date must be within the specified date after leave end otherwise consider as backdated if allowed
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {moment.Moment} endDate
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private validateApplyWithin(policy: LeaveTypePropertiesXmlDTO, endDate: moment.Moment): boolean {
 
         if (policy.applyWithinProperties.isAllowBackdated.isCheck) {
@@ -177,6 +256,15 @@ export class LeaveApplicationValidationService {
         return false;
     }
 
+    /**
+     * Method allowed day
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {*} applyLeaveDTO
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private allowedDay(policy: LeaveTypePropertiesXmlDTO, applyLeaveDTO: any): boolean {
 
         const maxAllowedDay = policy.maxDayPerLeave;
@@ -192,6 +280,17 @@ export class LeaveApplicationValidationService {
 
     // allow after confirmation or join date
     // based on current date leave applied
+    /**
+     * Method allow after confirm
+     * allow after confirmation or join date
+     * based on current date leave applied
+     *
+     * @private
+     * @param {LeaveTypePropertiesXmlDTO} policy
+     * @param {moment.Moment} confirmDate
+     * @returns {boolean}
+     * @memberof LeaveApplicationValidationService
+     */
     private allowAfterConfirm(policy: LeaveTypePropertiesXmlDTO, confirmDate: moment.Moment): boolean {
 
         const currentDate = moment(new Date(), 'YYYY-MM-DD');
@@ -204,12 +303,31 @@ export class LeaveApplicationValidationService {
         return true;
     }
 
+    /**
+     * Method convert date to moment
+     *
+     * @private
+     * @param {Date} date
+     * @returns
+     * @memberof LeaveApplicationValidationService
+     */
     private convertDateToMoment(date: Date) {
         return moment(date, 'YYYY-MM-DD');
     }
 
     // validate if other leave overlap with applied leave
     // except cancelled leave
+    /**
+     * Method validate overlap leave
+     * validate if other leave overlap with applied leave
+     * except cancelled leave
+     *
+     * @param {Date} startDate
+     * @param {Date} endDate
+     * @param {UserInfoModel} userInfo
+     * @returns
+     * @memberof LeaveApplicationValidationService
+     */
     public validateOverlapLeave(startDate: Date, endDate: Date, userInfo: UserInfoModel) {
         // console.log(userInfo.USER_GUID);
         const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")"];

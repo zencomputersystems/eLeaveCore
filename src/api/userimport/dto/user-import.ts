@@ -5,18 +5,18 @@
  * @class UserImport
  */
 export class UserImport {
-    
+
     /**
      *Creates an instance of UserImport.
-     * @param {string} USER_GUID
-     * @param {string} EMAIL
-     * @param {string} STAFF_ID
-     * @param {string} NAME
+     * @param {string} USER_GUID Data user import - user guid
+     * @param {string} EMAIL Data user import - email
+     * @param {string} STAFF_ID Data user import - staff id
+     * @param {string} NAME Data user import - name
      * @memberof UserImport
      */
     constructor(
         public USER_GUID: string,
         public EMAIL: string,
         public STAFF_ID: string,
-        public NAME: string) {}
+        public NAME: string) { }
 }

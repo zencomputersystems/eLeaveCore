@@ -375,6 +375,14 @@ export class UserprofileService {
         userPersonalDetail[sub_key] = sub_val;
     }
 
+    /**
+     * Join text method
+     *
+     * @private
+     * @param {string[]} data
+     * @returns
+     * @memberof UserprofileService
+     */
     private joinText(data: string[]) {
         return data.join(",");
     }

@@ -14,12 +14,18 @@ import { IDbService } from 'src/interface/IDbService';
 @Injectable()
 export class UserLeaveEntitlementSummaryDbService extends BaseDBService implements IDbService {
     // private _table = 'l_main_user_leave_entitlement';
+    /**
+     * Declare tablename view leave summary
+     *
+     * @private
+     * @memberof UserLeaveEntitlementSummaryDbService
+     */
     private _table = 'l_view_leave_summary';
 
     /**
      *Creates an instance of UserLeaveEntitlementSummaryDbService.
-     * @param {HttpService} httpService
-     * @param {QueryParserService} queryService
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
      * @memberof UserLeaveEntitlementSummaryDbService
      */
     constructor(

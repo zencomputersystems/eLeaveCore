@@ -18,8 +18,21 @@ import { SectionService } from '../section/section.service';
  */
 @Injectable()
 export class CostcentreService extends BaseDBService implements IDbService {
+    /**
+     * Declare tablename cost centre
+     *
+     * @private
+     * @memberof CostcentreService
+     */
     private _tableName = 'main_cost_centre';
 
+    /**
+     *Creates an instance of CostcentreService.
+     * @param {HttpService} httpService Service for http
+     * @param {SectionService} sectionService Service for section
+     * @param {QueryParserService} queryService Service for query
+     * @memberof CostcentreService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly sectionService: SectionService,

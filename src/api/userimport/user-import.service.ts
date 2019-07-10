@@ -20,10 +20,39 @@ import { UserImport } from './dto/user-import';
  */
 @Injectable()
 export class UserImportService {
+    /**
+     * Declare branchData
+     *
+     * @type {*}
+     * @memberof UserImportService
+     */
     public branchData: any;
+    /**
+     * Declare cost centre data
+     *
+     * @type {*}
+     * @memberof UserImportService
+     */
     public costCentreData: any;
+    /**
+     * Declare section data
+     *
+     * @type {*}
+     * @memberof UserImportService
+     */
     public sectionData: any;
+    /**
+     * Declare department data
+     *
+     * @type {*}
+     * @memberof UserImportService
+     */
     public departmentData: any;
+    /**
+     * Declare import result data
+     *
+     * @memberof UserImportService
+     */
     public importResult = new Array<UserImportResult>();
 
     /**
@@ -90,6 +119,7 @@ export class UserImportService {
             userModel.IS_TENANT_ADMIN = "";
             userModel.LOGIN_ID = element.STAFF_EMAIL;
             userModel.EMAIL = element.STAFF_EMAIL;
+            userModel.STAFF_ID = element.STAFF_ID;
 
             userResourceArray.resource.push(userModel);
         });

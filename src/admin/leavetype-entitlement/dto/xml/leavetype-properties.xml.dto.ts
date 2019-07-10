@@ -15,6 +15,10 @@ import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
  */
 export class LeaveTypePropertiesXmlDTO {
 
+    /**
+     *Creates an instance of LeaveTypePropertiesXmlDTO.
+     * @memberof LeaveTypePropertiesXmlDTO
+     */
     constructor() {
         this.applyInAdvance = false;
         this.applyNextYear = false;

@@ -23,10 +23,10 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 
     /**
      *Creates an instance of LeaveTransactionDbService.
-     * @param {HttpService} httpService
-     * @param {XMLParserService} xmlParserService
-     * @param {DateCalculationService} dateCalculationService
-     * @param {QueryParserService} queryService
+     * @param {HttpService} httpService Service for http
+     * @param {XMLParserService} xmlParserService Service for xml-json converter
+     * @param {DateCalculationService} dateCalculationService Service for date calculation
+     * @param {QueryParserService} queryService Service for query
      * @memberof LeaveTransactionDbService
      */
     constructor(

@@ -1,31 +1,33 @@
-// Access Level:Filters
+/**
+* Level of access : Access Level:Filters
+*/
 export const ACCESSLEVEL = {
     'ALL':
-    [
-        'TENANT_GUID'
-    ],
+        [
+            'TENANT_GUID'
+        ],
     'COMPANY':
-    [
-        'TENANT_COMPANY_GUID'
-    ],
+        [
+            'TENANT_COMPANY_GUID'
+        ],
     'DEPARTMENT':
-    [
-        'TENANT_COMPANY_GUID',
-        'DEPARTMENT'
-    ],
+        [
+            'TENANT_COMPANY_GUID',
+            'DEPARTMENT'
+        ],
     'BRANCH':
-    [
-        'TENANT_COMPANY_GUID',
-        'BRANCH'
-    ],
+        [
+            'TENANT_COMPANY_GUID',
+            'BRANCH'
+        ],
     'DIVISTION':
-    [
-        'TENANT_COMPANY_GUID',
-        'DIVISION'
-    ],
+        [
+            'TENANT_COMPANY_GUID',
+            'DIVISION'
+        ],
     'PERSONAL':
-    [
-        'TENANT_COMPANY_GUID',
-        'USER_GUID'
-    ]
+        [
+            'TENANT_COMPANY_GUID',
+            'USER_GUID'
+        ]
 }

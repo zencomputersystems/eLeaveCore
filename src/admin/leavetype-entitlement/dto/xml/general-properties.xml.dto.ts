@@ -8,6 +8,10 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @class GeneralPropertiesXmlDTO
  */
 export class GeneralPropertiesXmlDTO {
+    /**
+     *Creates an instance of GeneralPropertiesXmlDTO.
+     * @memberof GeneralPropertiesXmlDTO
+     */
     constructor() {
         this.isCheck = false;
     }

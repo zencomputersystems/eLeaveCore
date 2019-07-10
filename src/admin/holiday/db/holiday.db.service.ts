@@ -12,8 +12,20 @@ import { Observable } from 'rxjs';
  */
 @Injectable()
 export class HolidayDbService extends BaseDBService {
+    /**
+     * Declare tablename calendar profile
+     *
+     * @private
+     * @memberof HolidayDbService
+     */
     private _tableName = "l_calendar_profile";
 
+    /**
+     *Creates an instance of HolidayDbService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @memberof HolidayDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

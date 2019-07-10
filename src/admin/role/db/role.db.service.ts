@@ -12,12 +12,18 @@ import { Observable } from "rxjs";
  */
 @Injectable()
 export class RoleDbService extends BaseDBService {
+    /**
+     * Declare tablename l_role_profile
+     *
+     * @private
+     * @memberof RoleDbService
+     */
     private _tableName = "l_role_profile";
 
     /**
      *Creates an instance of RoleDbService.
-     * @param {HttpService} httpService
-     * @param {QueryParserService} queryService
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
      * @memberof RoleDbService
      */
     constructor(

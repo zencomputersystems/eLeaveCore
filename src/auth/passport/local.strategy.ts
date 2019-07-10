@@ -1,3 +1,6 @@
+/**
+ * Declare passport-local
+ */
 var Strategy = require('passport-local');
 import { AuthService } from '../auth.service';
 import { PassportStrategy } from '@nestjs/passport';

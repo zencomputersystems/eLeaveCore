@@ -5,6 +5,18 @@
  * @class DepartmentModel
  */
 export class DepartmentModel {
-    DEPARTMENT;
+    /**
+     * Department
+     *
+     * @type {string}
+     * @memberof DepartmentModel
+     */
+    DEPARTMENT: string;
+    /**
+     * Tenant guid
+     *
+     * @type {string}
+     * @memberof DepartmentModel
+     */
     TENANT_GUID: string;
 }

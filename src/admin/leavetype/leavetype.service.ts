@@ -18,8 +18,20 @@ import { IDbService } from 'src/interface/IDbService';
 @Injectable()
 export class LeavetypeService extends BaseDBService implements IDbService {
 
+    /**
+     * Declare tablename l_main_leavetype
+     *
+     * @private
+     * @memberof LeavetypeService
+     */
     private table_name = "l_main_leavetype";
 
+    /**
+     *Creates an instance of LeavetypeService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @memberof LeavetypeService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

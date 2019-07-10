@@ -3,6 +3,8 @@ import { BranchDbService } from './db/branch.db.service';
 import { map } from 'rxjs/operators';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
+// var azure = require('azure-storage');
+
 /**
  * Service for branch
  *
@@ -11,6 +13,12 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
  */
 @Injectable()
 export class BranchService {
+    /**
+     *Creates an instance of BranchService.
+     * @param {BranchDbService} branchDbService
+     * @param {CommonFunctionService} commonFunctionService
+     * @memberof BranchService
+     */
     constructor(private readonly branchDbService: BranchDbService,
         private readonly commonFunctionService: CommonFunctionService) { }
 
@@ -30,4 +38,34 @@ export class BranchService {
         //         }
         //     }))
     }
+
+    // public generateSasToken(container, blobName, permissions) {
+    //     var connString = process.env.AzureWebJobsStorage;
+    //     var blobService = azure.createBlobService(connString);
+
+    //     // Create a SAS token that expires in an hour
+    //     // Set start time to five minutes ago to avoid clock skew.
+    //     var startDate = new Date();
+    //     startDate.setMinutes(startDate.getMinutes() - 5);
+    //     var expiryDate = new Date(startDate);
+    //     expiryDate.setMinutes(startDate.getMinutes() + 60);
+
+    //     permissions = permissions || azure.BlobUtilities.SharedAccessPermissions.READ;
+
+    //     var sharedAccessPolicy = {
+    //         AccessPolicy: {
+    //             Permissions: permissions,
+    //             Start: startDate,
+    //             Expiry: expiryDate
+    //         }
+    //     };
+
+    //     var sasToken = blobService.generateSharedAccessSignature(container, blobName, sharedAccessPolicy);
+
+    //     return {
+    //         token: sasToken,
+    //         uri: blobService.getUrl(container, blobName, sasToken, true)
+    //     };
+    // }
+
 }

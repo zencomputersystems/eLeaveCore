@@ -14,8 +14,21 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 @Injectable()
 export class BranchDbService extends BaseDBService {
 
+    /**
+     * Declare viewtable branch
+     *
+     * @private
+     * @memberof BranchDbService
+     */
     private _tableName = "view_branches";
 
+    /**
+     *Creates an instance of BranchDbService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @param {CommonFunctionService} commonFunctionService Service for commonfunction
+     * @memberof BranchDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,

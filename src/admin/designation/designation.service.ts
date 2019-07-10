@@ -11,6 +11,12 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
  */
 @Injectable()
 export class DesignationService {
+    /**
+     *Creates an instance of DesignationService.
+     * @param {DesignationDbService} designationDbService
+     * @param {CommonFunctionService} commonFunctionService
+     * @memberof DesignationService
+     */
     constructor(private readonly designationDbService: DesignationDbService,
         private readonly commonFunctionService: CommonFunctionService) { }
 

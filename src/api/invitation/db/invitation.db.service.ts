@@ -15,12 +15,18 @@ import { UserInviteModel } from '../model/user-invite.model';
  */
 @Injectable()
 export class InvitationDbService extends BaseDBService {
+    /**
+     * Declare tablename to use
+     *
+     * @private
+     * @memberof InvitationDbService
+     */
     private _tableName = 'l_user_invitation';
 
     /**
      *Creates an instance of InvitationDbService.
-     * @param {HttpService} httpService
-     * @param {QueryParserService} queryService
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
      * @memberof InvitationDbService
      */
     constructor(

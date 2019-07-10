@@ -8,10 +8,10 @@ export class EmailList {
 
     /**
      *Creates an instance of EmailList.
-     * @param {string} userId
-     * @param {string} invitationId
-     * @param {string} name
-     * @param {string} email
+     * @param {string} userId Id user
+     * @param {string} invitationId Id invitation
+     * @param {string} name name
+     * @param {string} email email
      * @memberof EmailList
      */
     constructor(public userId: string, public invitationId: string, public name: string, public email: string) { }

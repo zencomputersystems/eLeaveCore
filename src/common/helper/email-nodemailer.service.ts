@@ -1,13 +1,38 @@
 import { EmailResultDTO } from "src/api/invitation/dto/email-result.dto";
-
+/**
+ * Declare nodemailer
+ */
 var nodemailer = require('nodemailer');
+/**
+ * Declare smtpTransport
+ */
 var smtpTransport = require('nodemailer-smtp-transport');
+/**
+ * Declare handlebars
+ */
 var handlebars = require('handlebars');
+/**
+ * Declare fs
+ */
 var fs = require('fs');
 import { SentMessageInfo, SendMailOptions } from 'nodemailer';
 
+/**
+ * Service for email nodemailer
+ *
+ * @export
+ * @class EmailNodemailerService
+ */
 export class EmailNodemailerService {
 
+    /**
+     * Method process mail
+     *
+     * @param {string} email
+     * @param {string} token
+     * @returns
+     * @memberof EmailNodemailerService
+     */
     public mailProcess(email: string, token: string) {
         console.log('is this run in nodemoduleservice?');
 
@@ -71,6 +96,11 @@ export class EmailNodemailerService {
         return "success";
     }
 
+    /**
+     * Method read html file
+     *
+     * @memberof EmailNodemailerService
+     */
     public readHTMLFile = function (path, callback) {
         return fs.readFile(path, { encoding: 'utf-8' }, function (err, html) {
             if (err) {

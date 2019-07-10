@@ -27,15 +27,75 @@ export class UserprofileListDTO {
         this.access = accessData;
     }
 
+    /**
+     * Data userprofilelist - id
+     *
+     * @type {string} 
+     * @memberof UserprofileListDTO
+     */
     public id: string;
+    /**
+     * Data userprofilelist - user id
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public userId: string;
+    /**
+     * Data userprofilelist - staffname
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public staffNumber: string;
+    /**
+     * Data userprofilelist - employee name
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public employeeName: string;
+    /**
+     * Data userprofilelist - designation
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public designation: string;
+    /**
+     * Data userprofilelist - department
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public department: string;
+    /**
+     * Data userprofilelist - branch
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public branch: string;
+    /**
+     * Data userprofilelist - company id
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public companyId: string;
+    /**
+     * Data userprofilelist - email
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
     public email: string;
+    /**
+     * Data userprofilelist - access
+     *
+     * @type {Access}
+     * @memberof UserprofileListDTO
+     */
     public access: Access;
 
     // id: string; //userinfo GUID

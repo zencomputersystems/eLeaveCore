@@ -2,6 +2,9 @@ import { AuthService } from '../auth.service';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ldap } from './mock/ldap';
+/**
+ * Declare passport-activedirectory
+ */
 var Strategy = require('passport-activedirectory');
 
 /**

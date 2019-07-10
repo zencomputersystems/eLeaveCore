@@ -4,10 +4,13 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ResourceDecoratorModel } from 'src/decorator/resource.decorator.model';
 import { roles } from './mock/role.mock';
+/**
+ * Include JWT 
+ */
 var jwt = require('jsonwebtoken');
 
 /**
- *
+ * Guard for role
  *
  * @export
  * @class RolesGuard
@@ -15,8 +18,20 @@ var jwt = require('jsonwebtoken');
  */
 @Injectable()
 export class RolesGuard implements CanActivate {
+    /**
+     *Creates an instance of RolesGuard.
+     * @param {Reflector} reflector
+     * @memberof RolesGuard
+     */
     constructor(private readonly reflector: Reflector) { }
 
+    /**
+     * canActivate method
+     *
+     * @param {ExecutionContext} context
+     * @returns {boolean}
+     * @memberof RolesGuard
+     */
     canActivate(context: ExecutionContext): boolean {
 
         // get the resource name
@@ -75,25 +90,35 @@ export class RolesGuard implements CanActivate {
         return false;
 
     }
+
+
     // , OPERATION: string
+    /**
+     * get role details
+     *
+     * @param {string} USER_GUID
+     * @param {string} TENANT_GUID
+     * @returns
+     * @memberof RolesGuard
+     */
     getRole(USER_GUID: string, TENANT_GUID: string) {
         // console.log(USER_GUID);
         // const checkUser = userList.find(x => x.USER_GUID.toString() === USER_GUID.toString());
         // this.roleGuardService.getRole(USER_GUID, TENANT_GUID).subscribe(
-            // data => {
-                //         console.log(data);
-                // const roleId = "7ed41000-98aa-11e9-b9d9-0901b57c06f4";
-                // this.roleGuardService.getRoleDetail(USER_GUID,TENANT_GUID).subscribe(
-                //     data=>{
-                //         console.log(data.data.resource);
-                //     },err=>{
+        // data => {
+        //         console.log(data);
+        // const roleId = "7ed41000-98aa-11e9-b9d9-0901b57c06f4";
+        // this.roleGuardService.getRoleDetail(USER_GUID,TENANT_GUID).subscribe(
+        //     data=>{
+        //         console.log(data.data.resource);
+        //     },err=>{
 
-                //     }
-                // )
-                //         return data;
-            // }, err => {
+        //     }
+        // )
+        //         return data;
+        // }, err => {
 
-            // }
+        // }
         // );
         // let infoUser = this.userInfoServices.findOne(USER_GUID,TENANT_GUID).subscribe(
         //     data=>{

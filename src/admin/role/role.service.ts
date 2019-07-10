@@ -66,6 +66,7 @@ export class RoleService {
             .pipe(map(res => {
                 if (res.status == 200) {
                     let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+                    jsonHoliday.code = res.data.resource[0].CODE;
                     return jsonHoliday;
                 }
             }))

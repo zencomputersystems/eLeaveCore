@@ -16,7 +16,19 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 @Injectable()
 export class UserService extends BaseDBService {
 
+    /**
+     * Declare tablename user main
+     *
+     * @private
+     * @memberof UserService
+     */
     private table_name = 'user_main';
+    /**
+     *Creates an instance of UserService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @memberof UserService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {

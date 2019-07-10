@@ -22,6 +22,14 @@ import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
  */
 @Injectable()
 export class HolidayService {
+    /**
+     *Creates an instance of HolidayService.
+     * @param {HolidayDbService} holidayDbService
+     * @param {UserInfoDbService} userinfoDbService
+     * @param {XMLParserService} xmlParserService
+     * @param {AssignerDataService} assignerDataService
+     * @memberof HolidayService
+     */
     constructor(private readonly holidayDbService: HolidayDbService,
         private readonly userinfoDbService: UserInfoDbService,
         private readonly xmlParserService: XMLParserService,

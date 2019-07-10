@@ -13,6 +13,10 @@ import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
  */
 export class ApplyBeforePropertiesXmlDTO {
 
+    /**
+     *Creates an instance of ApplyBeforePropertiesXmlDTO.
+     * @memberof ApplyBeforePropertiesXmlDTO
+     */
     constructor() {
         this.numberOfDays = 0;
         this.isAllowShortNotice = new GeneralPropertiesXmlDTO();

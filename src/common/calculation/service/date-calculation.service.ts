@@ -1,16 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpService } from '@nestjs/common';
 import moment = require("moment");
 import { holidayMock } from '../mock/holiday.mock';
+import { HolidayModel } from 'src/admin/holiday/model/holiday.model';
+// import { HolidayService } from 'src/admin/holiday/holiday.service';
+// import { Observable } from 'rxjs';
+// import { XMLParserService } from 'src/common/helper/xml-parser.service';
+// import { QueryParserService } from 'src/common/helper/query-parser.service';
+// import { map } from 'rxjs/operators';
 
 @Injectable()
 export class DateCalculationService {
-
+    // constructor(public readonly httpService: HttpService,
+    //     public readonly queryService: QueryParserService,
+    //     private readonly xmlParserService: XMLParserService) { }
     // get duration between 2 date
     getDayDuration(startDate: moment.Moment, endDate: moment.Moment, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
         startDate.startOf('days');
         endDate.endOf('days');
 
+        // let dataHoliday = this.getHolidayList('0b8e2250-9721-11e9-bdd4-6dce2bf8cec4');
+
+        // console.log(dataHoliday);
         // mock holiday
+
+        console.log(HolidayModel);
+
         const mockHoliday = holidayMock;
         const filterRestDay = new Array<any>();
         const filterHoliday = new Array<any>(); // hold the filtered holiday date
@@ -92,4 +106,29 @@ export class DateCalculationService {
 
         return duration;
     }
+
+    // getHolidayList(calendarId: string) {
+    //     console.log(calendarId);
+    //     return this.findAll(calendarId)
+    //         .pipe(map(res => {
+    //             if (res.status == 200) {
+    //                 let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+    //                 console.log(jsonHoliday);
+    //                 return jsonHoliday;
+    //             }
+    //         }))
+    // }
+
+    // findAll(calendarProfileId: string): Observable<any> {
+
+    //     const fields = ['PROPERTIES_XML'];
+    //     const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
+
+    //     const url = this.queryService.generateDbQueryV2('l_calendar_profile', fields, filters, []);
+
+    //     //call DF to validate the user
+    //     return this.httpService.get(url);
+
+    // }
+
 }

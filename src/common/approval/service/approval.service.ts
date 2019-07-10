@@ -7,7 +7,7 @@ import { STATESDTO } from '../dto/states.dto';
 import { Resource } from 'src/common/model/resource.model';
 
 /**
- *
+ * Service for approval
  *
  * @export
  * @class ApprovalService
@@ -15,6 +15,11 @@ import { Resource } from 'src/common/model/resource.model';
 @Injectable()
 export class ApprovalService {
 
+    /**
+     *Creates an instance of ApprovalService.
+     * @param {LeaveTransactionDbService} leaveTransactionService
+     * @memberof ApprovalService
+     */
     constructor(private leaveTransactionService: LeaveTransactionDbService) { }
 
     // get tenant company approval policy

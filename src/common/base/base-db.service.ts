@@ -14,9 +14,9 @@ export class BaseDBService {
 
     /**
      *Creates an instance of BaseDBService.
-     * @param {HttpService} httpService
-     * @param {QueryParserService} queryService
-     * @param {string} tableName
+     * @param {HttpService} httpService Service for http from base db file
+     * @param {QueryParserService} queryService Service for query from base db file
+     * @param {string} tableName Table name declaration from base db file
      * @memberof BaseDBService
      */
     constructor(

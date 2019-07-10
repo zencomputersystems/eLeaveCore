@@ -1,7 +1,10 @@
+/**
+    * ResourceGuardMock
+    */
 export const ResourceGuardMock = [
     {
-        "Action":"ViewProfile",
-        "Operation":[
+        "Action": "ViewProfile",
+        "Operation": [
             'GETALL',
             'GET'
         ]

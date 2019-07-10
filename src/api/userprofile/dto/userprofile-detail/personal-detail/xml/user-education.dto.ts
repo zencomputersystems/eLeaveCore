@@ -39,7 +39,7 @@ export class UserEducationDTO {
     university: string;
 
     /**
-     *
+     * Data user education - string stated year form to year to 
      *
      * @type {string}
      * @memberof UserEducationDTO

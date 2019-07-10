@@ -13,6 +13,12 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
  */
 @Injectable()
 export class LeaveTypeEntitlementService {
+    /**
+     *Creates an instance of LeaveTypeEntitlementService.
+     * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService
+     * @param {XMLParserService} xmlParserService
+     * @memberof LeaveTypeEntitlementService
+     */
     constructor(
         private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
         private readonly xmlParserService: XMLParserService) { }

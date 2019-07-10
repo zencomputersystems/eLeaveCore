@@ -1,3 +1,6 @@
+/**
+* Type for rounding
+*/
 export const ROUNDINGTYPE = [
     "Round Down 1.00",
     "Round Nearest 1.00",

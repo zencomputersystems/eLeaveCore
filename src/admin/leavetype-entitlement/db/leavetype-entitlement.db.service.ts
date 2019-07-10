@@ -23,9 +23,28 @@ import { CreateLeaveEntitlementTypeDTO } from '../dto/create-leavetype_entitleme
 @Injectable()
 export class LeavetypeEntitlementDbService extends BaseDBService implements IDbService {
 
+    /**
+     * Declare tablename entitlement def
+     *
+     * @private
+     * @memberof LeavetypeEntitlementDbService
+     */
     private _tableName = "l_leavetype_entitlement_def";
+    /**
+     * Declare viewtable leave type setup
+     *
+     * @private
+     * @memberof LeavetypeEntitlementDbService
+     */
     private _viewTableName = 'view_leave_type_setup';
 
+    /**
+     *Creates an instance of LeavetypeEntitlementDbService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
+     * @memberof LeavetypeEntitlementDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,

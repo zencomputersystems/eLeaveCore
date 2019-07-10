@@ -50,12 +50,22 @@ export class ApplyLeaveService {
         private readonly dateCalculationService: DateCalculationService
     ) { }
 
+    /**
+     * Process apply leave on behalf
+     *
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {*} user
+     * @param {*} userguidOnApply
+     * @param {*} filter
+     * @returns
+     * @memberof ApplyLeaveService
+     */
     public processLeaveOnBehalf(applyLeaveDTO: ApplyLeaveDTO, user, userguidOnApply, filter) {
         // console.log(userguidOnApply + '-' + user + " - " + filter);
 
         // let y = applyLeaveDTO;
-        let extension =  ['(USER_GUID=' + userguidOnApply + ')'];
-        return this.applyLeaveProcess(applyLeaveDTO,user,extension,true);
+        let extension = ['(USER_GUID=' + userguidOnApply + ')'];
+        return this.applyLeaveProcess(applyLeaveDTO, user, extension, true);
 
         // return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extension)
         //     .pipe(
@@ -117,7 +127,7 @@ export class ApplyLeaveService {
     public processLeave(applyLeaveDTO: ApplyLeaveDTO, user: any) {
         // let y = applyLeaveDTO;
         let extension = ['(USER_GUID=' + user.USER_GUID + ')', '(TENANT_GUID=' + user.TENANT_GUID + ')'];
-        return this.applyLeaveProcess(applyLeaveDTO,user,extension,null);
+        return this.applyLeaveProcess(applyLeaveDTO, user, extension, null);
         // return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extension)
         //     .pipe(
         //         map(res => {
@@ -159,7 +169,18 @@ export class ApplyLeaveService {
         //     )
     }
 
-    private applyLeaveProcess(applyLeaveDTO: ApplyLeaveDTO, user: any, extensionQuery:any, onbehalf:boolean){
+    /**
+     * Process apply leave
+     *
+     * @private
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {*} user
+     * @param {*} extensionQuery
+     * @param {boolean} onbehalf
+     * @returns
+     * @memberof ApplyLeaveService
+     */
+    private applyLeaveProcess(applyLeaveDTO: ApplyLeaveDTO, user: any, extensionQuery: any, onbehalf: boolean) {
         let y = applyLeaveDTO;
 
         return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extensionQuery)
@@ -198,7 +219,7 @@ export class ApplyLeaveService {
                 }),
                 mergeMap(result => {
                     if (result.validationResult.valid) {
-                        return of(this.applyLeaveData(result, y, user,onbehalf));
+                        return of(this.applyLeaveData(result, y, user, onbehalf));
                     } else {
                         return of(result.validationResult);
                     }
@@ -230,7 +251,7 @@ export class ApplyLeaveService {
             }
             else {
                 msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days' : 'day') + '  was send for approval between ' + leaveDetail.startDate + ' and ' + leaveDetail.endDate;
-                this.leaveTransactionDbService.create(y.data[i], result, user, y,onbehalf).pipe(map((res) => {
+                this.leaveTransactionDbService.create(y.data[i], result, user, y, onbehalf).pipe(map((res) => {
                     // console.log('pass');
                     if (res.status != 200) {
                         result.validationResult.valid = false;
@@ -279,7 +300,7 @@ export class ApplyLeaveService {
                         throw res;
                     }
                     // console.log('huhuhuhuhuhuus');
-                    
+
                     // console.log(result);
                     return result;
                 })

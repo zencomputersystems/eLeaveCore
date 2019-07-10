@@ -27,12 +27,12 @@ export class InvitationInviteService {
 
     /**
      *Creates an instance of InvitationInviteService.
-     * @param {InvitationDbService} inviteDbService
-     * @param {MailerService} mailerService
-     * @param {HttpService} httpService
-     * @param {QueryParserService} queryService
-     * @param {UserService} userService
-     * @param {EmailNodemailerService} emailNodemailerService
+     * @param {InvitationDbService} inviteDbService Service for invite db
+     * @param {MailerService} mailerService Service for mailer standard 
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @param {UserService} userService Service for user
+     * @param {EmailNodemailerService} emailNodemailerService Service for email node mailer
      * @memberof InvitationInviteService
      */
     constructor(

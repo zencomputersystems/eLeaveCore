@@ -12,6 +12,10 @@ import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
  */
 export class ApplyWithinPropertiesXmlDTO {
 
+    /**
+     *Creates an instance of ApplyWithinPropertiesXmlDTO.
+     * @memberof ApplyWithinPropertiesXmlDTO
+     */
     constructor() {
         this.numberOfDays = 0;
         this.isAllowBackdated = new GeneralPropertiesXmlDTO();

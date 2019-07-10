@@ -52,11 +52,20 @@ export class ApplyController {
 
     }
 
+    /**
+     * Method apply leave on behalf
+     *
+     * @param {*} id
+     * @param {ApplyLeaveDTO} applyLeaveDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof ApplyController
+     */
     @UseGuards(RolesGuard)
     @Post('leave/apply-on-behalf/:id')
     @ApiOperation({ title: 'Apply leave on behalf' })
     @Resources({ resourceRef: 'allowLeaveManagement', resourceName: 'allowApplyOnBehalf' })
-    createForOthers(@Param('id') id,@Body() applyLeaveDTO: ApplyLeaveDTO, @Req() req, @Res() res) {
+    createForOthers(@Param('id') id, @Body() applyLeaveDTO: ApplyLeaveDTO, @Req() req, @Res() res) {
         // console.log(req);
         // console.log(req.accessLevel);
         // res.send(id +' - '+ req.user.USER_GUID);

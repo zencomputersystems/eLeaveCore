@@ -22,8 +22,21 @@ import { IDbService } from 'src/interface/IDbService';
 @Injectable()
 export class UserInfoService extends BaseDBService implements IDbService {
 
+    /**
+     * Declare tablename user info
+     *
+     * @private
+     * @memberof UserInfoService
+     */
     private _tableName = 'user_info';
 
+    /**
+     *Creates an instance of UserInfoService.
+     * @param {HttpService} httpService  Service for http
+     * @param {QueryParserService} queryService Service for query
+     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
+     * @memberof UserInfoService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,

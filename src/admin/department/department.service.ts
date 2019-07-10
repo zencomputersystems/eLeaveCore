@@ -10,6 +10,11 @@ import { map } from 'rxjs/operators';
  */
 @Injectable()
 export class DepartmentService {
+    /**
+     *Creates an instance of DepartmentService.
+     * @param {DepartmentDbService} departmentDbService
+     * @memberof DepartmentService
+     */
     constructor(private readonly departmentDbService: DepartmentDbService) { }
 
     /**

@@ -13,8 +13,21 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
  */
 @Injectable()
 export class DesignationDbService extends BaseDBService {
+    /**
+     * Declare viewtable designations
+     *
+     * @private
+     * @memberof DesignationDbService
+     */
     private _tableName = "view_designations";
 
+    /**
+     *Creates an instance of DesignationDbService.
+     * @param {HttpService} httpService Service for http
+     * @param {QueryParserService} queryService Service for query 
+     * @param {CommonFunctionService} commonFunctionService Service for commonfunction
+     * @memberof DesignationDbService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,

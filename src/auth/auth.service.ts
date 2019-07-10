@@ -11,6 +11,11 @@ import { ldap } from './passport/mock/ldap';
  */
 @Injectable()
 export class AuthService {
+  /**
+   *Creates an instance of AuthService.
+   * @param {UserService} userService
+   * @memberof AuthService
+   */
   constructor(private readonly userService: UserService) { }
 
   /**

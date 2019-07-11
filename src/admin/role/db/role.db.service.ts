@@ -59,7 +59,7 @@ export class RoleDbService extends BaseDBService {
      */
     public findAll(roleProfileId: string): Observable<any> {
 
-        const fields = ['PROPERTIES_XML','CODE'];
+        const fields = ['PROPERTIES_XML'];
         const filters = ['(ROLE_GUID=' + roleProfileId + ')'];
 
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);

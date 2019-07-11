@@ -17,13 +17,14 @@ export class UserprofileListDTO {
     constructor(element: any, accessData: Access) {
         this.id = element.USER_INFO_GUID;
         this.userId = element.USER_GUID;
-        this.staffNumber = element.PERSONAL_ID == null ? '' : element.PERSONAL_ID;
+        this.staffNumber = element.STAFF_ID == null ? '' : element.STAFF_ID;
         this.employeeName = element.FULLNAME;
         this.designation = element.DESIGNATION;
         this.department = element.DEPARTMENT;
         this.branch = element.BRANCH;
         this.companyId = element.TENANT_COMPANY_GUID;
         this.email = element.EMAIL;
+        this.status = element.STATUS_ACTIVATION;
         this.access = accessData;
     }
 
@@ -90,6 +91,13 @@ export class UserprofileListDTO {
      * @memberof UserprofileListDTO
      */
     public email: string;
+    /**
+     * Data userprofilelist - status activation
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
+    public status: string;
     /**
      * Data userprofilelist - access
      *

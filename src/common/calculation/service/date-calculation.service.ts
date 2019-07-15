@@ -8,12 +8,28 @@ import { HolidayModel } from 'src/admin/holiday/model/holiday.model';
 // import { QueryParserService } from 'src/common/helper/query-parser.service';
 // import { map } from 'rxjs/operators';
 
+/**
+ * Service for date calculation
+ *
+ * @export
+ * @class DateCalculationService
+ */
 @Injectable()
 export class DateCalculationService {
     // constructor(public readonly httpService: HttpService,
     //     public readonly queryService: QueryParserService,
     //     private readonly xmlParserService: XMLParserService) { }
     // get duration between 2 date
+    /**
+     * Get day duration
+     *
+     * @param {moment.Moment} startDate
+     * @param {moment.Moment} endDate
+     * @param {boolean} isIncludeHoliday
+     * @param {boolean} isIncludeRestDay
+     * @returns
+     * @memberof DateCalculationService
+     */
     getDayDuration(startDate: moment.Moment, endDate: moment.Moment, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
         startDate.startOf('days');
         endDate.endOf('days');
@@ -84,6 +100,17 @@ export class DateCalculationService {
 
     }
 
+    /**
+     * Get leave duration
+     *
+     * @param {Date} firstDate
+     * @param {Date} secondDate
+     * @param {number} dayType
+     * @param {boolean} isIncludeHoliday
+     * @param {boolean} isIncludeRestDay
+     * @returns
+     * @memberof DateCalculationService
+     */
     getLeaveDuration(firstDate: Date, secondDate: Date, dayType: number, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
         const startDate = moment(firstDate, 'YYYY-MM-DD');
         const endDate = moment(secondDate, 'YYYY-MM-DD');

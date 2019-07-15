@@ -1,6 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -76,6 +76,30 @@ export class UserInfoService extends BaseDBService implements IDbService {
 
     }
 
+    public findOneData(userId: string, tenantId: string) {
+        const fields = [
+            'USER_INFO_GUID',
+            'FULLNAME',
+            'PROPERTIES_XML',
+            'BRANCH',
+            'DEPARTMENT',
+            'DESIGNATION',
+            'JOIN_DATE',
+            'CONFIRMATION_DATE',
+            'RESIGNATION_DATE',
+            'EMPLOYEE_STATUS',
+            'EMPLOYEE_TYPE',
+            'ROLE_GUID',
+            'CALENDAR_GUID',
+        ];
+        const filters = ['(USER_GUID=' + userId + ') LIMIT 1'];
+
+        const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
+
+        return of(this.httpService.get(url));
+
+    }
+
     /**
      * Find all user-info
      *
@@ -116,6 +140,7 @@ export class UserInfoService extends BaseDBService implements IDbService {
         data.USER_INFO_GUID = v1();
         data.CREATION_USER_GUID = user.USER_GUID;
         data.CREATION_TS = new Date().toISOString();
+        data.USER_GUID = user.USER_GUID;
 
         resource.resource.push(data);
 
@@ -142,7 +167,7 @@ export class UserInfoService extends BaseDBService implements IDbService {
         data.USER_INFO_GUID = d.id;
 
         resource.resource.push(data);
-
+        console.log(resource);
         return this.updateByModel(resource, [], [], []);
     }
 
@@ -157,7 +182,7 @@ export class UserInfoService extends BaseDBService implements IDbService {
     public mapData(d: UserDto, userId: string) {
         const data = new UserInfoModel();
 
-        data.USER_GUID = userId;
+        // data.USER_GUID = userId;
 
         data.DESIGNATION = d.employmentDetail.designationId;
         data.DEPARTMENT = d.employmentDetail.departmentId;

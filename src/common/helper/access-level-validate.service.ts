@@ -4,12 +4,33 @@ import { switchMap, map } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
 import { Injectable } from '@nestjs/common';
 
+/**
+ * Service for access level validate
+ *
+ * @export
+ * @class AccessLevelValidateService
+ */
 @Injectable()
 export class AccessLevelValidateService {
+    /**
+     *Creates an instance of AccessLevelValidateService.
+     * @param {UserInfoService} userInfoService Service for user info
+     * @memberof AccessLevelValidateService
+     */
     constructor(private readonly userInfoService: UserInfoService) { }
 
     // get the requestor permission level
     // return filter with the id of that level
+    /**
+     * get the requestor permission level
+     * return filter with the id of that level
+     *
+     * @param {string} accessLevel
+     * @param {string[]} filters
+     * @param {string} tenantId
+     * @returns
+     * @memberof AccessLevelValidateService
+     */
     public validateAccessLevel(accessLevel: string, filters: string[], tenantId: string) {
 
         const filter = ['(TENANT_GUID=' + tenantId + ')'];
@@ -45,6 +66,16 @@ export class AccessLevelValidateService {
     }
 
     //validate user access level before return data
+    /**
+     * validate user access level before return data
+     *
+     * @param {string} tenantId
+     * @param {string} requestor_userId
+     * @param {string} accessLevel
+     * @param {string[]} filterList
+     * @returns
+     * @memberof AccessLevelValidateService
+     */
     public generateFilterWithChecking(tenantId: string, requestor_userId: string, accessLevel: string, filterList: string[]) {
 
         return this.validateAccessLevel(accessLevel, ['(USER_GUID=' + requestor_userId + ')'], tenantId)

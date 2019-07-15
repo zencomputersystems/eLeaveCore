@@ -5,9 +5,22 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
+/**
+ * Service for pro rate date current month
+ *
+ * @export
+ * @class ProratedDateCurrentMonthService
+ * @extends {LeaveEntitlementBaseService}
+ * @implements {ILeaveEntitlementType}
+ */
 @Injectable()
 export class ProratedDateCurrentMonthService extends LeaveEntitlementBaseService implements ILeaveEntitlementType {
 
+    /**
+     *Creates an instance of ProratedDateCurrentMonthService.
+     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
+     * @memberof ProratedDateCurrentMonthService
+     */
     constructor(private readonly xmlParserService: XMLParserService) {
         super();
     }
@@ -19,6 +32,15 @@ export class ProratedDateCurrentMonthService extends LeaveEntitlementBaseService
     // current date: 1/4/2019
     // calculate Feb using day calculation
     // calculate March and April using Month Calculation
+    /**
+     * Calculate entitled leave
+     *
+     * @param {Date} date
+     * @param {number} yearOfService
+     * @param {LeaveTypePropertiesXmlDTO} leavePolicy
+     * @returns {number}
+     * @memberof ProratedDateCurrentMonthService
+     */
     calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: LeaveTypePropertiesXmlDTO): number {
 
         // convert date of join to moment type

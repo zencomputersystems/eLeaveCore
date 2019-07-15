@@ -1,8 +1,23 @@
 import { Moment } from 'moment';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
+/**
+ * Service for leave entitlement
+ *
+ * @export
+ * @class LeaveEntitlementBaseService
+ */
 export class LeaveEntitlementBaseService {
 
+    /**
+     * Method to get entitlement from policy
+     *
+     * @protected
+     * @param {*} leavePolicy
+     * @param {number} yearOfService
+     * @returns
+     * @memberof LeaveEntitlementBaseService
+     */
     protected getEntitlementFromPolicy(leavePolicy: any, yearOfService: number) {
 
         // Check if leave entitlement is an array or not
@@ -22,6 +37,16 @@ export class LeaveEntitlementBaseService {
         return entitledDay.entitledDays;
     }
 
+    /**
+     * Method to get entitlement per day
+     *
+     * @protected
+     * @param {Moment} date
+     * @param {number} entitlementPerMonth
+     * @param {string} option
+     * @returns
+     * @memberof LeaveEntitlementBaseService
+     */
     protected getEntitlementPerDay(date: Moment, entitlementPerMonth: number, option: string) {
 
         let monthWorkingDay = 0;
@@ -38,6 +63,18 @@ export class LeaveEntitlementBaseService {
         return ((entitlementPerMonth / date.daysInMonth()) * monthWorkingDay);
     }
 
+    /**
+     * Method calculate entitlement
+     *
+     * @protected
+     * @param {Moment} date
+     * @param {LeaveTypePropertiesXmlDTO} policyJson
+     * @param {number} yearOfService
+     * @param {number} monthFullEntitlement
+     * @param {string} option
+     * @returns
+     * @memberof LeaveEntitlementBaseService
+     */
     protected calculateEntitlement(
         date: Moment,
         policyJson: LeaveTypePropertiesXmlDTO,

@@ -20,6 +20,7 @@ import { LeaveModule } from './api/leave/leave.module';
 import { HolidayModule } from './admin/holiday/holiday.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
 import { RoleModule } from './admin/role/role.module';
+import { NotificationModule } from './admin/notification/notification.module';
 
 @Module({
   imports: [
@@ -60,7 +61,8 @@ import { RoleModule } from './admin/role/role.module';
     LeaveModule,
     HolidayModule,
     DashboardModule,
-    RoleModule
+    RoleModule,
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [

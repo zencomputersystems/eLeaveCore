@@ -6,9 +6,23 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
+/**
+ * Service for pro rate date end year
+ *
+ * @export
+ * @class ProratedDateEndYearService
+ * @extends {LeaveEntitlementBaseService}
+ * @implements {ILeaveEntitlementType}
+ */
 @Injectable()
 export class ProratedDateEndYearService extends LeaveEntitlementBaseService implements ILeaveEntitlementType {
 
+    /**
+     *Creates an instance of ProratedDateEndYearService.
+     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
+     * @param {EntitlementRoundingService} roundingService Service for rounding
+     * @memberof ProratedDateEndYearService
+     */
     constructor(
         private readonly xmlParserService: XMLParserService,
         private readonly roundingService: EntitlementRoundingService) {
@@ -16,6 +30,15 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
     }
 
     // get full entitlement of this service year
+    /**
+     * get full entitlement of this service year
+     *
+     * @param {Date} date
+     * @param {number} yearOfService
+     * @param {LeaveTypePropertiesXmlDTO} leavePolicy
+     * @returns {number}
+     * @memberof ProratedDateEndYearService
+     */
     calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: LeaveTypePropertiesXmlDTO): number {
 
         /* EG:

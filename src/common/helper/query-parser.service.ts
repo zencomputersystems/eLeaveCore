@@ -1,7 +1,22 @@
 import { DreamFactory } from 'src/config/dreamfactory';
 
+/**
+ * Service for query
+ *
+ * @export
+ * @class QueryParserService
+ */
 export class QueryParserService {
 
+    /**
+     * Method generate db query 
+     *
+     * @param {string} tableName
+     * @param {Array<string>} fields
+     * @param {Array<string>} filters
+     * @returns
+     * @memberof QueryParserService
+     */
     generateDbQuery(tableName: string, fields: Array<string>, filters: Array<string>) {
         let url = DreamFactory.df_host + tableName + "?";
         let field = "";
@@ -23,6 +38,16 @@ export class QueryParserService {
 
     }
 
+    /**
+     * Method generate db query additional idfields parameter
+     *
+     * @param {string} tableName
+     * @param {Array<string>} fields
+     * @param {Array<string>} filters
+     * @param {Array<string>} idFields
+     * @returns
+     * @memberof QueryParserService
+     */
     generateDbQueryV2(tableName: string, fields: Array<string>, filters: Array<string>, idFields: Array<string>) {
         let url = DreamFactory.df_host + tableName + "?";
 

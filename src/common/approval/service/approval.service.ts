@@ -22,11 +22,16 @@ export class ApprovalService {
      */
     constructor(private leaveTransactionService: LeaveTransactionDbService) { }
 
-    // get tenant company approval policy
-    // 3 type
-    // 1 = Anyone in hierarchy (ANYONE)
-    // 2 = Everyone in herarchy (EVERYONE)
-    // 3 = Superior
+    /**
+     * get tenant company approval policy
+     * 3 type
+     * 1 = Anyone in hierarchy (ANYONE)
+     * 2 = Everyone in herarchy (EVERYONE)
+     * 3 = Superior
+     *
+     * @returns
+     * @memberof ApprovalService
+     */
     getApprovalPolicy() {
 
         return of({
@@ -36,7 +41,14 @@ export class ApprovalService {
 
     }
 
-    // get leave applied states
+    /**
+     * get leave applied states
+     *
+     * @param {string} leaveTransactionId
+     * @param {string} tenantId
+     * @returns
+     * @memberof ApprovalService
+     */
     getAppliedLeaveDetail(leaveTransactionId: string, tenantId: string) {
 
         const filter = ["(LEAVE_TRANSACTION_GUID=" + leaveTransactionId + ")", "(TENANT_GUID=" + tenantId + ")"]
@@ -44,8 +56,17 @@ export class ApprovalService {
         return this.leaveTransactionService.findByFilterV2([], filter);
     }
 
-    // trigger when approval policy change
-    // only for EVERYONE and level deducted
+
+    /**
+     * trigger when approval policy change
+     * only for EVERYONE and level deducted
+     *
+     * @param {string} policyType
+     * @param {number} policyLevel
+     * @param {string} tenantId
+     * @returns
+     * @memberof ApprovalService
+     */
     onPolicyChanged(policyType: string, policyLevel: number, tenantId: string) {
 
         //get current policy
@@ -88,6 +109,16 @@ export class ApprovalService {
     }
 
 
+    /**
+     * Method on approve reject
+     *
+     * @param {string} leaveTransactionId
+     * @param {string} tenantId
+     * @param {string} approverUserId
+     * @param {boolean} isApprove
+     * @returns
+     * @memberof ApprovalService
+     */
     onApproveReject(leaveTransactionId: string, tenantId: string, approverUserId: string, isApprove: boolean) {
 
         return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
@@ -138,6 +169,17 @@ export class ApprovalService {
 
     }
 
+    /**
+     * Method vertical level
+     *
+     * @private
+     * @param {LeaveTransactionModel} leave
+     * @param {string} approverUserId
+     * @param {boolean} isApprove
+     * @param {number} currentPolicyLevel
+     * @returns
+     * @memberof ApprovalService
+     */
     private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {
         leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL + 1);
 
@@ -164,6 +206,16 @@ export class ApprovalService {
 
     }
 
+    /**
+     * Method horizontal level
+     *
+     * @private
+     * @param {LeaveTransactionModel} leave
+     * @param {string} approverUserId
+     * @param {boolean} isApprove
+     * @returns
+     * @memberof ApprovalService
+     */
     private horizontalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean) {
         // only 1 level vertically
         leave.CURRENT_APPROVAL_LEVEL = 1;

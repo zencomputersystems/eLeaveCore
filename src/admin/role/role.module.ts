@@ -12,6 +12,7 @@ import { RoleService } from './role.service';
 import { RoleDbService } from './db/role.db.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { NotificationService } from '../notification/notification.service';
 
 /**
  * Module for role
@@ -33,7 +34,8 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
         RoleDbService,
         AssignerDataService,
         UserInfoDbService,
-        CommonFunctionService
+        CommonFunctionService,
+        NotificationService
     ],
     controllers: [RoleController]
 })

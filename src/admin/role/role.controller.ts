@@ -6,6 +6,8 @@ import { RoleService } from './role.service';
 import { UpdateRoleDTO } from './dto/update-role.dto';
 import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { QueueNotificationDTO } from '../notification/dto/queue-notification.dto';
+import { NotificationService } from '../notification/notification.service';
 
 /**
  * Controller for role
@@ -26,7 +28,8 @@ export class RoleController {
      */
     constructor(
         private readonly roleService: RoleService,
-        private readonly commonFunctionService: CommonFunctionService
+        private readonly commonFunctionService: CommonFunctionService,
+        private readonly notificationService: NotificationService
     ) { }
 
     /**
@@ -39,6 +42,13 @@ export class RoleController {
     @Get('/role-profile')
     @ApiOperation({ title: 'Get role profile list' })
     findAllRole(@Req() req, @Res() res) {
+        // let notify = new QueueNotificationDTO;
+        // notify.employeeId = req.user.USER_GUID;
+        // notify.message = '[USER_NAME] has view role';
+        // notify.category = 'view role';
+        // console.log(notify);
+        const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has view role', 'view-role');
+        this.notificationService.create(notify).subscribe();
         this.commonFunctionService.runGetServiceV2(this.roleService.findRoleProfile(), res);
         // this.roleService.findRoleProfile().subscribe(
         //     data => {

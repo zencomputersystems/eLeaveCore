@@ -1,5 +1,5 @@
 import { UserEmployeeDTO } from './user-employee.dto';
-import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { IsNotEmpty, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserEducationDetailDTO } from 'src/api/userprofile/dto/userprofile-detail/personal-detail/xml/user-education-detail.dto';
 import { UserCertificationDetailDTO } from 'src/api/userprofile/dto/userprofile-detail/employment-detail/xml/user-certification-detail.dto';
@@ -219,4 +219,14 @@ export class UserDto {
     @ValidateNested()
     employmentDetail: UserEmployeeDTO;
 
+    /**
+     * Notification rule
+     *
+     * @type {string[]}
+     * @memberof UserDto
+     */
+    @ApiModelProperty({ description: 'Person guid to notify', example: '["bf1172cd-d950-343b-e3f2-60ebeb8afcf4","D6B84686-DF26-48BA-9EC7-086ABEFEA74A"]' })
+    @IsArray()
+    @IsNotEmpty()
+    notificationRule: string[];
 }

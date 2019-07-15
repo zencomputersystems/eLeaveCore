@@ -1,13 +1,26 @@
-import {j2xParser, parse} from 'fast-xml-parser';
+import { j2xParser, parse } from 'fast-xml-parser';
 
+/**
+ * Service XMLJSON converter
+ *
+ * @export
+ * @class XMLParserService
+ */
 export class XMLParserService {
-    
-    public convertJsonToXML(data:any) {
+
+    /**
+     * Method convert JSON to XML
+     *
+     * @param {*} data
+     * @returns
+     * @memberof XMLParserService
+     */
+    public convertJsonToXML(data: any) {
         var defaultOptions = {
-            attributeNamePrefix : "@_",
+            attributeNamePrefix: "@_",
             attrNodeName: "@", //default is false
-            textNodeName : "#text",
-            ignoreAttributes : true,
+            textNodeName: "#text",
+            ignoreAttributes: true,
             cdataTagName: "__cdata", //default is false
             cdataPositionChar: "\\c",
             format: false,
@@ -20,6 +33,13 @@ export class XMLParserService {
         return converter.parse(data);
     }
 
+    /**
+     * Method convert XML to JSON
+     *
+     * @param {*} data
+     * @returns
+     * @memberof XMLParserService
+     */
     public convertXMLToJson(data: any) {
         return parse(data);
     }

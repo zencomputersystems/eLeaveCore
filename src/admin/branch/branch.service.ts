@@ -39,6 +39,16 @@ export class BranchService {
         //     }))
     }
 
+    public getListTest(tenantId: string) {
+        // return this.commonFunctionService.getListData(this.branchDbService.findAll(tenantId));
+        return this.branchDbService.findAll(tenantId)
+            .pipe(map(res => {
+                if (res.status == 200) {
+                    return res.data.resource;
+                }
+            }))
+    }
+
     // public generateSasToken(container, blobName, permissions) {
     //     var connString = process.env.AzureWebJobsStorage;
     //     var blobService = azure.createBlobService(connString);

@@ -47,8 +47,8 @@ export class RoleController {
         // notify.message = '[USER_NAME] has view role';
         // notify.category = 'view role';
         // console.log(notify);
-        const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has view role', 'view-role');
-        this.notificationService.create(notify).subscribe();
+        // const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has view role', 'view-role');
+        // this.notificationService.create(notify).subscribe();
         this.commonFunctionService.runGetServiceV2(this.roleService.findRoleProfile(), res);
         // this.roleService.findRoleProfile().subscribe(
         //     data => {

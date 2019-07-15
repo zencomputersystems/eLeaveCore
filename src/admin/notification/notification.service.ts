@@ -29,7 +29,7 @@ export class NotificationService extends BaseDBService {
 
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
-        //call DF to validate the user
+        // call DF to validate the user
         return this.httpService.get(url);
 
     }

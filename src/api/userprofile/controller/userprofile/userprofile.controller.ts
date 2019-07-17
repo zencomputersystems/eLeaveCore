@@ -44,20 +44,15 @@ export class UserprofileController {
     findAll(@Req() req, @Res() res) {
 
         this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, [])
-            .pipe(switchMap(filter => {
-                return this.userprofileService.getList(filter);
-            }))
+            .pipe(switchMap(filter => { return this.userprofileService.getList(filter); }))
             .subscribe(
                 data => {
                     return res.send(data);
                 },
                 err => {
                     res.status(500);
-                    if (err.response.data) {
-                        res.send(err.response.data.error)
-                    } else {
-                        res.send(err);
-                    }
+                    if (err.response.data) { res.send(err.response.data.error) } 
+                    else { res.send(err); }
                 }
             )
     }
@@ -76,106 +71,26 @@ export class UserprofileController {
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
     findOne(@Param('id') id, @Req() req, @Res() res) {
-
         let dataId = null;
         let dataIdTemp = req.query.id;
-        if (dataIdTemp == null) {
-            dataId = id;
-        } else {
-            dataId = dataIdTemp;
-        }
-        // console.log(req.query.id);
+        if (dataIdTemp == null) { dataId = id; } 
+        else { dataId = dataIdTemp; }
         if (dataId == null) {
             res.status(400);
             res.send('id not found');
         }
-        //get the requesting user
         const user = req.user;
-        // console.log(user);
-
-        // const filter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID=' + dataId + ')'];
-        // console.log(user.TENANT_GUID + ' - ' + user.USER_GUID + ' - ' + req.accessLevel + ' - (USER_GUID=' + dataId + ')');
-
         this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + dataId + ')'])
             .pipe(
-                switchMap(filter => {
-                    // console.log(filter);
-                    return this.userprofileService.getDetail(filter);
-                    // filter;
-                })
+                switchMap(filter => { return this.userprofileService.getDetail(filter);  })
                 ).subscribe(data => {
-                    // console.log(data);
-                    if(data){
-                        // console.log('data');
-                        this.getEntitlementProcess(data, res, user);
-                    }else{
-                        // console.log('nfe');
-                        res.send(new NotFoundException(`Data user guid not found`));
-                    }
-                    // try{
-                    //     console.log('data');
-                    //     this.getEntitlementProcess(data, res, user);
-                    // }catch(error){
-                    //     console.log('nfe');
-                    //     res.send(error)
-                        
-                    // }
+                    if(data){ this.getEntitlementProcess(data, res, user); }
+                    else{ res.send(new NotFoundException(`Data user guid not found`)); }
                 }, err => {
-                    // console.log(err);
                     res.status(500);
-                    if (err.response.data) {
-                        res.send(err.response.data1.error)
-                    } else {
-                        res.send(err);
-                    }
+                    if (err.response.data) { res.send(err.response.data1.error) } 
+                    else { res.send(err); }
                 });
-
-        // console.log(filter);
-
-        // })
-        // )
-        // .subscribe(
-        //     data => {
-        //         res.send(data);
-        //         // console.log(data + " find");
-        //         // this.getEntitlementProcess(data, res, user);
-        //         // this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
-        //         //     data => {
-        //         //         let leaveData = [];
-        //         //         for (let i = 0; i < data.length; i++) {
-        //         //             let tempObj = new EntitlementDetailDTO;
-        //         //             tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
-        //         //             tempObj.leaveTypeName = data[i].LEAVE_CODE;
-        //         //             tempObj.entitledDays = data[i].ENTITLED_DAYS;
-        //         //             tempObj.pendingDays = data[i].TOTAL_PENDING;
-        //         //             tempObj.takenDays = data[i].TOTAL_APPROVED;
-        //         //             tempObj.balanceDays = data[i].BALANCE_DAYS;
-        //         //             leaveData.push(tempObj);
-        //         //         }
-        //         //         data1.entitlementDetail = leaveData;
-        //         //         res.send(data1);
-        //         //     },
-        //         //     err => {
-        //         //         res.status(500);
-        //         //         if (err.response) {
-        //         //             res.send(err.response.data.error)
-        //         //         } else {
-        //         //             res.send(err);
-        //         //         }
-        //         //     }
-        //         // )
-
-        //     },
-        //     err => {
-
-        //         res.status(500);
-        //         if (err.response.data1) {
-        //             res.send(err.response.data1.error)
-        //         } else {
-        //             res.send(err);
-        //         }
-        //     }
-        // )
     }
 
     /**
@@ -196,44 +111,12 @@ export class UserprofileController {
 
         this.userprofileService.getDetail(filters)
             .subscribe(
-                data => {
-                    // console.log(data + " own");
-                    this.getEntitlementProcess(data, res, user);
-                    // this.userprofileService.getEntitlementDetail(user.TENANT_GUID, user.USER_GUID).subscribe(
-                    //     data => {
-                    //         let leaveData = [];
-                    //         for (let i = 0; i < data.length; i++) {
-                    //             let tempObj = new EntitlementDetailDTO;
-                    //             console.log(data[i].LEAVE_TYPE_GUID);
-                    //             tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
-                    //             tempObj.leaveTypeName = data[i].LEAVE_CODE;
-                    //             tempObj.entitledDays = data[i].ENTITLED_DAYS;
-                    //             tempObj.pendingDays = data[i].TOTAL_PENDING;
-                    //             tempObj.takenDays = data[i].TOTAL_APPROVED;
-                    //             tempObj.balanceDays = data[i].BALANCE_DAYS;
-                    //             leaveData.push(tempObj);
-                    //         }
-                    //         data1.entitlementDetail = leaveData;
-                    //         res.send(data1);
-                    //     },
-                    //     err => {
-                    //         res.status(500);
-                    //         if (err.response) {
-                    //             res.send(err.response.data.error)
-                    //         } else {
-                    //             res.send(err);
-                    //         }
-                    //     }
-                    // )
-                },
+                data => { this.getEntitlementProcess(data, res, user); },
                 err => {
 
                     res.status(500);
-                    if (err.response) {
-                        res.send(err.response.data.error)
-                    } else {
-                        res.send(err);
-                    }
+                    if (err.response) { res.send(err.response.data.error) } 
+                    else { res.send(err); }
                 }
             )
 
@@ -269,11 +152,8 @@ export class UserprofileController {
             },
             err => {
                 res.status(500);
-                if (err.response) {
-                    res.send(err.response.data.error)
-                } else {
-                    res.send(err);
-                }
+                if (err.response) { res.send(err.response.data.error) } 
+                else { res.send(err); }
             }
         )
     }

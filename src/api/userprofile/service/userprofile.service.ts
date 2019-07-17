@@ -86,7 +86,16 @@ export class UserprofileService {
                     const data: UserInfoModel = res[0];
 
                     if (data) {
-                        return this.buildProfileData(data, true, true, true, true);
+                        let dataProfile = new Object;
+
+                        dataProfile['data'] = data; // : UserInfoModel,
+                        dataProfile['isShowPersonalData'] = true; // : boolean,
+                        dataProfile['isShowEmploymentData'] = true; // : boolean,
+                        dataProfile['isShowEntitlementData'] = true; // : boolean,
+                        dataProfile['isShowCertData'] = true; // : boolean
+
+                        return this.buildProfileData(dataProfile);
+                        // return this.buildProfileData(data, true, true, true, true);
                     }
                 })
             )
@@ -109,7 +118,16 @@ export class UserprofileService {
                     const data: UserInfoModel = res[0];
 
                     if (data) {
-                        return this.buildProfileData(data, true, false, false, false);
+                        let dataProfile = new Object;
+
+                        dataProfile['data'] = data; // : UserInfoModel,
+                        dataProfile['isShowPersonalData'] = true; // : boolean,
+                        dataProfile['isShowEmploymentData'] = false; // : boolean,
+                        dataProfile['isShowEntitlementData'] = false; // : boolean,
+                        dataProfile['isShowCertData'] = false; // : boolean
+
+                        return this.buildProfileData(dataProfile);
+                        // return this.buildProfileData(data, true, false, false, false);
                     }
                 })
             );
@@ -157,7 +175,16 @@ export class UserprofileService {
                     const data: UserInfoModel = res[0];
 
                     if (data) {
-                        return this.buildProfileData(data, false, true, false, false);
+                        let dataProfile = new Object;
+
+                        dataProfile['data'] = data; // : UserInfoModel,
+                        dataProfile['isShowPersonalData'] = false; // : boolean,
+                        dataProfile['isShowEmploymentData'] = true; // : boolean,
+                        dataProfile['isShowEntitlementData'] = false; // : boolean,
+                        dataProfile['isShowCertData'] = false; // : boolean
+
+                        return this.buildProfileData(dataProfile);
+                        // return this.buildProfileData(data, false, true, false, false);
                     }
                 })
             )
@@ -172,7 +199,7 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public updateEmploymentDetail(data: UpdateEmploymentDetailDTO, userId: string) {
-        console.log('this is employment update');
+        // console.log('this is employment update');
         const modelData = new UserInfoModel();
 
         modelData.USER_INFO_GUID = data.id;
@@ -239,7 +266,16 @@ export class UserprofileService {
                     const data: UserInfoModel = res[0];
 
                     if (data) {
-                        return this.buildProfileData(data, false, false, false, true);
+                        let dataProfile = new Object;
+
+                        dataProfile['data'] = data; // : UserInfoModel,
+                        dataProfile['isShowPersonalData'] = false; // : boolean,
+                        dataProfile['isShowEmploymentData'] = false; // : boolean,
+                        dataProfile['isShowEntitlementData'] = false; // : boolean,
+                        dataProfile['isShowCertData'] = true; // : boolean
+
+                        return this.buildProfileData(dataProfile);
+                        // return this.buildProfileData(data, false, false, false, true);
                     }
                 })
             )
@@ -259,12 +295,14 @@ export class UserprofileService {
      * @returns
      * @memberof UserprofileService
      */
-    private buildProfileData(
-        data: UserInfoModel,
-        isShowPersonalData: boolean,
-        isShowEmploymentData: boolean,
-        isShowEntitlementData: boolean,
-        isShowCertData: boolean) {
+    private buildProfileData( dataProfile:any
+        ) {
+            // console.log(dataProfile);
+        let data = dataProfile.data;
+        let isShowPersonalData = dataProfile.isShowPersonalData;
+        let isShowEmploymentData = dataProfile.isShowEmploymentData;
+        let isShowEntitlementData = dataProfile.isShowEntitlementData;
+        let isShowCertData = dataProfile.isShowCertData;
 
         const userProfileData = new UserProfileDTO();
 

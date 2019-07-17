@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
@@ -7,6 +7,7 @@ import { switchMap, map } from 'rxjs/operators';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
+import { throws } from 'assert';
 
 /**
  * Controller for user profile
@@ -104,7 +105,21 @@ export class UserprofileController {
                 })
                 ).subscribe(data => {
                     // console.log(data);
-                    this.getEntitlementProcess(data, res, user);
+                    if(data){
+                        // console.log('data');
+                        this.getEntitlementProcess(data, res, user);
+                    }else{
+                        // console.log('nfe');
+                        res.send(new NotFoundException(`Data user guid not found`));
+                    }
+                    // try{
+                    //     console.log('data');
+                    //     this.getEntitlementProcess(data, res, user);
+                    // }catch(error){
+                    //     console.log('nfe');
+                    //     res.send(error)
+                        
+                    // }
                 }, err => {
                     // console.log(err);
                     res.status(500);
@@ -234,6 +249,7 @@ export class UserprofileController {
      */
     public getEntitlementProcess(data1, res, user) {
         // console.log(data1);
+
         this.userprofileService.getEntitlementDetail(user.TENANT_GUID, data1.userId).subscribe(
             data => {
                 let leaveData = [];

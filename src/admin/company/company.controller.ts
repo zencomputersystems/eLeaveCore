@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CompanyService } from './company.service';
@@ -51,9 +51,29 @@ export class CompanyController {
 	@ApiOperation({ title: 'Get one company' })
 	findById(@Param('id') id,@Req() req, @Res() res) {
 		this.companyService.findById(req.user.TENANT_GUID,id).subscribe(
-			data => { res.send(data); },
+			data => { 
+				// console.log(data);
+				res.send(data); 
+			},
 			err => { this.commonFunctionService.sendResErrorV3(err, res); }
-		)
+			); 
+		// console.log(data);
+		// data.subscribe(data=>{
+		// 	console.log(data);
+		// 	res.send(data);
+		// },err=>{
+		// 	res.send(err);
+		// }
+		// );
+		// if(data){
+			
+		// }else{
+		// 	res.send(new NotFoundException('Not Found'));
+		// }
+		// .subscribe(
+		// 	data => { res.send(data); },
+		// 	err => { this.commonFunctionService.sendResErrorV3(err, res); }
+		// )
 	}
 
 }

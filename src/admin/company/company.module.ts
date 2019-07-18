@@ -5,6 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { CommonFunctionService } from '../../common/helper/common-function.services';
 
 /**
  * Module for company
@@ -20,7 +21,8 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
   ],
   providers: [
     CompanyService,
-    QueryParserService
+    QueryParserService,
+    CommonFunctionService
   ],
   controllers: [CompanyController]
 })

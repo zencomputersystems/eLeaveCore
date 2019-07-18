@@ -44,6 +44,22 @@ export class UserInfoService extends BaseDBService implements IDbService {
         super(httpService, queryService, 'user_info');
     }
 
+    private fields = [
+        'USER_INFO_GUID',
+        'FULLNAME',
+        'PROPERTIES_XML',
+        'BRANCH',
+        'DEPARTMENT',
+        'DESIGNATION',
+        'JOIN_DATE',
+        'CONFIRMATION_DATE',
+        'RESIGNATION_DATE',
+        'EMPLOYEE_STATUS',
+        'EMPLOYEE_TYPE',
+        'ROLE_GUID',
+        'CALENDAR_GUID',
+    ];
+
     /**
      * Find single user
      *
@@ -53,48 +69,48 @@ export class UserInfoService extends BaseDBService implements IDbService {
      * @memberof UserInfoService
      */
     public findOne(userId: string, tenantId: string): Observable<any> {
-        const fields = [
-            'USER_INFO_GUID',
-            'FULLNAME',
-            'PROPERTIES_XML',
-            'BRANCH',
-            'DEPARTMENT',
-            'DESIGNATION',
-            'JOIN_DATE',
-            'CONFIRMATION_DATE',
-            'RESIGNATION_DATE',
-            'EMPLOYEE_STATUS',
-            'EMPLOYEE_TYPE',
-            'ROLE_GUID',
-            'CALENDAR_GUID',
-        ];
+        // const fields = [
+        //     'USER_INFO_GUID',
+        //     'FULLNAME',
+        //     'PROPERTIES_XML',
+        //     'BRANCH',
+        //     'DEPARTMENT',
+        //     'DESIGNATION',
+        //     'JOIN_DATE',
+        //     'CONFIRMATION_DATE',
+        //     'RESIGNATION_DATE',
+        //     'EMPLOYEE_STATUS',
+        //     'EMPLOYEE_TYPE',
+        //     'ROLE_GUID',
+        //     'CALENDAR_GUID',
+        // ];
         const filters = ['(USER_GUID=' + userId + ')'];
 
-        const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
+        const url = this.queryService.generateDbQuery(this._tableName, this.fields, filters);
 
         return this.httpService.get(url);
 
     }
 
     public findOneData(userId: string, tenantId: string) {
-        const fields = [
-            'USER_INFO_GUID',
-            'FULLNAME',
-            'PROPERTIES_XML',
-            'BRANCH',
-            'DEPARTMENT',
-            'DESIGNATION',
-            'JOIN_DATE',
-            'CONFIRMATION_DATE',
-            'RESIGNATION_DATE',
-            'EMPLOYEE_STATUS',
-            'EMPLOYEE_TYPE',
-            'ROLE_GUID',
-            'CALENDAR_GUID',
-        ];
+        // const fields = [
+        //     'USER_INFO_GUID',
+        //     'FULLNAME',
+        //     'PROPERTIES_XML',
+        //     'BRANCH',
+        //     'DEPARTMENT',
+        //     'DESIGNATION',
+        //     'JOIN_DATE',
+        //     'CONFIRMATION_DATE',
+        //     'RESIGNATION_DATE',
+        //     'EMPLOYEE_STATUS',
+        //     'EMPLOYEE_TYPE',
+        //     'ROLE_GUID',
+        //     'CALENDAR_GUID',
+        // ];
         const filters = ['(USER_GUID=' + userId + ') LIMIT 1'];
 
-        const url = this.queryService.generateDbQuery(this._tableName, fields, filters);
+        const url = this.queryService.generateDbQuery(this._tableName, this.fields, filters);
 
         return of(this.httpService.get(url));
 

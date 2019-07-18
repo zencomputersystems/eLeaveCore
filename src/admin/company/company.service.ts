@@ -6,6 +6,7 @@ import { v1 } from 'uuid';
 import { CompanyModel } from './model/company.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
+import { CommonFunctionService } from '../../common/helper/common-function.services';
 
 /**
  * Service for company
@@ -34,7 +35,8 @@ export class CompanyService extends BaseDBService implements IDbService {
      */
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService) {
+        public readonly queryService: QueryParserService,
+        public readonly commonFunctionService: CommonFunctionService) {
         super(httpService, queryService, "tenant_company");
     }
 
@@ -48,13 +50,17 @@ export class CompanyService extends BaseDBService implements IDbService {
     public findAll(TENANT_GUID: string): Observable<any> {
 
         const fields = ['TENANT_COMPANY_GUID', 'NAME'];
-        const filters = ['(TENANT_COMPANY_GUID=' + TENANT_GUID + ')'];
+        let result = this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
 
-        //url
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        return this.commonFunctionService.getListData(result);
+        // const filters = ['(TENANT_GUID=' + TENANT_GUID + ')'];
+        // console.log(fields);
+        // console.log(filters);
+        // //url
+        // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
-        //call DF to validate the user
-        return this.httpService.get(url);
+        // //call DF to validate the user
+        // return this.httpService.get(url);
 
     }
 
@@ -68,14 +74,16 @@ export class CompanyService extends BaseDBService implements IDbService {
      */
     public findById(TENANT_GUID: any, id: string): Observable<any> {
 
-        const fields = ['BRANCH_GUID', 'NAME'];
-        const filters = ['(BRANCH_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
+        const fields = ['TENANT_COMPANY_GUID', 'NAME'];
+        const filters = ['(TENANT_COMPANY_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
 
         //url
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
         //call DF to validate the user
-        return this.httpService.get(url);
+        // return this.httpService.get(url);
+        let result = this.httpService.get(url);
+        return this.commonFunctionService.getListData(result);
     }
 
 

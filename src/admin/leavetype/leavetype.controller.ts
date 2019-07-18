@@ -33,16 +33,8 @@ export class LeaveTypeController {
 
     this.leavetypeService.create(req.user, createLeavetypeDTO)
       .subscribe(
-        data => {
-          if (data.status == 200)
-            res.send(data.data);
-        },
-        err => {
-          console.log(err.response.data.error.context);
-          res.status(400);
-          res.send('Fail to create resource');
-          //console.log(err.response.data.error.context);
-        }
+        data => { if (data.status == 200) { res.send(data.data); } },
+        err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
       )
   }
 
@@ -55,16 +47,11 @@ export class LeaveTypeController {
    * @memberof LeaveTypeController
    */
   @Patch()
-  update(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDto, @Req() req, @Res() res) {
+  updateLeavetype(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDto, @Req() req, @Res() res) {
     this.leavetypeService.update(req.user, updateLeaveTypeDTO)
       .subscribe(
-        data => {
-          if (data.status == 200)
-            res.send(data.data);
-        },
-        err => {
-          this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
-        }
+        data => { if (data.status == 200) { res.send(data.data); } },
+        err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
       )
   }
 
@@ -76,7 +63,7 @@ export class LeaveTypeController {
    * @memberof LeaveTypeController
    */
   @Get()
-  findAll(@Req() req, @Res() res) {
+  findAllLeavetype(@Req() req, @Res() res) {
     this.leavetypeService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
         res.send(data.data.resource);

@@ -33,15 +33,8 @@ export class SectionController {
 
     this.sectionService.create(req.user, createSectionDTO.name)
       .subscribe(
-        data => {
-          if (data.status == 200)
-            res.send(data.data);
-        },
-        err => {
-          res.status(400);
-          res.send('Fail to create resource');
-          //console.log(err.response.data.error.context);
-        }
+        data => { if (data.status == 200) { res.send(data.data); } },
+        err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
       )
   }
 
@@ -54,16 +47,11 @@ export class SectionController {
    * @memberof SectionController
    */
   @Patch()
-  update(@Body() updateSectionDTO: UpdateSectionDto, @Req() req, @Res() res) {
+  updateSection(@Body() updateSectionDTO: UpdateSectionDto, @Req() req, @Res() res) {
     this.sectionService.update(req.user, updateSectionDTO)
       .subscribe(
-        data => {
-          if (data.status == 200)
-            res.send(data.data);
-        },
-        err => {
-          this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource');
-        }
+        data => { if (data.status == 200) { res.send(data.data); } },
+        err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
       )
   }
 
@@ -75,7 +63,7 @@ export class SectionController {
    * @memberof SectionController
    */
   @Get()
-  findAll(@Req() req, @Res() res) {
+  findAllSection(@Req() req, @Res() res) {
     this.sectionService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
         res.send(data.data.resource);

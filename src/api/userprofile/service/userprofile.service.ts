@@ -85,18 +85,7 @@ export class UserprofileService {
                     // console.log(res);
                     const data: UserInfoModel = res[0];
 
-                    if (data) {
-                        let dataProfile = new Object;
-
-                        dataProfile['data'] = data; // : UserInfoModel,
-                        dataProfile['isShowPersonalData'] = true; // : boolean,
-                        dataProfile['isShowEmploymentData'] = true; // : boolean,
-                        dataProfile['isShowEntitlementData'] = true; // : boolean,
-                        dataProfile['isShowCertData'] = true; // : boolean
-
-                        return this.buildProfileData(dataProfile);
-                        // return this.buildProfileData(data, true, true, true, true);
-                    }
+                    if (data) { return this.buildProfileData(data, true, true, true, true); }
                 })
             )
 
@@ -117,18 +106,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) {
-                        let dataProfile = new Object;
-
-                        dataProfile['data'] = data; // : UserInfoModel,
-                        dataProfile['isShowPersonalData'] = true; // : boolean,
-                        dataProfile['isShowEmploymentData'] = false; // : boolean,
-                        dataProfile['isShowEntitlementData'] = false; // : boolean,
-                        dataProfile['isShowCertData'] = false; // : boolean
-
-                        return this.buildProfileData(dataProfile);
-                        // return this.buildProfileData(data, true, false, false, false);
-                    }
+                    if (data) { return this.buildProfileData(data, true, false, false, false); }
                 })
             );
     }
@@ -174,18 +152,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) {
-                        let dataProfile = new Object;
-
-                        dataProfile['data'] = data; // : UserInfoModel,
-                        dataProfile['isShowPersonalData'] = false; // : boolean,
-                        dataProfile['isShowEmploymentData'] = true; // : boolean,
-                        dataProfile['isShowEntitlementData'] = false; // : boolean,
-                        dataProfile['isShowCertData'] = false; // : boolean
-
-                        return this.buildProfileData(dataProfile);
-                        // return this.buildProfileData(data, false, true, false, false);
-                    }
+                    if (data) { return this.buildProfileData(data, false, true, false, false); }
                 })
             )
     }
@@ -265,18 +232,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) {
-                        let dataProfile = new Object;
-
-                        dataProfile['data'] = data; // : UserInfoModel,
-                        dataProfile['isShowPersonalData'] = false; // : boolean,
-                        dataProfile['isShowEmploymentData'] = false; // : boolean,
-                        dataProfile['isShowEntitlementData'] = false; // : boolean,
-                        dataProfile['isShowCertData'] = true; // : boolean
-
-                        return this.buildProfileData(dataProfile);
-                        // return this.buildProfileData(data, false, false, false, true);
-                    }
+                    if (data) { return this.buildProfileData(data, false, false, false, true); }
                 })
             )
     }
@@ -295,14 +251,18 @@ export class UserprofileService {
      * @returns
      * @memberof UserprofileService
      */
-    private buildProfileData( dataProfile:any
-        ) {
-            // console.log(dataProfile);
-        let data = dataProfile.data;
-        let isShowPersonalData = dataProfile.isShowPersonalData;
-        let isShowEmploymentData = dataProfile.isShowEmploymentData;
-        let isShowEntitlementData = dataProfile.isShowEntitlementData;
-        let isShowCertData = dataProfile.isShowCertData;
+    private buildProfileData(data: UserInfoModel,
+        isShowPersonalData: boolean,
+        isShowEmploymentData: boolean,
+        isShowEntitlementData: boolean,
+        isShowCertData: boolean
+    ) {
+        // console.log(dataProfile);
+        // let data = dataProfile.data;
+        // let isShowPersonalData = dataProfile.isShowPersonalData;
+        // let isShowEmploymentData = dataProfile.isShowEmploymentData;
+        // let isShowEntitlementData = dataProfile.isShowEntitlementData;
+        // let isShowCertData = dataProfile.isShowCertData;
 
         const userProfileData = new UserProfileDTO();
 
@@ -315,30 +275,30 @@ export class UserprofileService {
         userProfileData.calendarId = data.CALENDAR_GUID;
         userProfileData.tenantId = data.TENANT_GUID;
 
-        if (data.PROPERTIES_XML) {
-            this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData);
-        }
+        if (data.PROPERTIES_XML) { this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData); }
 
         if (isShowEmploymentData) {
-            const employmentDetail = new EmploymentDetailDTO();
+            // const employmentDetail = new EmploymentDetailDTO();
 
-            //process the employment data
-            employmentDetail.department = data.DEPARTMENT;
-            employmentDetail.designation = data.DESIGNATION;;
-            employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
-            employmentDetail.employeeNumber = data.PERSONAL_ID;
-            employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
-            employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
-            employmentDetail.reportingTo = data.MANAGER_USER_GUID;
-            employmentDetail.userRole = "Employee";
-            employmentDetail.dateOfJoin = data.JOIN_DATE;
-            employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
-            employmentDetail.dateOfResign = data.RESIGNATION_DATE;
-            employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
-            employmentDetail.epfNumber = data.PR_EPF_NUMBER;
-            employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
-            employmentDetail.bankAccountName = data.BANK;
-            employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
+            // //process the employment data
+            // employmentDetail.department = data.DEPARTMENT;
+            // employmentDetail.designation = data.DESIGNATION;;
+            // employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
+            // employmentDetail.employeeNumber = data.PERSONAL_ID;
+            // employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
+            // employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
+            // employmentDetail.reportingTo = data.MANAGER_USER_GUID;
+            // employmentDetail.userRole = "Employee";
+            // employmentDetail.dateOfJoin = data.JOIN_DATE;
+            // employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
+            // employmentDetail.dateOfResign = data.RESIGNATION_DATE;
+            // employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
+            // employmentDetail.epfNumber = data.PR_EPF_NUMBER;
+            // employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
+            // employmentDetail.bankAccountName = data.BANK;
+            // employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
+
+            const employmentDetail = this.assignEmploymentDetail(data);
 
             userProfileData.employmentDetail = employmentDetail;
         }
@@ -349,6 +309,30 @@ export class UserprofileService {
 
         return userProfileData;
 
+    }
+
+    public assignEmploymentDetail(data: any) {
+        const employmentDetail = new EmploymentDetailDTO();
+
+        //process the employment data
+        employmentDetail.department = data.DEPARTMENT;
+        employmentDetail.designation = data.DESIGNATION;;
+        employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
+        employmentDetail.employeeNumber = data.PERSONAL_ID;
+        employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
+        employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
+        employmentDetail.reportingTo = data.MANAGER_USER_GUID;
+        employmentDetail.userRole = "Employee";
+        employmentDetail.dateOfJoin = data.JOIN_DATE;
+        employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
+        employmentDetail.dateOfResign = data.RESIGNATION_DATE;
+        employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
+        employmentDetail.epfNumber = data.PR_EPF_NUMBER;
+        employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
+        employmentDetail.bankAccountName = data.BANK;
+        employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
+
+        return employmentDetail;
     }
 
     /**

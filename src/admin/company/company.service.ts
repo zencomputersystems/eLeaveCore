@@ -10,6 +10,7 @@ import { CommonFunctionService } from '../../common/helper/common-function.servi
 import { map, mergeMap } from 'rxjs/operators';
 import { DepartmentDbService } from '../department/db/department.db.service';
 import { CompanyDTO } from './dto/company.dto';
+import { UpdateCompanyDTO } from './dto/update-company.dto';
 
 /**
  * Service for company
@@ -91,7 +92,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 		let list: CompanyDTO = new CompanyDTO;
 
 		let dataCompany = this.commonFunctionService.getListData(result);
-		
+
 		let dataDepartment = this.departmentDBService.findByCompany(TENANT_GUID, id);
 
 		return forkJoin(
@@ -104,8 +105,8 @@ export class CompanyService extends BaseDBService implements IDbService {
 				list.companyName = first[0].NAME;
 				list.departmentList = [];
 
-				second.forEach(element => { 
-					list.departmentList.push(new Object({"department":element.DEPARTMENT})); 
+				second.forEach(element => {
+					list.departmentList.push(new Object({ "department": element.DEPARTMENT }));
 				});
 				return list;
 			})
@@ -115,7 +116,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 
 
 	/**
-	 * create new branch
+	 * create new company
 	 *
 	 * @param {*} user
 	 * @param {string} name
@@ -141,14 +142,14 @@ export class CompanyService extends BaseDBService implements IDbService {
 	}
 
 	/**
-	 * update existing branch
+	 * update existing company
 	 *
 	 * @param {*} user
 	 * @param {*} d
 	 * @returns
 	 * @memberof CompanyService
 	 */
-	update(user: any, d: any) {
+	update(user: any, d: UpdateCompanyDTO) {
 
 		const resource = new Resource(new Array);
 		const data = new CompanyModel();
@@ -159,6 +160,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 		data.NAME = d.name;
 
 		resource.resource.push(data);
+		// console.log(resource);
 
 		return this.updateByModel(resource, [], [], []);
 	}

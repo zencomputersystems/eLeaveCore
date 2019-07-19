@@ -12,7 +12,7 @@ describe('SectionController', () => {
     const sectionServiceStub = {
       create: (arg1, arg2) => ({ subscribe: () => ({}) }),
       update: (arg1, updateSectionDTO2) => ({ subscribe: () => ({}) }),
-      findAll: arg1 => ({ subscribe: () => ({}) }),
+      findAllall: arg1 => ({ subscribe: () => ({}) }),
       findById: (arg1, id2) => ({ subscribe: () => ({}) })
     };
     const createSectionDtoStub = { name: {} };
@@ -49,7 +49,7 @@ describe('SectionController', () => {
       }
 
       expect(sectionServiceStub.findAll).not.toHaveBeenCalled();
-      sectionController.findAll(mockUser,'data');
+      sectionController.findAllSection(mockUser,'data');
       expect(sectionServiceStub.findAll).toHaveBeenCalledTimes(1);
     });
   });

@@ -64,6 +64,8 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "jest": "^23.5.0",
+    "jest-allure": "^0.1.1",
+    "jest-html-reporters": "^1.1.8",
     "mocha": "^6.1.4",
     "mochawesome": "^4.0.1",
     "nodemon": "^1.18.3",
@@ -91,6 +93,17 @@
       "./"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "reporters": [
+      "default",
+      [
+        "jest-html-reporters",
+        {
+          "publicPath": "./html-report",
+          "filename": "index.html",
+          "expand": true
+        }
+      ]
+    ]
   }
 }

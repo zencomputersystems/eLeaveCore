@@ -8,7 +8,7 @@ class FriendsList {
   }
 
   announceFriendship(name) {
-    global.console.log(`${name} is now a friend!`);
+    // global.console.log(`${name} is now a friend!`);
   }
 
   removeFriend(name) {

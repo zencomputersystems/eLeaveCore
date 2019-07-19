@@ -85,7 +85,6 @@ export class CompanyController {
 	@Patch()
 	@ApiOperation({ title: 'Update company' })
 	updateCompany(@Body() updateCompanyDTO: UpdateCompanyDTO, @Req() req, @Res() res) {
-		// console.log(updateCompanyDTO);
 		this.companyService.update(req.user, updateCompanyDTO)
 			.subscribe(
 				data => { if (data.status == 200) { res.send(data.data); } },

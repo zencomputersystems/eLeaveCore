@@ -14,7 +14,6 @@ describe('BranchController', () => {
         { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
       ]
     }).compile();
-    // pipe = Test.get(BranchController);
     pipe = await module.get<BranchController>(BranchController);
   });
   it('can load instance', () => {

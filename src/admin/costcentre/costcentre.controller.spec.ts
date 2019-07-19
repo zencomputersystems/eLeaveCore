@@ -27,7 +27,6 @@ describe('CostcentreController', () => {
         { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
       ]
     }).compile();
-    // pipe = Test.get(CostcentreController);
     pipe = await module.get<CostcentreController>(CostcentreController);
   });
   it('can load instance', () => {

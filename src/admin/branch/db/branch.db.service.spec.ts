@@ -21,7 +21,6 @@ describe('BranchDbService', () => {
         { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
       ]
     }).compile();
-    // service = Test.get(BranchDbService);
     service = await module.get<BranchDbService>(BranchDbService);
   });
   it('can load instance', () => {

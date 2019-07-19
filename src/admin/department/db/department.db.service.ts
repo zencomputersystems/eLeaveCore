@@ -45,37 +45,26 @@ export class DepartmentDbService extends BaseDBService {
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['DEPARTMENT'];
-        return this.commonFunctionService.findAllList(fields, tenantid, this.queryService, this.httpService, this._tableName);
-        // const filters = ['(TENANT_GUID=' + tenantid + ')'];
-
-        // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
-        // //call DF to validate the user
-        // return this.httpService.get(url);
+        return this.commonFunctionService.findAllList(fields, tenantid, this.queryService, this.httpService, this._tableName);    
 
     }
 
+    /**
+     * find by company
+     *
+     * @param {string} tenantId
+     * @param {string} companyId
+     * @returns {Observable<any>}
+     * @memberof DepartmentDbService
+     */
     public findByCompany(tenantId: string,companyId: string): Observable<any> {
 
         const fields = ['DEPARTMENT'];
         const filters = ['(TENANT_COMPANY_GUID=' + companyId + ')', '(TENANT_GUID=' + tenantId + ')'];
 
-        //url
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
-        //call DF to validate the user
-        // return this.httpService.get(url);
         let result = this.httpService.get(url);
         return this.commonFunctionService.getListData(result);
-
-        // return this.commonFunctionService.findAllList(fields, tenantid, this.queryService, this.httpService, this._tableName);
-        // const filters = ['(TENANT_GUID=' + tenantid + ')'];
-
-        // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
-        // //call DF to validate the user
-        // return this.httpService.get(url);
-
     }
 
 

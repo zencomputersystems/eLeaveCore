@@ -58,14 +58,6 @@ export class CompanyService extends BaseDBService implements IDbService {
 		let result = this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
 
 		return this.commonFunctionService.getListData(result);
-		// const filters = ['(TENANT_GUID=' + TENANT_GUID + ')'];
-		// console.log(fields);
-		// console.log(filters);
-		// //url
-		// const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
-		// //call DF to validate the user
-		// return this.httpService.get(url);
 
 	}
 
@@ -160,7 +152,6 @@ export class CompanyService extends BaseDBService implements IDbService {
 		data.NAME = d.name;
 
 		resource.resource.push(data);
-		// console.log(resource);
 
 		return this.updateByModel(resource, [], [], []);
 	}

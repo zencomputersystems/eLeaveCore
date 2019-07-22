@@ -6,5 +6,5 @@ import { Controller } from '@nestjs/common';
  * @export
  * @class LeaveEntitlementController
  */
-@Controller('leave-entitlement')
+@Controller('leave-entitlements')
 export class LeaveEntitlementController { }

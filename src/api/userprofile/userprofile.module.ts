@@ -52,7 +52,7 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
   controllers: [
     PersonalDetailController,
     EmploymentDetailController,
-    LeaveEntitlementController,
+    // LeaveEntitlementController,
     CertificationDetailController,
     UserprofileController,
     EntitlementDetailController],

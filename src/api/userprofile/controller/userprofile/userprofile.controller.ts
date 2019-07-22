@@ -84,12 +84,15 @@ export class UserprofileController {
             .pipe(
                 switchMap(filter => { return this.userprofileService.getDetail(filter);  })
                 ).subscribe(data => {
+                    console.log(data);
                     if(data){ this.getEntitlementProcess(data, res, user); }
                     else{ res.send(new NotFoundException(`Data user guid not found`)); }
                 }, err => {
                     res.status(500);
-                    if (err.response.data) { res.send(err.response.data1.error) } 
-                    else { res.send(err); }
+                    // if (err.response.data) { res.send(err.response.data1.error) } 
+                    // else { 
+                        res.send(err); 
+                    // }
                 });
     }
 

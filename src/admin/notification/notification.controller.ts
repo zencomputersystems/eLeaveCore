@@ -12,11 +12,26 @@ import { XMLParserService } from "src/common/helper/xml-parser.service";
 import { UserService } from "../user/user.service";
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
+/**
+ * controller for notification
+ *
+ * @export
+ * @class NotificationController
+ */
 @Controller('/api/admin/notification')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class NotificationController {
 
+    /**
+     *Creates an instance of NotificationController.
+     * @param {NotificationService} notificationService notification
+     * @param {CommonFunctionService} commonFunctionService common function
+     * @param {XMLParserService} xmlParserService xmlparser
+     * @param {UserService} userService user service
+     * @param {UserInfoDbService} userinfoDbService userinfo db service
+     * @memberof NotificationController
+     */
     constructor(private readonly notificationService: NotificationService,
         private readonly commonFunctionService: CommonFunctionService,
         private readonly xmlParserService: XMLParserService,
@@ -38,6 +53,13 @@ export class NotificationController {
     //     res.send(data);
     // }
 
+    /**
+     * get notification
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof NotificationController
+     */
     @Get()
     @ApiOperation({ title: 'get notification for this user' })
     findAll(@Req() req, @Res() res) {
@@ -110,6 +132,14 @@ export class NotificationController {
     //     // res.send(data);
     // }
 
+    /**
+     * get notification detail
+     *
+     * @param {*} userArray
+     * @param {*} req
+     * @param {*} res
+     * @memberof NotificationController
+     */
     public getNotificationDetail(userArray, req, res) {
         this.notificationService.findAll(req.user.USER_GUID).pipe(map(result => {
             if (result.status == 200) {
@@ -126,6 +156,15 @@ export class NotificationController {
         );
     }
 
+    /**
+     * get process data
+     *
+     * @param {*} userArray
+     * @param {*} notifyData
+     * @param {*} req
+     * @returns
+     * @memberof NotificationController
+     */
     public processData(userArray, notifyData, req) {
         notifyData.forEach(element => {
             if (element.CATEGORY == 'user-leave' && element.PROPERTIES_XML != null) {

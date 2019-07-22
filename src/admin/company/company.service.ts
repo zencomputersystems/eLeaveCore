@@ -31,10 +31,13 @@ export class CompanyService extends BaseDBService implements IDbService {
 	 */
 	private _tableName = "tenant_company";
 
+
 	/**
 	 *Creates an instance of CompanyService.
-	 * @param {HttpService} httpService Service for http
-	 * @param {QueryParserService} queryService Service for query
+	 * @param {HttpService} httpService http service
+	 * @param {QueryParserService} queryService query service
+	 * @param {CommonFunctionService} commonFunctionService common function service
+	 * @param {DepartmentDbService} departmentDBService department db service
 	 * @memberof CompanyService
 	 */
 	constructor(

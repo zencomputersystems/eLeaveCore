@@ -218,11 +218,44 @@ export class CommonFunctionService {
 
     }
 
+    /**
+     * save activity to notification
+     *
+     * @param {*} employeeId
+     * @param {*} message
+     * @param {*} category
+     * @returns
+     * @memberof CommonFunctionService
+     */
     public setNotificationData(employeeId, message, category) {
         let notify = new QueueNotificationDTO;
         notify.employeeId = employeeId;
         notify.message = message;
         notify.category = category;
         return notify;
+    }
+
+    /**
+     * find id parameter
+     *
+     * @param {*} req
+     * @param {*} res
+     * @param {*} id
+     * @returns
+     * @memberof CommonFunctionService
+     */
+    public findIdParam(req, res, id) {
+        let dataId = null;
+        let dataIdParam = req.query.id;
+        if (dataIdParam == null) {
+            dataId = id;
+        } else {
+            dataId = dataIdParam;
+        }
+        if (dataId == null) {
+            res.status(400);
+            res.send('id not found');
+        }
+        return dataId;
     }
 }

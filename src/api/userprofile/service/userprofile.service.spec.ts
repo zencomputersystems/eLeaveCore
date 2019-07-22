@@ -92,6 +92,7 @@ describe('UserprofileService', () => {
       expect(userprofileDbServiceStub.findByFilterV2).toHaveBeenCalled();
       expect(userprofileDbServiceStub.findByFilterV2).toHaveBeenCalledTimes(1);
     })
+    
   });
 
   describe('Get Detail', () => {
@@ -193,4 +194,5 @@ describe('UserprofileService', () => {
     })
   });
 
+  
 });

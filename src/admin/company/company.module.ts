@@ -7,6 +7,8 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { DepartmentDbService } from '../department/db/department.db.service';
+import { CompanySiteService } from './company-site.service';
+import { CompanySiteController } from './company-site.controller';
 
 /**
  * Module for company
@@ -24,8 +26,9 @@ import { DepartmentDbService } from '../department/db/department.db.service';
     CompanyService,
     QueryParserService,
     CommonFunctionService,
-    DepartmentDbService
+    DepartmentDbService,
+    CompanySiteService
   ],
-  controllers: [CompanyController]
+  controllers: [CompanyController,CompanySiteController]
 })
 export class CompanyModule { }

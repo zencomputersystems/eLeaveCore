@@ -5,6 +5,7 @@ import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AssignLeavePolicyDTO } from '../../dto/leave-entitlement/assign-leave-policy.dto';
 import { UserLeaveEntitlementService } from '../../service/user-leave-entitlement.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 
 /**
  *  Controller for entitlement detail
@@ -12,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
  * @export
  * @class EntitlementDetailController
  */
-@Controller('api/userprofile')
+@Controller('api')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class EntitlementDetailController {
@@ -23,7 +24,8 @@ export class EntitlementDetailController {
      * @memberof EntitlementDetailController
      */
     constructor(
-        private readonly entitlementService: UserLeaveEntitlementService
+        private readonly entitlementService: UserLeaveEntitlementService,
+        private readonly commonFunctionService: CommonFunctionService
     ) { }
 
     /**
@@ -37,14 +39,17 @@ export class EntitlementDetailController {
     @ApiOperation({ title: 'Get entitlement detail for this user' })
     findOwn(@Req() req, @Res() res) {
 
+        // console.log('req');
         const user = req.user;
 
         this.entitlementService.getEntitlementList(user.TENANT_GUID, user.USER_GUID)
             .subscribe(
                 result => {
+                    // console.log(result);
                     res.send(result);
                 },
                 err => {
+                    res.send(err);
                     console.log(err);
                 }
             )
@@ -62,11 +67,25 @@ export class EntitlementDetailController {
     @UseGuards(ResourceGuard)
     @Get('leave-entitlement/:id')
     @Roles('ProfileAdmin')
-    @ApiOperation({ title: 'Get employment detail to edit for requested user' })
-    @ApiImplicitQuery({ name: 'id', description: 'filter entitlement by USER_LEAVE_ENTITLEMENT_GUID', required: true })
+    @ApiOperation({ title: 'Get entitlement detail to edit for requested user' })
+    @ApiImplicitQuery({ name: 'id', description: 'filter entitlement by USER_GUID', required: true })
     findOne(@Param('id') id, @Req() req, @Res() res) {
 
         const user = req.user;
+
+        id = this.commonFunctionService.findIdParam(req,res,id);
+
+        this.entitlementService.getEntitlementList(user.TENANT_GUID, id)
+            .subscribe(
+                result => {
+                    // console.log(result);
+                    res.send(result);
+                },
+                err => {
+                    res.send(err);
+                    console.log(err);
+                }
+            )
 
     }
 
@@ -108,13 +127,13 @@ export class EntitlementDetailController {
      * @param {*} res
      * @memberof EntitlementDetailController
      */
-    @UseGuards(ResourceGuard)
-    @Patch('leave-entitlement/:id')
-    @Roles('ProfileAdmin')
-    @ApiOperation({ title: 'Update user leave entitlement' })
-    update(@Body() insertDTO, @Req() req, @Res() res) {
+    // @UseGuards(ResourceGuard)
+    // @Patch('leave-entitlement/:id')
+    // @Roles('ProfileAdmin')
+    // @ApiOperation({ title: 'Update user leave entitlement' })
+    // update(@Body() insertDTO, @Req() req, @Res() res) {
 
-    }
+    // }
 
 
 

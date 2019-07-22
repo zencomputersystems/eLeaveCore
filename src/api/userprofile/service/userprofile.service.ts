@@ -311,6 +311,13 @@ export class UserprofileService {
 
     }
 
+    /**
+     * assign employment data
+     *
+     * @param {*} data
+     * @returns
+     * @memberof UserprofileService
+     */
     public assignEmploymentDetail(data: any) {
         const employmentDetail = new EmploymentDetailDTO();
 

@@ -12,15 +12,41 @@ import { v1 } from "uuid";
 import { BaseDBService } from "src/common/base/base-db.service";
 import { QueryParserService } from "src/common/helper/query-parser.service";
 
+/**
+ * Service for notification
+ *
+ * @export
+ * @class NotificationService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class NotificationService extends BaseDBService {
+    /**
+     * Declare tablename
+     *
+     * @private
+     * @memberof NotificationService
+     */
     private _tableName = "l_notification_queue";
+    /**
+     *Creates an instance of NotificationService.
+     * @param {HttpService} httpService Service http
+     * @param {QueryParserService} queryService Service query
+     * @memberof NotificationService
+     */
     constructor(
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService) {
         super(httpService, queryService, "l_notification_queue")
     }
 
+    /**
+     * find all notification
+     *
+     * @param {string} userId
+     * @returns
+     * @memberof NotificationService
+     */
     findAll(userId: string) {
 
         // const fields = ['MESSAGE', 'PROPERTIES_XML', 'CATEGORY'];
@@ -34,6 +60,13 @@ export class NotificationService extends BaseDBService {
 
     }
 
+    /**
+     * create notifocation
+     *
+     * @param {QueueNotificationDTO} data
+     * @returns
+     * @memberof NotificationService
+     */
     create(data: QueueNotificationDTO) {
         console.log(data);
         // let tempData = this.xmlParserService.convertJsonToXML(data);

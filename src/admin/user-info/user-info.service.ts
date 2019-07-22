@@ -44,6 +44,12 @@ export class UserInfoService extends BaseDBService implements IDbService {
         super(httpService, queryService, 'user_info');
     }
 
+    /**
+     * fields to get
+     *
+     * @private
+     * @memberof UserInfoService
+     */
     private fields = [
         'USER_INFO_GUID',
         'FULLNAME',
@@ -92,6 +98,14 @@ export class UserInfoService extends BaseDBService implements IDbService {
 
     }
 
+    /**
+     * find one data
+     *
+     * @param {string} userId
+     * @param {string} tenantId
+     * @returns
+     * @memberof UserInfoService
+     */
     public findOneData(userId: string, tenantId: string) {
         // const fields = [
         //     'USER_INFO_GUID',

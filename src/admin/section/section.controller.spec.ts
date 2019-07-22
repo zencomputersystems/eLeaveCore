@@ -12,7 +12,7 @@ describe('SectionController', () => {
     const sectionServiceStub = {
       create: (arg1, arg2) => ({ subscribe: () => ({}) }),
       update: (arg1, updateSectionDTO2) => ({ subscribe: () => ({}) }),
-      findAllall: arg1 => ({ subscribe: () => ({}) }),
+      findAll: arg1 => ({ subscribe: () => ({}) }),
       findById: (arg1, id2) => ({ subscribe: () => ({}) })
     };
     const createSectionDtoStub = { name: {} };

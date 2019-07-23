@@ -10,7 +10,7 @@ import { IsBoolean } from 'class-validator';
 export class ExcludeDayTypeXmlDTO {
 
     /**
-     *Creates an instance of ExcludeDayTypeXmlDTO.
+     * Creates an instance of ExcludeDayTypeXmlDTO.
      * @memberof ExcludeDayTypeXmlDTO
      */
     constructor() {
@@ -24,7 +24,7 @@ export class ExcludeDayTypeXmlDTO {
      * @type {boolean}
      * @memberof ExcludeDayTypeXmlDTO
      */
-    @ApiModelProperty({ description: 'Exclude Holidays from calculation' })
+    @ApiModelProperty({ description: 'Exclude Holidays from calculation', example: true })
     @IsBoolean()
     isExcludeHoliday: boolean;
 
@@ -34,7 +34,7 @@ export class ExcludeDayTypeXmlDTO {
      * @type {boolean}
      * @memberof ExcludeDayTypeXmlDTO
      */
-    @ApiModelProperty({ description: 'Exclude Rest Days from calculation' })
+    @ApiModelProperty({ description: 'Exclude Rest Days from calculation', example: true })
     @IsBoolean()
     isExcludeRestDay: boolean;
 

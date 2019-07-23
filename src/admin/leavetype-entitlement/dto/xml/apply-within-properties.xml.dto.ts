@@ -13,7 +13,7 @@ import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
 export class ApplyWithinPropertiesXmlDTO {
 
     /**
-     *Creates an instance of ApplyWithinPropertiesXmlDTO.
+     * Creates an instance of ApplyWithinPropertiesXmlDTO.
      * @memberof ApplyWithinPropertiesXmlDTO
      */
     constructor() {
@@ -28,7 +28,8 @@ export class ApplyWithinPropertiesXmlDTO {
      * @type {number}
      * @memberof ApplyWithinPropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Number of day required for backdated leave submission.' })
+    @ApiModelProperty({ description: 'Number of day required for backdated leave submission.', 
+        example: 2 })
     @IsNotEmpty()
     @IsNumber()
     numberOfDays: number;

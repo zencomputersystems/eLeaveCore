@@ -21,6 +21,7 @@ import { HolidayModule } from './admin/holiday/holiday.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
 import { RoleModule } from './admin/role/role.module';
 import { NotificationModule } from './admin/notification/notification.module';
+import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-leave-policy.module';
 
 @Module({
   imports: [
@@ -62,7 +63,8 @@ import { NotificationModule } from './admin/notification/notification.module';
     HolidayModule,
     DashboardModule,
     RoleModule,
-    NotificationModule
+    NotificationModule,
+    GeneralLeavePolicyModule
   ],
   controllers: [AppController],
   providers: [

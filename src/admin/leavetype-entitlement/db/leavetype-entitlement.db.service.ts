@@ -29,7 +29,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
      * @private
      * @memberof LeavetypeEntitlementDbService
      */
-    private _tableName = "l_leavetype_entitlement_def";
+    private _tableName = 'l_leavetype_entitlement_def';
     /**
      * Declare viewtable leave type setup
      *
@@ -39,7 +39,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
     private _viewTableName = 'view_leave_type_setup';
 
     /**
-     *Creates an instance of LeavetypeEntitlementDbService.
+     * Creates an instance of LeavetypeEntitlementDbService.
      * @param {HttpService} httpService Service for http
      * @param {QueryParserService} queryService Service for query
      * @param {XMLParserService} xmlParserService Service for XMLJSON converter
@@ -49,7 +49,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
         private readonly xmlParserService: XMLParserService) {
-        super(httpService, queryService, "l_leavetype_entitlement_def");
+        super(httpService, queryService, 'l_leavetype_entitlement_def');
     }
 
     /**
@@ -62,10 +62,10 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
     public findAll(tenantid: string): Observable<any> {
 
         const filters = ['(TENANT_GUID=' + tenantid + ')'];
-        //url
+        // url
         const url = this.queryService.generateDbQueryV2(this._viewTableName, [], filters, []);
 
-        //call DF to validate the user
+        // call DF to validate the user
         return this.httpService.get(url);
 
     }
@@ -86,7 +86,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         const url = this.queryService.generateDbQuery(this._viewTableName, fields, filters);
 
 
-        //call DF to validate the user
+        // call DF to validate the user
         return this.httpService.get(url);
     }
 
@@ -100,19 +100,19 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
      */
     create(user: any, d: CreateLeaveEntitlementTypeDTO): Observable<any> {
 
-        //do a leavetype checking to validate leave_type_guid belong to this tenant
+        // do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource = new Resource(new Array);
         const data = new LeaveTypeEntitlementModel();
 
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.property);
 
         data.ENTITLEMENT_GUID = v1();
         data.LEAVE_TYPE_GUID = d.leavetype_id;
         data.TENANT_GUID = user.TENANT_GUID;
-        data.TENANT_COMPANY_GUID = "323bdfa7-eed2-8bf2-2274-b1cd9390c9ca";
+        data.TENANT_COMPANY_GUID = '323bdfa7-eed2-8bf2-2274-b1cd9390c9ca';
         data.CREATION_TS = new Date().toISOString();
         data.CREATION_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;
@@ -132,7 +132,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
      */
     update(user: any, d: UpdateLeaveTypeEntitlementDto): Observable<any> {
 
-        //do a leavetype checking to validate leave_type_guid belong to this tenant
+        // do a leavetype checking to validate leave_type_guid belong to this tenant
 
         const resource = new Resource(new Array);
         const data = new LeaveTypeEntitlementModel();
@@ -141,7 +141,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         data.TENANT_GUID = user.TENANT_GUID;
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.property);
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;

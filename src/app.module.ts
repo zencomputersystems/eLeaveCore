@@ -22,6 +22,7 @@ import { DashboardModule } from './api/dashboard/dashboard.module';
 import { RoleModule } from './admin/role/role.module';
 import { NotificationModule } from './admin/notification/notification.module';
 import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-leave-policy.module';
+import { ApprovalOverrideModule } from './admin/approval-override/approval-override.module';
 
 @Module({
   imports: [
@@ -64,7 +65,8 @@ import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-l
     DashboardModule,
     RoleModule,
     NotificationModule,
-    GeneralLeavePolicyModule
+    GeneralLeavePolicyModule,
+    ApprovalOverrideModule
   ],
   controllers: [AppController],
   providers: [

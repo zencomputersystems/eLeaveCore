@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { AssignLeavePolicyDTO } from '../../dto/leave-entitlement/assign-leave-policy.dto';
 import { UserLeaveEntitlementService } from '../../service/user-leave-entitlement.service';
 import { EntitlementDetailController } from './entitlement-detail.controller';
+import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 describe('EntitlementDetailController', () => {
   let pipe: EntitlementDetailController;
   beforeEach(async () => {
@@ -12,7 +13,7 @@ describe('EntitlementDetailController', () => {
     };
     const module = await Test.createTestingModule({
       providers: [
-        EntitlementDetailController,
+        EntitlementDetailController,CommonFunctionService,
         { provide: AssignLeavePolicyDTO, useValue: assignLeavePolicyDTOStub },
         {
           provide: UserLeaveEntitlementService,

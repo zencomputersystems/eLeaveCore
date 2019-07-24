@@ -29,7 +29,7 @@ export class GeneralLeavePolicyController {
 
 	@Post()
 	@ApiOperation({ title: 'Create general leave policy' })
-	createCompany(@Body() data: CreateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
+	createGeneralLeavePolicy(@Body() data: CreateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
 		this.generalLeavePolicyService.create(req.user, data).subscribe(
 			data => { res.send(data.data); },
 			err => { res.send(err); }
@@ -38,7 +38,7 @@ export class GeneralLeavePolicyController {
 
 	@Patch()
 	@ApiOperation({ title: 'Update general leave policy' })
-	updateCompany(@Body() updateGeneralLeavePolicyDTO: UpdateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
+	updateGeneralLeavePolicy(@Body() updateGeneralLeavePolicyDTO: UpdateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
 		this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO).subscribe(
 			data => { res.send(data.data); },
 			err => { console.log(err); res.send(err); }

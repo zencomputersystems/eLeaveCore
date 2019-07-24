@@ -9,6 +9,7 @@ import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 import { ApplyLeaveDTO } from '../dto/apply-leave.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { UpdateApprovalDTO } from 'src/admin/approval-override/dto/update-approval.dto';
 
 /**
  * DB Service for leave transaction
@@ -37,6 +38,36 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         super(httpService, queryService, "l_main_leave_transaction");
     }
 
+    public findAll(tenantId: string) {
+        const fields = [];
+        const filters = ['(TENANT_GUID=' + tenantId + ')', '(STATUS=PENDING)'];
+        const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
+        return this.httpService.get(url);
+    }
+
+    public updateToEmployee(user: any, d: UpdateApprovalDTO) {
+        console.log(user);
+        const resource = new Resource(new Array);
+        const data = new LeaveTransactionModel;
+
+        data.STATUS = d.status;
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+        data.REMARKS = d.remark;
+        let leaveList = '';
+        for (let i = 0; i < d.leaveTransactionId.length; i++) {
+            if (leaveList == '') {
+                leaveList = '"' + d.leaveTransactionId[i] + '"';
+            } else {
+                leaveList = leaveList + ',"' + d.leaveTransactionId[i] + '"';
+            }
+        }
+
+        resource.resource.push(data);
+        console.log(resource);
+
+        return this.updateByModel(resource, [], ['(LEAVE_TRANSACTION_GUID IN (' + leaveList + '))'], []);
+    }
     /**
      * Create new leave transaction 
      *
@@ -47,7 +78,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
      * @returns
      * @memberof LeaveTransactionDbService
      */
-    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO, applyOnBehalf:boolean) {
+    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO, applyOnBehalf: boolean) {
 
         // let applyOnBehalf = true;
         // const data = new LeaveTransactionModel();

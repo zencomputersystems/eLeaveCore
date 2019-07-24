@@ -7,7 +7,6 @@ import { GeneralLeavePolicyService } from './general-leave-policy.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
-import { GeneralLeavePolicyDbService } from './db/general-leave-policy.db.service';
 
 
 @Module({
@@ -20,8 +19,7 @@ import { GeneralLeavePolicyDbService } from './db/general-leave-policy.db.servic
 		GeneralLeavePolicyService,
 		QueryParserService,
 		CommonFunctionService,
-		XMLParserService,
-		GeneralLeavePolicyDbService
+		XMLParserService
 	],
 	controllers: [GeneralLeavePolicyController]
 })

@@ -179,4 +179,11 @@ export class LeaveTransactionModel extends CreateUpdateModel {
      */
     CURRENT_APPROVAL_LEVEL: number;
 
+    /**
+     * Remarks
+     *
+     * @type {string}
+     * @memberof LeaveTransactionModel
+     */
+    REMARKS: string;
 }

@@ -7,10 +7,8 @@ import { HttpService, Injectable } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { BaseDBService } from 'src/common/base/base-db.service';
-import { IDbService } from 'src/interface/IDbService';
 import { Observable } from 'rxjs';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
-import { GeneralLeavePolicyDbService } from './db/general-leave-policy.db.service';
 @Injectable()
 export class GeneralLeavePolicyService extends BaseDBService {
 

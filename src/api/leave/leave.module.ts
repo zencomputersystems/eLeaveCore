@@ -18,6 +18,8 @@ import { LeaveTransactionDbService } from './db/leave-transaction.db.service';
 import { ApprovedController } from './controller/approval/approval.controller';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
+import { CommonFunctionService } from '../../common/helper/common-function.services';
+import { NotificationService } from 'src/admin/notification/notification.service';
 
 /**
  * Module for leave
@@ -46,7 +48,9 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
     ServiceYearCalc,
     EntitlementRoundingService,
     ApprovalService,
-    AccessLevelValidateService
+    AccessLevelValidateService,
+    CommonFunctionService,
+    NotificationService
   ],
 })
 export class LeaveModule { }

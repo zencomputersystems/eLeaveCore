@@ -80,7 +80,7 @@ export class UserLeaveEntitlementService {
     public assignEntitlement(user: any, data: AssignLeavePolicyDTO) {
 
         //check if the user belong to this tenant
-        const userFilter = ['(USER_GUID=' + data.userId + ')', '(TENANT_GUID=' + user.TENANT_GUID + ')']
+        const userFilter = ['(USER_GUID IN (' + data.userId + '))', '(TENANT_GUID=' + user.TENANT_GUID + ')']
 
         return this.dbSearch(this.userDbService, userFilter)
             .pipe(
@@ -89,10 +89,12 @@ export class UserLeaveEntitlementService {
                     //check if current leavetype has active policy
                     const userEntitlementFilter = [
                         '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
-                        '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID=' + data.userId + ')', '(ACTIVE_FLAG=1)'
+                        '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID IN (' + data.userId + '))', '(ACTIVE_FLAG=1)'
                     ]
 
-                    return this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter)
+                    const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
+
+                    return dataTemp;
 
                 }),
                 filter(x => x == null),
@@ -109,13 +111,16 @@ export class UserLeaveEntitlementService {
                 filter(x => x != null),
                 mergeMap((res: LeaveTypeEntitlementModel) => {
 
-                    const userInfoFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID=' + data.userId + ')']
+                    const userInfoFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID IN (' + data.userId + '))']
+                    // console.log(userInfoFilter);
                     return this.dbSearch(this.userInfoDbService, userInfoFilter)
-                        .pipe(map((userInfoResult: UserInfoModel) => {
+                        .pipe(map((userInfoResult) => {
+                            // console.log(res);
                             return { res, userInfoResult }
                         }))
                 }),
                 mergeMap((res) => {
+                    // console.log(res.res);
                     return this.assignPolicyProcess(res, user, data);
 
                 })
@@ -133,46 +138,105 @@ export class UserLeaveEntitlementService {
      * @memberof UserLeaveEntitlementService
      */
     public assignPolicyProcess(res, user, data) {
-        const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
-        // get the service year
-        const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
 
-        const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
+        // console.log('here' + res);
+        // console.log(user);
+        // console.log(data);
 
-        // //get the entitlement days
-        const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
-
-        if (entitlementDay == 0 || entitlementDay == undefined) {
-            return of(null);
-        }
-
-        // assign new policy to user
-        const entitlementModel = new UserLeaveEntitlementModel();
-        entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
-        entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
-        entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
-        entitlementModel.USER_GUID = data.userId;
-
-        entitlementModel.PARENT_FLAG = 1;
-        entitlementModel.CF_FLAG = 0;
-        entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
-        entitlementModel.YEAR = moment().year();
-        entitlementModel.REMARKS = 'this is remark';
-        entitlementModel.ACTIVE_FLAG = 1;
-
-        entitlementModel.TENANT_GUID = user.TENANT_GUID;
-        entitlementModel.CREATION_USER_GUID = user.USER_GUID;
-
-        entitlementModel.DAYS_ADDED = entitlementDay;
-
+        const { length } = data.userId;
         const resource = new Resource(new Array());
 
-        resource.resource.push(entitlementModel);
+        // console.log(length);
+        for (let i = 0; i < length; i++) {
+            // console.log(data.userId[i]);
+            const user = res.userInfoResult.find(x => x.USER_GUID.toString() === data.userId[i].toString());
+            // console.log(user);
+            const dateOfJoin = new Date(user.JOIN_DATE);
+            // get the service year
+            const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
+            // console.log('svc-year' + serviceYear);
+
+            // console.log(res.res[0].PROPERTIES_XML);
+
+            const policy = this.xmlParserService.convertXMLToJson(res.res[0].PROPERTIES_XML);
+            // console.log('pol' + policy);
+
+
+            //get the entitlement days
+            const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
+            // console.log('ed' + entitlementDay);
+
+            if (entitlementDay == 0 || entitlementDay == undefined) {
+                return of(null);
+            }
+
+            // assign new policy to user
+            const entitlementModel = new UserLeaveEntitlementModel();
+            entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+            entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
+            entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
+            entitlementModel.USER_GUID = data.userId[i];
+
+            entitlementModel.PARENT_FLAG = 1;
+            entitlementModel.CF_FLAG = 0;
+            entitlementModel.PROPERTIES_XML = res.res[0].PROPERTIES_XML;
+            entitlementModel.YEAR = moment().year();
+            entitlementModel.REMARKS = null;
+            entitlementModel.ACTIVE_FLAG = 1;
+
+            entitlementModel.TENANT_GUID = user.TENANT_GUID;
+            entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+
+            entitlementModel.DAYS_ADDED = entitlementDay;
+
+
+
+            resource.resource.push(entitlementModel);
+
+        }
+
+        // console.log(resource);
+
+        // const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
+        // // get the service year
+        // const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
+
+        // const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
+
+        // // //get the entitlement days
+        // const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
+
+        // if (entitlementDay == 0 || entitlementDay == undefined) {
+        //     return of(null);
+        // }
+
+        // // assign new policy to user
+        // const entitlementModel = new UserLeaveEntitlementModel();
+        // entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+        // entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
+        // entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
+        // entitlementModel.USER_GUID = data.userId;
+
+        // entitlementModel.PARENT_FLAG = 1;
+        // entitlementModel.CF_FLAG = 0;
+        // entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
+        // entitlementModel.YEAR = moment().year();
+        // entitlementModel.REMARKS = 'this is remark';
+        // entitlementModel.ACTIVE_FLAG = 1;
+
+        // entitlementModel.TENANT_GUID = user.TENANT_GUID;
+        // entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+
+        // entitlementModel.DAYS_ADDED = entitlementDay;
+
+        // const resource = new Resource(new Array());
+
+        // resource.resource.push(entitlementModel);
 
         return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
             .pipe(map(res => {
                 if (res.status == 200) {
-                    return res.data.resource[0];
+                    return res.data.resource;
                 }
             }))
     }
@@ -191,7 +255,7 @@ export class UserLeaveEntitlementService {
             .pipe(
                 map(res => {
                     if (res.length > 0) {
-                        return res[0];
+                        return res;
                     }
 
                 })

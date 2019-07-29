@@ -8,6 +8,8 @@ import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-d
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { CommonFunctionService } from '../../../../common/helper/common-function.services';
+import { NotificationService } from 'src/admin/notification/notification.service';
 
 /**
  * Controller for personal detail
@@ -30,6 +32,8 @@ export class PersonalDetailController {
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
+        private readonly commonFunctionService: CommonFunctionService,
+        private readonly notificationService: NotificationService,
         private readonly xmlParserService: XMLParserService) { }
 
 
@@ -106,6 +110,8 @@ export class PersonalDetailController {
     @Roles('EditProfile', 'ProfileAdmin')
     @ApiOperation({ title: 'Update userprofile' })
     update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO, @Req() req, @Res() res) {
+        const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has update the profile', 'user-update', '');
+        this.notificationService.create(notify).subscribe();
 
         return this.userprofileService.updatePersonalDetail(updatePersonalDetailDTO, req.USER_GUID)
             .subscribe(

@@ -36,7 +36,8 @@ export class NotificationService extends BaseDBService {
      */
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService) {
+        public readonly queryService: QueryParserService,
+        public readonly xmlParserService: XMLParserService) {
         super(httpService, queryService, "l_notification_queue")
     }
 
@@ -81,7 +82,7 @@ export class NotificationService extends BaseDBService {
         modelData.READ_STATUS = 0;
         modelData.CATEGORY = data.category;
         modelData.CREATION_TS = new Date().toISOString();
-        modelData.PROPERTIES_XML = data.remarks;
+        modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data.remarks);
 
         resource.resource.push(modelData);
         console.log(resource)

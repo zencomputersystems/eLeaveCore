@@ -227,11 +227,12 @@ export class CommonFunctionService {
      * @returns
      * @memberof CommonFunctionService
      */
-    public setNotificationData(employeeId, message, category) {
+    public setNotificationData(employeeId, message, category, remarks) {
         let notify = new QueueNotificationDTO;
         notify.employeeId = employeeId;
         notify.message = message;
         notify.category = category;
+        notify.remarks = remarks;
         return notify;
     }
 

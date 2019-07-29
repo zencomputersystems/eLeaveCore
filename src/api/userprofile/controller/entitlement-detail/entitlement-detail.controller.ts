@@ -73,7 +73,7 @@ export class EntitlementDetailController {
 
         const user = req.user;
 
-        id = this.commonFunctionService.findIdParam(req,res,id);
+        id = this.commonFunctionService.findIdParam(req, res, id);
 
         this.entitlementService.getEntitlementList(user.TENANT_GUID, id)
             .subscribe(
@@ -108,7 +108,7 @@ export class EntitlementDetailController {
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
+                    // console.log(err);
                     res.status(500);
                     res.send();
                 },

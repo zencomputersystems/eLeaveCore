@@ -23,6 +23,7 @@ import { RoleModule } from './admin/role/role.module';
 import { NotificationModule } from './admin/notification/notification.module';
 import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-leave-policy.module';
 import { ApprovalOverrideModule } from './admin/approval-override/approval-override.module';
+import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment.module';
 
 @Module({
   imports: [
@@ -37,14 +38,14 @@ import { ApprovalOverrideModule } from './admin/approval-override/approval-overr
     UserImportModule,
     MailerModule.forRoot({
       transport: {
-        service:'Gmail',
+        service: 'Gmail',
         auth: {
           user: 'wantan.wonderland.2018@gmail.com',
           pass: 'wantan123'
         }
       },
       defaults: {
-        from:'"Leave System" <wantan.wonderland.2018@gmail.com',
+        from: '"Leave System" <wantan.wonderland.2018@gmail.com',
       },
       template: {
         dir: './src/common/email-templates',
@@ -66,7 +67,8 @@ import { ApprovalOverrideModule } from './admin/approval-override/approval-overr
     RoleModule,
     NotificationModule,
     GeneralLeavePolicyModule,
-    ApprovalOverrideModule
+    ApprovalOverrideModule,
+    LeaveAdjustmentModule
   ],
   controllers: [AppController],
   providers: [

@@ -14,7 +14,7 @@ export class UserEmergencyContactDTO {
      * @type {string}
      * @memberof UserEmergencyContactDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Emergency contact name', example: 'Raymond' })
     @IsNotEmpty()
     contactName: string;
 
@@ -24,7 +24,7 @@ export class UserEmergencyContactDTO {
      * @type {string}
      * @memberof UserEmergencyContactDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Emergency contact number', example: '0197993312' })
     @IsNotEmpty()
     contactNumber: string;
 }

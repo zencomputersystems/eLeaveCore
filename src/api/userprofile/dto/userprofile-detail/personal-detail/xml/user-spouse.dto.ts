@@ -14,7 +14,7 @@ export class UserSpouseDTO {
      * @type {string}
      * @memberof UserSpouseDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Spouse name', example: 'Wai Mun Yee' })
     @IsNotEmpty()
     spouseName: string;
 
@@ -24,7 +24,7 @@ export class UserSpouseDTO {
      * @type {string}
      * @memberof UserSpouseDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Spouse identification number', example: '901112102212' })
     @IsNotEmpty()
     spouseIdentificationNumber: string;
 }

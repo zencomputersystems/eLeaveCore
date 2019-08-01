@@ -107,7 +107,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
 
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.property);
 
         data.ENTITLEMENT_GUID = v1();
         data.LEAVE_TYPE_GUID = d.leavetype_id;
@@ -141,7 +141,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         data.TENANT_GUID = user.TENANT_GUID;
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.properties);
+        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.property);
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;

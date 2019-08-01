@@ -16,7 +16,7 @@ export class LeaveTypeEntitlementXmlDTO {
      * @memberof LeaveTypeEntitlementXmlDTO
      */
     constructor() {
-        this.properties = new LeaveTypePropertiesXmlDTO();
+        this.property = new LeaveTypePropertiesXmlDTO();
     }
 
     /**
@@ -52,5 +52,5 @@ export class LeaveTypeEntitlementXmlDTO {
     @Type(() => LeaveTypePropertiesXmlDTO)
     @IsNotEmpty()
     @ValidateNested({ each: true })
-    properties: LeaveTypePropertiesXmlDTO;
+    property: LeaveTypePropertiesXmlDTO;
 } 

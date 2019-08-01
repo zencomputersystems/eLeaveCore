@@ -35,6 +35,20 @@ export class UserService extends BaseDBService {
         super(httpService, queryService, "user_main")
     }
 
+
+    public findEmail(userId: string[]): Observable<any> {
+
+        const fields = ['USER_GUID', 'EMAIL'];
+        //const filters = ['(EMAIL='+email+')','(PASSWORD='+CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex)+')'];
+        const filters = ['(USER_GUID IN (' + userId + '))'];
+
+        const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+
+    }
+
     /**
      * Find single user
      *

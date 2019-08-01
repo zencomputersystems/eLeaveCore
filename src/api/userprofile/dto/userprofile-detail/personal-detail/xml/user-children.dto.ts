@@ -14,7 +14,7 @@ export class UserChildrenDTO {
      * @type {string}
      * @memberof UserChildrenDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Child name', example: 'Err yee yuan' })
     @IsNotEmpty()
     childName: string;
 
@@ -24,7 +24,7 @@ export class UserChildrenDTO {
      * @type {string}
      * @memberof UserChildrenDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Child identification number', example: '010912109814' })
     @IsNotEmpty()
     childIdentificationNumber: string;
 }

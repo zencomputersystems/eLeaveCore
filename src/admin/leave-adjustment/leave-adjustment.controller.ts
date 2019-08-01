@@ -6,6 +6,12 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveAdjustmentDTO } from './dto/update-leave-adjustment.dto';
 
+/**
+ * Controller for leave adjustment
+ *
+ * @export
+ * @class LeaveAdjustmentController
+ */
 @Controller('api/admin/leave-adjustment')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
@@ -14,6 +20,14 @@ export class LeaveAdjustmentController {
     private readonly commonFunctionService: CommonFunctionService,
     private readonly xmlParserService: XMLParserService) { }
 
+  /**
+   * Update function general leave polisy
+   *
+   * @param {LeaveAdjustmentDTO} leaveAdjustmentDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof LeaveAdjustmentController
+   */
   @Patch()
   @ApiOperation({ title: 'Update Leave Adjustment' })
   updateGeneralLeavePolicy(@Body() leaveAdjustmentDTO: LeaveAdjustmentDTO, @Req() req, @Res() res) {

@@ -9,11 +9,32 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { Observable } from 'rxjs';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
+/**
+ * Service for general leave policy
+ *
+ * @export
+ * @class GeneralLeavePolicyService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class GeneralLeavePolicyService extends BaseDBService {
 
+	/**
+	 * Declare table name for general leave policy
+	 *
+	 * @private
+	 * @memberof GeneralLeavePolicyService
+	 */
 	private _tableName = "l_main_general_policy";
 
+	/**
+	 *Creates an instance of GeneralLeavePolicyService.
+	 * @param {CommonFunctionService} commonFunctionService Commonfunction service
+	 * @param {XMLParserService} xmlParserService XML parser service
+	 * @param {HttpService} httpService http service
+	 * @param {QueryParserService} queryService query service
+	 * @memberof GeneralLeavePolicyService
+	 */
 	constructor(
 		private readonly commonFunctionService: CommonFunctionService,
 		private readonly xmlParserService: XMLParserService,
@@ -22,6 +43,13 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		super(httpService, queryService, "l_main_general_policy");
 	}
 
+	/**
+	 * Get general leave policy
+	 *
+	 * @param {string} TENANT_GUID
+	 * @returns {Observable<any>}
+	 * @memberof GeneralLeavePolicyService
+	 */
 	public findAll(TENANT_GUID: string): Observable<any> {
 
 		const fields = [];
@@ -30,9 +58,17 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		return this.commonFunctionService.getListData(result);
 	}
 
+	/**
+	 * Create general leave policy
+	 *
+	 * @param {*} user
+	 * @param {CreateGeneralLeavePolicyDTO} d
+	 * @returns
+	 * @memberof GeneralLeavePolicyService
+	 */
 	create(user: any, d: CreateGeneralLeavePolicyDTO) {
 		// console.log(JSON.stringify(d));
-		console.log(d);
+		// console.log(d);
 		const resource = new Resource(new Array);
 		const modelData = new GeneralLeavePolicyModel();
 
@@ -45,16 +81,25 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		modelData.UPDATE_TS = null;
 		modelData.UPDATE_USER_GUID = null;
 		modelData.DELETED_AT = null;
+		modelData.CODE = d.policyName;
 
 		resource.resource.push(modelData);
-		console.log(resource);
+		// console.log(resource);
 
 		return this.createByModel(resource, [], [], []);
 
 	}
 
+	/**
+	 * Update general leave policy
+	 *
+	 * @param {*} user
+	 * @param {UpdateGeneralLeavePolicyDTO} d
+	 * @returns
+	 * @memberof GeneralLeavePolicyService
+	 */
 	update(user: any, d: UpdateGeneralLeavePolicyDTO) {
-		console.log(d);
+		// console.log(d);
 		const resource = new Resource(new Array);
 		const data = new GeneralLeavePolicyModel();
 
@@ -65,7 +110,7 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		data.UPDATE_USER_GUID = user.USER_GUID;
 
 		resource.resource.push(data);
-		console.log(resource);
+		// console.log(resource);
 
 		return this.updateByModel(resource, [], [], []);
 	}

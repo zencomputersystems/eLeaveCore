@@ -7,6 +7,12 @@ import { CreateGeneralLeavePolicyDTO } from './dto/create-general-leave-policy.d
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 
+/**
+ * Controller for general leave policy
+ *
+ * @export
+ * @class GeneralLeavePolicyController
+ */
 @Controller('api/admin/general-leave-policy')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
@@ -15,6 +21,13 @@ export class GeneralLeavePolicyController {
 		private readonly commonFunctionService: CommonFunctionService,
 		private readonly xmlParserService: XMLParserService) { }
 
+	/**
+	 * Method find all
+	 *
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof GeneralLeavePolicyController
+	 */
 	@Get()
 	@ApiOperation({ title: 'Get general leave policy' })
 	findAll(@Req() req, @Res() res) {
@@ -27,6 +40,14 @@ export class GeneralLeavePolicyController {
 		)
 	}
 
+	/**
+	 * Method create general leave policy
+	 *
+	 * @param {CreateGeneralLeavePolicyDTO} data
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof GeneralLeavePolicyController
+	 */
 	@Post()
 	@ApiOperation({ title: 'Create general leave policy' })
 	createGeneralLeavePolicy(@Body() data: CreateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
@@ -36,6 +57,14 @@ export class GeneralLeavePolicyController {
 		);
 	}
 
+	/**
+	 * Method update general leave policy
+	 *
+	 * @param {UpdateGeneralLeavePolicyDTO} updateGeneralLeavePolicyDTO
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof GeneralLeavePolicyController
+	 */
 	@Patch()
 	@ApiOperation({ title: 'Update general leave policy' })
 	updateGeneralLeavePolicy(@Body() updateGeneralLeavePolicyDTO: UpdateGeneralLeavePolicyDTO, @Req() req, @Res() res) {

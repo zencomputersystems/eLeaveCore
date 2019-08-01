@@ -14,7 +14,7 @@ export class UserEducationDTO {
      * @type {string}
      * @memberof UserEducationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Qualification level', example: 'Bachelor Degree' })
     @IsNotEmpty()
     qualificationLevel: string;
 
@@ -24,7 +24,7 @@ export class UserEducationDTO {
      * @type {string}
      * @memberof UserEducationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Major course', example: 'computer science' })
     @IsNotEmpty()
     major: string;
 
@@ -34,7 +34,7 @@ export class UserEducationDTO {
      * @type {string}
      * @memberof UserEducationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'University of studies', example: 'Universiti Kebangsaan Malaysia' })
     @IsNotEmpty()
     university: string;
 
@@ -44,7 +44,7 @@ export class UserEducationDTO {
      * @type {string}
      * @memberof UserEducationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Year start and year end', example: '2011-2015' })
     @IsNotEmpty()
     year: string;
 }

@@ -38,6 +38,13 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         super(httpService, queryService, "l_main_leave_transaction");
     }
 
+    /**
+     * Get all pending leave status
+     *
+     * @param {string} tenantId
+     * @returns
+     * @memberof LeaveTransactionDbService
+     */
     public findAll(tenantId: string) {
         const fields = [];
         const filters = ['(TENANT_GUID=' + tenantId + ')', '(STATUS=PENDING)'];
@@ -45,8 +52,16 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         return this.httpService.get(url);
     }
 
+    /**
+     * Update to employee for approval override
+     *
+     * @param {*} user
+     * @param {UpdateApprovalDTO} d
+     * @returns
+     * @memberof LeaveTransactionDbService
+     */
     public updateToEmployee(user: any, d: UpdateApprovalDTO) {
-        console.log(user);
+        // console.log(user);
         const resource = new Resource(new Array);
         const data = new LeaveTransactionModel;
 
@@ -64,9 +79,9 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         }
 
         resource.resource.push(data);
-        console.log(resource);
+        // console.log(resource);
 
-        return this.updateByModel(resource, [], ['(LEAVE_TRANSACTION_GUID IN (' + leaveList + '))'], []);
+        return this.updateByModel(resource, ['USER_GUID', 'LEAVE_TRANSACTION_GUID'], ['(LEAVE_TRANSACTION_GUID IN (' + leaveList + '))'], []);
     }
     /**
      * Create new leave transaction 

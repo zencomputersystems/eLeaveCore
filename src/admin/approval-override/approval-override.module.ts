@@ -9,6 +9,9 @@ import { ApprovalOverrideController } from './approval-override.controller';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { UserService } from '../user/user.service';
+import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
+import { UserInfoService } from '../user-info/user-info.service';
 
 @Module({
 	modules: [
@@ -20,9 +23,12 @@ import { DateCalculationService } from 'src/common/calculation/service/date-calc
 		ApprovalOverrideService,
 		QueryParserService,
 		CommonFunctionService,
-    XMLParserService,
-    LeaveTransactionDbService,
-    DateCalculationService
+		XMLParserService,
+		LeaveTransactionDbService,
+		DateCalculationService,
+		UserService,
+		EmailNodemailerService,
+		UserInfoService
 	],
 	controllers: [ApprovalOverrideController]
 })

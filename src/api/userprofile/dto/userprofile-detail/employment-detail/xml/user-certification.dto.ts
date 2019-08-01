@@ -14,7 +14,7 @@ export class UserCertificationDTO {
      * @type {string}
      * @memberof UserCertificationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Certification name', example: 'Bachelor Degree In Computer Science' })
     @IsNotEmpty()
     certificationName: string;
 
@@ -24,7 +24,7 @@ export class UserCertificationDTO {
      * @type {number}
      * @memberof UserCertificationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Certification enroll year', example: '2011' })
     @IsNotEmpty()
     certificationEnrollYear: number;
 
@@ -34,7 +34,7 @@ export class UserCertificationDTO {
      * @type {number}
      * @memberof UserCertificationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Certification graduation year', example: '2015' })
     @IsNotEmpty()
     certificationGraduateYear: number;
 
@@ -44,7 +44,7 @@ export class UserCertificationDTO {
      * @type {string}
      * @memberof UserCertificationDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Certification Attachment', example: 'attachment1.png' })
     @IsNotEmpty()
     certificationAttachment: string;
 }

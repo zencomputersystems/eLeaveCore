@@ -1,0 +1,11 @@
+{
+  "generator-karma": {
+    "frameworks": "jasmine",
+    "browsers": "PhantomJS",
+    "bower-components-path": "bower_components"
+  },
+  "generator-mocha": {
+    "ui": "bdd",
+    "rjs": false
+  }
+}

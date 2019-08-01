@@ -12,7 +12,7 @@ import { LeaveTypePropertiesXmlDTO } from './leavetype-properties.xml.dto';
 export class LeaveTypeEntitlementXmlDTO {
 
     /**
-     *Creates an instance of LeaveTypeEntitlementXmlDTO.
+     * Creates an instance of LeaveTypeEntitlementXmlDTO.
      * @memberof LeaveTypeEntitlementXmlDTO
      */
     constructor() {
@@ -25,7 +25,7 @@ export class LeaveTypeEntitlementXmlDTO {
      * @type {string}
      * @memberof LeaveTypeEntitlementXmlDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty( { description: 'Leavetype entitlement code', example: 'AL-generic'})
     @IsNotEmpty()
     code: string;
 
@@ -35,7 +35,7 @@ export class LeaveTypeEntitlementXmlDTO {
      * @type {string}
      * @memberof LeaveTypeEntitlementXmlDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty( { description: 'Entitlement description', example: 'Generic Annual Leave Entitlement'})
     @IsNotEmpty()
     description: string;
 
@@ -53,4 +53,5 @@ export class LeaveTypeEntitlementXmlDTO {
     @IsNotEmpty()
     @ValidateNested({ each: true })
     property: LeaveTypePropertiesXmlDTO;
+
 } 

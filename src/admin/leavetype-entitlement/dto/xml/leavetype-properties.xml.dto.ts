@@ -16,7 +16,7 @@ import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
 export class LeaveTypePropertiesXmlDTO {
 
     /**
-     *Creates an instance of LeaveTypePropertiesXmlDTO.
+     * Creates an instance of LeaveTypePropertiesXmlDTO.
      * @memberof LeaveTypePropertiesXmlDTO
      */
     constructor() {
@@ -41,7 +41,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave in Advance' })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave in Advance', example: true })
     @IsNotEmpty()
     @IsBoolean()
     applyInAdvance: boolean;
@@ -52,7 +52,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave of the Following Year' })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave of the Following Year', example: false })
     @IsNotEmpty()
     @IsBoolean()
     applyNextYear: boolean;
@@ -63,7 +63,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to claim entitlement (E.g. work OT,AL/RL' })
+    @ApiModelProperty({ description: 'Allow Applicant to claim entitlement (E.g. work OT,AL/RL', example: false })
     @IsNotEmpty()
     @IsBoolean()
     claimEntitlement: boolean;
@@ -75,9 +75,9 @@ export class LeaveTypePropertiesXmlDTO {
      * @memberof LeaveTypePropertiesXmlDTO
      */
     @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)' })
-    @IsNotEmpty()
     @IsBoolean()
     applyFractionUnit: boolean;
+
 
     /**
      * Include other leave type in balance calculation
@@ -85,7 +85,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Include other leave type in balance calculation' })
+    @ApiModelProperty({ description: 'Include other leave type in balance calculation', example: 'paste leavetype_guid here' })
     @IsString()
     includeOtherLeaveType: string;
 
@@ -95,7 +95,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Attach Certificate/ Supporting Documents (e.g.: Medical Certificate)' })
+    @ApiModelProperty({ description: 'Attach Certificate/ Supporting Documents (e.g.: Medical Certificate)', example: false })
     @IsNotEmpty()
     @IsBoolean()
     attachmentRequired: boolean;
@@ -152,12 +152,12 @@ export class LeaveTypePropertiesXmlDTO {
     isAllowAppliedMoreThanBalance: GeneralPropertiesXmlDTO;
 
     /**
-     * Convert exceed leave amount to other leave type
+     * Convert exceeded leave amount to other leave type
      *
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Convert exceed leave amount to other leave type' })
+    @ApiModelProperty({ description: 'Convert exceeded leave amount to other leave type', example: 'paste AL leavetype_guid here' })
     convertExceedLeaveAmount: string;
 
     /**
@@ -166,7 +166,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {number}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Number of days that can be apply in each leave type' })
+    @ApiModelProperty({ description: 'Number of days that can be applied in each leave type', example: 0 })
     @IsNumber()
     @IsNotEmpty()
     maxDayPerLeave: number;
@@ -179,7 +179,8 @@ export class LeaveTypePropertiesXmlDTO {
      */
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description: 'Allow to Apply Leave After Join'
+        description: 'Allow to Apply Leave After Join',
+        example: true
     })
     @IsNotEmpty()
     @Type(() => GeneralPropertiesXmlDTO)
@@ -193,7 +194,8 @@ export class LeaveTypePropertiesXmlDTO {
      */
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description: 'Allow Applicant to cancel leave after start/expired date'
+        description: 'Allow Applicant to cancel leave after start/expired date',
+        example: false
     })
     @ValidateNested({ each: true })
     @Type(() => GeneralPropertiesXmlDTO)
@@ -207,7 +209,8 @@ export class LeaveTypePropertiesXmlDTO {
      */
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description: 'Allow employee apply leave using current year bring forward amount only'
+        description: 'Allow employee apply leave using current year bring forward amount only',
+        example: false
     })
     @ValidateNested({ each: true })
     @Type(() => GeneralPropertiesXmlDTO)

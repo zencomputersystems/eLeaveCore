@@ -21,4 +21,4 @@ export class UpdateLeaveTypeEntitlementDto extends LeaveTypeEntitlementXmlDTO {
     @ApiModelProperty()
     @IsNotEmpty()
     readonly id: string;
-} 
+}

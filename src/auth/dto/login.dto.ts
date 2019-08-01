@@ -28,4 +28,4 @@ export class LoginDto {
     @IsNotEmpty()
     readonly password: string;
 
-} 
+}

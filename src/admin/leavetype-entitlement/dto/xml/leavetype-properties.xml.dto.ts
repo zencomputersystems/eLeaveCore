@@ -23,14 +23,14 @@ export class LeaveTypePropertiesXmlDTO {
         this.applyInAdvance = false;
         this.applyNextYear = false;
         this.claimEntitlement = false;
-        this.applyFractionUnit = '';
-        this.includeOtherLeaveType = '';
+        this.applyFractionUnit = false;
+        this.includeOtherLeaveType = "";
         this.attachmentRequired = false;
         this.excludeDayType = new ExcludeDayTypeXmlDTO();
         this.applyBeforeProperties = new ApplyBeforePropertiesXmlDTO();
         this.applyWithinProperties = new ApplyWithinPropertiesXmlDTO();
         this.isAllowAppliedMoreThanBalance = new GeneralPropertiesXmlDTO();
-        this.isAllowAfterJoinDate = true;
+        this.isAllowAfterJoinDate = new GeneralPropertiesXmlDTO();
         this.isAllowLeaveCancelAfterDate = new GeneralPropertiesXmlDTO();
         this.isLimitApplicationToCarryForward = new GeneralPropertiesXmlDTO();
     }
@@ -74,9 +74,10 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)', example: true })
-    @IsString()
-    applyFractionUnit: string;
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)' })
+    @IsBoolean()
+    applyFractionUnit: boolean;
+
 
     /**
      * Include other leave type in balance calculation
@@ -182,8 +183,8 @@ export class LeaveTypePropertiesXmlDTO {
         example: true
     })
     @IsNotEmpty()
-    @IsBoolean()
-    isAllowAfterJoinDate: boolean;
+    @Type(() => GeneralPropertiesXmlDTO)
+    isAllowAfterJoinDate: GeneralPropertiesXmlDTO;
 
     /**
      * Allow Applicant to cancel leave after start/expired date

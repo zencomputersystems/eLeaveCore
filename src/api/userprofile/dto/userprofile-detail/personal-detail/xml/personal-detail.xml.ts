@@ -21,7 +21,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Id', example: '2345731a-f3e3-1b0b-de05-d1a6c7c50447' })
     @IsNotEmpty()
     @IsString()
     id: string;
@@ -32,7 +32,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Nickname', example: 'Justin' })
     @IsNotEmpty()
     @IsString()
     nickname: string;
@@ -43,7 +43,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Identification number', example: '901211108813' })
     @IsNotEmpty()
     @IsString()
     nric: string;
@@ -54,7 +54,7 @@ export class PersonalDetailXML {
      * @type {Date}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Data of birth', example: '1990-12-11' })
     @IsNotEmpty()
     @IsISO8601()
     dob: Date;
@@ -65,7 +65,7 @@ export class PersonalDetailXML {
      * @type {number}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Gender', example: 1 })
     @IsNotEmpty()
     @IsNumber()
     gender: number;
@@ -76,7 +76,7 @@ export class PersonalDetailXML {
      * @type {number}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Marital status', example: 1 })
     @IsNotEmpty()
     @IsNumber()
     maritalStatus: number;
@@ -87,7 +87,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Race', example: 'Malay' })
     @IsNotEmpty()
     @IsString()
     race: string;
@@ -98,7 +98,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Religion', example: 'Islam' })
     @IsNotEmpty()
     @IsString()
     religion: string;
@@ -109,7 +109,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Nationality', example: 'Malaysian' })
     @IsNotEmpty()
     @IsString()
     nationality: string;
@@ -120,7 +120,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Phone number', example: '0173331441' })
     @IsNotEmpty()
     @IsString()
     phoneNumber: string;
@@ -131,7 +131,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Work phone number', example: '0198883123' })
     @IsNotEmpty()
     @IsString()
     workPhoneNumber: string;
@@ -142,7 +142,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Email address', example: 'tarmimi@gmail.com' })
     @IsNotEmpty()
     @IsString()
     emailAddress: string;
@@ -153,7 +153,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Work email address', example: 'tarmimi@zen.com.my' })
     @IsNotEmpty()
     @IsString()
     workEmailAddress: string;
@@ -164,7 +164,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Address', example: 'Unit No. A-6-2, Block A' })
     @IsNotEmpty()
     @IsString()
     address1: string;
@@ -175,7 +175,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Address 2', example: 'Persiaran Ceria, Cyber 12' })
     @IsString()
     address2: string;
 
@@ -185,7 +185,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Postcode', example: '63000' })
     @IsNotEmpty()
     @IsString()
     postcode: string;
@@ -196,7 +196,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'City', example: 'Cyberjaya' })
     @IsNotEmpty()
     @IsString()
     city: string;
@@ -207,7 +207,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'State', example: 'Selangor' })
     @IsNotEmpty()
     @IsString()
     state: string;
@@ -218,7 +218,7 @@ export class PersonalDetailXML {
      * @type {string}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Country', example: 'Malaysia' })
     @IsNotEmpty()
     @IsString()
     country: string;

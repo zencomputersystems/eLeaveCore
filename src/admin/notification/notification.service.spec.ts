@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/common';
 import { QueueNotificationDTO } from './dto/queue-notification.dto';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { NotificationService } from './notification.service';
+import { XMLParserService } from '../../common/helper/xml-parser.service';
 describe('NotificationService', () => {
   let service: NotificationService;
   beforeEach(async () => {
@@ -21,7 +22,8 @@ describe('NotificationService', () => {
         NotificationService,
         { provide: HttpService, useValue: httpServiceStub },
         { provide: QueueNotificationDTO, useValue: queueNotificationDTOStub },
-        { provide: QueryParserService, useValue: queryParserServiceStub }
+        { provide: QueryParserService, useValue: queryParserServiceStub },
+        XMLParserService
       ]
     }).compile();
     service = await module.get<NotificationService>(NotificationService);

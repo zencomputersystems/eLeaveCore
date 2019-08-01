@@ -4,6 +4,10 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
 import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-detail/update-personal-detail.dto';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { PersonalDetailController } from './personal-detail.controller';
+import { CommonFunctionService } from '../../../../common/helper/common-function.services';
+import { NotificationService } from 'src/admin/notification/notification.service';
+import { HttpService } from '@nestjs/common';
+import { QueryParserService } from '../../../../common/helper/query-parser.service';
 describe('PersonalDetailController', () => {
   let pipe: PersonalDetailController;
   beforeEach(async () => {
@@ -18,6 +22,7 @@ describe('PersonalDetailController', () => {
         pipe: () => ({ subscribe: () => ({}) })
       })
     };
+    const httpServiceStub = { get: url1 => ({}) };
     const updatePersonalDetailDTOStub = {};
     const xMLParserServiceStub = {};
     const module = await Test.createTestingModule({
@@ -32,7 +37,11 @@ describe('PersonalDetailController', () => {
           provide: UpdatePersonalDetailDTO,
           useValue: updatePersonalDetailDTOStub
         },
-        { provide: XMLParserService, useValue: xMLParserServiceStub }
+        { provide: XMLParserService, useValue: xMLParserServiceStub },
+        CommonFunctionService,
+        NotificationService,
+        { provide: HttpService, useValue: httpServiceStub },
+        QueryParserService
       ]
     }).compile();
     // pipe = Test.get(PersonalDetailController);

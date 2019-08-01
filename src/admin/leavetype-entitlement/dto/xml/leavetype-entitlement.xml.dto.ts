@@ -53,4 +53,5 @@ export class LeaveTypeEntitlementXmlDTO {
     @IsNotEmpty()
     @ValidateNested({ each: true })
     property: LeaveTypePropertiesXmlDTO;
-}
+
+} 

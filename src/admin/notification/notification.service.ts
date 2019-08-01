@@ -32,6 +32,7 @@ export class NotificationService extends BaseDBService {
      *Creates an instance of NotificationService.
      * @param {HttpService} httpService Service http
      * @param {QueryParserService} queryService Service query
+     * @param {XMLParserService} xmlParserService xmlParserService
      * @memberof NotificationService
      */
     constructor(

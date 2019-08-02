@@ -15,7 +15,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {string}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Id for service year' })
+    @ApiModelProperty({ description: 'Id for leavetype service year', example: 'fuibquf793ybf9y3bfbohbf34fe43f' })
     @IsNotEmpty()
     id: string;
 
@@ -47,8 +47,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave amount that entitle for employee for current year',
-        example: 14 })
+    @ApiModelProperty({ description: 'Leave amount that entitle for employee for current year', example: 14 })
     @IsNotEmpty()
     @IsNumber()
     entitledDays: number;

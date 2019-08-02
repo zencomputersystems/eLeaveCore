@@ -3,7 +3,7 @@ import { SectionService } from './section.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
@@ -29,6 +29,7 @@ export class SectionController {
    * @memberof SectionController
    */
   @Post()
+  @ApiOperation({ title: 'Create section' })
   create(@Body() createSectionDTO: CreateSectionDto, @Req() req, @Res() res) {
 
     this.sectionService.create(req.user, createSectionDTO.name)
@@ -47,6 +48,7 @@ export class SectionController {
    * @memberof SectionController
    */
   @Patch()
+  @ApiOperation({ title: 'Update section' })
   updateSection(@Body() updateSectionDTO: UpdateSectionDto, @Req() req, @Res() res) {
     this.sectionService.update(req.user, updateSectionDTO)
       .subscribe(
@@ -63,6 +65,7 @@ export class SectionController {
    * @memberof SectionController
    */
   @Get()
+  @ApiOperation({ title: 'Find all section' })
   findAllSection(@Req() req, @Res() res) {
     this.sectionService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
@@ -84,6 +87,7 @@ export class SectionController {
    * @memberof SectionController
    */
   @Get(':id')
+  @ApiOperation({ title: 'Find one section' })
   findOne(@Param('id') id, @Req() req, @Res() res) {
     this.sectionService.findById(req.user.TENANT_GUID, id).subscribe(
       data => {

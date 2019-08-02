@@ -25,7 +25,7 @@ export class LeaveTypeEntitlementXmlDTO {
      * @type {string}
      * @memberof LeaveTypeEntitlementXmlDTO
      */
-    @ApiModelProperty( { description: 'Leavetype entitlement code', example: 'AL-generic'})
+    @ApiModelProperty({ description: 'Leavetype entitlement code', example: 'AL-generic' })
     @IsNotEmpty()
     code: string;
 
@@ -35,12 +35,12 @@ export class LeaveTypeEntitlementXmlDTO {
      * @type {string}
      * @memberof LeaveTypeEntitlementXmlDTO
      */
-    @ApiModelProperty( { description: 'Entitlement description', example: 'Generic Annual Leave Entitlement'})
+    @ApiModelProperty({ description: 'Entitlement description', example: 'Generic Annual Leave Entitlement' })
     @IsNotEmpty()
     description: string;
 
     /**
-     * Data leavetype entitlement - properties
+     * Data leavetype entitlement - property
      *
      * @type {LeaveTypePropertiesXmlDTO}
      * @memberof LeaveTypeEntitlementXmlDTO

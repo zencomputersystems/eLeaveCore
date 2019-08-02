@@ -1,5 +1,5 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, IsArray } from "class-validator";
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsArray } from 'class-validator';
 
 /**
  * Data for queue notifocation

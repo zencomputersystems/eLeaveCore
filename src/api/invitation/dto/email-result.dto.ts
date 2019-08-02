@@ -1,5 +1,5 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 /**
  * Data for email result

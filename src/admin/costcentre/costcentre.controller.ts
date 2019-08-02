@@ -3,7 +3,7 @@ import { CreateCostCentreDto } from './dto/create-costcentre.dto';
 import { UpdateCostCentreDto } from './dto/update-costcentre.dto';
 import { CostcentreService } from './costcentre.service';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
@@ -29,6 +29,7 @@ export class CostcentreController {
    * @memberof CostcentreController
    */
   @Post()
+  @ApiOperation({ title: 'Create cost centre' })
   create(@Body() createBranchDTO: CreateCostCentreDto, @Req() req, @Res() res) {
 
     this.costcentreService.create(req.user, createBranchDTO.name)
@@ -47,6 +48,7 @@ export class CostcentreController {
    * @memberof CostcentreController
    */
   @Patch()
+  @ApiOperation({ title: 'Update cost centre' })
   updateCostcentre(@Body() updateBranchDTO: UpdateCostCentreDto, @Req() req, @Res() res) {
     this.costcentreService.update(req.user, updateBranchDTO)
       .subscribe(
@@ -63,6 +65,7 @@ export class CostcentreController {
    * @memberof CostcentreController
    */
   @Get()
+  @ApiOperation({ title: 'Find all cost centre' })
   findAllCostcentre(@Req() req, @Res() res) {
     this.costcentreService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
@@ -85,6 +88,7 @@ export class CostcentreController {
    * @memberof CostcentreController
    */
   @Get(':id')
+  @ApiOperation({ title: 'Find one cost centre' })
   findOne(@Param('id') id, @Req() req, @Res() res) {
     this.costcentreService.findById(req.user.TENANT_GUID, id).subscribe(
       data => {

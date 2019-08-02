@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LeavetypeService } from './leavetype.service';
 import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
@@ -29,6 +29,7 @@ export class LeaveTypeController {
    * @memberof LeaveTypeController
    */
   @Post()
+  @ApiOperation({ title: 'Create leavetype' })
   create(@Body() createLeavetypeDTO: CreateLeaveTypeDto, @Req() req, @Res() res) {
 
     this.leavetypeService.create(req.user, createLeavetypeDTO)
@@ -47,6 +48,7 @@ export class LeaveTypeController {
    * @memberof LeaveTypeController
    */
   @Patch()
+  @ApiOperation({ title: 'Update Leavetype' })
   updateLeavetype(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDto, @Req() req, @Res() res) {
     this.leavetypeService.update(req.user, updateLeaveTypeDTO)
       .subscribe(
@@ -63,6 +65,7 @@ export class LeaveTypeController {
    * @memberof LeaveTypeController
    */
   @Get()
+  @ApiOperation({ title: 'Find all Leavetype' })
   findAllLeavetype(@Req() req, @Res() res) {
     this.leavetypeService.findAll(req.user.TENANT_GUID).subscribe(
       data => {
@@ -84,6 +87,7 @@ export class LeaveTypeController {
    * @memberof LeaveTypeController
    */
   @Get(':id')
+  @ApiOperation({ title: 'Find one Leavetype' })
   findOne(@Param('id') id, @Req() req, @Res() res) {
     this.leavetypeService.findById(req.user.TENANT_GUID, id).subscribe(
       data => {

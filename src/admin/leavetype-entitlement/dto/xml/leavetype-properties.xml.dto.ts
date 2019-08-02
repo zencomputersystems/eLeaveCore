@@ -41,7 +41,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave in Advance', example: true })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave in Advance', example: false })
     @IsNotEmpty()
     @IsBoolean()
     applyInAdvance: boolean;
@@ -74,7 +74,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)' })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)', example: false })
     @IsBoolean()
     applyFractionUnit: boolean;
 
@@ -222,7 +222,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave Entitlment type' })
+    @ApiModelProperty({ description: 'Leave Entitlment type', example: 'eVjonf34fin9834uf83bfuu3084fn' })
     @IsString()
     @IsNotEmpty()
     leaveEntitlementType: string;
@@ -233,7 +233,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave entitlement rounding' })
+    @ApiModelProperty({ description: 'Leave entitlement rounding', example: 'Round Up 0.5' })
     @IsString()
     @IsNotEmpty()
     leaveEntitlementRounding: string;

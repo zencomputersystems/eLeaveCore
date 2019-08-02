@@ -1,6 +1,6 @@
-import { StatusPermissionDTO } from "./status-permission.dto";
-import { IsString } from "class-validator";
-import { ApiModelProperty } from "@nestjs/swagger";
+import { StatusPermissionDTO } from './status-permission.dto';
+import { IsString } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  * Data level permission 

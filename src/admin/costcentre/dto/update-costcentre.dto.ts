@@ -17,7 +17,7 @@ export class UpdateCostCentreDto extends CostCentreDto {
      * @type {string}
      * @memberof UpdateCostCentreDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Cost centre id', example: 'hgiosbgby83g939bhvg3849bgvurebv' })
     @IsNotEmpty()
     readonly id: string;
 } 

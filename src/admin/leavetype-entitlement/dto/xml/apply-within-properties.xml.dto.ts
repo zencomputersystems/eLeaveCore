@@ -28,8 +28,7 @@ export class ApplyWithinPropertiesXmlDTO {
      * @type {number}
      * @memberof ApplyWithinPropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Number of day required for backdated leave submission.', 
-        example: 2 })
+    @ApiModelProperty({ description: 'Number of day required for backdated leave submission.', example: 3 })
     @IsNotEmpty()
     @IsNumber()
     numberOfDays: number;

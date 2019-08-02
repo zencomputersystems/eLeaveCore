@@ -1,8 +1,8 @@
-import { LevelPermissionDTO } from "./level-permission.dto";
-import { StatusPermissionDTO } from "./status-permission.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { Type } from "class-transformer";
+import { LevelPermissionDTO } from './level-permission.dto';
+import { StatusPermissionDTO } from './status-permission.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
 
 /**
  * Data allow leave management setup

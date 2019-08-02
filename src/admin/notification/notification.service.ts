@@ -1,16 +1,16 @@
-import { NotificationDTO } from "./dto/notification.dto";
-import { Resource } from "src/common/model/resource.model";
-import { NotificationModel } from "./model/notification.model.dto";
-import { UserInfoDbService } from "../holiday/db/user-info.db.service";
-import { Injectable, HttpService } from "@nestjs/common";
-import { MailNotificationDTO } from "./dto/mail-notification.dto";
-import { UserInfoService } from "../user-info/user-info.service";
-import { of } from "rxjs";
-import { XMLParserService } from "src/common/helper/xml-parser.service";
-import { QueueNotificationDTO } from "./dto/queue-notification.dto";
-import { v1 } from "uuid";
-import { BaseDBService } from "src/common/base/base-db.service";
-import { QueryParserService } from "src/common/helper/query-parser.service";
+import { NotificationDTO } from './dto/notification.dto';
+import { Resource } from 'src/common/model/resource.model';
+import { NotificationModel } from './model/notification.model.dto';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+import { Injectable, HttpService } from '@nestjs/common';
+import { MailNotificationDTO } from './dto/mail-notification.dto';
+import { UserInfoService } from '../user-info/user-info.service';
+import { of } from 'rxjs';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { QueueNotificationDTO } from './dto/queue-notification.dto';
+import { v1 } from 'uuid';
+import { BaseDBService } from 'src/common/base/base-db.service';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
 
 /**
  * Service for notification

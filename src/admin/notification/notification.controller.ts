@@ -1,15 +1,15 @@
-import { Controller, UseGuards, Patch, Body, Req, Res, Post, Get } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
-import { CommonFunctionService } from "src/common/helper/common-function.services";
-import { NotificationDTO } from "./dto/notification.dto";
-import { NotificationService } from "./notification.service";
-import { MailNotificationDTO } from "./dto/mail-notification.dto";
-import { EmploymentDetailBase } from "src/api/userprofile/dto/userprofile-detail/employment-detail/employment-detail-base.dto";
-import { QueueNotificationDTO } from "./dto/queue-notification.dto";
-import { map } from "rxjs/operators";
-import { XMLParserService } from "src/common/helper/xml-parser.service";
-import { UserService } from "../user/user.service";
+import { Controller, UseGuards, Patch, Body, Req, Res, Post, Get } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { NotificationDTO } from './dto/notification.dto';
+import { NotificationService } from './notification.service';
+import { MailNotificationDTO } from './dto/mail-notification.dto';
+import { EmploymentDetailBase } from 'src/api/userprofile/dto/userprofile-detail/employment-detail/employment-detail-base.dto';
+import { QueueNotificationDTO } from './dto/queue-notification.dto';
+import { map } from 'rxjs/operators';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { UserService } from '../user/user.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 /**

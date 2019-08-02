@@ -41,7 +41,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave in Advance' })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave in Advance', example: false })
     @IsNotEmpty()
     @IsBoolean()
     applyInAdvance: boolean;
@@ -52,7 +52,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave of the Following Year' })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Leave of the Following Year', example: false })
     @IsNotEmpty()
     @IsBoolean()
     applyNextYear: boolean;
@@ -63,7 +63,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to claim entitlement (E.g. work OT,AL/RL' })
+    @ApiModelProperty({ description: 'Allow Applicant to claim entitlement (E.g. work OT,AL/RL', example: false })
     @IsNotEmpty()
     @IsBoolean()
     claimEntitlement: boolean;
@@ -74,7 +74,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)' })
+    @ApiModelProperty({ description: 'Allow Applicant to Apply Fraction of Unit (0.5 or 0.25)', example: false })
     @IsNotEmpty()
     @IsBoolean()
     applyFractionUnit: boolean;
@@ -85,7 +85,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Include other leave type in balance calculation' })
+    @ApiModelProperty({ description: 'Include other leave type in balance calculation', example: 'byvu38734vg38b4387ybv32gf45gv' })
     @IsString()
     includeOtherLeaveType: string;
 
@@ -95,7 +95,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {boolean}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Attach Certificate/ Supporting Documents (e.g.: Medical Certificate)' })
+    @ApiModelProperty({ description: 'Attach Certificate/ Supporting Documents (e.g.: Medical Certificate)', example: false })
     @IsNotEmpty()
     @IsBoolean()
     attachmentRequired: boolean;
@@ -157,7 +157,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Convert exceed leave amount to other leave type' })
+    @ApiModelProperty({ description: 'Convert exceed leave amount to other leave type', example: 'UNPAID LEAVE' })
     convertExceedLeaveAmount: string;
 
     /**
@@ -166,7 +166,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {number}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Number of days that can be apply in each leave type' })
+    @ApiModelProperty({ description: 'Number of days that can be apply in each leave type', example: 3 })
     @IsNumber()
     @IsNotEmpty()
     maxDayPerLeave: number;
@@ -219,7 +219,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave Entitlment type' })
+    @ApiModelProperty({ description: 'Leave Entitlment type', example: 'eVjonf34fin9834uf83bfuu3084fn' })
     @IsString()
     @IsNotEmpty()
     leaveEntitlementType: string;
@@ -230,7 +230,7 @@ export class LeaveTypePropertiesXmlDTO {
      * @type {string}
      * @memberof LeaveTypePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave entitlement rounding' })
+    @ApiModelProperty({ description: 'Leave entitlement rounding', example: 'Round Up 0.5' })
     @IsString()
     @IsNotEmpty()
     leaveEntitlementRounding: string;

@@ -1,10 +1,10 @@
-import { AllowLeaveSetupDTO } from "./allow-leave-setup.dto";
-import { LevelPermissionDTO } from "./level-permission.dto";
-import { AllowLeaveManagementSetupDTO } from "./allow-leave-management-setup.dto";
-import { AllowProfileManagementSetupDTO } from "./allow-profile-management-setup.dto";
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { Type } from "class-transformer";
+import { AllowLeaveSetupDTO } from './allow-leave-setup.dto';
+import { LevelPermissionDTO } from './level-permission.dto';
+import { AllowLeaveManagementSetupDTO } from './allow-leave-management-setup.dto';
+import { AllowProfileManagementSetupDTO } from './allow-profile-management-setup.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
 
 /**
  * Data properties for role

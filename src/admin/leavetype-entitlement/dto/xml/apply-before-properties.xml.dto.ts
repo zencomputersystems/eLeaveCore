@@ -30,7 +30,7 @@ export class ApplyBeforePropertiesXmlDTO {
      * @type {number}
      * @memberof ApplyBeforePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Number of day for employee to apply leave in advance.' })
+    @ApiModelProperty({ description: 'Number of day for employee to apply leave in advance.', example: 3 })
     @IsNotEmpty()
     @IsNumber()
     numberOfDays: number;
@@ -64,7 +64,7 @@ export class ApplyBeforePropertiesXmlDTO {
      * @type {boolean}
      * @memberof ApplyBeforePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Mark short notice application as Emergency' })
+    @ApiModelProperty({ description: 'Mark short notice application as Emergency', example: false })
     @IsNotEmpty()
     @IsBoolean()
     markAsEmergency: boolean;

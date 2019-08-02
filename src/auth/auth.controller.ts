@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
 import { ADAuthGuard } from './passport/ad-extend';
+import { ApiOperation } from '@nestjs/swagger';
 
 /**
  * Controller for auth
@@ -31,6 +32,7 @@ export class AuthController {
      * @memberof AuthController
      */
     @Post('login')
+    @ApiOperation({ title: 'Login' })
     @UseGuards(AuthGuard('ad'))
     public async login(@Body() loginDTO: LoginDto, @Req() req) {
 
@@ -47,6 +49,7 @@ export class AuthController {
      * @memberof AuthController
      */
     @Post('login/ad')
+    @ApiOperation({ title: 'Login ad' })
     @UseGuards(AuthGuard('ad'))
     public async ad(@Body() loginDTO: LoginDto, @Req() req) {
 
@@ -62,6 +65,7 @@ export class AuthController {
      * @memberof AuthController
      */
     @Post('login/email')
+    @ApiOperation({ title: 'Login email' })
     @UseGuards(AuthGuard('local'))
     public async local(@Body() loginDTO: LoginDto, @Req() req) {
 

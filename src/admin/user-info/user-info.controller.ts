@@ -3,7 +3,7 @@ import { UserInfoService } from './user-info.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiImplicitQuery, ApiOperation } from '@nestjs/swagger';
 
 
 /**
@@ -27,6 +27,7 @@ export class UserInfoController {
      * @memberof UserInfoController
      */
     @Post()
+    @ApiOperation({ title: 'Create user info' })
     create(@Body() createUserDTO: CreateUserDTO, @Req() req, @Res() res) {
         this.runCreateService(this.userInfoService.create(req.user, createUserDTO), res);
     }
@@ -40,6 +41,7 @@ export class UserInfoController {
      * @memberof UserInfoController
      */
     @Patch()
+    @ApiOperation({ title: 'Update user info' })
     update(@Body() updateUserDTO: UpdateUserDTO, @Req() req, @Res() res) {
         this.runUpdateService(this.userInfoService.update(req.user, updateUserDTO), res);
     }
@@ -52,6 +54,7 @@ export class UserInfoController {
      * @memberof UserInfoController
      */
     @Get()
+    @ApiOperation({ title: 'Find all user info' })
     findAll(@Req() req, @Res() res) {
         this.runGetService(req.user.USER_GUID, req.TENANT_GUID, res);
     }
@@ -65,6 +68,7 @@ export class UserInfoController {
      * @memberof UserInfoController
      */
     @Get(':id')
+    @ApiOperation({ title: 'Find one user info' })
     findOne(@Param('id') id, @Req() req, @Res() res) {
         this.runGetService(id, req.TENANT_GUID, res);
     }

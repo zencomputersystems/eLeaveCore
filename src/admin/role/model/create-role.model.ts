@@ -1,4 +1,4 @@
-import { CreateUpdateModel } from "src/common/model/create-update.model";
+import { CreateUpdateModel } from 'src/common/model/create-update.model';
 
 /**
  * Model for create role

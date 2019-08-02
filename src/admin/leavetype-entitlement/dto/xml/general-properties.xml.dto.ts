@@ -22,7 +22,7 @@ export class GeneralPropertiesXmlDTO {
      * @type {boolean}
      * @memberof GeneralPropertiesXmlDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Is check', example: false })
     @IsNotEmpty()
     @IsBoolean()
     isCheck: boolean;
@@ -33,7 +33,7 @@ export class GeneralPropertiesXmlDTO {
      * @type {string}
      * @memberof GeneralPropertiesXmlDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Text value', example: 'Some value' })
     @ValidateIf(o => o.isCheck == true)
     @IsNotEmpty()
     @IsString()

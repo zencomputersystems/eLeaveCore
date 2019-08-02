@@ -15,7 +15,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {string}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Id for service year' })
+    @ApiModelProperty({ description: 'Id for leavetype service year', example: 'fuibquf793ybf9y3bfbohbf34fe43f' })
     @IsNotEmpty()
     id: string;
 
@@ -25,7 +25,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Employee started service for company' })
+    @ApiModelProperty({ description: 'Employee started service for company', example: 1 })
     @IsNotEmpty()
     @IsNumber()
     serviceYearFrom: number;
@@ -36,7 +36,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Employee current service for company' })
+    @ApiModelProperty({ description: 'Employee current service for company', example: 99 })
     @IsNotEmpty()
     @IsNumber()
     serviceYearTo: number;
@@ -47,7 +47,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave amount that entitle for employee for current year' })
+    @ApiModelProperty({ description: 'Leave amount that entitle for employee for current year', example: 14 })
     @IsNotEmpty()
     @IsNumber()
     entitledDays: number;
@@ -58,7 +58,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Leave balanced that can bring forward to next year' })
+    @ApiModelProperty({ description: 'Leave balanced that can bring forward to next year', example: 3 })
     @IsNotEmpty()
     @IsNumber()
     carryForward: number;

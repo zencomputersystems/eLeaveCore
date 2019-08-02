@@ -1,7 +1,7 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { IsString, IsNotEmpty } from "class-validator";
-import { Type } from "class-transformer";
-import { RolePropertiesDTO } from "./role-properties.dto";
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { RolePropertiesDTO } from './role-properties.dto';
 
 /**
  * Data for role

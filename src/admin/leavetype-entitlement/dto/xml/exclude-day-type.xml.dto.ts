@@ -24,7 +24,7 @@ export class ExcludeDayTypeXmlDTO {
      * @type {boolean}
      * @memberof ExcludeDayTypeXmlDTO
      */
-    @ApiModelProperty({ description: 'Exclude Holidays from calculation' })
+    @ApiModelProperty({ description: 'Exclude Holidays from calculation', example: false })
     @IsBoolean()
     isExcludeHoliday: boolean;
 
@@ -34,7 +34,7 @@ export class ExcludeDayTypeXmlDTO {
      * @type {boolean}
      * @memberof ExcludeDayTypeXmlDTO
      */
-    @ApiModelProperty({ description: 'Exclude Rest Days from calculation' })
+    @ApiModelProperty({ description: 'Exclude Rest Days from calculation', example: false })
     @IsBoolean()
     isExcludeRestDay: boolean;
 

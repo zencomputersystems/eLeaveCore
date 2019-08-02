@@ -15,7 +15,7 @@ export class CostCentreDto {
      * @type {string}
      * @memberof CostCentreDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Cost centre name', example: 'Infra' })
     @IsNotEmpty()
     readonly name: string;
 } 

@@ -1,4 +1,3 @@
-import { EmailResultDTO } from "src/api/invitation/dto/email-result.dto";
 /**
  * Declare nodemailer
  */
@@ -15,7 +14,6 @@ var handlebars = require('handlebars');
  * Declare fs
  */
 var fs = require('fs');
-import { SentMessageInfo, SendMailOptions } from 'nodemailer';
 
 /**
  * Service for email nodemailer
@@ -34,108 +32,89 @@ export class EmailNodemailerService {
      * @memberof EmailNodemailerService
      */
     public mailProcess(email: string, token: string) {
-        console.log('is this run in nodemoduleservice?');
+        smtpTransport = this.createSMTP();
 
-        smtpTransport = nodemailer.createTransport({
-            host: process.env.SMTPHOST || "smtp.ethereal.email",
-            port: process.env.SMTPPORT || 587,
-            secure: process.env.SMTPSECURE || false, // true for 465, false for other ports
-            auth: {
-                user: process.env.SMTPUSER || 'casimir.mcglynn@ethereal.email',
-                pass: process.env.SMTPPASSWORD || 'GYSA4r14EQRPB9guAK'
-            }
-        });
+        var replacements = {
+            email: email,
+            code: "http://zencore.zen.com.my:3000/api/invitation/" + token
+        };
+        var from = 'wantan.wonderland.2018@gmail.com';
+        var emailTosend = email;
+        var subject = 'Testing Invitation System ✔';
 
-        let dataRes = this.readHTMLFile('src/common/email-templates/userinvitation.html', function (err, html) {
+        let data = {};
+        data['replacement'] = replacements;
+        data['from'] = from;
+        data['emailTosend'] = emailTosend;
+        data['subject'] = subject;
 
-            var template = handlebars.compile(html);
-            var replacements = {
-                email: email,
-                code: "http://zencore.zen.com.my:3000/api/invitation/" + token
-            };
-            var htmlToSend = template(replacements);
-            var mailOptions = {
-                from: 'wantan.wonderland.2018@gmail.com',
-                to: email,
-                subject: 'Testing Invitation System ✔',
-                html: htmlToSend
-            };
+        let dataRes = this.readHTMLFile('src/common/email-templates/userinvitation.html', this.callbackReadHTML(data));
 
-            smtpTransport.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log(error);
-                    return error;
-                } else {
-                    // console.log('This message was send');
-                    console.log(info);
-                    // let data = new EmailResultDTO;
-                    // data.accepted = info.accepted[0];
-                    // data.rejected = info.rejected[0];
-                    // data.envelopeTime = info.envelopeTime;
-                    // data.messageTime = info.messageTime;
-                    // data.messageSize = info.messageSize;
-                    // data.response = info.response;
-                    // data.emailfrom = info.envelope.from;
-                    // data.emailto = info.envelope.to;
-                    // data.messageId = info.messageId;
-                    // console.log(data);
-                    // return data;
-                    return info;
-                }
-            });
-
-        });
-        // let dataRes = {};
-        // dataRes['email'] = email;
-        // dataRes['status'] = 'send';
-        // return dataRes;
-        // setTimeout(function(){
-        // console.log('dah return ke?');
-        // return dataRes;
-        // },10000);
         return "success";
     }
 
 
+    /**
+     * mail process for approval leave
+     *
+     * @param {string} email
+     * @param {string} name
+     * @returns
+     * @memberof EmailNodemailerService
+     */
     public mailProcessApprove(email: string, name: string) {
-        console.log('is this run in nodemoduleservice?');
+        smtpTransport = this.createSMTP();
 
-        smtpTransport = nodemailer.createTransport({
-            host: process.env.SMTPHOST || "smtp.ethereal.email",
-            port: process.env.SMTPPORT || 587,
-            secure: process.env.SMTPSECURE || false, // true for 465, false for other ports
-            auth: {
-                user: process.env.SMTPUSER || 'casimir.mcglynn@ethereal.email',
-                pass: process.env.SMTPPASSWORD || 'GYSA4r14EQRPB9guAK'
+        var replacements = {
+            email: email,
+            code: "#" + name,
+            name: name
+        };
+        var from = 'wantan.wonderland.2018@gmail.com';
+        var emailTosend = email;
+        var subject = 'Leave approval ✔';
+
+        let data = {};
+        data['replacement'] = replacements;
+        data['from'] = from;
+        data['emailTosend'] = emailTosend;
+        data['subject'] = subject;
+
+        let dataRes = this.readHTMLFile('src/common/email-templates/notifyleaveapprove.html', this.callbackReadHTML(data));
+
+        return "success";
+    }
+
+    /**
+     * Setup and send email
+     *
+     * @memberof EmailNodemailerService
+     */
+    public callbackReadHTML = (data) => async function (err, html) {
+
+        var template = handlebars.compile(html);
+        // var replacements = {
+        //     email: email,
+        //     code: "#" + name,
+        //     name: name
+        // };
+        var htmlToSend = template(data.replacements);
+        var mailOptions = {
+            from: data.from, // 'wantan.wonderland.2018@gmail.com',
+            to: data.emailTosend, // email,
+            subject: data.subject, // 'Leave approval ✔',
+            html: htmlToSend
+        };
+
+        return await smtpTransport.sendMail(mailOptions, async function (error, info) {
+            if (error) {
+                console.log(error);
+                return await error;
+            } else {
+                console.log(info);
+                return await info;
             }
         });
-
-        let dataRes = this.readHTMLFile('src/common/email-templates/notifyleaveapprove.html', function (err, html) {
-
-            var template = handlebars.compile(html);
-            var replacements = {
-                email: email,
-                code: "#" + name,
-                name: name
-            };
-            var htmlToSend = template(replacements);
-            var mailOptions = {
-                from: 'wantan.wonderland.2018@gmail.com',
-                to: email,
-                subject: 'Leave approval ✔',
-                html: htmlToSend
-            };
-            smtpTransport.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log(error);
-                    return error;
-                } else {
-                    console.log(info);
-                    return info;
-                }
-            });
-        });
-        return "success";
     }
 
     /**
@@ -155,28 +134,22 @@ export class EmailNodemailerService {
         });
     };
 
-    // public processEmailsFunctions(mailOptions) {
-    //     smtpTransport.sendMail(mailOptions, function (error, info) {
-    //         if (error) {
-    //             console.log(error);
-    //             return error;
-    //         } else {
-    //             // console.log('This message was send');
-    //             console.log(info);
-    //             // let data = new EmailResultDTO;
-    //             // data.accepted = info.accepted[0];
-    //             // data.rejected = info.rejected[0];
-    //             // data.envelopeTime = info.envelopeTime;
-    //             // data.messageTime = info.messageTime;
-    //             // data.messageSize = info.messageSize;
-    //             // data.response = info.response;
-    //             // data.emailfrom = info.envelope.from;
-    //             // data.emailto = info.envelope.to;
-    //             // data.messageId = info.messageId;
-    //             // // console.log(data);
-    //             // return data;
-    //             return info;
-    //         }
-    //     });
-    // }
+    /**
+     * Setup smtp data
+     *
+     * @returns
+     * @memberof EmailNodemailerService
+     */
+    public createSMTP() {
+        smtpTransport = nodemailer.createTransport({
+            host: process.env.SMTPHOST || "smtp.ethereal.email",
+            port: process.env.SMTPPORT || 587,
+            secure: process.env.SMTPSECURE || false, // true for 465, false for other ports
+            auth: {
+                user: process.env.SMTPUSER || 'casimir.mcglynn@ethereal.email',
+                pass: process.env.SMTPPASSWORD || 'GYSA4r14EQRPB9guAK'
+            }
+        });
+        return smtpTransport;
+    }
 }

@@ -14,7 +14,7 @@ export class SectionDto {
      * @type {string}
      * @memberof SectionDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Section name', example: 'Software Section' })
     @IsNotEmpty()
     readonly name: string;
 

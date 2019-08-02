@@ -32,6 +32,7 @@ export class UserImportController {
      * @memberof UserImportController
      */
     @Post()
+    @ApiOperation({ title: 'Import user' })
     create(@Body() userInviteDto: [UserCsvDto], @Req() req, @Res() res) {
 
         // res.send(userInviteDto);

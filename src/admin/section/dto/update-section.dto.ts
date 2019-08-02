@@ -16,7 +16,7 @@ export class UpdateSectionDto extends SectionDto {
      * @type {string}
      * @memberof UpdateSectionDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Section id', example: 'c5fb24c0-9245-11e9-aa1c-cbda7717b5a8' })
     @IsNotEmpty()
     readonly id: string;
 

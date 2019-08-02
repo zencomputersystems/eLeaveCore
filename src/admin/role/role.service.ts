@@ -1,18 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { RoleDTO } from "./dto/role.dto";
-import { XMLParserService } from "src/common/helper/xml-parser.service";
-import { CreateRoleModel } from "./model/create-role.model";
-import { Resource } from "src/common/model/resource.model";
-import { v1 } from "uuid";
-import { RoleDbService } from "./db/role.db.service";
-import { map } from "rxjs/operators";
-import { RoleListDTO } from "./dto/role-list.dto";
-import { AssignerDataService } from "src/common/helper/assigner-data.service";
-import { UpdateRoleDTO } from "./dto/update-role.dto";
-import { UpdateRoleModel } from "./model/update-role.model";
-import { UpdateUserRoleDTO } from "./dto/update-userrole.dto";
-import { UpdateUserRoleModel } from "./model/update-userrole.model";
-import { UserInfoDbService } from "../holiday/db/user-info.db.service";
+import { Injectable } from '@nestjs/common';
+import { RoleDTO } from './dto/role.dto';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { CreateRoleModel } from './model/create-role.model';
+import { Resource } from 'src/common/model/resource.model';
+import { v1 } from 'uuid';
+import { RoleDbService } from './db/role.db.service';
+import { map } from 'rxjs/operators';
+import { RoleListDTO } from './dto/role-list.dto';
+import { AssignerDataService } from 'src/common/helper/assigner-data.service';
+import { UpdateRoleDTO } from './dto/update-role.dto';
+import { UpdateRoleModel } from './model/update-role.model';
+import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
+import { UpdateUserRoleModel } from './model/update-userrole.model';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 /**
  * Service for role

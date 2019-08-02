@@ -14,7 +14,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Designation id', example: 'Solutions Developer' })
     @IsNotEmpty()
     designationId: string;
 
@@ -24,7 +24,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Company id', example: 'Zen Computer System'})
     @IsNotEmpty()
     companyId: string;
 
@@ -34,7 +34,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Department id', example: 'Research & Development' })
     @IsNotEmpty()
     departmentId: string;
 
@@ -44,7 +44,7 @@ export class UserEmployeeDTO {
      * @type {Date}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'date of join', example: '2019-04-01' })
     @IsNotEmpty()
     joinDate: Date;
 
@@ -54,7 +54,7 @@ export class UserEmployeeDTO {
      * @type {Date}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Confirmation date', example: '2019-07-01' })
     @IsNotEmpty()
     confirmationDate: Date;
 
@@ -64,7 +64,7 @@ export class UserEmployeeDTO {
      * @type {Date}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Resignation date', example: '2019-08-01' })
     resignationDate: Date;
 
     /**
@@ -73,7 +73,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Email id', example: 'example@zen.com.my' })
     @IsNotEmpty()
     emailId: string;
 
@@ -83,7 +83,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Branch id', example: 'Cyberjaya' })
     @IsNotEmpty()
     branchId: string;
 
@@ -93,7 +93,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Role id', example: 'guiYG^guygI&6gGI&Giuyg' })
     @IsNotEmpty()
     roleId: string;
 
@@ -103,7 +103,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Reporting to manager id', example: 'JHGI67hgd2378hgdsaBH' })
     @IsNotEmpty()
     reportingToId: string;
 
@@ -113,7 +113,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Calendar id', example: 'UHGI87tgIGYUD7hdwhjb' })
     @IsNotEmpty()
     calendarId: string;
 
@@ -123,7 +123,7 @@ export class UserEmployeeDTO {
      * @type {number}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employment status', example: 2 })
     @IsNotEmpty()
     employmentStatus: number;
 
@@ -133,7 +133,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Cost centre id', example: 'HJBOUBd8w7dJDSHidhw' })
     @IsNotEmpty()
     costCentreId: string;
 }

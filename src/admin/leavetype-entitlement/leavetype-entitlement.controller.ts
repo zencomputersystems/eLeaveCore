@@ -82,6 +82,7 @@ export class LeavetypeEntitlementController {
      * @memberof LeavetypeEntitlementController
      */
     @Post()
+    @ApiOperation({ title: 'Create leavetype entitlement' })
     create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDTO, @Req() req, @Res() res) {
 
         this.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO)
@@ -105,6 +106,7 @@ export class LeavetypeEntitlementController {
      * @memberof LeavetypeEntitlementController
      */
     @Patch()
+    @ApiOperation({ title: 'Update Leavetype entitlement' })
     update(@Body() updateLeaveTypeEntitlementDTO: UpdateLeaveTypeEntitlementDto, @Req() req, @Res() res) {
         this.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO)
             .subscribe(

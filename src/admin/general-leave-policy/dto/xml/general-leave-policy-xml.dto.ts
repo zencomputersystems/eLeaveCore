@@ -51,7 +51,7 @@ export class GeneralLeavePolicyXMLDTO {
    * @type {boolean}
    * @memberof GeneralLeavePolicyXML
    */
-  @ApiModelProperty({ description: 'apply on behalf comfirmation' })
+  @ApiModelProperty({ description: 'apply on behalf comfirmation', example: false })
   @IsBoolean()
   applyOnBehalfConfirmation: boolean;
 
@@ -61,7 +61,7 @@ export class GeneralLeavePolicyXMLDTO {
    * @type {boolean}
    * @memberof GeneralLeavePolicyXML
    */
-  @ApiModelProperty({ description: 'allow email reminder features' })
+  @ApiModelProperty({ description: 'allow email reminder features', example: false })
   @IsBoolean()
   emailReminder: boolean;
 }

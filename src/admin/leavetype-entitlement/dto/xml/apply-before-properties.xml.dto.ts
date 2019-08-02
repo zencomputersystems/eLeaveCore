@@ -14,7 +14,7 @@ import { GeneralPropertiesXmlDTO } from './general-properties.xml.dto';
 export class ApplyBeforePropertiesXmlDTO {
 
     /**
-     *Creates an instance of ApplyBeforePropertiesXmlDTO.
+     * Creates an instance of ApplyBeforePropertiesXmlDTO.
      * @memberof ApplyBeforePropertiesXmlDTO
      */
     constructor() {
@@ -30,7 +30,7 @@ export class ApplyBeforePropertiesXmlDTO {
      * @type {number}
      * @memberof ApplyBeforePropertiesXmlDTO
      */
-    @ApiModelProperty({ description: 'Number of day for employee to apply leave in advance.', example: 3 })
+    @ApiModelProperty({ description: 'Number of day for employee to apply leave in advance.', example: 5 })
     @IsNotEmpty()
     @IsNumber()
     numberOfDays: number;

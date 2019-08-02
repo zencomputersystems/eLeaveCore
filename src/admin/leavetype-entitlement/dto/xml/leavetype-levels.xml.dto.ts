@@ -11,7 +11,7 @@ import { LeaveTypeServiceYearXmlDTO } from './leavetype-serviceyear.xml.dto';
  */
 export class LeaveTypeLevelsXmlDTO {
     /**
-     * Data elavetype level - leave entitlement data
+     * Data eleavetype level - leave entitlement data
      *
      * @type {LeaveTypeServiceYearXmlDTO[]}
      * @memberof LeaveTypeLevelsXmlDTO

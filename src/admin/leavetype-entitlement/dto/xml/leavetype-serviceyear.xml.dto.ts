@@ -25,7 +25,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Employee started service for company', example: 1 })
+    @ApiModelProperty({ description: 'Employee started service for company', example: 0 })
     @IsNotEmpty()
     @IsNumber()
     serviceYearFrom: number;
@@ -36,7 +36,7 @@ export class LeaveTypeServiceYearXmlDTO {
      * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Employee current service for company', example: 99 })
+    @ApiModelProperty({ description: 'Employee current service for company', example: 10 })
     @IsNotEmpty()
     @IsNumber()
     serviceYearTo: number;

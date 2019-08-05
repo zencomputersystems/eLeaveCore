@@ -81,7 +81,6 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		modelData.UPDATE_TS = null;
 		modelData.UPDATE_USER_GUID = null;
 		modelData.DELETED_AT = null;
-		modelData.CODE = d.policyName;
 
 		resource.resource.push(modelData);
 		// console.log(resource);

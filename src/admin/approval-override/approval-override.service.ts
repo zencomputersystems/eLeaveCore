@@ -90,6 +90,14 @@ export class ApprovalOverrideService {
   }
 
 
+  /**
+   * Method to send email notify
+   *
+   * @param {*} user
+   * @param {string[]} userId
+   * @returns {Observable<any>}
+   * @memberof ApprovalOverrideService
+   */
   public sendEmailNotify(user: any, userId: string[]): Observable<any> {
     let successList = [];
     let failedList = [];
@@ -121,6 +129,15 @@ export class ApprovalOverrideService {
     return of(emailArr);
   }
 
+  /**
+   * Method to send email
+   *
+   * @private
+   * @param {string} email
+   * @param {string} token
+   * @returns
+   * @memberof ApprovalOverrideService
+   */
   private sendEmailV2(email: string, token: string) {
     // console.log('before function');
     let results = this.emailNodemailerService.mailProcessApprove(email, token);

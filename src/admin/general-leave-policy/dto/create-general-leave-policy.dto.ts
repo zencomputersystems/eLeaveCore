@@ -19,14 +19,4 @@ export class CreateGeneralLeavePolicyDTO extends GeneralLeavePolicyXMLDTO {
     @IsNotEmpty()
     tenantCompanyId: string;
 
-    /**
-     * Policy name
-     *
-     * @type {string}
-     * @memberof CreateGeneralLeavePolicyDTO
-     */
-    @ApiModelProperty({ description: 'policy name', example: 'Zen Computer System general policy' })
-    @IsString()
-    @IsNotEmpty()
-    policyName: string;
 }

@@ -42,11 +42,4 @@ export class GeneralLeavePolicyModel extends CreateUpdateModel {
      * @memberof GeneralLeavePolicyModel
      */
     DELETED_AT: string;
-    /**
-     * Policy code name
-     *
-     * @type {string}
-     * @memberof GeneralLeavePolicyModel
-     */
-    CODE: string;
 }

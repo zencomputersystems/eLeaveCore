@@ -8,6 +8,7 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
 import { throws } from 'assert';
+import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 
 /**
  * Controller for user profile
@@ -28,7 +29,8 @@ export class UserprofileController {
      */
     constructor(
         private readonly userprofileService: UserprofileService,
-        private readonly accessLevelValidationService: AccessLevelValidateService) { }
+        private readonly accessLevelValidationService: AccessLevelValidateService,
+        private readonly commonFunctionService: CommonFunctionService) { }
 
     /**
      * Find all user profile
@@ -51,7 +53,7 @@ export class UserprofileController {
                 },
                 err => {
                     res.status(500);
-                    if (err.response.data) { res.send(err.response.data.error) } 
+                    if (err.response.data) { res.send(err.response.data.error) }
                     else { res.send(err); }
                 }
             )
@@ -71,29 +73,30 @@ export class UserprofileController {
     @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
     findOne(@Param('id') id, @Req() req, @Res() res) {
-        let dataId = null;
-        let dataIdTemp = req.query.id;
-        if (dataIdTemp == null) { dataId = id; } 
-        else { dataId = dataIdTemp; }
-        if (dataId == null) {
-            res.status(400);
-            res.send('id not found');
-        }
+        // let dataId = null;
+        // let dataIdTemp = req.query.id;
+        // if (dataIdTemp == null) { dataId = id; }
+        // else { dataId = dataIdTemp; }
+        // if (dataId == null) {
+        //     res.status(400);
+        //     res.send('id not found');
+        // }
+        let dataId = this.commonFunctionService.findIdParam(req, res, id);
         const user = req.user;
         this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + dataId + ')'])
             .pipe(
-                switchMap(filter => { return this.userprofileService.getDetail(filter);  })
-                ).subscribe(data => {
-                    console.log(data);
-                    if(data){ this.getEntitlementProcess(data, res, user); }
-                    else{ res.send(new NotFoundException(`Data user guid not found`)); }
-                }, err => {
-                    res.status(500);
-                    // if (err.response.data) { res.send(err.response.data1.error) } 
-                    // else { 
-                        res.send(err); 
-                    // }
-                });
+                switchMap(filter => { return this.userprofileService.getDetail(filter); })
+            ).subscribe(data => {
+                console.log(data);
+                if (data) { this.getEntitlementProcess(data, res, user); }
+                else { res.send(new NotFoundException(`Data user guid not found`)); }
+            }, err => {
+                res.status(500);
+                // if (err.response.data) { res.send(err.response.data1.error) } 
+                // else { 
+                res.send(err);
+                // }
+            });
     }
 
     /**
@@ -118,7 +121,7 @@ export class UserprofileController {
                 err => {
 
                     res.status(500);
-                    if (err.response) { res.send(err.response.data.error) } 
+                    if (err.response) { res.send(err.response.data.error) }
                     else { res.send(err); }
                 }
             )
@@ -155,7 +158,7 @@ export class UserprofileController {
             },
             err => {
                 res.status(500);
-                if (err.response) { res.send(err.response.data.error) } 
+                if (err.response) { res.send(err.response.data.error) }
                 else { res.send(err); }
             }
         )

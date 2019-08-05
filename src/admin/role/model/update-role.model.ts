@@ -40,4 +40,11 @@ export class UpdateRoleModel {
      * @memberof UpdateRoleModel
      */
     DESCRIPTION: string;
+    /**
+     * Data update role - deleted at
+     *
+     * @type {string}
+     * @memberof UpdateRoleModel
+     */
+    DELETED_AT: string;
 }

@@ -152,4 +152,16 @@ export class RoleService {
 
         return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
     }
+    deleteRole(user: any, roleId: string) {
+        const resource = new Resource(new Array);
+        const data = new UpdateRoleModel();
+
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+        data.DELETED_AT = new Date().toISOString();
+
+        resource.resource.push(data);
+
+        return this.roleDbService.updateByModel(resource, [], ['(ROLE_GUID=' + roleId + ')'], ['ROLE_GUID', 'CODE']);
+    }
 }

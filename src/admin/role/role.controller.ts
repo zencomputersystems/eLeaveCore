@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Req, Res, Get, Patch, Param } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Req, Res, Get, Patch, Param, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { RoleDTO } from './dto/role.dto';
@@ -111,6 +111,22 @@ export class RoleController {
     }
 
     /**
+     * Delete role
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof RoleController
+     */
+    @Delete('role-profile/:id')
+    @ApiOperation({ title: 'Delete role profile' })
+    @ApiImplicitQuery({ name: 'id', description: 'Delete by ROLE_GUID', required: true })
+    deleteRoleProfile(@Param('id') id, @Req() req, @Res() res) {
+        id = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runUpdateService(this.roleService.deleteRole(req.user, id), res);
+    }
+
+    /**
      * Get role detail by role profile guid
      *
      * @param {*} req
@@ -128,17 +144,19 @@ export class RoleController {
     findOne(@Req() req, @Res() res, @Param('id') id) {
         // console.log(id);
         // console.log(req);
-        let dataId = null;
-        let dataIdParam = req.query.id;
-        if (dataIdParam == null) {
-            dataId = id;
-        } else {
-            dataId = dataIdParam;
-        }
-        if (dataId == null) {
-            res.status(400);
-            res.send('id not found');
-        }
+        // let dataId = null;
+        // let dataIdParam = req.query.id;
+        // if (dataIdParam == null) {
+        //     dataId = id;
+        // } else {
+        //     dataId = dataIdParam;
+        // }
+        // if (dataId == null) {
+        //     res.status(400);
+        //     res.send('id not found');
+        // }
+
+        let dataId = this.commonFunctionService.findIdParam(req, req, id);
 
         this.commonFunctionService.runGetServiceV2(this.roleService.getRoleDetail(dataId), res);
         // this.roleService.getRoleDetail(dataId).subscribe(
@@ -176,4 +194,5 @@ export class RoleController {
         //         }
         //     )
     }
+
 }

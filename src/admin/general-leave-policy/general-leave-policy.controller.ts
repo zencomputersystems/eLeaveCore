@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Get, Req, Res, Post, Patch, Body, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { GeneralLeavePolicyService } from './general-leave-policy.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { CreateGeneralLeavePolicyDTO } from './dto/create-general-leave-policy.dto';
@@ -34,6 +34,20 @@ export class GeneralLeavePolicyController {
 		this.generalLeavePolicyService.findAll(req.user.TENANT_GUID).subscribe(
 			data => {
 				data.forEach(element => { element.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML); });
+				res.send(data);
+			},
+			err => { this.commonFunctionService.sendResErrorV3(err, res); }
+		)
+	}
+
+	@Get(':id')
+	@ApiOperation({ title: 'Get general leave policy by company id' })
+	@ApiImplicitQuery({ name: 'id', description: 'Filter by TENANT_COMPANY_GUID', required: true })
+	findOne(@Param('id') id, @Req() req, @Res() res) {
+		id = this.commonFunctionService.findIdParam(req, res, id);
+		this.generalLeavePolicyService.findOne(req.user.TENANT_GUID, id).subscribe(
+			data => {
+				data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
 				res.send(data);
 			},
 			err => { this.commonFunctionService.sendResErrorV3(err, res); }

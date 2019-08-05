@@ -167,17 +167,19 @@ export class HolidayController {
     findOne(@Req() req, @Res() res, @Param('id') id) {
         // console.log(id);
         // console.log(req);
-        let dataId = null;
-        let dataIdParam = req.query.id;
-        if (dataIdParam == null) {
-            dataId = id;
-        } else {
-            dataId = dataIdParam;
-        }
-        if (dataId == null) {
-            res.status(400);
-            res.send('id not found');
-        }
+        // let dataId = null;
+        // let dataIdParam = req.query.id;
+        // if (dataIdParam == null) {
+        //     dataId = id;
+        // } else {
+        //     dataId = dataIdParam;
+        // }
+        // if (dataId == null) {
+        //     res.status(400);
+        //     res.send('id not found');
+        // }
+
+        let dataId = this.commonFunctionService.findIdParam(req, res, id);
 
         this.commonFunctionService.runGetServiceV2(this.holidayService.getHolidayList(dataId), res);
         // this.holidayService.getHolidayList(dataId).subscribe(

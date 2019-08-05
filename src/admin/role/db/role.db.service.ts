@@ -41,7 +41,7 @@ export class RoleDbService extends BaseDBService {
     public findAllRoleProfile(): Observable<any> {
 
         const fields = ['ROLE_GUID', 'CODE', 'DESCRIPTION'];
-        const filters = [];
+        const filters = ['(DELETED_AT IS NULL)'];
 
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 

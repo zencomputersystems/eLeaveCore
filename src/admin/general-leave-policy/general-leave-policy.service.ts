@@ -9,6 +9,7 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { Observable } from 'rxjs';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
+import { map } from 'rxjs/operators';
 /**
  * Service for general leave policy
  *
@@ -56,6 +57,25 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		let result = this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
 
 		return this.commonFunctionService.getListData(result);
+	}
+
+	public findOne(tenantId: string, companyGuid: string): Observable<any> {
+		// const fields = ['BRANCH'];
+		const fields = [];
+		const filters = ['(TENANT_GUID=' + tenantId + ')', '(TENANT_COMPANY_GUID=' + companyGuid + ')'];
+
+		//url
+		const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
+		//call DF to validate the user
+		let result = this.httpService.get(url);
+		return result.pipe(map(res => {
+			if (res.status == 200) {
+				return res.data.resource[0];
+			}
+		}))
+
+
 	}
 
 	/**

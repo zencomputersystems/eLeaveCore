@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpService } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpService, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { HolidayService } from './holiday.service';
@@ -149,6 +149,22 @@ export class HolidayController {
         //             //console.log(err.response.data.error.context);
         //         }
         //     )
+    }
+
+    /**
+     * Delete calendar profile
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof HolidayController
+     */
+    @Delete('/calendar-profile/:id')
+    @ApiOperation({ title: 'Delete calendar profile' })
+    @ApiImplicitQuery({ name: 'id', description: 'Delete by CALENDAR_GUID', required: true })
+    deleteRoleProfile(@Param('id') id, @Req() req, @Res() res) {
+        id = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runUpdateService(this.holidayService.deleteCalendar(req.user, id), res);
     }
 
     /**

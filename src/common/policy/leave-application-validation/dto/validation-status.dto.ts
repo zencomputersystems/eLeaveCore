@@ -28,4 +28,11 @@ export class ValidationStatusDTO {
      * @memberof ValidationStatusDTO
      */
     message: Array<String>;
+    /**
+     * User guid
+     *
+     * @type {string}
+     * @memberof ValidationStatusDTO
+     */
+    userId: string;
 }

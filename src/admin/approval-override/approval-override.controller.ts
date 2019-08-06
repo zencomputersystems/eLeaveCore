@@ -57,20 +57,20 @@ export class ApprovalOverrideController {
   }
 
 
-  @Patch('send-email')
-  @ApiOperation({ title: 'Send email' })
-  sendEmailNotification(@Body() email: string[], @Req() req, @Res() res) {
-    this.approvalOverrideService.sendEmailNotify(req.user, email)
-    // .subscribe(data => {
-    //   // console.log(data.data.resource);
-    //   // res.sedata.data.resource;
-    //   res.send(data);
-    // }, err => {
-    //   // return err;
-    //   res.send(err);
-    // });
+  // @Patch('send-email')
+  // @ApiOperation({ title: 'Send email' })
+  // sendEmailNotification(@Body() email: string[], @Req() req, @Res() res) {
+  //   this.approvalOverrideService.sendEmailNotify(req.user, email)
+  //   // .subscribe(data => {
+  //   //   // console.log(data.data.resource);
+  //   //   // res.sedata.data.resource;
+  //   //   res.send(data);
+  //   // }, err => {
+  //   //   // return err;
+  //   //   res.send(err);
+  //   // });
 
-    res.send('ok');
-  }
+  //   res.send('ok');
+  // }
 
 }

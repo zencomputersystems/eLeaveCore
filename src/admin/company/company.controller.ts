@@ -1,6 +1,6 @@
-import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException, Post, Body, Patch } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException, Post, Body, Patch, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { CompanyService } from './company.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { UpdateCompanyDTO } from './dto/update-company.dto';
@@ -90,6 +90,22 @@ export class CompanyController {
 				data => { if (data.status == 200) { res.send(data.data); } },
 				err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
 			)
+	}
+
+	/**
+	 * Delete company
+	 *
+	 * @param {*} id
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof CompanyController
+	 */
+	@Delete('/:id')
+	@ApiOperation({ title: 'Delete company' })
+	@ApiImplicitQuery({ name: 'id', description: 'Delete by company guid', required: true })
+	deleteRoleProfile(@Param('id') id, @Req() req, @Res() res) {
+		id = this.commonFunctionService.findIdParam(req, res, id);
+		this.commonFunctionService.runUpdateService(this.companyService.deleteCompany(req.user, id), res);
 	}
 
 }

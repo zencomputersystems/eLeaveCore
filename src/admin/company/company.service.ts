@@ -159,4 +159,18 @@ export class CompanyService extends BaseDBService implements IDbService {
 		return this.updateByModel(resource, [], [], []);
 	}
 
+	deleteCompany(user: any, company_guid: string) {
+
+		const resource = new Resource(new Array);
+		const data = new CompanyModel();
+
+		data.DELETED_AT = new Date().toISOString();
+		data.UPDATE_TS = new Date().toISOString();
+		data.UPDATE_USER_GUID = user.USER_GUID;
+
+		resource.resource.push(data);
+
+		return this.updateByModel(resource, [], ['(TENANT_COMPANY_GUID=' + company_guid + ')'], ['TENANT_COMPANY_GUID', 'NAME']);
+	}
+
 }

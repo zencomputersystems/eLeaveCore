@@ -121,6 +121,28 @@ export class HolidayService {
     }
 
     /**
+     * Delete calendar
+     *
+     * @param {*} user
+     * @param {UpdateCalendarDTO} d
+     * @returns
+     * @memberof HolidayService
+     */
+    deleteCalendar(user: any, calendar_guid: string) {
+        const resource = new Resource(new Array);
+        const data = new HolidayModel();
+
+        // data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+        data.DELETED_AT = new Date().toISOString();
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+
+        return this.holidayDbService.updateByModel(resource, [], ['(CALENDAR_GUID=' + calendar_guid + ')'], ['CALENDAR_GUID', 'CODE']);
+    }
+
+    /**
      * Setup new calendar profile using data from calendarific
      *
      * @param {*} user

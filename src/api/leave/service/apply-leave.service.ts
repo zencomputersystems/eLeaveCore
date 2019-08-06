@@ -9,7 +9,7 @@ import { LeaveApplicationValidationService } from 'src/common/policy/leave-appli
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import moment = require('moment');
-import { of } from 'rxjs';
+import { of, pipe, Observable } from 'rxjs';
 import { LeaveBalanceValidationService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation.service';
 import { LeaveTransactionModel } from '../model/leave-transaction.model';
 import { v1 } from 'uuid';
@@ -20,6 +20,7 @@ import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/x
 import { ValidationStatusDTO } from 'src/common/policy/leave-application-validation/dto/validation-status.dto';
 import { json } from 'body-parser';
 import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
+import { setTimeout } from 'timers';
 
 
 /**
@@ -60,12 +61,84 @@ export class ApplyLeaveService {
      * @returns
      * @memberof ApplyLeaveService
      */
-    public processLeaveOnBehalf(applyLeaveDTO: ApplyLeaveDTO, user, userguidOnApply, filter) {
+    public async processLeaveOnBehalf(applyLeaveDTO: ApplyLeaveDTO, user, userguidOnApply, filter): Promise<any> {
         // console.log(userguidOnApply + '-' + user + " - " + filter);
+        // console.log(applyLeaveDTO);
+        // console.log(userguidOnApply);
+
+        let resultArr = [];
+
+        for (var i = 0; i < userguidOnApply.length; i++) {
+            let userguid = userguidOnApply[i];
+            // console.log(userguid);
+            let extension = ['(USER_GUID=' + userguid + ')'];
+            // console.log(extension);
+            let temp = await this.applyLeaveProcess(applyLeaveDTO, user, extension, true)
+                .subscribe(
+                    data => {
+                        console.log(data);
+                        resultArr.push(data);
+                        // return await of(resultArr);
+                        // console.log(resultArr);
+                        // return resultArr;
+                        return data;
+                    }, err => {
+                        // console.log(err);
+                    }
+                );
+
+            // console.log('in');
+            // console.log(temp);
+            // console.log(resultArr);
+        }
+        // let datares = setTimeout(function afterTwoSeconds() {
+        //     console.log(resultArr)
+        //     return resultArr;
+        // }, 10000)
+        // console.log('im here');
+        // console.log(datares);
+        // return datares;
+        // console.log('out' + resultArr);
 
         // let y = applyLeaveDTO;
-        let extension = ['(USER_GUID=' + userguidOnApply + ')'];
-        return this.applyLeaveProcess(applyLeaveDTO, user, extension, true);
+        // userguidOnApply.forEach(userguid => {
+        //     // console.log(userguid);
+        //     let extension = ['(USER_GUID=' + userguid + ')'];
+        //     // console.log(extension);
+        //     this.applyLeaveProcess(applyLeaveDTO, user, extension, true).subscribe(
+        //         data => {
+        //             console.log(data);
+        //             resultArr.push(data);
+        //             // return await of(resultArr);
+        //             // console.log(resultArr);
+        //             // return of(resultArr);
+        //         }, err => {
+        //             // console.log(err);
+        //         }
+        //     );
+
+        //     // console.log(of(resultArrTemp));
+        //     // console.log(dataRes);
+        //     // resultArr.push(dataRes);
+        //     // return await dataRes;
+        //     // return resultArr;
+
+        // }).pipe(map(res => {
+        //     console.log('u can see me?');
+        //     console.log(res);
+        // })).subscribe(
+        //     data => {
+        //         console.log(data);
+        //         return of(data);
+        //     }, err => {
+
+        //     }
+        // );
+        // console.log(result);
+        // console.log(resultArr);
+        return 'Successfully apply';
+        // let extension = ['(USER_GUID=' + userguidOnApply + ')'];
+        // return this.applyLeaveProcess(applyLeaveDTO, user, extension, true);
 
         // return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extension)
         //     .pipe(
@@ -214,6 +287,7 @@ export class ApplyLeaveService {
                     const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
 
                     return validation.pipe(map((validationResult) => {
+                        validationResult.userId = result.userInfo.USER_GUID;
                         return { result, validationResult, policy };
                     }));
                 }),

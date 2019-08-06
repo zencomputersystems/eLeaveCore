@@ -208,7 +208,9 @@ export class CommonFunctionService {
     public findAllList(fields, tenantId, queryService, httpService, tableName): Observable<any> {
 
         // const fields = ['BRANCH'];
-        const filters = ['(TENANT_GUID=' + tenantId + ')'];
+        let filters = ['(TENANT_GUID=' + tenantId + ')'];
+
+        if (tableName === 'tenant_company') { filters = ['(DELETED_AT IS NULL)'] }
 
         //url
         const url = queryService.generateDbQueryV2(tableName, fields, filters, []);

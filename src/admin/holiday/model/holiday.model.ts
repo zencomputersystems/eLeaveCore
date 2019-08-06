@@ -33,4 +33,11 @@ export class HolidayModel {
      * @memberof HolidayModel
      */
     CODE: string;
+    /**
+     * Data holidat - deleted at
+     *
+     * @type {string}
+     * @memberof HolidayModel
+     */
+    DELETED_AT: string;
 }

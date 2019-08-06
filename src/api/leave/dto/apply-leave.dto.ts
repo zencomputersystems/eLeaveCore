@@ -17,7 +17,7 @@ export class ApplyLeaveDTO {
      * @type {string}
      * @memberof ApplyLeaveDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Leavetype id', example: '238fc8fa-6e70-fa83-7c9b-17f77108b691' })
     @IsNotEmpty()
     leaveTypeID: string;
 
@@ -27,7 +27,7 @@ export class ApplyLeaveDTO {
      * @type {string}
      * @memberof ApplyLeaveDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Reason for leave', example: 'Hari raya' })
     @IsNotEmpty()
     reason: string;
 
@@ -37,7 +37,15 @@ export class ApplyLeaveDTO {
      * @type {ApplyLeaveDataDTO[]}
      * @memberof ApplyLeaveDTO
      */
-    @ApiModelProperty({ type: ApplyLeaveDataDTO })
+    @ApiModelProperty({
+        type: ApplyLeaveDataDTO, description: 'Leave details', example: [{
+            "startDate": "2019-08-14",
+            "endDate": "2019-08-14",
+            "dayType": 0,
+            "slot": "",
+            "quarterDay": ""
+        }]
+    })
     @Type(() => ApplyLeaveDataDTO)
     @ValidateNested()
     data: ApplyLeaveDataDTO[];

@@ -43,7 +43,7 @@ export class LeaveAdjustmentService {
 
         let resource = new Resource(new Array);
 
-        resource = this.setupData(leaveAdjustmentDTO, res, successList, failedList, resource, user);
+        resource = this.setupData([leaveAdjustmentDTO, res, successList, failedList, resource, user]);
 
         this.runServiceCreateData(resource);
 
@@ -65,7 +65,13 @@ export class LeaveAdjustmentService {
    * @returns
    * @memberof LeaveAdjustmentService
    */
-  public setupData(leaveAdjustmentDTO, res, successList, failedList, resource, user) {
+  public setupData(data) {
+    let leaveAdjustmentDTO = data[0];
+    let res = data[1];
+    let successList = data[2];
+    let failedList = data[3];
+    let resource = data[4];
+    let user = data[5];
     leaveAdjustmentDTO.userId.forEach(element => {
       let leave: UserLeaveEntitlementModel = res.find(x => x.USER_GUID.toString() === element.toString());
       if (leave) {

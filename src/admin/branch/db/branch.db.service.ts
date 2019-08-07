@@ -48,7 +48,7 @@ export class BranchDbService extends BaseDBService {
     public findAll(TENANT_GUID: string): Observable<any> {
 
         const fields = ['BRANCH'];
-        return this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
+        return this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
         // const filters = ['(TENANT_GUID=' + TENANT_GUID + ')'];
 
         // //url

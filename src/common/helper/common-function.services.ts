@@ -205,7 +205,12 @@ export class CommonFunctionService {
      * @returns {Observable<any>}
      * @memberof CommonFunctionService
      */
-    public findAllList(fields, tenantId, queryService, httpService, tableName): Observable<any> {
+    public findAllList(data): Observable<any> {
+        let fields = data[0];
+        let tenantId = data[1];
+        let queryService = data[2];
+        let httpService = data[3];
+        let tableName = data[4];
 
         // const fields = ['BRANCH'];
         let filters = ['(TENANT_GUID=' + tenantId + ')'];

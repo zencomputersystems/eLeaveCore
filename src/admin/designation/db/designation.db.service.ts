@@ -45,7 +45,7 @@ export class DesignationDbService extends BaseDBService {
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['DESIGNATION'];
-        return this.commonFunctionService.findAllList(fields, tenantid, this.queryService, this.httpService, this._tableName);
+        return this.commonFunctionService.findAllList([fields, tenantid, this.queryService, this.httpService, this._tableName]);
         // const filters = ['(TENANT_GUID=' + tenantid + ')'];
 
         // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);

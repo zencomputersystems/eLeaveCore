@@ -57,7 +57,7 @@ export class CompanySiteService extends BaseDBService implements IDbService {
      */
     public findAll(TENANT_GUID: string): Observable<any> {
         const fields = [];
-        let result = this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
+        let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
         return this.commonFunctionService.getListData(result);
     }
 

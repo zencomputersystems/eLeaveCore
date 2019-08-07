@@ -45,7 +45,7 @@ export class DepartmentDbService extends BaseDBService {
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['DEPARTMENT'];
-        return this.commonFunctionService.findAllList(fields, tenantid, this.queryService, this.httpService, this._tableName);    
+        return this.commonFunctionService.findAllList([fields, tenantid, this.queryService, this.httpService, this._tableName]);
 
     }
 
@@ -57,7 +57,7 @@ export class DepartmentDbService extends BaseDBService {
      * @returns {Observable<any>}
      * @memberof DepartmentDbService
      */
-    public findByCompany(tenantId: string,companyId: string): Observable<any> {
+    public findByCompany(tenantId: string, companyId: string): Observable<any> {
 
         const fields = ['DEPARTMENT'];
         const filters = ['(TENANT_COMPANY_GUID=' + companyId + ')', '(TENANT_GUID=' + tenantId + ')'];

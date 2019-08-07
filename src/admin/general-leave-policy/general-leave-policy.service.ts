@@ -54,7 +54,7 @@ export class GeneralLeavePolicyService extends BaseDBService {
 	public findAll(TENANT_GUID: string): Observable<any> {
 
 		const fields = [];
-		let result = this.commonFunctionService.findAllList(fields, TENANT_GUID, this.queryService, this.httpService, this._tableName);
+		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
 
 		return this.commonFunctionService.getListData(result);
 	}

@@ -88,7 +88,7 @@ export class UserprofileService {
                     // console.log(res);
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.userprofileAssignerService.buildProfileData(data, true, true, true, true); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, true, true, true, true]); }
                 })
             )
 
@@ -109,7 +109,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.userprofileAssignerService.buildProfileData(data, true, false, false, false); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, true, false, false, false]); }
                 })
             );
     }
@@ -155,7 +155,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.userprofileAssignerService.buildProfileData(data, false, true, false, false); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, false, true, false, false]); }
                 })
             )
     }
@@ -171,6 +171,15 @@ export class UserprofileService {
     public updateEmploymentDetail(data: UpdateEmploymentDetailDTO, userId: string) {
         // console.log('this is employment update');
         const modelData = new UserInfoModel();
+
+        modelData.USER_INFO_GUID = data.id;
+
+        modelData.PERSONAL_ID = data.employeeNumber;
+        modelData.DESIGNATION = data.designation;
+        modelData.DEPARTMENT = data.department;
+        modelData.BRANCH = data.branch;
+        modelData.DIVISION = data.division;
+        modelData.MANAGER_USER_GUID = data.reportingTo;
 
         this.assignUpdateEmploymentDetail(modelData, data);
         // modelData.USER_INFO_GUID = data.id;
@@ -204,15 +213,15 @@ export class UserprofileService {
         return this.userInfoService.updateByModel(resource, [], [], []);
     }
 
+    /**
+     * refactor to resolve assignment branch condition
+     *
+     * @param {UserInfoModel} modelData
+     * @param {UpdateEmploymentDetailDTO} data
+     * @returns
+     * @memberof UserprofileService
+     */
     public assignUpdateEmploymentDetail(modelData: UserInfoModel, data: UpdateEmploymentDetailDTO) {
-        modelData.USER_INFO_GUID = data.id;
-
-        modelData.PERSONAL_ID = data.employeeNumber;
-        modelData.DESIGNATION = data.designation;
-        modelData.DEPARTMENT = data.department;
-        modelData.BRANCH = data.branch;
-        modelData.DIVISION = data.division;
-        modelData.MANAGER_USER_GUID = data.reportingTo;
 
         modelData.JOIN_DATE = data.dateOfJoin;
         modelData.RESIGNATION_DATE = data.dateOfResign;
@@ -261,7 +270,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.userprofileAssignerService.buildProfileData(data, false, false, false, true); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, false, false, false, true]); }
                 })
             )
     }

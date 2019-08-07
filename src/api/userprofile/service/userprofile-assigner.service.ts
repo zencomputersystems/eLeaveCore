@@ -7,6 +7,9 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
 
+type ProfileDataDetails = [UserInfoModel, boolean, boolean, boolean, boolean];
+type PersonalDataDetails = [UserInfoModel, boolean, boolean, UserProfileDTO];
+
 /**
  * Service to assign profile data
  *
@@ -32,27 +35,24 @@ export class UserprofileAssignerService {
   /**
    * Main function build userprofile data
    *
-   * @param {UserInfoModel} data
-   * @param {boolean} isShowPersonalData
-   * @param {boolean} isShowEmploymentData
-   * @param {boolean} isShowEntitlementData
-   * @param {boolean} isShowCertData
+   * @param {ProfileDataDetails} profileDataDetails
    * @returns
    * @memberof UserprofileAssignerService
    */
-  public buildProfileData(data: UserInfoModel,
-    isShowPersonalData: boolean,
-    isShowEmploymentData: boolean,
-    isShowEntitlementData: boolean,
-    isShowCertData: boolean
-  ) {
+  public buildProfileData(profileDataDetails: ProfileDataDetails) {
+
+    let data: UserInfoModel = profileDataDetails[0];
+    let isShowPersonalData: boolean = profileDataDetails[1];
+    let isShowEmploymentData: boolean = profileDataDetails[2];
+    let isShowEntitlementData: boolean = profileDataDetails[3];
+    let isShowCertData: boolean = profileDataDetails[4];
 
     const userProfileData = new UserProfileDTO();
 
     this.assignUserProfileData(userProfileData, data);
 
     if (data.PROPERTIES_XML) {
-      this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData);
+      this.personaldetailProcess([data, isShowPersonalData, isShowCertData, userProfileData]);
     }
 
     if (isShowEmploymentData) {
@@ -96,13 +96,14 @@ export class UserprofileAssignerService {
    * Assign user profile data second method refactor - personal data and certification data
    *
    * @private
-   * @param {UserInfoModel} data
-   * @param {boolean} isShowPersonalData
-   * @param {boolean} isShowCertData
-   * @param {UserProfileDTO} userProfileData
+   * @param {PersonalDataDetails} personalDataDetails
    * @memberof UserprofileAssignerService
    */
-  private personaldetailProcess(data: UserInfoModel, isShowPersonalData: boolean, isShowCertData: boolean, userProfileData: UserProfileDTO) {
+  private personaldetailProcess(personalDataDetails: PersonalDataDetails) {
+    let data: UserInfoModel = personalDataDetails[0];
+    let isShowPersonalData: boolean = personalDataDetails[1];
+    let isShowCertData: boolean = personalDataDetails[2];
+    let userProfileData: UserProfileDTO = personalDataDetails[3];
 
     // process the personal detail
     const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);

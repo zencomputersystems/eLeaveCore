@@ -18,6 +18,7 @@ import { Access } from 'src/common/dto/access.dto';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
+import { UserprofileAssignerService } from './userprofile-assigner.service';
 
 /**
  * Service for user profile
@@ -42,7 +43,9 @@ export class UserprofileService {
         private readonly userprofileDBService: UserprofileDbService,
         private readonly xmlParserService: XMLParserService,
         private readonly entitlementDetailService: UserLeaveEntitlementService,
-        private readonly serviceYearCalcService: ServiceYearCalc) { }
+        private readonly userprofileAssignerService: UserprofileAssignerService
+        // private readonly serviceYearCalcService: ServiceYearCalc
+    ) { }
 
     /**
      * Get user profile list
@@ -85,7 +88,7 @@ export class UserprofileService {
                     // console.log(res);
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.buildProfileData(data, true, true, true, true); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, true, true, true, true]); }
                 })
             )
 
@@ -106,7 +109,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.buildProfileData(data, true, false, false, false); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, true, false, false, false]); }
                 })
             );
     }
@@ -152,7 +155,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.buildProfileData(data, false, true, false, false); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, false, true, false, false]); }
                 })
             )
     }
@@ -169,6 +172,58 @@ export class UserprofileService {
         // console.log('this is employment update');
         const modelData = new UserInfoModel();
 
+        this.assignUpdateEmploymentDetail(modelData, data);
+
+        // modelData.USER_INFO_GUID = data.id;
+
+        // modelData.PERSONAL_ID = data.employeeNumber;
+        // modelData.DESIGNATION = data.designation;
+        // modelData.DEPARTMENT = data.department;
+        // modelData.BRANCH = data.branch;
+        // modelData.DIVISION = data.division;
+        // modelData.MANAGER_USER_GUID = data.reportingTo;
+
+        // this.assignUpdateEmploymentDetail2(modelData, data);
+        // modelData.USER_INFO_GUID = data.id;
+
+        // modelData.PERSONAL_ID = data.employeeNumber;
+        // modelData.DESIGNATION = data.designation;
+        // modelData.DEPARTMENT = data.department;
+        // modelData.BRANCH = data.branch;
+        // modelData.DIVISION = data.division;
+        // modelData.MANAGER_USER_GUID = data.reportingTo;
+
+        // modelData.JOIN_DATE = data.dateOfJoin;
+        // modelData.RESIGNATION_DATE = data.dateOfResign;
+        // modelData.CONFIRMATION_DATE = data.dateOfConfirmation;
+
+        // modelData.EMPLOYEE_STATUS = data.employmentStatus;
+        // modelData.EMPLOYEE_TYPE = data.employmentType;
+
+        // modelData.BANK = data.bankAccountName;
+        // modelData.PR_ACCOUNT_NUMBER = data.bankAccountNumber;
+        // modelData.PR_EPF_NUMBER = data.epfNumber;
+        // modelData.PR_INCOMETAX_NUMBER = data.incomeTaxNumber;
+
+        modelData.UPDATE_TS = new Date().toISOString();
+        modelData.UPDATE_USER_GUID = userId;
+
+        const resource = new Resource(new Array());
+
+        resource.resource.push(modelData);
+
+        return this.userInfoService.updateByModel(resource, [], [], []);
+    }
+
+    /**
+     * Split to reduce function line
+     *
+     * @param {UserInfoModel} modelData
+     * @param {UpdateEmploymentDetailDTO} data
+     * @returns
+     * @memberof UserprofileService
+     */
+    public assignUpdateEmploymentDetail(modelData: UserInfoModel, data: UpdateEmploymentDetailDTO) {
         modelData.USER_INFO_GUID = data.id;
 
         modelData.PERSONAL_ID = data.employeeNumber;
@@ -177,6 +232,20 @@ export class UserprofileService {
         modelData.BRANCH = data.branch;
         modelData.DIVISION = data.division;
         modelData.MANAGER_USER_GUID = data.reportingTo;
+
+        this.assignUpdateEmploymentDetail2(modelData, data);
+        return modelData;
+    }
+
+    /**
+     * refactor to resolve assignment branch condition
+     *
+     * @param {UserInfoModel} modelData
+     * @param {UpdateEmploymentDetailDTO} data
+     * @returns
+     * @memberof UserprofileService
+     */
+    public assignUpdateEmploymentDetail2(modelData: UserInfoModel, data: UpdateEmploymentDetailDTO) {
 
         modelData.JOIN_DATE = data.dateOfJoin;
         modelData.RESIGNATION_DATE = data.dateOfResign;
@@ -190,14 +259,7 @@ export class UserprofileService {
         modelData.PR_EPF_NUMBER = data.epfNumber;
         modelData.PR_INCOMETAX_NUMBER = data.incomeTaxNumber;
 
-        modelData.UPDATE_TS = new Date().toISOString();
-        modelData.UPDATE_USER_GUID = userId;
-
-        const resource = new Resource(new Array());
-
-        resource.resource.push(modelData);
-
-        return this.userInfoService.updateByModel(resource, [], [], []);
+        return modelData;
     }
 
     //#region ENTITLEMENT DETAIL
@@ -232,189 +294,212 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.buildProfileData(data, false, false, false, true); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, false, false, false, true]); }
                 })
             )
     }
 
     //#endregion
 
-    /**
-     * Build profile data json
-     *
-     * @private
-     * @param {UserInfoModel} data
-     * @param {boolean} isShowPersonalData
-     * @param {boolean} isShowEmploymentData
-     * @param {boolean} isShowEntitlementData
-     * @param {boolean} isShowCertData
-     * @returns
-     * @memberof UserprofileService
-     */
-    private buildProfileData(data: UserInfoModel,
-        isShowPersonalData: boolean,
-        isShowEmploymentData: boolean,
-        isShowEntitlementData: boolean,
-        isShowCertData: boolean
-    ) {
-        // console.log(dataProfile);
-        // let data = dataProfile.data;
-        // let isShowPersonalData = dataProfile.isShowPersonalData;
-        // let isShowEmploymentData = dataProfile.isShowEmploymentData;
-        // let isShowEntitlementData = dataProfile.isShowEntitlementData;
-        // let isShowCertData = dataProfile.isShowCertData;
+    // /**
+    //  * Build profile data json
+    //  *
+    //  * @private
+    //  * @param {UserInfoModel} data
+    //  * @param {boolean} isShowPersonalData
+    //  * @param {boolean} isShowEmploymentData
+    //  * @param {boolean} isShowEntitlementData
+    //  * @param {boolean} isShowCertData
+    //  * @returns
+    //  * @memberof UserprofileService
+    //  */
+    // private buildProfileData(data: UserInfoModel,
+    //     isShowPersonalData: boolean,
+    //     isShowEmploymentData: boolean,
+    //     isShowEntitlementData: boolean,
+    //     isShowCertData: boolean
+    // ) {
+    //     // console.log(dataProfile);
+    //     // let data = dataProfile.data;
+    //     // let isShowPersonalData = dataProfile.isShowPersonalData;
+    //     // let isShowEmploymentData = dataProfile.isShowEmploymentData;
+    //     // let isShowEntitlementData = dataProfile.isShowEntitlementData;
+    //     // let isShowCertData = dataProfile.isShowCertData;
 
-        const userProfileData = new UserProfileDTO();
+    //     const userProfileData = new UserProfileDTO();
 
-        userProfileData.id = data.USER_INFO_GUID;
-        userProfileData.userId = data.USER_GUID;
-        userProfileData.employeeName = data.FULLNAME;
-        userProfileData.employeeDesignation = data.DESIGNATION;
-        userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
-        userProfileData.employeeDepartment = data.DEPARTMENT;
-        userProfileData.calendarId = data.CALENDAR_GUID;
-        userProfileData.tenantId = data.TENANT_GUID;
+    //     // userProfileData.id = data.USER_INFO_GUID;
+    //     // userProfileData.userId = data.USER_GUID;
+    //     // userProfileData.employeeName = data.FULLNAME;
+    //     // userProfileData.employeeDesignation = data.DESIGNATION;
+    //     // userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
+    //     // userProfileData.employeeDepartment = data.DEPARTMENT;
+    //     // userProfileData.calendarId = data.CALENDAR_GUID;
+    //     // userProfileData.tenantId = data.TENANT_GUID;
 
-        if (data.PROPERTIES_XML) { this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData); }
+    //     this.assignUserProfileData(userProfileData, data);
 
-        if (isShowEmploymentData) {
-            // const employmentDetail = new EmploymentDetailDTO();
+    //     if (data.PROPERTIES_XML) { this.personaldetailProcess(data, isShowPersonalData, isShowCertData, userProfileData); }
 
-            // //process the employment data
-            // employmentDetail.department = data.DEPARTMENT;
-            // employmentDetail.designation = data.DESIGNATION;;
-            // employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
-            // employmentDetail.employeeNumber = data.PERSONAL_ID;
-            // employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
-            // employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
-            // employmentDetail.reportingTo = data.MANAGER_USER_GUID;
-            // employmentDetail.userRole = "Employee";
-            // employmentDetail.dateOfJoin = data.JOIN_DATE;
-            // employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
-            // employmentDetail.dateOfResign = data.RESIGNATION_DATE;
-            // employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
-            // employmentDetail.epfNumber = data.PR_EPF_NUMBER;
-            // employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
-            // employmentDetail.bankAccountName = data.BANK;
-            // employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
+    //     if (isShowEmploymentData) {
+    //         // const employmentDetail = new EmploymentDetailDTO();
 
-            const employmentDetail = this.assignEmploymentDetail(data);
+    //         // //process the employment data
+    //         // employmentDetail.department = data.DEPARTMENT;
+    //         // employmentDetail.designation = data.DESIGNATION;;
+    //         // employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
+    //         // employmentDetail.employeeNumber = data.PERSONAL_ID;
+    //         // employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
+    //         // employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
+    //         // employmentDetail.reportingTo = data.MANAGER_USER_GUID;
+    //         // employmentDetail.userRole = "Employee";
+    //         // employmentDetail.dateOfJoin = data.JOIN_DATE;
+    //         // employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
+    //         // employmentDetail.dateOfResign = data.RESIGNATION_DATE;
+    //         // employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
+    //         // employmentDetail.epfNumber = data.PR_EPF_NUMBER;
+    //         // employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
+    //         // employmentDetail.bankAccountName = data.BANK;
+    //         // employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
 
-            userProfileData.employmentDetail = employmentDetail;
-        }
+    //         // const employmentDetail = this.assignEmploymentDetail(data);
 
-        if (isShowEntitlementData) {
-            userProfileData.entitlementDetail = [];
-        }
+    //         userProfileData.employmentDetail = this.assignEmploymentDetail(data); //employmentDetail;
+    //     }
 
-        return userProfileData;
+    //     if (isShowEntitlementData) {
+    //         userProfileData.entitlementDetail = [];
+    //     }
 
-    }
+    //     return userProfileData;
 
-    /**
-     * assign employment data
-     *
-     * @param {*} data
-     * @returns
-     * @memberof UserprofileService
-     */
-    public assignEmploymentDetail(data: any) {
-        const employmentDetail = new EmploymentDetailDTO();
+    // }
 
-        //process the employment data
-        employmentDetail.department = data.DEPARTMENT;
-        employmentDetail.designation = data.DESIGNATION;;
-        employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
-        employmentDetail.employeeNumber = data.PERSONAL_ID;
-        employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
-        employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
-        employmentDetail.reportingTo = data.MANAGER_USER_GUID;
-        employmentDetail.userRole = "Employee";
-        employmentDetail.dateOfJoin = data.JOIN_DATE;
-        employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
-        employmentDetail.dateOfResign = data.RESIGNATION_DATE;
-        employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
-        employmentDetail.epfNumber = data.PR_EPF_NUMBER;
-        employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
-        employmentDetail.bankAccountName = data.BANK;
-        employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
+    // /**
+    //  * Refactor assign userprofile data
+    //  *
+    //  * @param {UserProfileDTO} userProfileData
+    //  * @param {UserInfoModel} data
+    //  * @returns
+    //  * @memberof UserprofileService
+    //  */
+    // public assignUserProfileData(userProfileData: UserProfileDTO, data: UserInfoModel) {
+    //     userProfileData.id = data.USER_INFO_GUID;
+    //     userProfileData.userId = data.USER_GUID;
+    //     userProfileData.employeeName = data.FULLNAME;
+    //     userProfileData.employeeDesignation = data.DESIGNATION;
+    //     userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
+    //     userProfileData.employeeDepartment = data.DEPARTMENT;
+    //     userProfileData.calendarId = data.CALENDAR_GUID;
+    //     userProfileData.tenantId = data.TENANT_GUID;
 
-        return employmentDetail;
-    }
+    //     return userProfileData;
+    // }
 
-    /**
-     * get personal detail refactor
-     *
-     * @param {UserInfoModel} data
-     * @param {boolean} isShowPersonalData
-     * @param {boolean} isShowCertData
-     * @param {*} userProfileData
-     * @memberof UserprofileService
-     */
-    public personaldetailProcess(data: UserInfoModel, isShowPersonalData: boolean, isShowCertData: boolean, userProfileData) {
-        //process the personal detail
-        const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+    // /**
+    //  * assign employment data
+    //  *
+    //  * @param {*} data
+    //  * @returns
+    //  * @memberof UserprofileService
+    //  */
+    // public assignEmploymentDetail(data: any) {
+    //     const employmentDetail = new EmploymentDetailDTO();
 
-        if (isShowPersonalData) {
-            this.personaldataProcess(parseXMLtoJSON, userProfileData);
-        }
+    //     //process the employment data
+    //     employmentDetail.department = data.DEPARTMENT;
+    //     employmentDetail.designation = data.DESIGNATION;;
+    //     employmentDetail.workLocation = "Kuala Lumpur, Malaysia"
+    //     employmentDetail.employeeNumber = data.PERSONAL_ID;
+    //     employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
+    //     employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
+    //     employmentDetail.reportingTo = data.MANAGER_USER_GUID;
+    //     employmentDetail.userRole = "Employee";
+    //     employmentDetail.dateOfJoin = data.JOIN_DATE;
+    //     employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;
+    //     employmentDetail.dateOfResign = data.RESIGNATION_DATE;
+    //     employmentDetail.yearOfService = this.serviceYearCalcService.calculateEmployeeServiceYear(new Date(data.JOIN_DATE)) + " Years";
+    //     employmentDetail.epfNumber = data.PR_EPF_NUMBER;
+    //     employmentDetail.incomeTaxNumber = data.PR_INCOMETAX_NUMBER;
+    //     employmentDetail.bankAccountName = data.BANK;
+    //     employmentDetail.bankAccountNumber = data.PR_ACCOUNT_NUMBER;
 
-        if (isShowCertData) {
-            userProfileData.awardCertification = [];
-        }
-    }
+    //     return employmentDetail;
+    // }
 
-    //loop data for personal detail
-    /**
-     * Loop data for personal detail
-     *
-     * @param {*} parseXMLtoJSON
-     * @param {*} userProfileData
-     * @memberof UserprofileService
-     */
-    public personaldataProcess(parseXMLtoJSON, userProfileData) {
-        const userPersonalDetail = new UserPersonalDetailDTO();
-        for (var j in parseXMLtoJSON) {
-            var sub_key = j;
-            var sub_val = parseXMLtoJSON[j];
+    // /**
+    //  * get personal detail refactor
+    //  *
+    //  * @param {UserInfoModel} data
+    //  * @param {boolean} isShowPersonalData
+    //  * @param {boolean} isShowCertData
+    //  * @param {*} userProfileData
+    //  * @memberof UserprofileService
+    //  */
+    // public personaldetailProcess(data: UserInfoModel, isShowPersonalData: boolean, isShowCertData: boolean, userProfileData) {
+    //     //process the personal detail
+    //     const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
 
-            if (sub_key == 'id') { continue; }
+    //     if (isShowPersonalData) {
+    //         this.personaldataProcess(parseXMLtoJSON, userProfileData);
+    //     }
 
-            this.doProcess(sub_key, sub_val, userPersonalDetail);
-        }
-        userProfileData.personalDetail = userPersonalDetail;
-    }
+    //     if (isShowCertData) {
+    //         userProfileData.awardCertification = [];
+    //     }
+    // }
 
-    //change key or substitute value for personaldata
-    /**
-     * change key or substitute value for personaldata
-     *
-     * @param {*} sub_key
-     * @param {*} sub_val
-     * @param {*} userPersonalDetail
-     * @memberof UserprofileService
-     */
-    public doProcess(sub_key, sub_val, userPersonalDetail) {
-        if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; }
-        if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; }
-        if (sub_key == 'address1') { sub_key = 'residentialAddress1'; }
-        if (sub_key == 'address2') { sub_key = 'residentialAddress2'; }
-        if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; }
+    // //loop data for personal detail
+    // /**
+    //  * Loop data for personal detail
+    //  *
+    //  * @param {*} parseXMLtoJSON
+    //  * @param {*} userProfileData
+    //  * @memberof UserprofileService
+    //  */
+    // public personaldataProcess(parseXMLtoJSON, userProfileData) {
+    //     const userPersonalDetail = new UserPersonalDetailDTO();
+    //     for (var j in parseXMLtoJSON) {
+    //         var sub_key = j;
+    //         var sub_val = parseXMLtoJSON[j];
 
-        userPersonalDetail[sub_key] = sub_val;
-    }
+    //         if (sub_key == 'id') { continue; }
+    //         //loop process to refactor code
+    //         this.doProcess(sub_key, sub_val, userPersonalDetail);
+    //     }
+    //     userProfileData.personalDetail = userPersonalDetail;
+    // }
 
-    /**
-     * Join text method
-     *
-     * @private
-     * @param {string[]} data
-     * @returns
-     * @memberof UserprofileService
-     */
-    private joinText(data: string[]) {
-        return data.join(",");
-    }
+    // //change key or substitute value for personaldata
+    // /**
+    //  * change key or substitute value for personaldata
+    //  *
+    //  * @param {*} sub_key
+    //  * @param {*} sub_val
+    //  * @param {*} userPersonalDetail
+    //  * @memberof UserprofileService
+    //  */
+    // public doProcess(sub_key, sub_val, userPersonalDetail) {
+    //     if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; }
+    //     if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; }
+    //     if (sub_key == 'address1') { sub_key = 'residentialAddress1'; }
+    //     if (sub_key == 'address2') { sub_key = 'residentialAddress2'; }
+    //     if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; }
+
+    //     userPersonalDetail[sub_key] = sub_val;
+    // }
+
+    // /**
+    //  * Join text method
+    //  *
+    //  * @private
+    //  * @param {string[]} data
+    //  * @returns
+    //  * @memberof UserprofileService
+    //  */
+    // private joinText(data: string[]) {
+    //     return data.join(",");
+    // }
 
 
 

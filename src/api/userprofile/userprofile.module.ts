@@ -22,6 +22,7 @@ import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-t
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { NotificationService } from '../../admin/notification/notification.service';
+import { UserprofileAssignerService } from './service/userprofile-assigner.service';
 
 /**
  * Module for user profile
@@ -46,7 +47,8 @@ import { NotificationService } from '../../admin/notification/notification.servi
     ProratedDateEndYearService,
     ProratedDateCurrentMonthService,
     CommonFunctionService,
-    NotificationService
+    NotificationService,
+    UserprofileAssignerService
   ],
   modules: [
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),

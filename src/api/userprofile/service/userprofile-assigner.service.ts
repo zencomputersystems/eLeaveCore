@@ -186,6 +186,22 @@ export class UserprofileAssignerService {
     employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
     employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
     employmentDetail.reportingTo = data.MANAGER_USER_GUID;
+    this.assignEmploymentDetail2(employmentDetail, data);
+
+    return employmentDetail;
+  }
+
+  /**
+   * Refactor to continue assign employment detail
+   *
+   * @private
+   * @param {*} employmentDetail
+   * @param {*} data
+   * @returns
+   * @memberof UserprofileAssignerService
+   */
+  private assignEmploymentDetail2(employmentDetail, data) {
+
     employmentDetail.userRole = "Employee";
     employmentDetail.dateOfJoin = data.JOIN_DATE;
     employmentDetail.dateOfConfirmation = data.CONFIRMATION_DATE;

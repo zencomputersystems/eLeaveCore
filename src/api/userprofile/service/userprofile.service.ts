@@ -172,16 +172,18 @@ export class UserprofileService {
         // console.log('this is employment update');
         const modelData = new UserInfoModel();
 
-        modelData.USER_INFO_GUID = data.id;
-
-        modelData.PERSONAL_ID = data.employeeNumber;
-        modelData.DESIGNATION = data.designation;
-        modelData.DEPARTMENT = data.department;
-        modelData.BRANCH = data.branch;
-        modelData.DIVISION = data.division;
-        modelData.MANAGER_USER_GUID = data.reportingTo;
-
         this.assignUpdateEmploymentDetail(modelData, data);
+
+        // modelData.USER_INFO_GUID = data.id;
+
+        // modelData.PERSONAL_ID = data.employeeNumber;
+        // modelData.DESIGNATION = data.designation;
+        // modelData.DEPARTMENT = data.department;
+        // modelData.BRANCH = data.branch;
+        // modelData.DIVISION = data.division;
+        // modelData.MANAGER_USER_GUID = data.reportingTo;
+
+        // this.assignUpdateEmploymentDetail2(modelData, data);
         // modelData.USER_INFO_GUID = data.id;
 
         // modelData.PERSONAL_ID = data.employeeNumber;
@@ -214,7 +216,7 @@ export class UserprofileService {
     }
 
     /**
-     * refactor to resolve assignment branch condition
+     * Split to reduce function line
      *
      * @param {UserInfoModel} modelData
      * @param {UpdateEmploymentDetailDTO} data
@@ -222,6 +224,28 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public assignUpdateEmploymentDetail(modelData: UserInfoModel, data: UpdateEmploymentDetailDTO) {
+        modelData.USER_INFO_GUID = data.id;
+
+        modelData.PERSONAL_ID = data.employeeNumber;
+        modelData.DESIGNATION = data.designation;
+        modelData.DEPARTMENT = data.department;
+        modelData.BRANCH = data.branch;
+        modelData.DIVISION = data.division;
+        modelData.MANAGER_USER_GUID = data.reportingTo;
+
+        this.assignUpdateEmploymentDetail2(modelData, data);
+        return modelData;
+    }
+
+    /**
+     * refactor to resolve assignment branch condition
+     *
+     * @param {UserInfoModel} modelData
+     * @param {UpdateEmploymentDetailDTO} data
+     * @returns
+     * @memberof UserprofileService
+     */
+    public assignUpdateEmploymentDetail2(modelData: UserInfoModel, data: UpdateEmploymentDetailDTO) {
 
         modelData.JOIN_DATE = data.dateOfJoin;
         modelData.RESIGNATION_DATE = data.dateOfResign;

@@ -318,14 +318,14 @@ export class ApplyLeaveService {
             let leaveDetail = y.data[i];
 
             let msjStatus = "";
-            let noOfDays = this.dateCalculationService.getLeaveDuration(y.data[i].startDate, y.data[i].endDate, y.data[i].dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay);
+            let noOfDays = this.dateCalculationService.getLeaveDuration([y.data[i].startDate, y.data[i].endDate, y.data[i].dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
 
             if (noOfDays == 0) {
                 msjStatus = leaveDetail.startDate + ' is a leave day';
             }
             else {
                 msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days' : 'day') + '  was send for approval between ' + leaveDetail.startDate + ' and ' + leaveDetail.endDate;
-                this.leaveTransactionDbService.create(y.data[i], result, user, y, onbehalf).pipe(map((res) => {
+                this.leaveTransactionDbService.create([y.data[i], result, user, y, onbehalf]).pipe(map((res) => {
                     // console.log('pass');
                     if (res.status != 200) {
                         result.validationResult.valid = false;

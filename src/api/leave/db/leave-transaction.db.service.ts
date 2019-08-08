@@ -11,6 +11,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { UpdateApprovalDTO } from 'src/admin/approval-override/dto/update-approval.dto';
 
+type CreateLeave = [ApplyLeaveDataDTO, any, any, ApplyLeaveDTO, boolean];
 /**
  * DB Service for leave transaction
  *
@@ -93,8 +94,12 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
      * @returns
      * @memberof LeaveTransactionDbService
      */
-    public create(applyLeaveDataDTO: ApplyLeaveDataDTO, result: any, user: any, y: ApplyLeaveDTO, applyOnBehalf: boolean) {
-
+    public create(data: CreateLeave) {
+        let applyLeaveDataDTO: ApplyLeaveDataDTO = data[0];
+        let result: any = data[1];
+        let user: any = data[2];
+        let y: ApplyLeaveDTO = data[3];
+        let applyOnBehalf: boolean = data[4];
         // let applyOnBehalf = true;
         // const data = new LeaveTransactionModel();
 
@@ -122,7 +127,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         leaveData.START_DATE = applyLeaveDataDTO.startDate;
         leaveData.END_DATE = applyLeaveDataDTO.endDate;
         leaveData.REASON = y.reason;
-        leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration(applyLeaveDataDTO.startDate, applyLeaveDataDTO.endDate, applyLeaveDataDTO.dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay);
+        leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration([applyLeaveDataDTO.startDate, applyLeaveDataDTO.endDate, applyLeaveDataDTO.dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
         leaveData.ENTITLEMENT_XML_SNAPSHOT = this.xmlParserService.convertJsonToXML(result.policy);
         leaveData.ACTIVE_FLAG = true;
         leaveData.STATES = null;

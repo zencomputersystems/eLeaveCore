@@ -23,6 +23,8 @@ import { EntitlementRoundingService } from 'src/common/policy/entitlement-roundi
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { NotificationService } from '../../admin/notification/notification.service';
 import { UserprofileAssignerService } from './service/userprofile-assigner.service';
+import { UserEntitlementAssignEntitlement } from './service/userentitlement-assign-entitlement.service';
+import { UserEntitlementAssignPolicy } from './service/userentitlement-assign-policy.service';
 
 /**
  * Module for user profile
@@ -48,7 +50,9 @@ import { UserprofileAssignerService } from './service/userprofile-assigner.servi
     ProratedDateCurrentMonthService,
     CommonFunctionService,
     NotificationService,
-    UserprofileAssignerService
+    UserprofileAssignerService,
+    UserEntitlementAssignEntitlement,
+    UserEntitlementAssignPolicy
   ],
   modules: [
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),

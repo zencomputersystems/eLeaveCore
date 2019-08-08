@@ -8,6 +8,7 @@ import { HolidayModel } from 'src/admin/holiday/model/holiday.model';
 // import { QueryParserService } from 'src/common/helper/query-parser.service';
 // import { map } from 'rxjs/operators';
 
+type LeaveDuration = [Date, Date, number, boolean, boolean];
 /**
  * Service for date calculation
  *
@@ -111,7 +112,13 @@ export class DateCalculationService {
      * @returns
      * @memberof DateCalculationService
      */
-    getLeaveDuration(firstDate: Date, secondDate: Date, dayType: number, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
+    getLeaveDuration(data: LeaveDuration) {
+        let firstDate: Date = data[0];
+        let secondDate: Date = data[1];
+        let dayType: number = data[2];
+        let isIncludeHoliday: boolean = data[3];
+        let isIncludeRestDay: boolean = data[4];
+
         const startDate = moment(firstDate, 'YYYY-MM-DD');
         const endDate = moment(secondDate, 'YYYY-MM-DD');
 

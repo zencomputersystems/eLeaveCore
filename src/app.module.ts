@@ -24,6 +24,7 @@ import { NotificationModule } from './admin/notification/notification.module';
 import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-leave-policy.module';
 import { ApprovalOverrideModule } from './admin/approval-override/approval-override.module';
 import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment.module';
+import { YearEndClosingModule } from './admin/year-end-closing/year-end-closing.module';
 
 @Module({
   imports: [
@@ -68,7 +69,8 @@ import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment
     NotificationModule,
     GeneralLeavePolicyModule,
     ApprovalOverrideModule,
-    LeaveAdjustmentModule
+    LeaveAdjustmentModule,
+    YearEndClosingModule
   ],
   controllers: [AppController],
   providers: [

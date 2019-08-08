@@ -2,6 +2,8 @@ import { Test } from '@nestjs/testing';
 import { UserprofileService } from '../../service/userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { UserprofileController } from './userprofile.controller';
+import { UserprofileAssignerService } from '../../service/userprofile-assigner.service';
+import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 describe('UserprofileController', () => {
   let pipe: UserprofileController;
   beforeEach(async () => {
@@ -15,6 +17,9 @@ describe('UserprofileController', () => {
         pipe: () => ({ subscribe: () => ({}) })
       })
     };
+    const userprofileAssignerServiceStub = {
+
+    }
     const module = await Test.createTestingModule({
       providers: [
         UserprofileController,
@@ -22,7 +27,12 @@ describe('UserprofileController', () => {
         {
           provide: AccessLevelValidateService,
           useValue: accessLevelValidateServiceStub
-        }
+        },
+        {
+          provide: UserprofileAssignerService,
+          useValue: userprofileAssignerServiceStub
+        },
+        CommonFunctionService
       ]
     }).compile();
     pipe = await module.get<UserprofileController>(UserprofileController);

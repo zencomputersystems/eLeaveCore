@@ -269,7 +269,7 @@ export class LeaveApplicationValidationService {
 
         const maxAllowedDay = policy.maxDayPerLeave;
 
-        const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate, applyLeaveDTO.endDate, applyLeaveDTO.dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay);
+        const leaveDuration = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.startDate, applyLeaveDTO.endDate, applyLeaveDTO.dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
 
         if (leaveDuration <= maxAllowedDay) {
             return true;

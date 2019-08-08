@@ -71,7 +71,7 @@ export class LeaveBalanceValidationService {
 
         let sumLeaveDuration = 0
         for (let i = 0; i < applyLeaveDTO.data.length; i++) {
-            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay);
+            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
             sumLeaveDuration = sumLeaveDuration + leaveDurationTemp;
         }
 
@@ -204,7 +204,7 @@ export class LeaveBalanceValidationService {
 
                     let sumLeaveDurTemp = 0
                     for (let i = 0; i < applyLeaveDTO.data.length; i++) {
-                        let leaveDurationTemp = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay);
+                        let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
                         sumLeaveDurTemp = sumLeaveDurTemp + leaveDurationTemp;
                     }
 

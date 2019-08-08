@@ -10,6 +10,8 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
+import { UserEntitlementAssignEntitlement } from './userentitlement-assign-entitlement.service';
+import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.service';
 describe('UserLeaveEntitlementService', () => {
   let service: UserLeaveEntitlementService;
   beforeEach(async () => {
@@ -63,7 +65,9 @@ describe('UserLeaveEntitlementService', () => {
           provide: ProratedDateEndYearService,
           useValue: proratedDateEndYearServiceStub
         },
-        { provide: XMLParserService, useValue: xMLParserServiceStub }
+        { provide: XMLParserService, useValue: xMLParserServiceStub },
+        UserEntitlementAssignEntitlement,
+        UserEntitlementAssignPolicy
       ]
     }).compile();
     service = await module.get<UserLeaveEntitlementService>(UserLeaveEntitlementService);

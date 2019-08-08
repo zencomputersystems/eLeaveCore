@@ -13,6 +13,7 @@ import moment = require('moment');
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { map } from 'rxjs/operators';
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
+import { LeaveBalanceValidationParentService } from './leave-balance-validation-parent.service';
 
 /**
  * Service for leave balance validation
@@ -36,12 +37,13 @@ export class LeaveBalanceValidationService {
      */
     constructor(
         private readonly dateCalculationService: DateCalculationService,
-        private readonly entitledInFullService: EntitledFullService,
-        private readonly proratedDateMonthService: ProratedDateCurrentMonthService,
-        private readonly proratedDateEndYearService: ProratedDateEndYearService,
-        private readonly workingYearService: ServiceYearCalc,
+        // private readonly entitledInFullService: EntitledFullService,
+        // private readonly proratedDateMonthService: ProratedDateCurrentMonthService,
+        // private readonly proratedDateEndYearService: ProratedDateEndYearService,
+        // private readonly workingYearService: ServiceYearCalc,
         private readonly xmlParserService: XMLParserService,
-        private readonly leaveTransactionDbService: LeaveTransactionDbService) { }
+        private readonly leaveTransactionDbService: LeaveTransactionDbService,
+        private readonly leaveBalanceValidationParentService: LeaveBalanceValidationParentService) { }
 
 
     /**
@@ -121,7 +123,7 @@ export class LeaveBalanceValidationService {
                 // for parent flag, we need to calculate based on policy
                 // balance calculation will be based on entitlement type in policy
                 // for child leave, we need to check the expiry date
-                const parentBalance = this.getParentBalance(userInfo, policy);
+                const parentBalance = this.leaveBalanceValidationParentService.getParentBalance(userInfo, policy);
 
                 const childBalance = this.getChildBalance(applyLeaveDTO, userEntitlement, policy);
 
@@ -137,42 +139,42 @@ export class LeaveBalanceValidationService {
 
     }
 
-    /**
-     * Method get parent balance
-     *
-     * @param {UserInfoModel} userInfo
-     * @param {LeaveTypePropertiesXmlDTO} policy
-     * @returns
-     * @memberof LeaveBalanceValidationService
-     */
-    public getParentBalance(userInfo: UserInfoModel, policy: LeaveTypePropertiesXmlDTO) {
-        // PARENT CALCULATION
-        let parentBalance = 0;
+    // /**
+    //  * Method get parent balance
+    //  *
+    //  * @param {UserInfoModel} userInfo
+    //  * @param {LeaveTypePropertiesXmlDTO} policy
+    //  * @returns
+    //  * @memberof LeaveBalanceValidationService
+    //  */
+    // public getParentBalance(userInfo: UserInfoModel, policy: LeaveTypePropertiesXmlDTO) {
+    //     // PARENT CALCULATION
+    //     let parentBalance = 0;
 
-        const serviceYear = this.workingYearService.calculateEmployeeServiceYear(new Date(userInfo.JOIN_DATE));
+    //     const serviceYear = this.workingYearService.calculateEmployeeServiceYear(new Date(userInfo.JOIN_DATE));
 
-        switch (policy.leaveEntitlementType.toUpperCase()) {
-            case ('Entitled in full').toUpperCase():
-                parentBalance = this.entitledInFullService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
-                break;
-            case ('Prorated from date-of-confirm to current month').toUpperCase():
-                parentBalance = this.proratedDateMonthService.calculateEntitledLeave(new Date(userInfo.CONFIRMATION_DATE), serviceYear, policy);
-                break;
-            case ('Prorated from date-of-join to current month').toUpperCase():
-                parentBalance = this.proratedDateMonthService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
-                break;
-            case ('Prorated from date-of-confirm to end of year').toUpperCase():
-                parentBalance = this.proratedDateEndYearService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
-                break;
-            case ('Prorated from date-of-join to end of year').toUpperCase():
-                parentBalance = this.proratedDateEndYearService.calculateEntitledLeave(new Date(userInfo.CONFIRMATION_DATE), serviceYear, policy);
-                break;
-            default:
-                break;
-        }
+    //     switch (policy.leaveEntitlementType.toUpperCase()) {
+    //         case ('Entitled in full').toUpperCase():
+    //             parentBalance = this.entitledInFullService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
+    //             break;
+    //         case ('Prorated from date-of-confirm to current month').toUpperCase():
+    //             parentBalance = this.proratedDateMonthService.calculateEntitledLeave(new Date(userInfo.CONFIRMATION_DATE), serviceYear, policy);
+    //             break;
+    //         case ('Prorated from date-of-join to current month').toUpperCase():
+    //             parentBalance = this.proratedDateMonthService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
+    //             break;
+    //         case ('Prorated from date-of-confirm to end of year').toUpperCase():
+    //             parentBalance = this.proratedDateEndYearService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
+    //             break;
+    //         case ('Prorated from date-of-join to end of year').toUpperCase():
+    //             parentBalance = this.proratedDateEndYearService.calculateEntitledLeave(new Date(userInfo.CONFIRMATION_DATE), serviceYear, policy);
+    //             break;
+    //         default:
+    //             break;
+    //     }
 
-        return parentBalance;
-    }
+    //     return parentBalance;
+    // }
 
     /**
      * Method get child balance

@@ -113,7 +113,7 @@ export class UserprofileAssignerService {
     }
 
     if (isShowCertData) {
-      userProfileData.awardCertification = [];
+      userProfileData.awardCertification = parseXMLtoJSON.certification;
     }
   }
 
@@ -134,7 +134,7 @@ export class UserprofileAssignerService {
       var sub_val = parseXMLtoJSON[j];
 
       // skip key id
-      if (sub_key == 'id') {
+      if (sub_key == 'id' || sub_key == 'certification') {
         continue;
       }
 

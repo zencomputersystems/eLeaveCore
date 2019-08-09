@@ -10,9 +10,23 @@ import { map } from 'rxjs/operators';
 import { UserLeaveEntitlementDbService } from '../db/user-leave-entitlement.db.service';
 import { of } from 'rxjs';
 
+/**
+ * User leave entitlement : assign policy
+ *
+ * @export
+ * @class UserEntitlementAssignPolicy
+ */
 @Injectable()
 export class UserEntitlementAssignPolicy {
 
+  /**
+   *Creates an instance of UserEntitlementAssignPolicy.
+   * @param {ServiceYearCalc} serviceYearCalcService
+   * @param {ProratedDateEndYearService} proratedMonthEndYearService
+   * @param {XMLParserService} xmlParserService
+   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+   * @memberof UserEntitlementAssignPolicy
+   */
   constructor(
     private readonly serviceYearCalcService: ServiceYearCalc,
     private readonly proratedMonthEndYearService: ProratedDateEndYearService,
@@ -20,14 +34,14 @@ export class UserEntitlementAssignPolicy {
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService, ) { }
 
   /**
-     * Method assign policy process
-     *
-     * @param {*} res
-     * @param {*} user
-     * @param {*} data
-     * @returns
-     * @memberof UserLeaveEntitlementService
-     */
+   * Method assign policy process
+   *
+   * @param {*} res
+   * @param {*} user
+   * @param {*} data
+   * @returns
+   * @memberof UserEntitlementAssignPolicy
+   */
   public assignPolicyProcess(res, user, data) {
 
     // console.log('here' + res);

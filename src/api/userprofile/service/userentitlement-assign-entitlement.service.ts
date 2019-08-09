@@ -9,9 +9,24 @@ import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
 import { LeaveTypeEntitlementModel } from 'src/admin/leavetype-entitlement/model/leavetype_entitlement.model';
 import { IDbService } from 'src/interface/IDbService';
 
+/**
+ * Service user leave entitlement: assign entitlement
+ *
+ * @export
+ * @class UserEntitlementAssignEntitlement
+ */
 @Injectable()
 export class UserEntitlementAssignEntitlement {
 
+  /**
+   *Creates an instance of UserEntitlementAssignEntitlement.
+   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+   * @param {UserprofileDbService} userDbService
+   * @param {LeavetypeEntitlementDbService} leaveEntitlementDbService
+   * @param {UserInfoService} userInfoDbService
+   * @param {UserEntitlementAssignPolicy} userEntitlementAssignPolicy
+   * @memberof UserEntitlementAssignEntitlement
+   */
   constructor(
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly userDbService: UserprofileDbService,
@@ -22,15 +37,13 @@ export class UserEntitlementAssignEntitlement {
 
   }
 
-  // in one time, only 1 policy can active for each type of main leave
   /**
-   * Method to assign entitlement
-   * In one time, only 1 policy can active for each type of main leave
+   * Assign entitlement
    *
    * @param {*} user
    * @param {AssignLeavePolicyDTO} data
    * @returns
-   * @memberof UserLeaveEntitlementService
+   * @memberof UserEntitlementAssignEntitlement
    */
   public assignEntitlement(user: any, data: AssignLeavePolicyDTO) {
 
@@ -83,6 +96,15 @@ export class UserEntitlementAssignEntitlement {
 
   }
 
+  /**
+   * Method db search
+   *
+   * @private
+   * @param {IDbService} IDbService
+   * @param {string[]} filter
+   * @returns
+   * @memberof UserEntitlementAssignEntitlement
+   */
   private dbSearch(IDbService: IDbService, filter: string[]) {
     return IDbService.findByFilterV2([], filter)
       .pipe(

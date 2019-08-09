@@ -36,6 +36,13 @@ export class UserService extends BaseDBService {
     }
 
 
+    /**
+     * Method find email
+     *
+     * @param {string[]} userId
+     * @returns {Observable<any>}
+     * @memberof UserService
+     */
     public findEmail(userId: string[]): Observable<any> {
 
         const fields = ['USER_GUID', 'EMAIL'];

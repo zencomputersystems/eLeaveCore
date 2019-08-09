@@ -40,6 +40,14 @@ export class GeneralLeavePolicyController {
 		)
 	}
 
+	/**
+	 * Get general leave poslicy by company id
+	 *
+	 * @param {*} id
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof GeneralLeavePolicyController
+	 */
 	@Get(':id')
 	@ApiOperation({ title: 'Get general leave policy by company id' })
 	@ApiImplicitQuery({ name: 'id', description: 'Filter by TENANT_COMPANY_GUID', required: true })

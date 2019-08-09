@@ -70,6 +70,15 @@ export class UserLeaveEntitlementService {
         return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter);
     }
 
+    /**
+     * Method to assign entitlement
+     * In one time, only 1 policy can active for each type of main leave
+     *
+     * @param {*} user
+     * @param {AssignLeavePolicyDTO} data
+     * @returns
+     * @memberof UserLeaveEntitlementService
+     */
     public assignEntitlement(user: any, data: AssignLeavePolicyDTO) {
         return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
     }

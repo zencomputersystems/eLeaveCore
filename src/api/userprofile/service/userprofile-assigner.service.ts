@@ -109,12 +109,12 @@ export class UserprofileAssignerService {
     const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
 
     if (isShowPersonalData) {
-      this.personaldataProcess(parseXMLtoJSON, userProfileData);
+      this.personaldataProcess(parseXMLtoJSON, userProfileData, isShowCertData);
     }
 
-    if (isShowCertData) {
-      userProfileData.awardCertification = parseXMLtoJSON.certification;
-    }
+    // if (isShowCertData) {
+    //   userProfileData.awardCertification = parseXMLtoJSON.certification;
+    // }
   }
 
 
@@ -127,16 +127,21 @@ export class UserprofileAssignerService {
    * @param {*} userProfileData
    * @memberof UserprofileAssignerService
    */
-  private personaldataProcess(parseXMLtoJSON, userProfileData) {
+  private personaldataProcess(parseXMLtoJSON, userProfileData, isShowCertData) {
     const userPersonalDetail = new UserPersonalDetailDTO();
     for (var j in parseXMLtoJSON) {
       var sub_key = j;
       var sub_val = parseXMLtoJSON[j];
 
       // skip key id
-      if (sub_key == 'id' || sub_key == 'certification') {
+      if (sub_key == 'id') {
         continue;
       }
+
+      if (!isShowCertData && sub_key == 'certification') {
+        continue;
+      }
+
 
       // loop process to refactor code
       this.doProcess(sub_key, sub_val, userPersonalDetail);

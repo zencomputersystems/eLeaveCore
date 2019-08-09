@@ -37,59 +37,34 @@ export class YearEndClosingService {
    * @memberof YearEndClosingService
    */
   public yearEndProcess(user: any): Observable<any> {
-    // console.log('hello there');
-    // const filters = ['(TENANT_GUID=58a035ca-b22f-1b4e-79c6-7e13ec15d2d2)'];
-    // const userFilter = ['(TENANT_GUID=' + req.user.TENANT_GUID + ')']
+
     const userFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(DELETED_AT IS NULL)']
+
     let result = this.userInfoDbService.findByFilterV2([], userFilter)
       .pipe(
         map(res => { // check user active or resign
-          let userInfo: UserInfoModel[] = res;
-          let resignUser = [];
-          let activeUser = [];
-          userInfo.forEach(element => {
-            if (new Date(element.RESIGNATION_DATE).getFullYear() <= new Date().getFullYear() && element.RESIGNATION_DATE != null) {
-              resignUser.push(element);
-            } else {
-              activeUser.push(element);
-            }
-          });
-          return { resignUser, activeUser };
+          let dataRes = this.checkUser(res);
+          return dataRes;
+
         }), map(res => { // update status disable to resign user based on year
-          let userToDisable: UserInfoModel[] = res.resignUser;
-          let activeUser = res.activeUser;
-          let disableUserGroup = '';
-          userToDisable.forEach(element => {
-            if (disableUserGroup == '') { disableUserGroup = '"' + element.USER_GUID + '"'; }
-            else { disableUserGroup = disableUserGroup + ',"' + element.USER_GUID + '"'; }
-          });
-          let resultDisable = this.disableUser(user, disableUserGroup);
+          let { resignUser, activeUser } = res;
+          let resultDisable = this.disableProcess(user, resignUser);
           return { activeUser, resultDisable };
+
         }), map(res => { // update user entitlement for active user
-          res.resultDisable.subscribe(
-            data => {
-              console.log(data.data.resource);
-            }, err => {
-              console.log(err);
-            }
-          );
-          // res.activeUser
-          res.activeUser.forEach(element => {
+          let { activeUser, resultDisable } = res;
 
-            let entitlement = this.getLeaveEntitlement(element.USER_GUID).subscribe(
-              data => {
-                if (data.length > 0) {
-                  // console.log('_______________________________________________________________');
-                  // console.log(data);
-                }
-              }, err => {
-                // console.log(err);
-              }
-            );
-            // userArray.push(
-            //   new UserprofileListDTO(element, new Access()));
+          let resultEntitlement = this.checkEntitlement(activeUser);
 
-          });
+          // return resultDisable.subscribe(
+          //   data => {
+          //     console.log(data.data.resource);
+          //   }, err => {
+          //     console.log(err);
+          //   }
+          // );
+
+          return activeUser;
         })
       )
     // .subscribe(
@@ -105,6 +80,55 @@ export class YearEndClosingService {
     // console.log(result);
     return result;
     // return of('userList');
+  }
+
+  public checkUser(res: UserInfoModel[]) {
+    let userInfo: UserInfoModel[] = res;
+
+    let resignUser = [];
+    let activeUser = [];
+
+    userInfo.forEach(element => {
+      if (new Date(element.RESIGNATION_DATE).getFullYear() <= new Date().getFullYear() && element.RESIGNATION_DATE != null) {
+        resignUser.push(element);
+      } else {
+        activeUser.push(element);
+      }
+    });
+
+    return { resignUser, activeUser };
+  }
+
+  public disableProcess(user, resignUser) {
+    let disableUserGroup = '';
+    resignUser.forEach(element => {
+      if (disableUserGroup == '') { disableUserGroup = '"' + element.USER_GUID + '"'; }
+      else { disableUserGroup = disableUserGroup + ',"' + element.USER_GUID + '"'; }
+    });
+    let resultDisable = this.disableUser(user, disableUserGroup);
+    return resultDisable;
+  }
+
+  public checkEntitlement(activeUser) {
+    return activeUser.forEach(element => {
+      let entitlement = this.getLeaveEntitlement(element.USER_GUID).subscribe(
+        data => {
+          // if (data.length > 0) {
+          //   console.log('____________________________________________________');
+          //   // console.log(data);
+          //   data.forEach(element => {
+          //     console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+          //   });
+          // }
+          // else {
+          //   console.log('else');
+          //   console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+          // }
+        }, err => {
+          // console.log(err);
+        }
+      );
+    });
   }
 
   /**

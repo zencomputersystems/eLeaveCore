@@ -109,7 +109,7 @@ export class UserprofileService {
                 map(res => {
                     const data: UserInfoModel = res[0];
 
-                    if (data) { return this.userprofileAssignerService.buildProfileData([data, true, false, false, false]); }
+                    if (data) { return this.userprofileAssignerService.buildProfileData([data, true, false, false, true]); }
                 })
             );
     }

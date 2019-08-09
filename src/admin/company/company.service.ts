@@ -159,6 +159,14 @@ export class CompanyService extends BaseDBService implements IDbService {
 		return this.updateByModel(resource, [], [], []);
 	}
 
+	/**
+	 * Delete company: update deleted_at field
+	 *
+	 * @param {*} user
+	 * @param {string} company_guid
+	 * @returns
+	 * @memberof CompanyService
+	 */
 	deleteCompany(user: any, company_guid: string) {
 
 		const resource = new Resource(new Array);

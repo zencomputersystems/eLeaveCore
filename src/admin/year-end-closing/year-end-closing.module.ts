@@ -7,6 +7,7 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 
 @Module({
@@ -15,7 +16,8 @@ import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave
     YearEndClosingService,
     UserService,
     QueryParserService,
-    UserLeaveEntitlementDbService
+    UserLeaveEntitlementDbService,
+    UserInfoDbService
   ],
   modules: [
     AuthModule,

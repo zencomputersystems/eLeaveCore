@@ -119,6 +119,14 @@ export class ApplyController {
     // }
 
 
+    /**
+     * Apply on behalf: bundle
+     *
+     * @param {ApplyLeaveBundleDTO} applyLeaveBundleDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof ApplyController
+     */
     @UseGuards(RolesGuard)
     @Post('leave/apply-on-behalf')
     @ApiOperation({ title: 'Apply leave on behalf by bundle' })

@@ -152,6 +152,14 @@ export class RoleService {
 
         return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
     }
+    /**
+     * Delete role profile: update deleted_at field
+     *
+     * @param {*} user
+     * @param {string} roleId
+     * @returns
+     * @memberof RoleService
+     */
     deleteRole(user: any, roleId: string) {
         const resource = new Resource(new Array);
         const data = new UpdateRoleModel();

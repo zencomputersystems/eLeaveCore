@@ -59,6 +59,14 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		return this.commonFunctionService.getListData(result);
 	}
 
+	/**
+	 * Find general leave policy by company id
+	 *
+	 * @param {string} tenantId
+	 * @param {string} companyGuid
+	 * @returns {Observable<any>}
+	 * @memberof GeneralLeavePolicyService
+	 */
 	public findOne(tenantId: string, companyGuid: string): Observable<any> {
 		// const fields = ['BRANCH'];
 		const fields = [];

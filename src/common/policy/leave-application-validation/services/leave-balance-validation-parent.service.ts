@@ -6,23 +6,38 @@ import { ServiceYearCalc } from '../../entitlement-type/services/service-year-ca
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 
+/**
+ * Service leave balance validation: get parent calculation
+ *
+ * @export
+ * @class LeaveBalanceValidationParentService
+ */
 @Injectable()
 export class LeaveBalanceValidationParentService {
 
+  /**
+   *Creates an instance of LeaveBalanceValidationParentService.
+   * @param {EntitledFullService} entitledInFullService
+   * @param {ProratedDateCurrentMonthService} proratedDateMonthService
+   * @param {ProratedDateEndYearService} proratedDateEndYearService
+   * @param {ServiceYearCalc} workingYearService
+   * @memberof LeaveBalanceValidationParentService
+   */
   constructor(
     private readonly entitledInFullService: EntitledFullService,
     private readonly proratedDateMonthService: ProratedDateCurrentMonthService,
     private readonly proratedDateEndYearService: ProratedDateEndYearService,
     private readonly workingYearService: ServiceYearCalc,
   ) { }
+
   /**
-     * Method get parent balance
-     *
-     * @param {UserInfoModel} userInfo
-     * @param {LeaveTypePropertiesXmlDTO} policy
-     * @returns
-     * @memberof LeaveBalanceValidationService
-     */
+   * Get parent balance method
+   *
+   * @param {UserInfoModel} userInfo
+   * @param {LeaveTypePropertiesXmlDTO} policy
+   * @returns
+   * @memberof LeaveBalanceValidationParentService
+   */
   public getParentBalance(userInfo: UserInfoModel, policy: LeaveTypePropertiesXmlDTO) {
     // PARENT CALCULATION
     let parentBalance = 0;

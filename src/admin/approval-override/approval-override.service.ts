@@ -61,8 +61,8 @@ export class ApprovalOverrideService {
     result.subscribe(data => {
       data.data.resource.forEach(element => {
         // console.log(element.USER_GUID);
-        let userguid = '4C693DBE-4CC0-4DD1-9708-5E8FDFE35A83';
-        let userData = this.userInfoService.findOne(userguid, user.TENANT_GUID).subscribe(
+        // let userguid = '4C693DBE-4CC0-4DD1-9708-5E8FDFE35A83';
+        let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
           data => {
             let tempData = data.data.resource[0];
             // console.log(tempData);

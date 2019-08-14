@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
+import { Observable, of, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
@@ -7,6 +7,8 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { UserInfoModel } from '../user-info/model/user-info.model';
 import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from '../user/model/user.model';
+import { LeavetypeService } from '../leavetype/leavetype.service';
+import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
 
 
 /**
@@ -27,7 +29,8 @@ export class YearEndClosingService {
   constructor(
     private readonly userService: UserService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
-    private readonly userInfoDbService: UserInfoDbService
+    private readonly userInfoDbService: UserInfoDbService,
+    private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService
   ) { }
   /**
    * Method year end process
@@ -51,11 +54,15 @@ export class YearEndClosingService {
           let resultDisable = this.disableProcess(user, resignUser);
           return { activeUser, resultDisable };
 
+        }), map(res => { // get all leavetype detail policy
+          let { resultDisable, activeUser } = res;
+          let leavetypePolicy = this.leavetypeEntitlementDbService.findByFilterV2([], ['(DELETED_AT IS NULL)']);
+          return { activeUser, resultDisable, leavetypePolicy };
         }), map(res => { // update user entitlement for active user
-          let { activeUser, resultDisable } = res;
+          let { activeUser, resultDisable, leavetypePolicy } = res;
 
-          let resultEntitlement = this.checkEntitlement(activeUser);
-
+          let resultEntitlement = this.checkEntitlement(activeUser, leavetypePolicy);
+          // return resultEntitlement;
           // return resultDisable.subscribe(
           //   data => {
           //     console.log(data.data.resource);
@@ -109,27 +116,52 @@ export class YearEndClosingService {
     return resultDisable;
   }
 
-  public checkEntitlement(activeUser) {
-    return activeUser.forEach(element => {
-      let entitlement = this.getLeaveEntitlement(element.USER_GUID).subscribe(
-        data => {
-          // if (data.length > 0) {
-          //   console.log('____________________________________________________');
-          //   // console.log(data);
-          //   data.forEach(element => {
-          //     console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-          //   });
-          // }
-          // else {
-          //   console.log('else');
-          //   console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-          // }
-        }, err => {
-          // console.log(err);
-        }
-      );
-    });
+  public checkEntitlement(activeUser, leavetypePolicy): Observable<any> {
+    return leavetypePolicy.pipe(map(res => {
+      console.log('in checkentitlement');
+      console.log(res);
+      return res;
+    }))
+    // .subscribe(
+    //   data=>{
+
+    //   },err=>{
+
+    //   }
+    // );
+
+    // return activeUser.forEach(element => {
+    //   let entitlement = this.getLeaveEntitlement(element.USER_GUID).subscribe(
+    //     data => {
+    //       // if (data.length > 0) {
+    //       //   console.log('____________________________________________________');
+    //       //   // console.log(data);
+    //       //   data.forEach(element => {
+    //       //     console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+    //       //   });
+    //       // }
+    //       // else {
+    //       //   console.log('else');
+    //       //   console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+    //       // }
+    //     }, err => {
+    //       // console.log(err);
+    //     }
+    //   );
+    // });
   }
+
+  // public getLeavetypeDetail(): Observable<any> {
+  //   let result = this.leavetypeEntitlementDbService.findByFilterV2([], ['(DELETED_AT IS NULL)']).subscribe(
+  //     data => {
+  //       // console.log(data);
+  //       return data;
+  //     }, err => {
+  //       return err;
+  //     }
+  //   )
+  //   return of(result);
+  // }
 
   /**
    * Get leave entitlement

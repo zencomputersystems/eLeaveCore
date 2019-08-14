@@ -6,6 +6,8 @@ import { LeaveTypeModel } from './model/leavetype.model';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
+import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
+import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
 
 /**
  * Service for leavetype
@@ -49,7 +51,7 @@ export class LeavetypeService extends BaseDBService implements IDbService {
     public findAll(tenantid: string): Observable<any> {
 
         const fields = ['LEAVE_TYPE_GUID', 'CODE', 'DESCRIPTION'];
-        const filters = ['(TENANT_GUID=' + tenantid + ')'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')', '(DELETED_AT IS NULL)'];
         //url
         const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
 
@@ -87,7 +89,7 @@ export class LeavetypeService extends BaseDBService implements IDbService {
      * @returns
      * @memberof LeavetypeService
      */
-    create(user: any, data: any) {
+    create(user: any, data: CreateLeaveTypeDto) {
 
         const resource = new Resource(new Array);
         const modelData = new LeaveTypeModel()
@@ -99,11 +101,10 @@ export class LeavetypeService extends BaseDBService implements IDbService {
         modelData.CODE = data.code;
         modelData.DESCRIPTION = data.description;
         modelData.TENANT_GUID = user.TENANT_GUID;
-        modelData.TENANT_COMPANY_GUID = "test";
+        // modelData.TENANT_COMPANY_GUID = data.companyId;
 
         resource.resource.push(modelData);
 
-        console.log(resource);
         return this.createByModel(resource, [], [], []);
     }
 
@@ -115,7 +116,7 @@ export class LeavetypeService extends BaseDBService implements IDbService {
      * @returns
      * @memberof LeavetypeService
      */
-    update(user: any, d: any) {
+    update(user: any, d: UpdateLeaveTypeDto) {
 
         // do a checking first to determine this data belong to user
 
@@ -128,10 +129,36 @@ export class LeavetypeService extends BaseDBService implements IDbService {
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
         data.TENANT_GUID = user.TENANT_GUID;
+        // data.TENANT_COMPANY_GUID = d.companyId;
 
         resource.resource.push(data);
 
         return this.updateByModel(resource, [], [], []);
+
+    }
+
+    /**
+     * Delete method
+     *
+     * @param {*} user
+     * @param {string} leavetype_guid
+     * @returns
+     * @memberof LeavetypeService
+     */
+    delete(user: any, leavetype_guid: string) {
+
+        // do a checking first to determine this data belong to user
+
+        const resource = new Resource(new Array);
+        const data = new LeaveTypeModel()
+
+        data.DELETED_AT = new Date().toISOString();
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+
+        return this.updateByModel(resource, [], ['(LEAVE_TYPE_GUID=' + leavetype_guid + ')'], ['LEAVE_TYPE_GUID', 'CODE']);
 
     }
 }

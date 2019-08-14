@@ -76,7 +76,7 @@ export class ApplyLeaveService {
             let temp = await this.applyLeaveProcess(applyLeaveDTO, user, extension, true)
                 .subscribe(
                     data => {
-                        console.log(data);
+                        // console.log(data);
                         resultArr.push(data);
                         // return await of(resultArr);
                         // console.log(resultArr);

@@ -29,14 +29,14 @@ export class UserPersonalDetailDTO {
         this.workPhoneNumber = "";
         this.emailAddress = "";
         this.workEmailAddress = "";
-        this.residentialAddress1 = "";
-        this.residentialAddress2 = "";
+        this.address1 = "";
+        this.address2 = "";
         this.city = "";
         this.postcode = "";
         this.state = "";
         this.country = "";
 
-        this.emergencyContactNumber = new UserEmergencyContactDetailDTO();
+        this.emergencyContact = new UserEmergencyContactDetailDTO();
         this.education = new UserEducationDetailDTO();
         this.family = new UserFamilyDTO();
     }
@@ -162,23 +162,23 @@ export class UserPersonalDetailDTO {
     workEmailAddress: string;
 
     /**
-     * Data user personal detail - residential address 1
+     * Data user personal detail - address 1
      *
      * @type {string}
      * @memberof UserPersonalDetailDTO
      */
     @ApiModelProperty()
     @IsNotEmpty()
-    residentialAddress1: string;
+    address1: string;
 
     /**
-     * Data user personal detail - residential address 2
+     * Data user personal detail - address 2
      *
      * @type {string}
      * @memberof UserPersonalDetailDTO
      */
     @ApiModelProperty()
-    residentialAddress2: string;
+    address2: string;
 
     /**
      * Data user personal detail - city
@@ -221,13 +221,13 @@ export class UserPersonalDetailDTO {
     postcode: string;
 
     /**
-     * Data user personal detail - emergency contact number
+     * Data user personal detail - emergency contact
      *
      * @type {UserEmergencyContactDetailDTO}
      * @memberof UserPersonalDetailDTO
      */
     @ApiModelProperty({ type: UserEmergencyContactDetailDTO })
-    emergencyContactNumber: UserEmergencyContactDetailDTO;
+    emergencyContact: UserEmergencyContactDetailDTO;
 
     /**
      * Data user personal detail - education detail

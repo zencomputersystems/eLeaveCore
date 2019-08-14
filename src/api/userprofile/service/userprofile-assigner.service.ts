@@ -163,9 +163,9 @@ export class UserprofileAssignerService {
   private doProcess(sub_key, sub_val, userPersonalDetail) {
     if (sub_key == 'gender') { sub_val = sub_val == 1 ? 'Male' : 'Female'; } // convert gender code to text
     if (sub_key == 'maritalStatus') { sub_val = sub_val == 1 ? 'Married' : 'Single'; } // convert maritalstatus to text
-    if (sub_key == 'address1') { sub_key = 'residentialAddress1'; } // change key address1 to key residentialaddress1
-    if (sub_key == 'address2') { sub_key = 'residentialAddress2'; } // change ker address2 to key residentialaddress2
-    if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; } // change key emergency contact to emergencycontactnumber
+    // if (sub_key == 'address1') { sub_key = 'residentialAddress1'; } // change key address1 to key residentialaddress1
+    // if (sub_key == 'address2') { sub_key = 'residentialAddress2'; } // change ker address2 to key residentialaddress2
+    // if (sub_key == 'emergencyContact') { sub_key = 'emergencyContactNumber'; } // change key emergency contact to emergencycontactnumber
 
     userPersonalDetail[sub_key] = sub_val;
   }

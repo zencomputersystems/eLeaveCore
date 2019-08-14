@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, of, pipe } from 'rxjs';
+import { Observable, of, pipe, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
@@ -9,6 +9,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from '../user/model/user.model';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { LeaveTypeEntitlementModel } from '../leavetype-entitlement/model/leavetype_entitlement.model';
 
 
 /**
@@ -70,6 +71,7 @@ export class YearEndClosingService {
           //     console.log(err);
           //   }
           // );
+          // return forkJoin(leavetypePolicy, resultEntitlement);
 
           return activeUser;
         })
@@ -117,39 +119,104 @@ export class YearEndClosingService {
   }
 
   public checkEntitlement(activeUser, leavetypePolicy): Observable<any> {
-    return leavetypePolicy.pipe(map(res => {
-      console.log('in checkentitlement');
-      console.log(res);
-      return res;
-    }))
-    // .subscribe(
-    //   data=>{
+    let allArr = [];
+    activeUser.forEach(element => {
+      let tempArr = [];
+      tempArr['userguid'] = element.USER_GUID;
+      this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
+        tempArr['entitlement'] = [];
+        if (res.length > 0) {
+          // console.log('____________________________________________________');
+          res.forEach(element => {
+            // console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+            tempArr['entitlement'].push(element.USER_LEAVE_ENTITLEMENT_GUID);
+          });
+        }
+        // else {
+        //   console.log('else');
+        // }
+        return tempArr;
+      })).subscribe(data => { console.log('here data : ' + data); });
+      console.log(tempArr);
+    });
+    return of(allArr);
 
-    //   },err=>{
+    // return leavetypePolicy.pipe(map(res => {
+    //   console.log('in checkentitlement');
+    //   // console.log(res);
+    //   return res;
+    // }), map(res => {
+    //   // console.log(res);
+    //   // let leavePolicy:Array<LeaveTypeEntitlementModel>;
+    //   let leavePolicy = res;
 
-    //   }
-    // );
+    //   // let userEntitlement = 
+    //   // activeUser.forEach(element => {
+    //   //   return this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
+    //   //     if (res.length > 0) {
+    //   //       console.log('____________________________________________________');
+    //   //       res.forEach(element => {
+    //   //         console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+    //   //       });
+    //   //     }
+    //   //     else {
+    //   //       console.log('else');
+    //   //     }
+    //   //   }))
+    //   //     .subscribe(
+    //   //       data => {
+    //   //         return data;
+    //           //     // if (data.length > 0) {
+    //           //     //   console.log('____________________________________________________');
+    //           //     //   // console.log(data);
+    //           //     //   data.forEach(element => {
+    //           //     //     console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+    //           //     //   });
+    //           //     // }
+    //           //     // else {
+    //           //     //   console.log('else');
+    //           //     //   console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+    //           //     // }
+    //         }, err => {
+    //           //     // console.log(err);
+    //         }
+    //       );
+    //   });
 
-    // return activeUser.forEach(element => {
-    //   let entitlement = this.getLeaveEntitlement(element.USER_GUID).subscribe(
-    //     data => {
-    //       // if (data.length > 0) {
-    //       //   console.log('____________________________________________________');
-    //       //   // console.log(data);
-    //       //   data.forEach(element => {
-    //       //     console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-    //       //   });
-    //       // }
-    //       // else {
-    //       //   console.log('else');
-    //       //   console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-    //       // }
-    //     }, err => {
-    //       // console.log(err);
-    //     }
+    //   console.log('before entering map');
+    //   console.log(leavePolicy);
+    //   console.log(userEntitlement);
+
+    //   return { leavePolicy, userEntitlement }
+    // }), map(res => {
+    //   // let {leavePolicy,userEntitlement} = res;
+    //   // console.log(leavePolicy);
+    //   // console.log(userEntitlement);
+    //   console.log('im hereeee');
+    //   return res;
+    // }))
+    //   .subscribe(
+    //     //   data=>{
+
+    //     //   },err=>{
+
+    //     //   }
     //   );
-    // });
   }
+
+  // public getuserLeaveEntitlement(element):Observable<any>{
+  //   return this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
+  //     if (res.length > 0) {
+  //       console.log('____________________________________________________');
+  //       res.forEach(element => {
+  //         console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
+  //       });
+  //     }
+  //     else {
+  //       console.log('else');
+  //     }
+  //   }))
+  // }
 
   // public getLeavetypeDetail(): Observable<any> {
   //   let result = this.leavetypeEntitlementDbService.findByFilterV2([], ['(DELETED_AT IS NULL)']).subscribe(

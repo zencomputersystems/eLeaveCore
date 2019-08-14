@@ -8,6 +8,8 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
 
 
 @Module({
@@ -17,7 +19,9 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
     UserService,
     QueryParserService,
     UserLeaveEntitlementDbService,
-    UserInfoDbService
+    UserInfoDbService,
+    LeavetypeEntitlementDbService,
+    XMLParserService
   ],
   modules: [
     AuthModule,

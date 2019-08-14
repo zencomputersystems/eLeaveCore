@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
@@ -9,6 +9,7 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
 import { throws } from 'assert';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
+import { UserInfoDbService } from '../../../../admin/holiday/db/user-info.db.service';
 
 /**
  * Controller for user profile
@@ -30,7 +31,8 @@ export class UserprofileController {
     constructor(
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly commonFunctionService: CommonFunctionService) { }
+        private readonly commonFunctionService: CommonFunctionService,
+        private readonly userinfoDbService: UserInfoDbService) { }
 
     /**
      * Find all user profile
@@ -57,6 +59,22 @@ export class UserprofileController {
                     else { res.send(err); }
                 }
             )
+    }
+
+    /**
+     * Set date of resign to user
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserprofileController
+     */
+    @Delete('/users/:id')
+    @ApiOperation({ title: 'Set resign date' })
+    @ApiImplicitQuery({ name: 'id', description: 'Delete by user guid', required: true })
+    setResignDate(@Param('id') id, @Req() req, @Res() res) {
+        id = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runUpdateService(this.userinfoDbService.setResignUser(req.user, id), res);
     }
 
     /**

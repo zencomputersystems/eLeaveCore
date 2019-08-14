@@ -4,6 +4,7 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
 import { UserprofileController } from './userprofile.controller';
 import { UserprofileAssignerService } from '../../service/userprofile-assigner.service';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
+import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 describe('UserprofileController', () => {
   let pipe: UserprofileController;
   beforeEach(async () => {
@@ -20,6 +21,9 @@ describe('UserprofileController', () => {
     const userprofileAssignerServiceStub = {
 
     }
+    const userInfoDbServiceStub = {
+
+    }
     const module = await Test.createTestingModule({
       providers: [
         UserprofileController,
@@ -32,7 +36,11 @@ describe('UserprofileController', () => {
           provide: UserprofileAssignerService,
           useValue: userprofileAssignerServiceStub
         },
-        CommonFunctionService
+        CommonFunctionService,
+        {
+          provide: UserInfoDbService,
+          useValue: userInfoDbServiceStub
+        }
       ]
     }).compile();
     pipe = await module.get<UserprofileController>(UserprofileController);

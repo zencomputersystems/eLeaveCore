@@ -6,6 +6,7 @@ import { EmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
+import { UserInfoService } from 'src/admin/user-info/user-info.service';
 
 type ProfileDataDetails = [UserInfoModel, boolean, boolean, boolean, boolean];
 type PersonalDataDetails = [UserInfoModel, boolean, boolean, UserProfileDTO];
@@ -27,7 +28,8 @@ export class UserprofileAssignerService {
    */
   constructor(
     private readonly serviceYearCalcService: ServiceYearCalc,
-    private readonly xmlParserService: XMLParserService
+    private readonly xmlParserService: XMLParserService,
+    private readonly userInfoService: UserInfoService
   ) { }
 
 
@@ -191,9 +193,23 @@ export class UserprofileAssignerService {
     employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
     employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
     employmentDetail.reportingTo = data.MANAGER_USER_GUID;
+    this.findManagerName(data.MANAGER_USER_GUID, employmentDetail);
+
+
     this.assignEmploymentDetail2(employmentDetail, data);
 
     return employmentDetail;
+  }
+
+  public findManagerName(managerGuid, employmentDetail) {
+    this.userInfoService.findOne(managerGuid, '').subscribe(
+      data => {
+        // console.log(data.data.resource[0].FULLNAME);
+        return employmentDetail.reportingTo = data.data.resource[0].FULLNAME;
+      }, err => {
+        console.log(err);
+      }
+    );
   }
 
   /**

@@ -41,6 +41,6 @@ export class XMLParserService {
      * @memberof XMLParserService
      */
     public convertXMLToJson(data: any) {
-        return parse(data);
+        return parse(data, { parseTrueNumberOnly: true });
     }
 }

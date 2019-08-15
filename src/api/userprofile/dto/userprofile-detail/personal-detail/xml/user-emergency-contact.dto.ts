@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
@@ -16,6 +16,7 @@ export class UserEmergencyContactDTO {
      */
     @ApiModelProperty({ description: 'Emergency contact name', example: 'Raymond' })
     @IsNotEmpty()
+    @IsString()
     contactName: string;
 
     /**
@@ -26,5 +27,6 @@ export class UserEmergencyContactDTO {
      */
     @ApiModelProperty({ description: 'Emergency contact number', example: '0197993312' })
     @IsNotEmpty()
+    @IsString()
     contactNumber: string;
 }

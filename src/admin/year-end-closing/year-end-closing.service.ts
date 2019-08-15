@@ -63,7 +63,15 @@ export class YearEndClosingService {
           let { activeUser, resultDisable, leavetypePolicy } = res;
 
           let resultEntitlement = this.checkEntitlement(activeUser, leavetypePolicy);
-          // return resultEntitlement;
+          resultEntitlement.forEach(x => x.subscribe(
+            data => {
+              this.processPolicy(leavetypePolicy, x);
+            }, err => {
+              console.log(err);
+            }
+          ));
+          // let temp =
+          // return forkJoin(leavetypePolicy, resultEntitlement[0]);
           // return resultDisable.subscribe(
           //   data => {
           //     console.log(data.data.resource);
@@ -89,6 +97,33 @@ export class YearEndClosingService {
     // console.log(result);
     return result;
     // return of('userList');
+  }
+
+  public processPolicy(leavetypePolicy: Observable<any>, userEntitlement: Observable<any>) {
+    let joinObserve = forkJoin(leavetypePolicy, userEntitlement);
+    // console.log('in function process policy');
+    joinObserve.pipe(map(([res1, res2]) => {
+      // console.log(res2);
+      if (res2.entitlement.length > 0) {
+        res2.entitlement.forEach(y => {
+          let tempPolicy = res1.find(x => x.ENTITLEMENT_GUID.toString() === y.toString());
+          if (tempPolicy) {
+            console.log(res2.userguid + ' - ' + tempPolicy.ENTITLEMENT_GUID + ' - ' + tempPolicy.LEAVE_TYPE_GUID);
+          }
+        });
+      } else {
+        console.log(res2.userguid + ' - user was not assigned with any entitlement');
+      }
+      // console.log(res1[0]);
+      // console.log(res2);
+    })).subscribe(
+      data => {
+        // console.log(data);
+      }, err => {
+        // console.log(err);
+      }
+    );
+    return 'ok';
   }
 
   public checkUser(res: UserInfoModel[]) {
@@ -118,28 +153,37 @@ export class YearEndClosingService {
     return resultDisable;
   }
 
-  public checkEntitlement(activeUser, leavetypePolicy): Observable<any> {
+  public checkEntitlement(activeUser, leavetypePolicy): Observable<any>[] {
     let allArr = [];
+    let usertemp;
     activeUser.forEach(element => {
       let tempArr = [];
       tempArr['userguid'] = element.USER_GUID;
-      this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
+      usertemp = this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
         tempArr['entitlement'] = [];
         if (res.length > 0) {
           // console.log('____________________________________________________');
           res.forEach(element => {
             // console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-            tempArr['entitlement'].push(element.USER_LEAVE_ENTITLEMENT_GUID);
+            tempArr['entitlement'].push(element.ENTITLEMENT_GUID);
           });
         }
         // else {
         //   console.log('else');
         // }
+        // console.log(tempArr);
         return tempArr;
-      })).subscribe(data => { console.log('here data : ' + data); });
-      console.log(tempArr);
+
+      }))
+      //.subscribe(data => { console.log('here data : ' + data); });
+      // console.log(tempArr);
+      allArr.push(usertemp);
     });
-    return of(allArr);
+
+
+    // console.log(allArr);
+    return allArr;
+    // return of(allArr);
 
     // return leavetypePolicy.pipe(map(res => {
     //   console.log('in checkentitlement');

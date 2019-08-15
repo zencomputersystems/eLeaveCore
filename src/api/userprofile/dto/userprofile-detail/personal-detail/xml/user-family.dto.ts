@@ -17,7 +17,7 @@ export class UserFamilyDTO {
      * @type {UserSpouseDTO[]}
      * @memberof UserFamilyDTO
      */
-    @ApiModelProperty({ type: UserSpouseDTO })
+    @ApiModelProperty({ type: [UserSpouseDTO] })
     @Type(() => UserSpouseDTO)
     @ValidateNested()
     spouse: UserSpouseDTO[];
@@ -28,7 +28,7 @@ export class UserFamilyDTO {
      * @type {UserChildrenDTO[]}
      * @memberof UserFamilyDTO
      */
-    @ApiModelProperty({ type: UserChildrenDTO })
+    @ApiModelProperty({ type: [UserChildrenDTO] })
     @Type(() => UserChildrenDTO)
     @ValidateNested()
     child: UserChildrenDTO[];

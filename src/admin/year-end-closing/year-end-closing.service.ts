@@ -10,6 +10,9 @@ import { UserModel } from '../user/model/user.model';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { LeaveTypeEntitlementModel } from '../leavetype-entitlement/model/leavetype_entitlement.model';
+import { UserLeaveEntitlementService } from 'src/api/userprofile/service/user-leave-entitlement.service';
+import { AssignLeavePolicyDTO } from '../../api/userprofile/dto/leave-entitlement/assign-leave-policy.dto';
+import { YearEndAssignEntitlementService } from './service/year-end-assign-entitlement.service';
 
 
 /**
@@ -31,7 +34,8 @@ export class YearEndClosingService {
     private readonly userService: UserService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly userInfoDbService: UserInfoDbService,
-    private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService
+    private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
+    private readonly yearEndAssignEntitlementService: YearEndAssignEntitlementService
   ) { }
   /**
    * Method year end process
@@ -40,7 +44,7 @@ export class YearEndClosingService {
    * @returns {Observable<any>}
    * @memberof YearEndClosingService
    */
-  public yearEndProcess(user: any): Observable<any> {
+  public yearEndProcess(user: any, year: number): Observable<any> {
 
     const userFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(DELETED_AT IS NULL)']
 
@@ -62,68 +66,53 @@ export class YearEndClosingService {
         }), map(res => { // update user entitlement for active user
           let { activeUser, resultDisable, leavetypePolicy } = res;
 
-          let resultEntitlement = this.checkEntitlement(activeUser, leavetypePolicy);
+          let resultEntitlement = this.checkEntitlement(activeUser);
           resultEntitlement.forEach(x => x.subscribe(
             data => {
-              this.processPolicy(leavetypePolicy, x);
+              this.processPolicy(leavetypePolicy, x, year, user); //find all leave entitlement
             }, err => {
               console.log(err);
             }
           ));
-          // let temp =
-          // return forkJoin(leavetypePolicy, resultEntitlement[0]);
-          // return resultDisable.subscribe(
-          //   data => {
-          //     console.log(data.data.resource);
-          //   }, err => {
-          //     console.log(err);
-          //   }
-          // );
-          // return forkJoin(leavetypePolicy, resultEntitlement);
-
           return activeUser;
         })
       )
-    // .subscribe(
-    //   data => {
-    //     console.log(data[0].USER_GUID);
-    //     return data;
-    //   }, err => {
-    //     // console.log(err);
-    //     return err;
-    //   }
-    // );
-
-    // console.log(result);
     return result;
-    // return of('userList');
   }
 
-  public processPolicy(leavetypePolicy: Observable<any>, userEntitlement: Observable<any>) {
+  public processPolicy(leavetypePolicy: Observable<any>, userEntitlement: Observable<any>, year: number, user: any) {
     let joinObserve = forkJoin(leavetypePolicy, userEntitlement);
-    // console.log('in function process policy');
     joinObserve.pipe(map(([res1, res2]) => {
-      // console.log(res2);
       if (res2.entitlement.length > 0) {
         res2.entitlement.forEach(y => {
           let tempPolicy = res1.find(x => x.ENTITLEMENT_GUID.toString() === y.toString());
           if (tempPolicy) {
-            console.log(res2.userguid + ' - ' + tempPolicy.ENTITLEMENT_GUID + ' - ' + tempPolicy.LEAVE_TYPE_GUID);
+            this.assignNewYearEntitlement(tempPolicy, res2.userguid, year, user);
           }
         });
       } else {
         console.log(res2.userguid + ' - user was not assigned with any entitlement');
       }
-      // console.log(res1[0]);
-      // console.log(res2);
-    })).subscribe(
-      data => {
-        // console.log(data);
-      }, err => {
-        // console.log(err);
-      }
-    );
+    })).subscribe();
+
     return 'ok';
+  }
+
+  public assignNewYearEntitlement(tempPolicy, userguid, year, user) {
+    // year = year + 1;
+    // console.log(userguid);
+    // console.log(year);
+    // console.log(userguid + ' - ' + tempPolicy + ' - ' + tempPolicy);
+    // console.log(tempPolicy);
+    let data = new AssignLeavePolicyDTO();
+    data.leaveEntitlementId = tempPolicy.ENTITLEMENT_GUID;
+    data.leaveTypeId = tempPolicy.LEAVE_TYPE_GUID;
+    // data.userId.push(userguid);
+    data.userId = [userguid];
+
+    this.yearEndAssignEntitlementService.assignEntitlement(user, data);
+
+
   }
 
   public checkUser(res: UserInfoModel[]) {
@@ -153,7 +142,7 @@ export class YearEndClosingService {
     return resultDisable;
   }
 
-  public checkEntitlement(activeUser, leavetypePolicy): Observable<any>[] {
+  public checkEntitlement(activeUser): Observable<any>[] {
     let allArr = [];
     let usertemp;
     activeUser.forEach(element => {
@@ -162,117 +151,17 @@ export class YearEndClosingService {
       usertemp = this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
         tempArr['entitlement'] = [];
         if (res.length > 0) {
-          // console.log('____________________________________________________');
           res.forEach(element => {
-            // console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
             tempArr['entitlement'].push(element.ENTITLEMENT_GUID);
           });
         }
-        // else {
-        //   console.log('else');
-        // }
-        // console.log(tempArr);
         return tempArr;
-
       }))
-      //.subscribe(data => { console.log('here data : ' + data); });
-      // console.log(tempArr);
       allArr.push(usertemp);
     });
 
-
-    // console.log(allArr);
     return allArr;
-    // return of(allArr);
-
-    // return leavetypePolicy.pipe(map(res => {
-    //   console.log('in checkentitlement');
-    //   // console.log(res);
-    //   return res;
-    // }), map(res => {
-    //   // console.log(res);
-    //   // let leavePolicy:Array<LeaveTypeEntitlementModel>;
-    //   let leavePolicy = res;
-
-    //   // let userEntitlement = 
-    //   // activeUser.forEach(element => {
-    //   //   return this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
-    //   //     if (res.length > 0) {
-    //   //       console.log('____________________________________________________');
-    //   //       res.forEach(element => {
-    //   //         console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-    //   //       });
-    //   //     }
-    //   //     else {
-    //   //       console.log('else');
-    //   //     }
-    //   //   }))
-    //   //     .subscribe(
-    //   //       data => {
-    //   //         return data;
-    //           //     // if (data.length > 0) {
-    //           //     //   console.log('____________________________________________________');
-    //           //     //   // console.log(data);
-    //           //     //   data.forEach(element => {
-    //           //     //     console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-    //           //     //   });
-    //           //     // }
-    //           //     // else {
-    //           //     //   console.log('else');
-    //           //     //   console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-    //           //     // }
-    //         }, err => {
-    //           //     // console.log(err);
-    //         }
-    //       );
-    //   });
-
-    //   console.log('before entering map');
-    //   console.log(leavePolicy);
-    //   console.log(userEntitlement);
-
-    //   return { leavePolicy, userEntitlement }
-    // }), map(res => {
-    //   // let {leavePolicy,userEntitlement} = res;
-    //   // console.log(leavePolicy);
-    //   // console.log(userEntitlement);
-    //   console.log('im hereeee');
-    //   return res;
-    // }))
-    //   .subscribe(
-    //     //   data=>{
-
-    //     //   },err=>{
-
-    //     //   }
-    //   );
   }
-
-  // public getuserLeaveEntitlement(element):Observable<any>{
-  //   return this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
-  //     if (res.length > 0) {
-  //       console.log('____________________________________________________');
-  //       res.forEach(element => {
-  //         console.log(element.USER_LEAVE_ENTITLEMENT_GUID);
-  //       });
-  //     }
-  //     else {
-  //       console.log('else');
-  //     }
-  //   }))
-  // }
-
-  // public getLeavetypeDetail(): Observable<any> {
-  //   let result = this.leavetypeEntitlementDbService.findByFilterV2([], ['(DELETED_AT IS NULL)']).subscribe(
-  //     data => {
-  //       // console.log(data);
-  //       return data;
-  //     }, err => {
-  //       return err;
-  //     }
-  //   )
-  //   return of(result);
-  // }
 
   /**
    * Get leave entitlement
@@ -285,8 +174,6 @@ export class YearEndClosingService {
     const userFilter = ['(USER_GUID=' + userguid + ')', '(PARENT_FLAG=1)'];
     return this.userLeaveEntitlementDbService.findByFilterV2([], userFilter).pipe(
       map(res => {
-        // console.log('in function leave');
-        // console.log(res);
         return res;
       }));
   }

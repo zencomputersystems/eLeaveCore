@@ -1,7 +1,8 @@
-import { Controller, UseGuards, Get, Post, Body, Req, Res } from '@nestjs/common';
+import { Controller, UseGuards, Get, Post, Body, Req, Res, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { YearEndClosingService } from './year-end-closing.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Controller year end closing
@@ -18,21 +19,42 @@ export class YearEndClosingController {
    * @param {YearEndClosingService} yearEndClosingService
    * @memberof YearEndClosingController
    */
-  constructor(private readonly yearEndClosingService: YearEndClosingService) { }
+  constructor(
+    private readonly yearEndClosingService: YearEndClosingService,
+    private readonly commonFunctionService: CommonFunctionService
+  ) { }
 
   /**
    * Do process year end 
    * Disable resign user
    * Assign new leave entitlement
+   * add carry forward based on leave policy
    *
    * @param {*} req
    * @param {*} res
    * @memberof YearEndClosingController
    */
-  @Post()
-  @ApiOperation({ title: 'Create user info' })
-  create(@Req() req, @Res() res) {
-    this.yearEndClosingService.yearEndProcess(req.user).subscribe(data => {
+  @Post('/:year')
+  @ApiImplicitQuery({ name: 'year', description: 'Closing year', required: true })
+  @ApiOperation({ title: 'Assign leave entitlement for next year' })
+  create(@Param('year') year, @Req() req, @Res() res) {
+    // console.log(year);
+    // year = this.commonFunctionService.findIdParam(req, res, year);
+    let dataYear = null;
+    let dataIdParam = req.query.year;
+    if (dataIdParam == null) {
+      dataYear = year;
+    } else {
+      dataYear = dataIdParam;
+    }
+    if (dataYear == null) {
+      res.status(400);
+      res.send('id not found');
+    }
+    year = dataYear;
+    // console.log(year);
+    // console.log(new Date(year).getFullYear() + 1);
+    this.yearEndClosingService.yearEndProcess(req.user, new Date(year).getFullYear() + 1).subscribe(data => {
       res.send(data);
     }, err => {
       res.send(err);

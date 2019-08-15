@@ -16,7 +16,7 @@ export class UserCertificationDetailDTO {
      * @type {UserCertificationDTO[]}
      * @memberof UserCertificationDetailDTO
      */
-    @ApiModelProperty({ type: UserCertificationDTO })
+    @ApiModelProperty({ type: [UserCertificationDTO] })
     @Type(() => UserCertificationDTO)
     @ValidateNested()
     certificationDetail: UserCertificationDTO[]

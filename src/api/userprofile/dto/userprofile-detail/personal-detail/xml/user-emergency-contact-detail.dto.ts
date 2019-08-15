@@ -17,7 +17,7 @@ export class UserEmergencyContactDetailDTO {
      * @type {UserEmergencyContactDTO[]}
      * @memberof UserEmergencyContactDetailDTO
      */
-    @ApiModelProperty({ type: UserEmergencyContactDTO })
+    @ApiModelProperty({ type: [UserEmergencyContactDTO] })
     @Type(() => UserEmergencyContactDTO)
     @ValidateNested()
     contacts: UserEmergencyContactDTO[];

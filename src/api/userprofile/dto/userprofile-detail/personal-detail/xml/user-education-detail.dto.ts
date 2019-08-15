@@ -17,7 +17,7 @@ export class UserEducationDetailDTO {
      * @type {UserEducationDTO[]}
      * @memberof UserEducationDetailDTO
      */
-    @ApiModelProperty({ type: UserEducationDTO })
+    @ApiModelProperty({ type: [UserEducationDTO] })
     @Type(() => UserEducationDTO)
     @ValidateNested()
     educationDetail: UserEducationDTO[]

@@ -167,7 +167,7 @@ export class NotificationController {
      */
     public processData(userArray, notifyData, req) {
         notifyData.forEach(element => {
-            if (element.CATEGORY == 'user-leave' && element.PROPERTIES_XML != null) {
+            if (element.CATEGORY == 'user-leave' && element.PROPERTIES_XML != null && element.PROPERTIES_XML != '') {
                 let temp;
                 // if (element.PROPERTIES_XML) {
                 temp = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML);

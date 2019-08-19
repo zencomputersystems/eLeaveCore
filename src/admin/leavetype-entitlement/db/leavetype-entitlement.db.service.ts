@@ -152,5 +152,26 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
 
     }
 
+    /**
+     * Delete leavetype entitlement 
+     *
+     * @param {*} user
+     * @param {string} leavetype_entitlement_guid
+     * @returns
+     * @memberof LeavetypeEntitlementDbService
+     */
+    deleteLeavetypeEntitlement(user: any, leavetype_entitlement_guid: string) {
+
+        const resource = new Resource(new Array);
+        const data = new LeaveTypeEntitlementModel();
+
+        data.DELETED_AT = new Date().toISOString();
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+
+        return this.updateByModel(resource, [], ['(ENTITLEMENT_GUID=' + leavetype_entitlement_guid + ')'], ['CODE', 'DESCRIPTION']);
+    }
 
 }

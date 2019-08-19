@@ -7,6 +7,7 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
+import { map } from 'rxjs/operators';
 
 type ProfileDataDetails = [UserInfoModel, boolean, boolean, boolean, boolean];
 type PersonalDataDetails = [UserInfoModel, boolean, boolean, UserProfileDTO];
@@ -193,7 +194,7 @@ export class UserprofileAssignerService {
     employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
     employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
     employmentDetail.reportingTo = data.MANAGER_USER_GUID;
-    this.findManagerName(data.MANAGER_USER_GUID, employmentDetail);
+    this.findManagerName(data.MANAGER_USER_GUID, employmentDetail); //.subscribe(data => { employmentDetail.reportingTo = data; });
 
 
     this.assignEmploymentDetail2(employmentDetail, data);
@@ -210,6 +211,23 @@ export class UserprofileAssignerService {
         console.log(err);
       }
     );
+    // return this.userInfoService.findOne(managerGuid, '')
+    // // .pipe(map(
+    // //   res => { console.log(res.data.resource[0].FULLNAME); return employmentDetail.reportingTo = res.data.resource[0].FULLNAME; }))
+    // .subscribe(
+    // data => {
+    //   console.log(data);
+    //   return data;
+    //   // if (data.data.resource[0].FULLNAME != undefined) {
+    //   //   // console.log(data.data.resource[0].FULLNAME);
+    //   //   return data.data.resource[0].FULLNAME;
+    //   // } else {
+    //   //   return null;
+    //   // }
+    // }, err => {
+    //   console.log(err);
+    // }
+    // );
   }
 
   /**

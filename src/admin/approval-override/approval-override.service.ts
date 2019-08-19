@@ -57,38 +57,33 @@ export class ApprovalOverrideService {
    */
   public updateToEmployee(user: any, data: UpdateApprovalDTO) {
     let result = this.leaveTransactionDbService.updateToEmployee(user, data);
-
     result.subscribe(data => {
       data.data.resource.forEach(element => {
-        // console.log(element.USER_GUID);
-        // let userguid = '4C693DBE-4CC0-4DD1-9708-5E8FDFE35A83';
-        let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
-          data => {
-            let tempData = data.data.resource[0];
-            // console.log(tempData);
-            // console.log(tempData.PROPERTIES_XML);
-            let dataObj = this.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
-            // console.log(dataObj.email);
-            // console.log(dataObj.notificationRule);
-            if (dataObj.notificationRule) {
-              this.sendEmailNotify(user, dataObj.notificationRule);
-            } else {
-              // console.log('Notification email not exist');
-            }
-          }, err => {
-
-          }
-        );
+        this.checkMailAvailable(user, element);
       });
-    }
-    );
-
-    // console.log(data);
-    // console.log(result);
-
+    });
     return result;
   }
 
+  public checkMailAvailable(user, element) {
+    if (element.status == 'APPROVE') {
+      let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
+        data => {
+          let tempData = data.data.resource[0];
+          this.sendEmailToNotifier(user, tempData);
+        }, err => { }
+      );
+    }
+  }
+
+  public sendEmailToNotifier(user, tempData) {
+    if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
+      let dataObj = this.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
+      if (dataObj.notificationRule) {
+        this.sendEmailNotify(user, dataObj.notificationRule);
+      }
+    }
+  }
 
   /**
    * Method to send email notify
@@ -115,12 +110,10 @@ export class ApprovalOverrideService {
         return { successList, failedList };
       }), map(res => {
         res.successList.forEach(element => {
-          // console.log(element.EMAIL);
           this.sendEmailV2(element.EMAIL, "Farah");
         });
         return res;
       })).subscribe(data => {
-        // console.log(data);
         return data;
       }, err => {
         return err;
@@ -139,10 +132,7 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   private sendEmailV2(email: string, token: string) {
-    // console.log('before function');
     let results = this.emailNodemailerService.mailProcessApprove(email, token);
-    // console.log('after function');
-    // console.log(results);
     return results;
   }
 

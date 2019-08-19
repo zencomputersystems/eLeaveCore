@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Param, Req, Res, Post, Body, Patch } from '@nestjs/common';
+import { Controller, UseGuards, Get, Param, Req, Res, Post, Body, Patch, Delete } from '@nestjs/common';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { AssignLeavePolicyDTO } from '../../dto/leave-entitlement/assign-leave-p
 import { UserLeaveEntitlementService } from '../../service/user-leave-entitlement.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
+// import { UpdateUserLeaveEntitlementDTO } from '../../dto/leave-entitlement/update-user-leave-entitlement.dto';
 
 /**
  *  Controller for entitlement detail
@@ -13,7 +14,7 @@ import { CommonFunctionService } from '../../../../common/helper/common-function
  * @export
  * @class EntitlementDetailController
  */
-@Controller('api')
+@Controller('api/leave-entitlement')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class EntitlementDetailController {
@@ -35,7 +36,7 @@ export class EntitlementDetailController {
      * @param {*} res
      * @memberof EntitlementDetailController
      */
-    @Get('leave-entitlement')
+    @Get()
     @ApiOperation({ title: 'Get entitlement detail for this user' })
     findOwn(@Req() req, @Res() res) {
 
@@ -65,7 +66,7 @@ export class EntitlementDetailController {
      * @memberof EntitlementDetailController
      */
     @UseGuards(ResourceGuard)
-    @Get('leave-entitlement/:id')
+    @Get(':id')
     @Roles('ProfileAdmin')
     @ApiOperation({ title: 'Get entitlement detail to edit for requested user' })
     @ApiImplicitQuery({ name: 'id', description: 'filter entitlement by USER_GUID', required: true })
@@ -98,7 +99,7 @@ export class EntitlementDetailController {
      * @memberof EntitlementDetailController
      */
     @UseGuards(ResourceGuard)
-    @Post('leave-entitlement')
+    @Post()
     @Roles('ProfileAdmin')
     @ApiOperation({ title: 'Assign leave entitlement to user' })
     create(@Body() assignLeaveDTO: AssignLeavePolicyDTO, @Req() req, @Res() res) {
@@ -119,22 +120,37 @@ export class EntitlementDetailController {
     }
 
 
+    // /**
+    //  * Update leave-entitlement
+    //  *
+    //  * @param {*} insertDTO
+    //  * @param {*} req
+    //  * @param {*} res
+    //  * @memberof EntitlementDetailController
+    //  */
+    // @UseGuards(ResourceGuard)
+    // @Patch()
+    // @Roles('ProfileAdmin')
+    // @ApiOperation({ title: 'Update user leave entitlement' })
+    // update(@Body() updateUserLeaveEntitlementDTO: UpdateUserLeaveEntitlementDTO, @Req() req, @Res() res) {
+    //     this.commonFunctionService.runUpdateService(this.entitlementService.updateLeaveEntitlement(req.user, updateUserLeaveEntitlementDTO), res);
+    // }
+
+
     /**
-     * Update leave-entitlement
+     * Delete user leave entitlement 
      *
-     * @param {*} insertDTO
+     * @param {*} id
      * @param {*} req
      * @param {*} res
      * @memberof EntitlementDetailController
      */
-    // @UseGuards(ResourceGuard)
-    // @Patch('leave-entitlement/:id')
-    // @Roles('ProfileAdmin')
-    // @ApiOperation({ title: 'Update user leave entitlement' })
-    // update(@Body() insertDTO, @Req() req, @Res() res) {
-
-    // }
-
-
+    @Delete(':id')
+    @ApiOperation({ title: 'Delete user leave entitlement' })
+    @ApiImplicitQuery({ name: 'id', description: 'Delete by user leave entitlement guid', required: true })
+    deleteLeavetypeEntitlement(@Param('id') id, @Req() req, @Res() res) {
+        id = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runUpdateService(this.entitlementService.deleteLeaveEntitlement(req.user, id), res);
+    }
 
 }

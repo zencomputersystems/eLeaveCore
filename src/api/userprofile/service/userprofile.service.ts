@@ -19,6 +19,7 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 import { UserprofileAssignerService } from './userprofile-assigner.service';
+import { Observable } from 'rxjs';
 
 /**
  * Service for user profile
@@ -156,11 +157,27 @@ export class UserprofileService {
             .pipe(
                 map(res => {
                     const data: UserInfoModel = res[0];
+                    // this.findManagerName(data.MANAGER_USER_GUID, data).subscribe(data => {
+                    //     // return data;
+                    //     console.log(data);
+                    //     // if (data) { return this.userprofileAssignerService.buildProfileData([data, false, true, false, false]); }
+                    // })
 
                     if (data) { return this.userprofileAssignerService.buildProfileData([data, false, true, false, false]); }
                 })
             )
     }
+
+    // public findManagerName(managerGuid: string, data: UserInfoModel): Observable<any> {
+    //     return this.userInfoService.findOne(managerGuid, '').pipe(map(
+    //         res => {
+    //             // console.log(res.data.resource[0].FULLNAME);
+    //             // return res.data.resource[0].FULLNAME;
+    //             data.MANAGER_USER_GUID = res.data.resource[0].FULLNAME;
+    //             return data;
+    //         }))
+
+    // }
 
     /**
      * update employmemnt detail

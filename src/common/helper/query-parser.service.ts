@@ -1,5 +1,6 @@
 import { DreamFactory } from 'src/config/dreamfactory';
 
+type DBRequest = [string, Array<string>, Array<string>, string, number];
 /**
  * Service for query
  *
@@ -54,19 +55,21 @@ export class QueryParserService {
         const paramArray = [];
 
 
-        // build the parameter
-        if (fields.length > 0) {
-            const field = "fields=" + fields.map(res => encodeURIComponent(res)).join(",");
+        this.refactor(paramArray, fields, filters, "AND");
+        // console.log(paramArray);
+        // // build the parameter
+        // if (fields.length > 0) {
+        //     const field = "fields=" + fields.map(res => encodeURIComponent(res)).join(",");
 
-            paramArray.push(field);
-        }
+        //     paramArray.push(field);
+        // }
 
-        if (filters.length > 0) {
+        // if (filters.length > 0) {
 
-            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join("AND");
+        //     const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join("AND");
 
-            paramArray.push(filter);
-        }
+        //     paramArray.push(filter);
+        // }
 
 
         if (idFields.length > 0) {
@@ -80,7 +83,70 @@ export class QueryParserService {
 
     }
 
+    generateDbQueryV3(data: DBRequest) {
+
+        let tableName: string = data[0];
+        let fields: Array<string> = data[1];
+        let filters: Array<string> = data[2];
+        let orders: string = data[3];
+        let limit: number = data[4];
+
+        let url = DreamFactory.df_host + tableName + "?";
+
+        const paramArray = [];
+
+        this.refactor(paramArray, fields, filters, " ");
+
+        // // build the parameter
+        // if (fields.length > 0) {
+        //     const field = "fields=" + fields.map(res => encodeURIComponent(res)).join(",");
+
+        //     paramArray.push(field);
+        // }
+
+        // if (filters.length > 0) {
+
+        //     const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join(" ");
+
+        //     paramArray.push(filter);
+        // }
+
+
+        if (orders != null && orders != '' && orders != undefined) {
+            const order = "order=" + orders;
+
+            paramArray.push(order);
+        }
+
+        if (limit != null && limit != undefined) {
+            const limits = "limit=" + limit;
+
+            paramArray.push(limits);
+        }
+
+        const buildurl = url + paramArray.join("&");
+        return buildurl;
+
+    }
+
     //const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CCOST_CENTRE_GUID";
 
+    public refactor(paramArray: any[], fields: string[], filters: string[], whereArgs: string) {
+        // console.log(whereArgs);
+        // build the parameter
+        if (fields.length > 0) {
+            const field = "fields=" + fields.map(res => encodeURIComponent(res)).join(",");
 
+            paramArray.push(field);
+        }
+
+        if (filters.length > 0) {
+
+            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join('"' + whereArgs + '"');
+
+            paramArray.push(filter);
+        }
+        // console.log(paramArray);
+        // return paramArray;
+    }
 }

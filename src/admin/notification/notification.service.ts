@@ -53,9 +53,10 @@ export class NotificationService extends BaseDBService {
 
         // const fields = ['MESSAGE', 'PROPERTIES_XML', 'CATEGORY'];
         const fields = [];
-        const filters = ['(USER_GUID=' + userId + ')'];
+        const filters = ['(USER_GUID=' + userId + ') OR (CATEGORY="new-announcement")'];
+        const orders = 'CREATION_TS DESC';
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        const url = this.queryService.generateDbQueryV3(this._tableName, fields, filters, orders);
 
         // call DF to validate the user
         return this.httpService.get(url);

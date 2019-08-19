@@ -20,7 +20,7 @@ export class UserEntitlementAssignEntitlement {
 
   /**
    *Creates an instance of UserEntitlementAssignEntitlement.
-   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService DB service for l_main_user_leave_entitlement
    * @param {UserprofileDbService} userDbService
    * @param {LeavetypeEntitlementDbService} leaveEntitlementDbService
    * @param {UserInfoService} userInfoDbService
@@ -28,7 +28,7 @@ export class UserEntitlementAssignEntitlement {
    * @memberof UserEntitlementAssignEntitlement
    */
   constructor(
-    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+    public readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly userDbService: UserprofileDbService,
     private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
     private readonly userInfoDbService: UserInfoService,

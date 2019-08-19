@@ -82,7 +82,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
         resource.resource.push(data);
         // console.log(resource);
 
-        return this.updateByModel(resource, ['USER_GUID', 'LEAVE_TRANSACTION_GUID'], ['(LEAVE_TRANSACTION_GUID IN (' + leaveList + '))'], []);
+        return this.updateByModel(resource, ['USER_GUID', 'LEAVE_TRANSACTION_GUID', 'STATUS'], ['(LEAVE_TRANSACTION_GUID IN (' + leaveList + '))'], []);
     }
     /**
      * Create new leave transaction 

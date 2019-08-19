@@ -20,6 +20,7 @@ import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-t
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.service';
 import { UserEntitlementAssignEntitlement } from './userentitlement-assign-entitlement.service';
+// import { UpdateUserLeaveEntitlementDTO } from '../dto/leave-entitlement/update-user-leave-entitlement.dto';
 
 /**
  * Service for user leave entitlement
@@ -81,6 +82,42 @@ export class UserLeaveEntitlementService {
      */
     public assignEntitlement(user: any, data: AssignLeavePolicyDTO) {
         return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
+    }
+
+    // public updateLeaveEntitlement(user: any, d: UpdateUserLeaveEntitlementDTO) {
+    //     const resource = new Resource(new Array);
+    //     const data = new UserLeaveEntitlementModel();
+
+    //     data.USER_GUID = d.userGuid;
+    //     data.LEAVE_TYPE_GUID = d.leavetypeGuid;
+    //     data.ENTITLEMENT_GUID = d.leavetypeEntitlementGuid;
+    //     data.YEAR = d.year;
+    //     data.DAYS_ADDED = d.daysAdded;
+    //     data.CF_FLAG = d.cfFlag;
+    //     data.PARENT_FLAG = d.parentFlag;
+    //     data.EXPIREDATE = d.expiredDate;
+    //     data.REMARKS = d.remarks;
+    //     data.PROPERTIES_XML = d.propertiesXML;
+    //     data.ACTIVE_FLAG = d.activeFlag;
+    //     data.UPDATE_TS = new Date().toISOString();
+    //     data.UPDATE_USER_GUID = user.USER_GUID;
+
+    //     resource.resource.push(data);
+
+    //     return this.userEntitlementAssignEntitlement.userLeaveEntitlementDbService.updateByModel(resource, [], ['(USER_LEAVE_ENTITLEMENT_GUID=' + d.userLeaveEntitlementGuid + ')'], ['USER_GUID', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'USER_LEAVE_ENTITLEMENT_GUID']);
+    // }
+
+    public deleteLeaveEntitlement(user: any, userleave_entitlement_guid: string) {
+        const resource = new Resource(new Array);
+        const data = new UserLeaveEntitlementModel();
+
+        data.DELETED_AT = new Date().toISOString();
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+
+        return this.userEntitlementAssignEntitlement.userLeaveEntitlementDbService.updateByModel(resource, [], ['(USER_LEAVE_ENTITLEMENT_GUID=' + userleave_entitlement_guid + ')'], ['USER_GUID', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID']);
     }
 
     // // in one time, only 1 policy can active for each type of main leave

@@ -80,6 +80,44 @@ export class QueryParserService {
 
     }
 
+    generateDbQueryV3(tableName: string, fields: Array<string>, filters: Array<string>, orders: string, limit: number) {
+        let url = DreamFactory.df_host + tableName + "?";
+
+        const paramArray = [];
+
+
+        // build the parameter
+        if (fields.length > 0) {
+            const field = "fields=" + fields.map(res => encodeURIComponent(res)).join(",");
+
+            paramArray.push(field);
+        }
+
+        if (filters.length > 0) {
+
+            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join(" ");
+
+            paramArray.push(filter);
+        }
+
+
+        if (orders != null && orders != '' && orders != undefined) {
+            const order = "order=" + orders;
+
+            paramArray.push(order);
+        }
+
+        if (limit != null && limit != undefined) {
+            const limits = "limit=" + limit;
+
+            paramArray.push(limits);
+        }
+
+        const buildurl = url + paramArray.join("&");
+        return buildurl;
+
+    }
+
     //const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CCOST_CENTRE_GUID";
 
 

@@ -72,4 +72,12 @@ export class LeaveTypeEntitlementModel extends CreateUpdateModel {
      */
     ACTIVE_FLAG: number;
 
+    /**
+     * Deleted at
+     *
+     * @type {string}
+     * @memberof LeaveTypeEntitlementModel
+     */
+    DELETED_AT: string;
+
 } 

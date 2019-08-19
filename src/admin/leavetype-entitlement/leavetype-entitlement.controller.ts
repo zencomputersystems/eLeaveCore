@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, Post, Body, UseGuards, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Req, Res, Post, Body, UseGuards, Param, Patch, Delete } from '@nestjs/common';
 import { LeavetypeEntitlementDbService } from './db/leavetype-entitlement.db.service';
 import { CreateLeaveEntitlementTypeDTO } from './dto/create-leavetype_entitlement.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,31 +27,6 @@ export class LeavetypeEntitlementController {
     ) { }
 
     /**
-     * Find one leavetype entitlement by id
-     *
-     * @param {*} id
-     * @param {*} req
-     * @param {*} res
-     * @memberof LeavetypeEntitlementController
-     */
-    @UseGuards(ResourceGuard)
-    @Roles('LeaveSetup')
-    @ApiOperation({ title: 'Get leave entitlement for this tenant' })
-    @ApiImplicitQuery({ name: 'id', description: 'filter leave by ENTITLEMENT GUID', required: true })
-    @Get(':id')
-    findOne(@Param('id') id, @Req() req, @Res() res) {
-
-        this.leavetypeEntitlementService.getDetail(req.user.TENANT_GUID, id).subscribe(
-            data => {
-                res.send(data);
-            },
-            err => {
-                this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
-            }
-        );
-    }
-
-    /**
      * Find all leavetype entitlement for current tenant
      *
      * @param {*} req
@@ -71,6 +46,31 @@ export class LeavetypeEntitlementController {
                 this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
             }
         )
+    }
+
+    /**
+     * Find one leavetype entitlement by id
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
+    @UseGuards(ResourceGuard)
+    @Roles('LeaveSetup')
+    @ApiOperation({ title: 'Get leave entitlement for this tenant' })
+    @ApiImplicitQuery({ name: 'id', description: 'filter leave by ENTITLEMENT GUID', required: true })
+    @Get(':id')
+    findOne(@Param('id') id, @Req() req, @Res() res) {
+        id = this.commonFunctionService.findIdParam(req, res, id);
+        this.leavetypeEntitlementService.getDetail(req.user.TENANT_GUID, id).subscribe(
+            data => {
+                res.send(data);
+            },
+            err => {
+                this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
+            }
+        );
     }
 
     /**
@@ -119,6 +119,14 @@ export class LeavetypeEntitlementController {
 
                 }
             )
+    }
+
+    @Delete('/:id')
+    @ApiOperation({ title: 'Delete leavetype entitlement' })
+    @ApiImplicitQuery({ name: 'id', description: 'Delete by leavetype entitlement guid', required: true })
+    deleteLeavetypeEntitlement(@Param('id') id, @Req() req, @Res() res) {
+        id = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runUpdateService(this.leavetypeEntitlementDbService.deleteLeavetypeEntitlement(req.user, id), res);
     }
 
     /**

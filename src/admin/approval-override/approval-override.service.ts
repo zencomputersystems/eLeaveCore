@@ -59,26 +59,33 @@ export class ApprovalOverrideService {
     let result = this.leaveTransactionDbService.updateToEmployee(user, data);
 
     result.subscribe(data => {
+      // console.log(data.data.resource);
       data.data.resource.forEach(element => {
         // console.log(element.USER_GUID);
         // let userguid = '4C693DBE-4CC0-4DD1-9708-5E8FDFE35A83';
-        let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
-          data => {
-            let tempData = data.data.resource[0];
-            // console.log(tempData);
-            // console.log(tempData.PROPERTIES_XML);
-            let dataObj = this.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
-            // console.log(dataObj.email);
-            // console.log(dataObj.notificationRule);
-            if (dataObj.notificationRule) {
-              this.sendEmailNotify(user, dataObj.notificationRule);
-            } else {
-              // console.log('Notification email not exist');
-            }
-          }, err => {
+        // console.log(element.STATUS);
+        if (element.status == 'APPROVE') {
+          let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
+            data => {
+              // console.log(data.data.resource);
+              let tempData = data.data.resource[0];
+              // console.log(tempData);
+              // console.log(tempData.PROPERTIES_XML);
+              if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
+                let dataObj = this.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
+                // console.log(dataObj.email);
+                // console.log(dataObj.notificationRule);
+                if (dataObj.notificationRule) {
+                  this.sendEmailNotify(user, dataObj.notificationRule);
+                } else {
+                  // console.log('Notification email not exist');
+                }
+              }
+            }, err => {
 
-          }
-        );
+            }
+          );
+        }
       });
     }
     );

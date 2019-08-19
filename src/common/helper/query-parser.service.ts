@@ -142,7 +142,7 @@ export class QueryParserService {
 
         if (filters.length > 0) {
 
-            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join('"' + whereArgs + '"');
+            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join(whereArgs);
 
             paramArray.push(filter);
         }

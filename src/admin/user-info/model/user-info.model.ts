@@ -8,21 +8,21 @@ import { CreateUpdateModel } from 'src/common/model/create-update.model';
  */
 export class UserInfoModel extends CreateUpdateModel {
     /**
-     * User info guid
+     * User info guid - PK
      *
      * @type {string}
      * @memberof UserInfoModel
      */
-    USER_INFO_GUID: string; //PK
-    /**
-     * User guid
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    USER_GUID: string; //FK
+    USER_INFO_GUID: string;
 
-    // Personal Information
+    /**
+     * User guid - FK
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    USER_GUID: string;
+
     /**
      * Fullname
      *
@@ -30,6 +30,7 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     FULLNAME: string;
+
     /**
      * Nickname
      *
@@ -37,6 +38,19 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     NICKNAME: string;
+
+    // SALUTATION here (skipped)
+
+    /**
+     * Manager user guid - reporting to whom
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    MANAGER_USER_GUID: string;
+
+    // PERSONAL_ID_TYPE here (skipped)
+
     /**
      * Personal id
      *
@@ -45,57 +59,8 @@ export class UserInfoModel extends CreateUpdateModel {
      */
     PERSONAL_ID: string;
 
-    // Employee Company Information
-    /**
-     * Tenant company guid
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    TENANT_COMPANY_GUID: string;
-    /**
-     * Tenant company site guid
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    TENANT_COMPANY_SITE_GUID: string;
-    /**
-     * Manager user guid
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    MANAGER_USER_GUID: string; //reporting to whom
-
-    /**
-     * Branch name
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    BRANCH: string; //employee belong to which branch
-    /**
-     * Department name
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    DEPARTMENT: string; //employee belong to which department
-    /**
-     * Designation name
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    DESIGNATION: string //employee job title
-    /**
-     * Division name
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    DIVISION: string;
+    // DOB here (skipped)
+    // GENDER here (skipped)
 
     /**
      * Join date
@@ -104,13 +69,81 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     JOIN_DATE: Date;
+
+    // MARITAL STATUS here (skipped)
+
     /**
-     * Confirmation date
+    * Division name
+    *
+    * @type {string}
+    * @memberof UserInfoModel
+    */
+    DIVISION: string;
+
+    /**
+      * Employee type
+      *
+      * @type {string}
+      * @memberof UserInfoModel
+      */
+    EMPLOYEE_TYPE: string;
+
+    /**
+      * Employee status
+      *
+      * @type {number}
+      * @memberof UserInfoModel
+      */
+    EMPLOYEE_STATUS: number;
+
+    /**
+     * Department name - employee belong to which department
      *
-     * @type {Date}
+     * @type {string}
      * @memberof UserInfoModel
      */
-    CONFIRMATION_DATE: Date;
+    DEPARTMENT: string;
+
+    /**
+     * Branch name - employee belong to which branch
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    BRANCH: string;
+
+    /**
+     * Designation name - employee job title
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    DESIGNATION: string
+
+    /**
+     * Costcentre name - employee belong to which costcentre
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    COSTCENTRE: string;
+
+    /**
+     * Section name - employee belong to which section
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    SECTION: string;
+
+    /**
+     * Country name - employee belong to which country 
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    COUNTRY: string;
+
     /**
      * Resignation date
      *
@@ -118,28 +151,69 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     RESIGNATION_DATE: Date;
-    /**
-     * Employee status
-     *
-     * @type {number}
-     * @memberof UserInfoModel
-     */
-    EMPLOYEE_STATUS: number;
-    /**
-     * Employee type
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    EMPLOYEE_TYPE: string;
 
     /**
-     * Properties xml
+     * Confirmation date
+     *
+     * @type {Date}
+     * @memberof UserInfoModel
+     */
+    CONFIRMATION_DATE: Date;
+
+    /**
+     * Tenant company guid - Employee Company Information
      *
      * @type {string}
      * @memberof UserInfoModel
      */
-    PROPERTIES_XML: string;
+    TENANT_COMPANY_GUID: string;
+
+    /**
+     * Tenant company site guid
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    TENANT_COMPANY_SITE_GUID: string;
+
+    // EMG_CONTACT_NAME_1 here (skipped)
+    // EMG_RELATIONSHIP_1
+    // EMG_CONTACT_NUMBER_1
+    // EMG_CONTACT_NAME_2
+    // EMG_RELATIONSHIP_2
+    // EMG_CONTACT_NUMBER_2
+
+    /**
+     * PR epf number
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    PR_EPF_NUMBER: string;
+
+    /**
+     * PR income tax number
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    PR_INCOMETAX_NUMBER: string;
+
+    /**
+     * Bank
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    BANK: string;
+
+    /**
+     * PR account number
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    PR_ACCOUNT_NUMBER: string;
 
     /**
      * Attachment id
@@ -150,35 +224,13 @@ export class UserInfoModel extends CreateUpdateModel {
     ATTACHMENT_ID: string;
 
     /**
-     * PR epf number
+     * Properties xml
      *
      * @type {string}
      * @memberof UserInfoModel
      */
-    PR_EPF_NUMBER: string;
-    /**
-     * PR income tax number
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    PR_INCOMETAX_NUMBER: string;
-    /**
-     * Bank
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    BANK: string;
-    /**
-     * PR account number
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    PR_ACCOUNT_NUMBER: string;
+    PROPERTIES_XML: string;
 
-    //ACTIVE_FLAG: number;
     /**
      *Tenant guid
      *
@@ -186,13 +238,6 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     TENANT_GUID: string;
-    /**
-     * Deleted at
-     *
-     * @type {string}
-     * @memberof UserInfoModel
-     */
-    DELETED_AT: string;
 
     /**
      * Role guid
@@ -201,6 +246,7 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     ROLE_GUID: string;
+
     /**
      * Calendar guid
      *
@@ -208,4 +254,13 @@ export class UserInfoModel extends CreateUpdateModel {
      * @memberof UserInfoModel
      */
     CALENDAR_GUID: string;
+
+    /**
+     * Deleted at
+     *
+     * @type {string}
+     * @memberof UserInfoModel
+     */
+    DELETED_AT: string;
+
 }

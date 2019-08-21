@@ -65,6 +65,13 @@ export class ApprovalOverrideService {
     return result;
   }
 
+  /**
+   * Check mail if available
+   *
+   * @param {*} user
+   * @param {*} element
+   * @memberof ApprovalOverrideService
+   */
   public checkMailAvailable(user, element) {
     if (element.status == 'APPROVE') {
       let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
@@ -76,6 +83,13 @@ export class ApprovalOverrideService {
     }
   }
 
+  /**
+   * Send email to email available
+   *
+   * @param {*} user
+   * @param {*} tempData
+   * @memberof ApprovalOverrideService
+   */
   public sendEmailToNotifier(user, tempData) {
     if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
       let dataObj = this.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);

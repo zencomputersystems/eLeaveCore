@@ -121,6 +121,14 @@ export class LeavetypeEntitlementController {
             )
     }
 
+    /**
+     * Delete leavetype entitlement endpoint
+     *
+     * @param {*} id
+     * @param {*} req
+     * @param {*} res
+     * @memberof LeavetypeEntitlementController
+     */
     @Delete('/:id')
     @ApiOperation({ title: 'Delete leavetype entitlement' })
     @ApiImplicitQuery({ name: 'id', description: 'Delete by leavetype entitlement guid', required: true })

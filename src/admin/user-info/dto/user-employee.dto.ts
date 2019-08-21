@@ -24,7 +24,7 @@ export class UserEmployeeDTO {
      * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty({ description: 'Company id', example: 'Zen Computer System'})
+    @ApiModelProperty({ description: 'Company id', example: 'Zen Computer System' })
     @IsNotEmpty()
     companyId: string;
 
@@ -37,6 +37,26 @@ export class UserEmployeeDTO {
     @ApiModelProperty({ description: 'Department id', example: 'Research & Development' })
     @IsNotEmpty()
     departmentId: string;
+
+    /**
+     * Data user employee - costcentre
+     *
+     * @type {string}
+     * @memberof UserEmployeeDTO
+     */
+    @ApiModelProperty({ description: 'Costcentre', example: 'Service' })
+    @IsNotEmpty()
+    costcentre: string;
+
+    /**
+     * Data user employee - section
+     *
+     * @type {string}
+     * @memberof UserEmployeeDTO
+     */
+    @ApiModelProperty({ description: 'Section', example: 'Management' })
+    @IsNotEmpty()
+    section: string;
 
     /**
      * Data user employee - join date

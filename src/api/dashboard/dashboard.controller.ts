@@ -25,7 +25,7 @@ export class DashboardController {
      */
     @Get('/employee/status-onleave')
     @ApiOperation({ title: 'Get total employee' })
-    @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
+    // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
     @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
     @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
     findTotalEmployee(@Req() req, @Res() res) {
@@ -41,7 +41,7 @@ export class DashboardController {
      */
     @Get('/employee/leave-list')
     @ApiOperation({ title: 'Get total employee' })
-    @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
+    // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
     @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
     @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
     findEmployeeLeaveList(@Req() req, @Res() res) {
@@ -57,7 +57,7 @@ export class DashboardController {
      * @memberof DashboardController
      */
     public runService(req, res, method_procedure) {
-        let url = DreamFactory.df_host_proc + `${method_procedure}(${req.query.tenantguid},${req.query.startdate},${req.query.enddate})`;
+        let url = DreamFactory.df_host_proc + `${method_procedure}(${req.user.TENANT_GUID},${req.query.startdate},${req.query.enddate})`;
         this.http.get(url).subscribe(data => {
             this.commonFunctionService.sendResSuccessV2(data, res);
         }, err => {

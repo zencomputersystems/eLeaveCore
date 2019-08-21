@@ -88,7 +88,7 @@ export class UserprofileService {
         return this.userInfoService.findByFilterV2([], filters)
             .pipe(
                 map(res => {
-                    // console.log(res);
+                    console.log(res);
                     const data: UserInfoModel = res[0];
 
                     if (data) { return this.userprofileAssignerService.buildProfileData([data, true, true, true, true]); }

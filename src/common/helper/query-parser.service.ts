@@ -83,6 +83,13 @@ export class QueryParserService {
 
     }
 
+    /**
+     * function with sort and limit
+     *
+     * @param {DBRequest} data
+     * @returns
+     * @memberof QueryParserService
+     */
     generateDbQueryV3(data: DBRequest) {
 
         let tableName: string = data[0];
@@ -131,6 +138,15 @@ export class QueryParserService {
 
     //const url = DreamFactory.df_host+this.table_name+"?id_field=TENANT_GUID%2CCOST_CENTRE_GUID";
 
+    /**
+     * Refactor function
+     *
+     * @param {any[]} paramArray
+     * @param {string[]} fields
+     * @param {string[]} filters
+     * @param {string} whereArgs
+     * @memberof QueryParserService
+     */
     public refactor(paramArray: any[], fields: string[], filters: string[], whereArgs: string) {
         // console.log(whereArgs);
         // build the parameter
@@ -142,7 +158,7 @@ export class QueryParserService {
 
         if (filters.length > 0) {
 
-            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join('"' + whereArgs + '"');
+            const filter = "filter=" + filters.map(res => encodeURIComponent(res)).join(whereArgs);
 
             paramArray.push(filter);
         }

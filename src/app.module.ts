@@ -25,6 +25,7 @@ import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-l
 import { ApprovalOverrideModule } from './admin/approval-override/approval-override.module';
 import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment.module';
 import { YearEndClosingModule } from './admin/year-end-closing/year-end-closing.module';
+import { MasterSetupModule } from './admin/master-setup/master-setup.module';
 
 @Module({
   imports: [
@@ -70,7 +71,8 @@ import { YearEndClosingModule } from './admin/year-end-closing/year-end-closing.
     GeneralLeavePolicyModule,
     ApprovalOverrideModule,
     LeaveAdjustmentModule,
-    YearEndClosingModule
+    YearEndClosingModule,
+    MasterSetupModule
   ],
   controllers: [AppController],
   providers: [

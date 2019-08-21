@@ -57,6 +57,8 @@ export class UserInfoService extends BaseDBService implements IDbService {
         'BRANCH',
         'DEPARTMENT',
         'DESIGNATION',
+        'COSTCENTRE',
+        'SECTION',
         'JOIN_DATE',
         'CONFIRMATION_DATE',
         'RESIGNATION_DATE',

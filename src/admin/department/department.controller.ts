@@ -15,28 +15,28 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 @ApiBearerAuth()
 export class DepartmentController {
 
-    constructor(private readonly departmentService: DepartmentService,
-        private readonly commonFunctionService: CommonFunctionService) { }
+    // constructor(private readonly departmentService: DepartmentService,
+    //     private readonly commonFunctionService: CommonFunctionService) { }
 
-    /**
-     * Find all department 
-     *
-     * @param {*} req
-     * @param {*} res
-     * @memberof DepartmentController
-     */
-    @Get()
-    @ApiOperation({ title: 'Get department list' })
-    findAll(@Req() req, @Res() res) {
-        this.departmentService.getList(req.user.TENANT_GUID).subscribe(
-            data => {
-                res.send(data);
-            },
-            err => {
-                this.commonFunctionService.sendResErrorV3(err, res);
-            }
-        );
+    // /**
+    //  * Find all department 
+    //  *
+    //  * @param {*} req
+    //  * @param {*} res
+    //  * @memberof DepartmentController
+    //  */
+    // @Get()
+    // @ApiOperation({ title: 'Get department list' })
+    // findAll(@Req() req, @Res() res) {
+    //     this.departmentService.getList(req.user.TENANT_GUID).subscribe(
+    //         data => {
+    //             res.send(data);
+    //         },
+    //         err => {
+    //             this.commonFunctionService.sendResErrorV3(err, res);
+    //         }
+    //     );
 
-    }
+    // }
 
 }

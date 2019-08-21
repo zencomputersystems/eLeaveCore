@@ -35,7 +35,7 @@ export class YearEndClosingService {
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly userInfoDbService: UserInfoDbService,
     private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-    private readonly yearEndAssignEntitlementService: YearEndAssignEntitlementService
+    // private readonly yearEndAssignEntitlementService: YearEndAssignEntitlementService
   ) { }
   /**
    * Method year end process
@@ -87,7 +87,7 @@ export class YearEndClosingService {
         res2.entitlement.forEach(y => {
           let tempPolicy = res1.find(x => x.ENTITLEMENT_GUID.toString() === y.toString());
           if (tempPolicy) {
-            this.assignNewYearEntitlement(tempPolicy, res2.userguid, year, user);
+            // this.assignNewYearEntitlement(tempPolicy, res2.userguid, year, user);
           }
         });
       } else {
@@ -110,7 +110,7 @@ export class YearEndClosingService {
     // data.userId.push(userguid);
     data.userId = [userguid];
 
-    this.yearEndAssignEntitlementService.assignEntitlement(user, data);
+    // this.yearEndAssignEntitlementService.assignEntitlement(user, data);
 
 
   }

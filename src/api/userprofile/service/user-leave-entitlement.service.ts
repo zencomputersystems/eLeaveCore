@@ -107,6 +107,14 @@ export class UserLeaveEntitlementService {
     //     return this.userEntitlementAssignEntitlement.userLeaveEntitlementDbService.updateByModel(resource, [], ['(USER_LEAVE_ENTITLEMENT_GUID=' + d.userLeaveEntitlementGuid + ')'], ['USER_GUID', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'USER_LEAVE_ENTITLEMENT_GUID']);
     // }
 
+    /**
+     * Delete leave entitlement
+     *
+     * @param {*} user
+     * @param {string} userleave_entitlement_guid
+     * @returns
+     * @memberof UserLeaveEntitlementService
+     */
     public deleteLeaveEntitlement(user: any, userleave_entitlement_guid: string) {
         const resource = new Resource(new Array);
         const data = new UserLeaveEntitlementModel();

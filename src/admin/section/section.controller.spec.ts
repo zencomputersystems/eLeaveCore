@@ -29,7 +29,7 @@ describe('SectionController', () => {
         { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
       ]
     }).compile();
-    
+
     sectionController = await module.get<SectionController>(SectionController);
     sectionService = await module.get<SectionService>(SectionService);
   });
@@ -37,21 +37,21 @@ describe('SectionController', () => {
     expect(sectionController).toBeTruthy();
   });
 
-  describe('findAll', () => {
-    it('findAll section from the database', async () => {
-      const sectionServiceStub: SectionService = sectionService;
-      spyOn(sectionServiceStub, 'findAll').and.callThrough();
+  // describe('findAll', () => {
+  //   it('findAll section from the database', async () => {
+  //     const sectionServiceStub: SectionService = sectionService;
+  //     spyOn(sectionServiceStub, 'findAll').and.callThrough();
 
-      const mockUser = {
-        "user":{
-          "TENANT_ID":"tenantguidtest"
-        }
-      }
+  //     const mockUser = {
+  //       "user":{
+  //         "TENANT_ID":"tenantguidtest"
+  //       }
+  //     }
 
-      expect(sectionServiceStub.findAll).not.toHaveBeenCalled();
-      sectionController.findAllSection(mockUser,'data');
-      expect(sectionServiceStub.findAll).toHaveBeenCalledTimes(1);
-    });
-  });
+  //     expect(sectionServiceStub.findAll).not.toHaveBeenCalled();
+  //     sectionController.findAllSection(mockUser,'data');
+  //     expect(sectionServiceStub.findAll).toHaveBeenCalledTimes(1);
+  //   });
+  // });
 
 });

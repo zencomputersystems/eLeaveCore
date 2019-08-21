@@ -19,131 +19,131 @@ import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-
 @Injectable()
 export class YearEndAssignPolicy {
 
-  /**
-   *Creates an instance of UserEntitlementAssignPolicy.
-   * @param {ServiceYearCalc} serviceYearCalcService
-   * @param {ProratedDateEndYearService} proratedMonthEndYearService
-   * @param {XMLParserService} xmlParserService
-   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
-   * @memberof UserEntitlementAssignPolicy
-   */
-  constructor(
-    private readonly serviceYearCalcService: ServiceYearCalc,
-    private readonly proratedMonthEndYearService: ProratedDateEndYearService,
-    private readonly xmlParserService: XMLParserService,
-    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService, ) { }
+  // /**
+  //  *Creates an instance of UserEntitlementAssignPolicy.
+  //  * @param {ServiceYearCalc} serviceYearCalcService
+  //  * @param {ProratedDateEndYearService} proratedMonthEndYearService
+  //  * @param {XMLParserService} xmlParserService
+  //  * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+  //  * @memberof UserEntitlementAssignPolicy
+  //  */
+  // constructor(
+  //   private readonly serviceYearCalcService: ServiceYearCalc,
+  //   private readonly proratedMonthEndYearService: ProratedDateEndYearService,
+  //   private readonly xmlParserService: XMLParserService,
+  //   private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService, ) { }
 
-  /**
-   * Method assign policy process
-   *
-   * @param {*} res
-   * @param {*} user
-   * @param {*} data
-   * @returns
-   * @memberof UserEntitlementAssignPolicy
-   */
-  public assignPolicyProcess(res, user, data) {
+  // /**
+  //  * Method assign policy process
+  //  *
+  //  * @param {*} res
+  //  * @param {*} user
+  //  * @param {*} data
+  //  * @returns
+  //  * @memberof UserEntitlementAssignPolicy
+  //  */
+  // public assignPolicyProcess(res, user, data) {
 
-    // console.log('here' + res);
-    // console.log(user);
-    // console.log(data);
+  //   // console.log('here' + res);
+  //   // console.log(user);
+  //   // console.log(data);
 
-    const { length } = data.userId;
-    const resource = new Resource(new Array());
+  //   const { length } = data.userId;
+  //   const resource = new Resource(new Array());
 
-    // console.log(length);
-    for (let i = 0; i < length; i++) {
-      // console.log(data.userId[i]);
-      const user = res.userInfoResult.find(x => x.USER_GUID.toString() === data.userId[i].toString());
-      // console.log(user);
-      const dateOfJoin = new Date(user.JOIN_DATE);
-      // get the service year
-      const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
-      // console.log('svc-year' + serviceYear);
+  //   // console.log(length);
+  //   for (let i = 0; i < length; i++) {
+  //     // console.log(data.userId[i]);
+  //     const user = res.userInfoResult.find(x => x.USER_GUID.toString() === data.userId[i].toString());
+  //     // console.log(user);
+  //     const dateOfJoin = new Date(user.JOIN_DATE);
+  //     // get the service year
+  //     const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
+  //     // console.log('svc-year' + serviceYear);
 
-      // console.log(res.res[0].PROPERTIES_XML);
+  //     // console.log(res.res[0].PROPERTIES_XML);
 
-      const policy = this.xmlParserService.convertXMLToJson(res.res[0].PROPERTIES_XML);
-      // console.log('pol' + policy);
-
-
-      //get the entitlement days
-      const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
-      // console.log('ed' + entitlementDay);
-
-      if (entitlementDay == 0 || entitlementDay == undefined) {
-        return of(null);
-      }
-
-      // assign new policy to user
-      const entitlementModel = new UserLeaveEntitlementModel();
-      entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
-      entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
-      entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
-      entitlementModel.USER_GUID = data.userId[i];
-
-      entitlementModel.PARENT_FLAG = 1;
-      entitlementModel.CF_FLAG = 0;
-      entitlementModel.PROPERTIES_XML = res.res[0].PROPERTIES_XML;
-      entitlementModel.YEAR = 2020; //moment().year();
-      entitlementModel.REMARKS = null;
-      entitlementModel.ACTIVE_FLAG = 1;
-
-      entitlementModel.TENANT_GUID = user.TENANT_GUID;
-      entitlementModel.CREATION_USER_GUID = user.USER_GUID;
-
-      entitlementModel.DAYS_ADDED = entitlementDay;
+  //     const policy = this.xmlParserService.convertXMLToJson(res.res[0].PROPERTIES_XML);
+  //     // console.log('pol' + policy);
 
 
+  //     //get the entitlement days
+  //     const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
+  //     // console.log('ed' + entitlementDay);
 
-      resource.resource.push(entitlementModel);
+  //     if (entitlementDay == 0 || entitlementDay == undefined) {
+  //       return of(null);
+  //     }
 
-    }
+  //     // assign new policy to user
+  //     const entitlementModel = new UserLeaveEntitlementModel();
+  //     entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+  //     entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
+  //     entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
+  //     entitlementModel.USER_GUID = data.userId[i];
 
-    // console.log(resource);
+  //     entitlementModel.PARENT_FLAG = 1;
+  //     entitlementModel.CF_FLAG = 0;
+  //     entitlementModel.PROPERTIES_XML = res.res[0].PROPERTIES_XML;
+  //     entitlementModel.YEAR = 2020; //moment().year();
+  //     entitlementModel.REMARKS = null;
+  //     entitlementModel.ACTIVE_FLAG = 1;
 
-    // const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
-    // // get the service year
-    // const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
+  //     entitlementModel.TENANT_GUID = user.TENANT_GUID;
+  //     entitlementModel.CREATION_USER_GUID = user.USER_GUID;
 
-    // const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
+  //     entitlementModel.DAYS_ADDED = entitlementDay;
 
-    // // //get the entitlement days
-    // const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
 
-    // if (entitlementDay == 0 || entitlementDay == undefined) {
-    //     return of(null);
-    // }
 
-    // // assign new policy to user
-    // const entitlementModel = new UserLeaveEntitlementModel();
-    // entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
-    // entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
-    // entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
-    // entitlementModel.USER_GUID = data.userId;
+  //     resource.resource.push(entitlementModel);
 
-    // entitlementModel.PARENT_FLAG = 1;
-    // entitlementModel.CF_FLAG = 0;
-    // entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
-    // entitlementModel.YEAR = moment().year();
-    // entitlementModel.REMARKS = 'this is remark';
-    // entitlementModel.ACTIVE_FLAG = 1;
+  //   }
 
-    // entitlementModel.TENANT_GUID = user.TENANT_GUID;
-    // entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+  //   // console.log(resource);
 
-    // entitlementModel.DAYS_ADDED = entitlementDay;
+  //   // const dateOfJoin = new Date(res.userInfoResult.JOIN_DATE);
+  //   // // get the service year
+  //   // const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
 
-    // const resource = new Resource(new Array());
+  //   // const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
 
-    // resource.resource.push(entitlementModel);
+  //   // // //get the entitlement days
+  //   // const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
 
-    return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
-      .pipe(map(res => {
-        if (res.status == 200) {
-          return res.data.resource;
-        }
-      }))
-  }
+  //   // if (entitlementDay == 0 || entitlementDay == undefined) {
+  //   //     return of(null);
+  //   // }
+
+  //   // // assign new policy to user
+  //   // const entitlementModel = new UserLeaveEntitlementModel();
+  //   // entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+  //   // entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
+  //   // entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
+  //   // entitlementModel.USER_GUID = data.userId;
+
+  //   // entitlementModel.PARENT_FLAG = 1;
+  //   // entitlementModel.CF_FLAG = 0;
+  //   // entitlementModel.PROPERTIES_XML = res.res.PROPERTIES_XML;
+  //   // entitlementModel.YEAR = moment().year();
+  //   // entitlementModel.REMARKS = 'this is remark';
+  //   // entitlementModel.ACTIVE_FLAG = 1;
+
+  //   // entitlementModel.TENANT_GUID = user.TENANT_GUID;
+  //   // entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+
+  //   // entitlementModel.DAYS_ADDED = entitlementDay;
+
+  //   // const resource = new Resource(new Array());
+
+  //   // resource.resource.push(entitlementModel);
+
+  //   return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
+  //     .pipe(map(res => {
+  //       if (res.status == 200) {
+  //         return res.data.resource;
+  //       }
+  //     }))
+  // }
 
 }

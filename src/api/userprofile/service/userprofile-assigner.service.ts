@@ -202,6 +202,13 @@ export class UserprofileAssignerService {
     return employmentDetail;
   }
 
+  /**
+   * Get manager reporting to name
+   *
+   * @param {*} managerGuid
+   * @param {*} employmentDetail
+   * @memberof UserprofileAssignerService
+   */
   public findManagerName(managerGuid, employmentDetail) {
     this.userInfoService.findOne(managerGuid, '').subscribe(
       data => {

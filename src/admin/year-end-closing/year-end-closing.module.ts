@@ -22,6 +22,7 @@ import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/s
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { YearEndAssignPolicy } from './service/year-end-assign-policy.service';
 import { YearEndAssignEntitlementService } from './service/year-end-assign-entitlement.service';
+import { LeaveEntitlementBaseService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/leave-entitlement-base.service';
 
 
 @Module({
@@ -42,7 +43,8 @@ import { YearEndAssignEntitlementService } from './service/year-end-assign-entit
     ProratedDateEndYearService,
     EntitlementRoundingService,
     YearEndAssignPolicy,
-    YearEndAssignEntitlementService
+    YearEndAssignEntitlementService,
+    LeaveEntitlementBaseService
   ],
   modules: [
     AuthModule,

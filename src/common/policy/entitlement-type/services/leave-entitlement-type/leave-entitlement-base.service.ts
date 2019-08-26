@@ -18,7 +18,7 @@ export class LeaveEntitlementBaseService {
      * @returns
      * @memberof LeaveEntitlementBaseService
      */
-    protected getEntitlementFromPolicy(leavePolicy: any, yearOfService: number) {
+    public getEntitlementFromPolicy(leavePolicy: any, yearOfService: number) {
 
         // Check if leave entitlement is an array or not
         const checkArray = leavePolicy.levels.leaveEntitlement instanceof Array;

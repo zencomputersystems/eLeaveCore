@@ -78,7 +78,7 @@ export class UserEntitlementAssignEntitlement {
         }),
         filter(x => x != null),
         mergeMap((res: LeaveTypeEntitlementModel) => {
-
+          console.log(res);
           const userInfoFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID IN (' + data.userId + '))']
           // console.log(userInfoFilter);
           return this.dbSearch(this.userInfoDbService, userInfoFilter)
@@ -88,7 +88,7 @@ export class UserEntitlementAssignEntitlement {
             }))
         }),
         mergeMap((res) => {
-          // console.log(res.res);
+          console.log(res.res);
           return this.userEntitlementAssignPolicy.assignPolicyProcess(res, user, data);
 
         })

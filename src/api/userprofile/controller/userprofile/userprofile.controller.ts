@@ -42,13 +42,32 @@ export class UserprofileController {
      * @memberof UserprofileController
      */
     @UseGuards(ResourceGuard)
-    @Get('/users')
+    @Get('/users/:role')
     @ApiOperation({ title: 'Get list of employee' })
+    @ApiImplicitQuery({ name: 'role', description: 'Whether admin or employee', required: false })
     @Roles('ViewProfile', 'ProfileAdmin', 'EditProfile')
-    findAll(@Req() req, @Res() res) {
+    findAll(@Param('role') role: string, @Req() req, @Res() res) {
 
+        let dataRole = null;
+        let dataRoleParam = req.query.role;
+        if (dataRoleParam == null) {
+            dataRole = role;
+        } else {
+            dataRole = dataRoleParam;
+        }
+        role = dataRole;
+
+        // console.log(role);
         this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, [])
-            .pipe(switchMap(filter => { return this.userprofileService.getList(filter); }))
+            .pipe(switchMap(filter => {
+
+                if (role.toLowerCase() == 'employee') {
+                    const extra = '(ACTIVATION_FLAG=1)';
+                    filter.push(extra);
+                }
+                // console.log(filter);
+                return this.userprofileService.getList(filter);
+            }))
             .subscribe(
                 data => {
                     return res.send(data);

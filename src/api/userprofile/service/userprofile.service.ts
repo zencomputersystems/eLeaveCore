@@ -56,7 +56,7 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public getList(filters: string[]) {
-        filters.push('(RESIGNATION_DATE IS NULL)');
+        // filters.push('(RESIGNATION_DATE IS NULL)');
         // console.log(filters);
         return this.userprofileDBService.findByFilterV2([], filters)
             .pipe(

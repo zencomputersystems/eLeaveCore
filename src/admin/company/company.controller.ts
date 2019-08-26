@@ -50,10 +50,19 @@ export class CompanyController {
 	 */
 	@Get('/:id')
 	@ApiOperation({ title: 'Get one company' })
+	@ApiImplicitQuery({ name: 'id', description: 'Get by company guid', required: true })
 	findById(@Param('id') id, @Req() req, @Res() res) {
+		id = this.commonFunctionService.findIdParam(req, res, id);
+		if (id == null || id == '' || id == '{id}') {
+			// res.send('id not found') 
+			throw new NotFoundException('Id not found');
+		}
 		this.companyService.findById(req.user.TENANT_GUID, id).subscribe(
 			data => { res.send(data); },
-			err => { this.commonFunctionService.sendResErrorV3(err, res); }
+			err => {
+				res.status(500);
+				res.send(err);
+			}
 		);
 	}
 

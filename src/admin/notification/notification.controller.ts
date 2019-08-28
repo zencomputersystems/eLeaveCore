@@ -113,6 +113,20 @@ export class NotificationController {
         // );
     }
 
+    /**
+     * Update read notification
+     *
+     * @param {string[]} notifyId
+     * @param {*} req
+     * @param {*} res
+     * @memberof NotificationController
+     */
+    @Patch()
+    @ApiOperation({ title: 'Update notification read status' })
+    updateApprovalStatus(@Body() notifyId: string[], @Req() req, @Res() res) {
+        this.commonFunctionService.runUpdateService(this.notificationService.updateReadNotification(notifyId), res);
+    }
+
     // @Post('/queue')
     // @ApiOperation({ title: 'Store notification queue' })
     // create(@Body() queueNotificationDTO: QueueNotificationDTO, @Req() req, @Res() res) {

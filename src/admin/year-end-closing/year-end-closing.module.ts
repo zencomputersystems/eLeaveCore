@@ -11,18 +11,14 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
-import { UserLeaveEntitlementService } from 'src/api/userprofile/service/user-leave-entitlement.service';
 import { UserLeaveEntitlementSummaryDbService } from 'src/api/userprofile/db/user-leave-summary.db.service';
-import { UserEntitlementAssignEntitlement } from 'src/api/userprofile/service/userentitlement-assign-entitlement.service';
 import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 import { UserInfoService } from '../user-info/user-info.service';
-import { UserEntitlementAssignPolicy } from 'src/api/userprofile/service/userentitlement-assign-policy.service';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
-import { YearEndAssignPolicy } from './service/year-end-assign-policy.service';
-import { YearEndAssignEntitlementService } from './service/year-end-assign-entitlement.service';
 import { LeaveEntitlementBaseService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/leave-entitlement-base.service';
+import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
 
 
 @Module({
@@ -42,9 +38,8 @@ import { LeaveEntitlementBaseService } from 'src/common/policy/entitlement-type/
     ServiceYearCalc,
     ProratedDateEndYearService,
     EntitlementRoundingService,
-    YearEndAssignPolicy,
-    YearEndAssignEntitlementService,
-    LeaveEntitlementBaseService
+    LeaveEntitlementBaseService,
+    GeneralLeavePolicyService
   ],
   modules: [
     AuthModule,

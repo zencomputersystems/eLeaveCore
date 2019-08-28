@@ -194,7 +194,9 @@ export class UserprofileAssignerService {
     employmentDetail.employmentStatus = data.EMPLOYEE_STATUS.toString();
     employmentDetail.employmentType = data.EMPLOYEE_TYPE.toString();
     employmentDetail.reportingTo = data.MANAGER_USER_GUID;
-    this.findManagerName(data.MANAGER_USER_GUID, employmentDetail); //.subscribe(data => { employmentDetail.reportingTo = data; });
+
+    if (data.MANAGER_USER_GUID != null && data.MANAGER_USER_GUID != '' && data.MANAGER_USER_GUID != undefined)
+      this.findManagerName(data.MANAGER_USER_GUID, employmentDetail); //.subscribe(data => { employmentDetail.reportingTo = data; });
 
 
     this.assignEmploymentDetail2(employmentDetail, data);

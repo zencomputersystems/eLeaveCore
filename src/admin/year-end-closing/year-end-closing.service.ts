@@ -3,25 +3,22 @@ import { Observable, of, pipe, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
-import { UserInfoDbService } from '../holiday/db/user-info.db.service';
-import { UserInfoModel } from '../user-info/model/user-info.model';
 import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from '../user/model/user.model';
-import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { LeaveTypeEntitlementModel } from '../leavetype-entitlement/model/leavetype_entitlement.model';
-import { UserLeaveEntitlementService } from 'src/api/userprofile/service/user-leave-entitlement.service';
-import { AssignLeavePolicyDTO } from '../../api/userprofile/dto/leave-entitlement/assign-leave-policy.dto';
-import { YearEndAssignEntitlementService } from './service/year-end-assign-entitlement.service';
 import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-entitlement.model';
 import { v1 } from 'uuid';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
-import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveEntitlementBaseService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/leave-entitlement-base.service';
 import { UserLeaveEntitlementSummaryDbService } from 'src/api/userprofile/db/user-leave-summary.db.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { ViewUserProfileListModel } from 'src/api/userprofile/model/view_userprofile_list.model';
+import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
+import { GeneralLeavePolicyModel } from '../general-leave-policy/model/general-leave-policy.model';
 
-type userEntitlement = [Resource, LeaveTypeEntitlementModel, string, string, number, any, string, number];
+type userEntitlement = [Resource, LeaveTypeEntitlementModel, string, string, number, any, string, number, Date];
 /**
  * Service year end closing
  *
@@ -40,14 +37,13 @@ export class YearEndClosingService {
   constructor(
     private readonly userService: UserService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
-    private readonly userInfoDbService: UserInfoDbService,
     private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
     private readonly serviceYearCalcService: ServiceYearCalc,
-    private readonly proratedMonthEndYearService: ProratedDateEndYearService,
     private readonly xmlParserService: XMLParserService,
     private readonly leaveEntitlementBaseService: LeaveEntitlementBaseService,
-    private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService
-    // private readonly yearEndAssignEntitlementService: YearEndAssignEntitlementService
+    private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
+    private readonly userprofileDbService: UserprofileDbService,
+    private readonly generalLeavePolicyService: GeneralLeavePolicyService
   ) { }
   /**
    * Method year end process
@@ -58,90 +54,167 @@ export class YearEndClosingService {
    */
   public yearEndProcess(user: any, year: number): Observable<any> {
 
-    const userFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(DELETED_AT IS NULL)']
+    // const userFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(DELETED_AT IS NULL)']
+    const userFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')']
 
-    let result = this.userInfoDbService.findByFilterV2([], userFilter)
+    let result = this.userprofileDbService.findByFilterV2([], userFilter)
       .pipe(
-        map(res => { // check user active or resign
+        map(res => {
+          // check user active or resign
           let dataRes = this.checkUser(res);
+
+          // dataRes.resignUser = this.trimData(dataRes.resignUser);
+          // dataRes.activeUser = this.trimData(dataRes.activeUser);
+          // dataRes.disabledUser = this.trimData(dataRes.disabledUser);
+
           return dataRes;
 
-        }), map(res => { // update status disable to resign user based on year
-          let { resignUser, activeUser } = res;
-          let resultDisable = this.disableProcess(user, resignUser);
-          return { activeUser, resultDisable };
+        }), map(res => {
+          // update status disable to resign user based on year
+          let { resignUser, activeUser, disabledUser } = res;
+          // let resultDisable = 
+          this.disableProcess(user, resignUser)
+            .subscribe(
+              data => {
+                return 'Successfully disabled';
+              }, err => {
+                return 'Failed to disable';
+              });
 
-        }), map(res => { // get all leavetype detail policy
-          let { resultDisable, activeUser } = res;
+          return { resignUser, disabledUser, activeUser };
+        })
+        , map(res => {
+          // get all leavetype detail policy
+          let { resignUser, disabledUser, activeUser } = res;
           let leavetypePolicy = this.leavetypeEntitlementDbService.findByFilterV2([], ['(DELETED_AT IS NULL)']);
-          return { activeUser, resultDisable, leavetypePolicy };
-        }), map(res => { // update user entitlement for active user
-          let { activeUser, resultDisable, leavetypePolicy } = res;
+          return { resignUser, disabledUser, activeUser, leavetypePolicy };
 
-          let resultEntitlement = this.checkEntitlement(activeUser, year);
+        })
+        , map(res => {
+          // update user entitlement for active user
+          let { resignUser, disabledUser, activeUser, leavetypePolicy } = res;
+
+          let resultEntitlement = this.checkEntitlement(activeUser);
+
           resultEntitlement.forEach(x => x.subscribe(
             data => {
               this.processPolicy(leavetypePolicy, x, year, user); //find all leave entitlement
+              return 'Success assign entitlement';
             }, err => {
-              console.log(err);
+              return 'Failed assign entitlement';
             }
           ));
-          return { activeUser, leavetypePolicy };
-        }), map(res => {
-          let { activeUser, leavetypePolicy } = res;
-          this.checkCarryForward(activeUser, leavetypePolicy, user, year);
-          return res;
+          return { resignUser, disabledUser, activeUser, leavetypePolicy };
+
+        })
+        , map(res => {
+          // get general leave policy for company
+          let { resignUser, disabledUser, activeUser, leavetypePolicy } = res;
+          let generalPolicy = this.generalLeavePolicyService.findAll(user.TENANT_GUID);
+          return { resignUser, disabledUser, activeUser, leavetypePolicy, generalPolicy };
+
+        })
+        , map(res => {
+          // assign carry forward entitlement
+          let { resignUser, disabledUser, activeUser, leavetypePolicy, generalPolicy } = res;
+          this.checkCarryForward(activeUser, leavetypePolicy, generalPolicy, user, year);
+          // let finalRes = [];
+          // finalRes['Disable user'] = resultDisable;
+          // return finalRes;
+          // let tmp = [];
+
+          // res.resignUser = this.trimData(res.resignUser);
+          // res.activeUser = this.trimData(res.activeUser);
+          // res.disabledUser = this.trimData(res.disabledUser);
+
+          return { resignUser, activeUser, disabledUser };
+
         })
       )
+
     return result;
   }
 
-  public checkCarryForward(activeUser: UserInfoModel[], leavetypePolicy: Observable<any[]>, user: any, year: number) {
+  public checkCarryForward(activeUser: ViewUserProfileListModel[], leavetypePolicy: Observable<any[]>, generalPolicy: Observable<any>, user: any, year: number) {
 
     let balanceLeave = this.userLeaveEntitlementSummaryDbService.findByFilterV2([], ['(TENANT_GUID = ' + user.TENANT_GUID + ')']);
+    let assignSuccess = [];
+    let assignFailed = [];
 
-    forkJoin(leavetypePolicy, balanceLeave).pipe(map(
-      ([leavetypePolicyData, balanceLeaveData]) => {
-        const resource = new Resource(new Array);
-        balanceLeaveData.forEach(element => {
+    forkJoin(leavetypePolicy, balanceLeave, generalPolicy).pipe(map(
+      ([leavetypePolicyData, balanceLeaveData, generalPolicyData]) => {
+        // const resource = new Resource(new Array);
+        activeUser.forEach(userActive => {
+          let resource = new Resource(new Array);
+          let entitlement = balanceLeaveData.filter(x => x.USER_GUID === userActive.USER_GUID);
+          let generalPolicy: GeneralLeavePolicyModel = generalPolicyData.find(x => x.TENANT_COMPANY_GUID === userActive.TENANT_COMPANY_GUID);
+          let generalPolicyDetail = this.xmlParserService.convertXMLToJson(generalPolicy.PROPERTIES_XML);
+          let dateForfeitCF: Date = null;
 
-          let getLeavePolicy: LeaveTypeEntitlementModel = leavetypePolicyData.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-          let policyLeave = this.xmlParserService.convertXMLToJson(getLeavePolicy.PROPERTIES_XML);
-          let dayCF = policyLeave.levels.leaveEntitlement.carryForward;
+          if (generalPolicyDetail.forfeitCFLeave != null) {
+            if (generalPolicyDetail.forfeitCFLeave.value == true) {
+              dateForfeitCF = new Date(year + '-' + generalPolicyDetail.forfeitCFLeave.month + '-' + generalPolicyDetail.forfeitCFLeave.day);
+            }
+          }
 
-          if (dayCF != 0 && element.BALANCE_DAYS > 0) {
-            let dayAvailableCF = element.BALANCE_DAYS >= dayCF ? dayCF : element.BALANCE_DAYS;
-            // console.log('assign CF : ' + dayAvailableCF);
-            // console.log(activeUser);
-            // activeUser.forEach(userActive => {
-            //   console.log(userActive.USER_GUID + ' - ' + element.USER_GUID);
-            //   if (userActive.USER_GUID == element.USER_GUID) {
-            //     console.log('found u hahaha');
-            //   }
-            // });
-            console.log(element.USER_GUID);
-            // let userData: UserInfoModel = activeUser.find(x => 
-            //   x.USER_GUID.toString() === element.USER_GUID.toString()
-            // );
-            // console.log(userData);
-            this.assignNewYearEntitlement([resource, getLeavePolicy, element.USER_GUID, null, year, user, 'CF', dayAvailableCF]);
+          if (entitlement.length > 0) {
+
+            entitlement.forEach(element => {
+              let getLeavePolicy: LeaveTypeEntitlementModel = leavetypePolicyData.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+              let policyLeave = this.xmlParserService.convertXMLToJson(getLeavePolicy.PROPERTIES_XML);
+              let dayCF = policyLeave.levels.leaveEntitlement.carryForward;
+
+
+              if (dayCF != 0 && element.BALANCE_DAYS > 0) {
+                // if balance more than CF, get CF, else get balance if greater than 0
+                let dayAvailableCF = element.BALANCE_DAYS >= dayCF ? dayCF : element.BALANCE_DAYS;
+
+                let findCF = this.getLeaveEntitlement(element.USER_GUID, ['(CF_FLAG=1)', '(LEAVE_TYPE_GUID=' + element.LEAVE_TYPE_GUID + ')', '(YEAR=' + year + ')']).pipe(map(res => {
+                  if (res.length > 0) {
+                    return 'Already assigned CF leave';
+                  } else {
+                    this.assignNewYearEntitlement([resource, getLeavePolicy, element.USER_GUID, null, year, user, 'CF', dayAvailableCF, dateForfeitCF]);
+                    this.assignUserLeaveEntitlement(resource);
+                    return 'Success Assign CF Leave';
+                  }
+                })).subscribe(
+                  data => {
+                    return 'Success CF assignnnnn';
+                  }, err => {
+                    return 'Failed CF assignnnnn';
+                  }
+                );
+
+              }
+            });
+            assignSuccess.push(userActive.FULLNAME);
+          } else {
+            assignFailed.push(userActive.FULLNAME);
           }
         });
 
-        return this.assignUserLeaveEntitlement(resource);
+        return { assignSuccess, assignFailed };;
       }
     )).subscribe(
       data => {
-        console.log('success assign carry forward');
+        return 'success assign carry forward';
       }, err => {
-        console.log('error assign carry forward');
+        return 'error assign carry forward';
       }
     );
     return 'data';
   }
 
 
-
+  // public trimData(dataArr: string[]) {
+  //   const keyDelete = ["TENANT_GUID", "TENANT_COMPANY_GUID", "USER_INFO_GUID", "DESIGNATION", "DEPARTMENT", "DIVISION", "BRANCH", "ATTACHMENT_ID", "STATUS_ACTIVATION", "RESIGNATION_DATE", "ACTIVATION_FLAG", "JOIN_DATE"]
+  //   dataArr.forEach(userResign => {
+  //     keyDelete.forEach(keyTemp => {
+  //       delete userResign[keyTemp];
+  //     });
+  //   });
+  //   return dataArr;
+  // }
 
 
 
@@ -150,28 +223,28 @@ export class YearEndClosingService {
 
   public processPolicy(leavetypePolicy: Observable<any>, userEntitlement: Observable<any>, year: number, user: any) {
     let joinObserve = forkJoin(leavetypePolicy, userEntitlement);
+    let assignETSuccess = [];
+    let assignETFailed = [];
     joinObserve.pipe(map(([res1, res2]) => {
-      // console.log(res1);
-      console.log(res2);
+
       if (res2.entitlement.length > 0) {
         const resource = new Resource(new Array);
         res2.entitlement.forEach(y => {
           if (!y.year.includes(year)) {
             let tempPolicy: LeaveTypeEntitlementModel = res1.find(x => x.ENTITLEMENT_GUID.toString() === y.id.toString());
             if (tempPolicy) {
-              console.log('u here?');
-              this.assignNewYearEntitlement([resource, tempPolicy, res2.userguid, res2.joindate, year, user, 'STD', 0]);
+              this.assignNewYearEntitlement([resource, tempPolicy, res2.userguid, res2.joindate, year, user, 'STD', 0, null]);
             }
           }
         });
-        console.log(resource);
-
-        return this.assignUserLeaveEntitlement(resource);
+        assignETSuccess.push(res2);
+        this.assignUserLeaveEntitlement(resource);
 
       } else {
-        return 'user not assign';
+        assignETFailed.push(res2);
+        // return 'user not assign';
       }
-
+      return { assignETSuccess, assignETFailed };
     })).subscribe(
       data => {
         return 'subs - success';
@@ -197,8 +270,8 @@ export class YearEndClosingService {
   }
 
   // resource: Resource, tempPolicy: LeaveTypeEntitlementModel, userguid: string, joindate: string, year: number, user: any, process: string, CFDays: number
-  public assignNewYearEntitlement([resource, tempPolicy, userguid, joindate, year, user, process, CFdays]: userEntitlement) {
-    // console.log(joindate);
+  public assignNewYearEntitlement([resource, tempPolicy, userguid, joindate, year, user, process, CFdays, dateForfeitCF]: userEntitlement) {
+
     let entitlementDay = 0;
     if (joindate != null) {
       const dateOfJoin = new Date(joindate);
@@ -232,7 +305,7 @@ export class YearEndClosingService {
     data.DAYS_ADDED = daysToAdd;
     data.CF_FLAG = CFFlag;
     data.PARENT_FLAG = PRFlag;
-    // data.EXPIREDATE = null;
+    data.EXPIREDATE = dateForfeitCF;
     // data.REMARKS = null;
     data.PROPERTIES_XML = tempPolicy.PROPERTIES_XML;
     data.CREATION_TS = new Date().toISOString();
@@ -248,16 +321,16 @@ export class YearEndClosingService {
     return resource;
   }
 
-  public checkEntitlement(activeUser, year): Observable<any>[] {
+  public checkEntitlement(activeUser): Observable<any>[] {
     let allArr = [];
     let usertemp;
     activeUser.forEach(element => {
       let tempArr = [];
       tempArr['userguid'] = element.USER_GUID;
       tempArr['joindate'] = element.JOIN_DATE;
-      usertemp = this.getLeaveEntitlement(element.USER_GUID).pipe(map(res => {
+      usertemp = this.getLeaveEntitlement(element.USER_GUID, ['(PARENT_FLAG=1)']).pipe(map(res => {
         tempArr['entitlement'] = [];
-        console.log(res);
+
         if (res.length > 0) {
           res.forEach(element => {
             let temp = tempArr['entitlement'].find(x => x.id === element.ENTITLEMENT_GUID);
@@ -268,6 +341,7 @@ export class YearEndClosingService {
             else {
               temp.year.push(element.YEAR);
             }
+
           });
         }
         return tempArr;
@@ -285,13 +359,11 @@ export class YearEndClosingService {
    * @returns {Observable<any>}
    * @memberof YearEndClosingService
    */
-  public getLeaveEntitlement(userguid: string): Observable<any> {
-    let userFilter = ['(USER_GUID=' + userguid + ')', '(PARENT_FLAG=1)'];
-    console.log(userFilter);
-
+  public getLeaveEntitlement(userguid: string, extraCond: string[]): Observable<any> {
+    let userFilter = ['(USER_GUID=' + userguid + ')'];
+    userFilter = userFilter.concat(extraCond);
     return this.userLeaveEntitlementDbService.findByFilterV2([], userFilter).pipe(
       map(res => {
-        console.log(res);
         return res;
       }));
   }
@@ -313,25 +385,30 @@ export class YearEndClosingService {
   /**
    * Check if user has resignation date - we disable them
    *
-   * @param {UserInfoModel[]} res
+   * @param {ViewUserProfileListModel[]} res
    * @returns
    * @memberof YearEndClosingService
    */
-  public checkUser(res: UserInfoModel[]) {
-    let userInfo: UserInfoModel[] = res;
+  public checkUser(res: ViewUserProfileListModel[]) {
+    let userInfo: ViewUserProfileListModel[] = res;
 
     let resignUser = [];
     let activeUser = [];
+    let disabledUser = [];
 
     userInfo.forEach(element => {
-      if (new Date(element.RESIGNATION_DATE).getFullYear() <= new Date().getFullYear() && element.RESIGNATION_DATE != null) {
+      if (new Date(element.RESIGNATION_DATE).getFullYear() <= new Date().getFullYear() && element.RESIGNATION_DATE != null && element.ACTIVATION_FLAG == 1) {
         resignUser.push(element);
-      } else {
+      } else if (element.ACTIVATION_FLAG == 1) {
         activeUser.push(element);
+      } else {
+        disabledUser.push(element);
       }
     });
 
-    return { resignUser, activeUser };
+    // console.log(resignUser.length + ' - ' + activeUser.length + ' - ' + disabledUser.length);
+
+    return { resignUser, activeUser, disabledUser };
   }
 
   /**
@@ -361,7 +438,8 @@ export class YearEndClosingService {
    * @memberof YearEndClosingService
    */
   public disableUser(user: any, userToDisable: string) {
-    userToDisable = '"2b93fc11-23d5-db42-dd9f-bb9499071156","7756ab98-e69e-48e1-5fc3-b7e30a157cf3"';
+    // userToDisable = '"2b93fc11-23d5-db42-dd9f-bb9499071156","7756ab98-e69e-48e1-5fc3-b7e30a157cf3"';
+
     const resource = new Resource(new Array);
     const data = new UserModel();
 

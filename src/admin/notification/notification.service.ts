@@ -64,6 +64,26 @@ export class NotificationService extends BaseDBService {
     }
 
     /**
+     * update read notification
+     *
+     * @param {string[]} notifyId
+     * @returns
+     * @memberof NotificationService
+     */
+    updateReadNotification(notifyId: string[]) {
+
+        const resource = new Resource(new Array);
+        const data = new NotificationModel();
+
+        data.READ_STATUS = 1;
+
+        resource.resource.push(data);
+        return this.updateByModel(resource, [], ['(QUEUE_GUID IN (' + notifyId + '))'], ['QUEUE_GUID']);
+
+
+    }
+
+    /**
      * create notifocation
      *
      * @param {QueueNotificationDTO} data

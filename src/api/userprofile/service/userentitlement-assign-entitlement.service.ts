@@ -61,7 +61,7 @@ export class UserEntitlementAssignEntitlement {
           ]
 
           const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
-
+          console.log(dataTemp);
           return dataTemp;
 
         }),
@@ -111,6 +111,8 @@ export class UserEntitlementAssignEntitlement {
         map(res => {
           if (res.length > 0) {
             return res;
+          } else {
+            return 'success';
           }
 
         })

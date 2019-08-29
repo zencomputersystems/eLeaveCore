@@ -50,7 +50,7 @@ export class PersonalDetailController {
         //get the requesting user
         const user = req.user;
 
-        const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID=' + user.USER_GUID + ')'];
+        const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ') AND (USER_GUID=' + user.USER_GUID + ')'];
 
         this.userprofileService.getPersonalDetail(filters)
             .subscribe(

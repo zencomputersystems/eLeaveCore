@@ -122,7 +122,15 @@ export class UserprofileController {
         const user = req.user;
         this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + dataId + ')'])
             .pipe(
-                switchMap(filter => { return this.userprofileService.getDetail(filter); })
+                switchMap(filter => {
+                    let filters: string[] = [];
+                    let merge: string;
+                    for (var i = 0; i < filter.length; i++) {
+                        merge = filter[i - 1] + ' AND ' + filter[i];
+                    }
+                    filters.push(merge);
+                    return this.userprofileService.getDetail(filters);
+                })
             ).subscribe(data => {
                 // console.log(data);
                 if (data) { this.getEntitlementProcess(data, res, user); }
@@ -150,7 +158,7 @@ export class UserprofileController {
         //get the requesting user
         const user = req.user;
 
-        const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID=' + user.USER_GUID + ')'];
+        const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ') AND (USER_GUID=' + user.USER_GUID + ')'];
 
         this.userprofileService.getDetail(filters)
             .subscribe(

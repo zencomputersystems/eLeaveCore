@@ -85,10 +85,10 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public getDetail(filters: string[]) {
-        return this.userInfoService.findByFilterV2([], filters)
+        return this.userInfoService.findByFilterV4([], filters, 'CREATION_TS DESC', 1)
             .pipe(
                 map(res => {
-                    console.log(res);
+                    // console.log(res);
                     const data: UserInfoModel = res[0];
 
                     if (data) { return this.userprofileAssignerService.buildProfileData([data, true, true, true, true]); }
@@ -107,7 +107,7 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public getPersonalDetail(filters: string[]) {
-        return this.userInfoService.findByFilterV2([], filters)
+        return this.userInfoService.findByFilterV4([], filters, 'CREATION_TS DESC', 1)
             .pipe(
                 map(res => {
                     const data: UserInfoModel = res[0];

@@ -65,7 +65,7 @@ export class NotificationController {
     findAll(@Req() req, @Res() res) {
         // let userArray = [];
         const userFilter = ['(TENANT_GUID=' + req.user.TENANT_GUID + ')']
-        this.userinfoDbService.findByFilterV2([], userFilter)
+        this.userinfoDbService.findByFilterV4([], userFilter, 'CREATION_TS DESC', null)
             .pipe(map(res => { return res; }))
             .subscribe(
                 data => {

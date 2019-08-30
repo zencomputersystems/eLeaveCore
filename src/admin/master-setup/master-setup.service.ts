@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { MasterSetupDbService } from './db/master-setup.db.service';
 import { MasterSetupDTO } from './dto/master-setup.dto';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 
 /**
  * Service for master setup
@@ -58,6 +58,12 @@ export class MasterSetupService {
     if (item == 'country') {
       result = this.getAllLists([this.masterSetupDbService, tenantId, ['COUNTRY'], 'view_country']);
     }
+    if (item == 'employee_type') {
+      result = this.getAllLists([this.masterSetupDbService, tenantId, ['EMPLOYEE_TYPE'], 'view_employee_types']);
+    }
+    if (item == 'employee_status') {
+      result = this.getAllLists([this.masterSetupDbService, tenantId, ['EMPLOYEE_STATUS'], 'view_employee_status']);
+    }
 
     return result;
   }
@@ -83,9 +89,40 @@ export class MasterSetupService {
    * @returns
    * @memberof MasterSetupService
    */
-  public updateMasterItem(data: MasterSetupDTO, item: string, user: any) {
+  public updateMasterItem(data: MasterSetupDTO, item: string, user: any): Observable<any> {
+    let tenantId = user.TENANT_GUID;
+    let result = null;
 
-    return of(data);
+    if (item == 'department') {
+      result = this.updateLists([data, user, 'DEPARTMENT']);
+    }
+    if (item == 'designation') {
+      result = this.updateLists([data, user, 'DESIGNATION']);
+    }
+    if (item == 'section') {
+      result = this.updateLists([data, user, 'SECTION']);
+    }
+    if (item == 'branch') {
+      result = this.updateLists([data, user, 'BRANCH']);
+    }
+    if (item == 'bank') {
+      result = this.updateLists([data, user, 'BANK']);
+    }
+    if (item == 'costcentre') {
+      result = this.updateLists([data, user, 'COSTCENTRE']);
+    }
+    if (item == 'country') {
+      result = this.updateLists([data, user, 'COUNTRY']);
+    }
+
+    return result;
+  }
+
+  private updateLists([data, user, field]): Observable<any> {
+
+    // return this.commonFunctionService.getListData(
+    return this.masterSetupDbService.updateMasterList([data, user, field]);
+    // );
   }
 
 }

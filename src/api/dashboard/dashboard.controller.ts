@@ -14,7 +14,10 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class DashboardController {
-    constructor(private http: HttpService, private commonFunctionService: CommonFunctionService) { }
+    constructor(
+        private http: HttpService,
+        private commonFunctionService: CommonFunctionService
+    ) { }
 
     /**
      * Get total employee and onleave count

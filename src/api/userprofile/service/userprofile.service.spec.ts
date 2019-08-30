@@ -28,7 +28,8 @@ describe('UserprofileService', () => {
     const updatePersonalDetailDTOStub = { id: {}, nickname: {} };
     const userInfoServiceStub = {
       findByFilterV2: (array1, filters2) => ({ pipe: () => ({}) }),
-      updateByModel: (resource1, array2, array3, array4) => ({})
+      updateByModel: (resource1, array2, array3, array4) => ({}),
+      findByFilterV4: (array1, filters2, filters3, filters4) => ({ pipe: () => ({}) })
     };
     const updateEmploymentDetailDTOStub = {
       id: {},
@@ -106,22 +107,22 @@ describe('UserprofileService', () => {
   describe('Get Detail', () => {
     it('should call method find by filter in get detail', () => {
       const userInfoServiceStub: UserInfoService = userInfoService;
-      spyOn(userInfoServiceStub, 'findByFilterV2').and.callThrough();
-      expect(userInfoServiceStub.findByFilterV2).not.toHaveBeenCalled();
+      spyOn(userInfoServiceStub, 'findByFilterV4').and.callThrough();
+      expect(userInfoServiceStub.findByFilterV4).not.toHaveBeenCalled();
       service.getDetail([]);
-      expect(userInfoServiceStub.findByFilterV2).toHaveBeenCalled();
-      expect(userInfoServiceStub.findByFilterV2).toHaveBeenCalledTimes(1);
+      expect(userInfoServiceStub.findByFilterV4).toHaveBeenCalled();
+      expect(userInfoServiceStub.findByFilterV4).toHaveBeenCalledTimes(1);
     })
   });
 
   describe('Get Personal Detail', () => {
     it('should call method find by filter in get personal detail', () => {
       const userInfoServiceStub: UserInfoService = userInfoService;
-      spyOn(userInfoServiceStub, 'findByFilterV2').and.callThrough();
-      expect(userInfoServiceStub.findByFilterV2).not.toHaveBeenCalled();
+      spyOn(userInfoServiceStub, 'findByFilterV4').and.callThrough();
+      expect(userInfoServiceStub.findByFilterV4).not.toHaveBeenCalled();
       service.getPersonalDetail([]);
-      expect(userInfoServiceStub.findByFilterV2).toHaveBeenCalled();
-      expect(userInfoServiceStub.findByFilterV2).toHaveBeenCalledTimes(1);
+      expect(userInfoServiceStub.findByFilterV4).toHaveBeenCalled();
+      expect(userInfoServiceStub.findByFilterV4).toHaveBeenCalledTimes(1);
     })
   });
 

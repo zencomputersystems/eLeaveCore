@@ -106,7 +106,6 @@ export class EntitlementDetailController {
         this.entitlementService.assignEntitlement(req.user, assignLeaveDTO)
             .subscribe(
                 data => {
-                    console.log(data);
                     res.send(data);
                 },
                 err => {

@@ -36,7 +36,7 @@ export class MasterSetupController {
   @ApiOperation({ title: 'Get data list' })
   @ApiImplicitQuery({
     name: 'item', description: 'Get list of master item', required: true,
-    enum: ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country']
+    enum: ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status']
   })
   findAll(@Param('item') get_item, @Req() req, @Res() res) {
 
@@ -66,7 +66,7 @@ export class MasterSetupController {
   @ApiOperation({ title: 'Update data list' })
   @ApiImplicitQuery({
     name: 'item', description: 'Update list of master item', required: true,
-    enum: ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country']
+    enum: ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status']
   })
   updateMaster(@Param('item') get_item, @Body() data: MasterSetupDTO, @Req() req, @Res() res) {
 
@@ -93,7 +93,7 @@ export class MasterSetupController {
    */
   public verifyItem(req, get_item) {
     // list item to find
-    let item = ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country'];
+    let item = ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status'];
     // item to get
     let dataId: string = null;
     // if have item from implicit query set to dataid param 

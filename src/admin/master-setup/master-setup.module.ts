@@ -7,6 +7,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { MasterSetupService } from './master-setup.service';
 import { MasterSetupDbService } from './db/master-setup.db.service';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { MasterSetupDbService } from './db/master-setup.db.service';
     MasterSetupService,
     QueryParserService,
     CommonFunctionService,
-    MasterSetupDbService
+    MasterSetupDbService,
+    UserInfoDbService
   ]
 })
 export class MasterSetupModule { }

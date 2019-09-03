@@ -70,7 +70,7 @@ export class UserService extends BaseDBService {
         //const filters = ['(EMAIL='+email+')','(PASSWORD='+CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex)+')'];
         const filters = ['(EMAIL=' + email + ')', '(PASSWORD=' + password + ')'];
 
-        console.log(filters);
+        // console.log(filters);
 
         const url = this.queryService.generateDbQuery(this.table_name, fields, filters);
 
@@ -128,6 +128,28 @@ export class UserService extends BaseDBService {
 
         return this.createByModel(resource, [], [], []);
 
+    }
+
+    /**
+     * Update user inactive
+     *
+     * @param {*} user
+     * @param {string} user_guid
+     * @returns
+     * @memberof UserService
+     */
+    public updateUserInactive(user: any, user_guid: string) {
+        const resource = new Resource(new Array);
+        const data = new UserModel;
+
+        data.ACTIVATION_FLAG = 0;
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+        // console.log(resource);
+
+        return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'EMAIL']);
     }
 
 }

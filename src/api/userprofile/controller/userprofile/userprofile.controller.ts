@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException, Delete } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException, Delete, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
@@ -10,6 +10,8 @@ import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-d
 import { throws } from 'assert';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 import { UserInfoDbService } from '../../../../admin/holiday/db/user-info.db.service';
+import { DisableUserDTO } from '../../../../admin/user/dto/disable-user.dto';
+import { UserProfileStatusService } from '../../service/userprofile-status.service';
 
 /**
  * Controller for user profile
@@ -32,7 +34,8 @@ export class UserprofileController {
         private readonly userprofileService: UserprofileService,
         private readonly accessLevelValidationService: AccessLevelValidateService,
         private readonly commonFunctionService: CommonFunctionService,
-        private readonly userinfoDbService: UserInfoDbService) { }
+        private readonly userinfoDbService: UserInfoDbService,
+        private readonly userProfileStatusService: UserProfileStatusService) { }
 
     /**
      * Find all user profile
@@ -93,7 +96,21 @@ export class UserprofileController {
     @ApiImplicitQuery({ name: 'id', description: 'Delete by user guid', required: true })
     setResignDate(@Param('id') id, @Req() req, @Res() res) {
         id = this.commonFunctionService.findIdParam(req, res, id);
-        this.commonFunctionService.runUpdateService(this.userinfoDbService.setResignUser(req.user, id), res);
+        this.commonFunctionService.runUpdateService(this.userinfoDbService.setResignUser(req.user, id, null), res);
+    }
+
+    /**
+     * Set date resign user, if resign date < current -> set inactive
+     *
+     * @param {{user_guid:string,resign_date:Date}} data
+     * @param {*} req
+     * @param {*} res
+     * @memberof UserprofileController
+     */
+    @Post('/users/disable')
+    @ApiOperation({ title: 'Set disable user' })
+    setDisabledUser(@Body() data: DisableUserDTO, @Req() req, @Res() res) {
+        this.commonFunctionService.runUpdateService(this.userProfileStatusService.resignAndChangeStatus(req.user, data), res);
     }
 
     /**

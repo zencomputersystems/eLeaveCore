@@ -118,6 +118,14 @@ export class MasterSetupService {
     return result;
   }
 
+  /**
+   * Update list
+   *
+   * @private
+   * @param {*} [data, user, field]
+   * @returns {Observable<any>}
+   * @memberof MasterSetupService
+   */
   private updateLists([data, user, field]): Observable<any> {
 
     // return this.commonFunctionService.getListData(

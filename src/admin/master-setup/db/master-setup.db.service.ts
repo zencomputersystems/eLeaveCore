@@ -16,11 +16,13 @@ import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
  */
 @Injectable()
 export class MasterSetupDbService {
+
   /**
    *Creates an instance of MasterSetupDbService.
    * @param {HttpService} httpService http service
    * @param {QueryParserService} queryService query service
    * @param {CommonFunctionService} commonFunctionService common function service
+   * @param {UserInfoDbService} userinfoDbService user info db service
    * @memberof MasterSetupDbService
    */
   constructor(
@@ -88,12 +90,22 @@ export class MasterSetupDbService {
   }
 
 
+  /**
+   * update method
+   *
+   * @param {*} user
+   * @param {string} userGuidAll
+   * @param {string} fields
+   * @param {string} newName
+   * @returns
+   * @memberof MasterSetupDbService
+   */
   update(user: any, userGuidAll: string, fields: string, newName: string) {
 
     const resource = new Resource(new Array);
     const data = new UserInfoModel;
 
-    data.UPDATE_TS = new Date().toISOString();
+    // data.UPDATE_TS = new Date().toISOString();
     data.UPDATE_USER_GUID = user.USER_GUID;
     data[fields] = newName;
 

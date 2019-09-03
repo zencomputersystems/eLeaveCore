@@ -5,6 +5,7 @@ import { UserprofileController } from './userprofile.controller';
 import { UserprofileAssignerService } from '../../service/userprofile-assigner.service';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
+import { UserProfileStatusService } from '../../service/userprofile-status.service';
 describe('UserprofileController', () => {
   let pipe: UserprofileController;
   beforeEach(async () => {
@@ -24,6 +25,7 @@ describe('UserprofileController', () => {
     const userInfoDbServiceStub = {
 
     }
+    const userProfileStatusServiceStub = {}
     const module = await Test.createTestingModule({
       providers: [
         UserprofileController,
@@ -40,6 +42,10 @@ describe('UserprofileController', () => {
         {
           provide: UserInfoDbService,
           useValue: userInfoDbServiceStub
+        },
+        {
+          provide: UserProfileStatusService,
+          useValue: userProfileStatusServiceStub
         }
       ]
     }).compile();

@@ -50,11 +50,13 @@ export class HolidayController {
         let yearLink = req.query.year != null ? '&year=' + req.query.year : '&year=' + dt.getFullYear();
         let locationLink = req.query.location != null ? '&location=' + req.query.location : '';
         let monthLink = req.query.month != null ? '&month=' + req.query.month : '';
+        let localNational = '&type=local,national';
+
         let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
         let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
         let calendarFullURL = calendarBaseUrl + calendarApiKey;
 
-        this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink)
+        this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink + localNational)
             .subscribe((response) => {
                 res.send(response.data);
             }, err => {

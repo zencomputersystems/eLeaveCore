@@ -92,6 +92,16 @@ export class BaseDBService {
             )
     }
 
+    /**
+     * With order and limit
+     *
+     * @param {string[]} fields
+     * @param {string[]} filters
+     * @param {string} order
+     * @param {number} limit
+     * @returns {Observable<Array<any>>}
+     * @memberof BaseDBService
+     */
     public findByFilterV4(fields: string[], filters: string[], order: string, limit: number): Observable<Array<any>> {
         //url
         const url = this.queryService.generateDbQueryV3([this.tableName, fields, filters, order, limit]);

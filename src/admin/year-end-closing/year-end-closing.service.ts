@@ -135,6 +135,17 @@ export class YearEndClosingService {
     return result;
   }
 
+  /**
+   * Check carry forward if any
+   *
+   * @param {ViewUserProfileListModel[]} activeUser
+   * @param {Observable<any[]>} leavetypePolicy
+   * @param {Observable<any>} generalPolicy
+   * @param {*} user
+   * @param {number} year
+   * @returns
+   * @memberof YearEndClosingService
+   */
   public checkCarryForward(activeUser: ViewUserProfileListModel[], leavetypePolicy: Observable<any[]>, generalPolicy: Observable<any>, user: any, year: number) {
 
     let balanceLeave = this.userLeaveEntitlementSummaryDbService.findByFilterV2([], ['(TENANT_GUID = ' + user.TENANT_GUID + ')']);
@@ -221,6 +232,16 @@ export class YearEndClosingService {
 
 
 
+  /**
+   * Process policy for new year
+   *
+   * @param {Observable<any>} leavetypePolicy
+   * @param {Observable<any>} userEntitlement
+   * @param {number} year
+   * @param {*} user
+   * @returns
+   * @memberof YearEndClosingService
+   */
   public processPolicy(leavetypePolicy: Observable<any>, userEntitlement: Observable<any>, year: number, user: any) {
     let joinObserve = forkJoin(leavetypePolicy, userEntitlement);
     let assignETSuccess = [];
@@ -255,6 +276,13 @@ export class YearEndClosingService {
     return 'ok';
   }
 
+  /**
+   * Assign user for new year leave entitlement
+   *
+   * @param {*} resource
+   * @returns
+   * @memberof YearEndClosingService
+   */
   public assignUserLeaveEntitlement(resource) {
     return this.userLeaveEntitlementDbService.createByModel(resource, [], [], []).pipe(
       map(res => {
@@ -270,6 +298,13 @@ export class YearEndClosingService {
   }
 
   // resource: Resource, tempPolicy: LeaveTypeEntitlementModel, userguid: string, joindate: string, year: number, user: any, process: string, CFDays: number
+  /**
+   * Assign new year entitlement
+   *
+   * @param {userEntitlement} [resource, tempPolicy, userguid, joindate, year, user, process, CFdays, dateForfeitCF]
+   * @returns
+   * @memberof YearEndClosingService
+   */
   public assignNewYearEntitlement([resource, tempPolicy, userguid, joindate, year, user, process, CFdays, dateForfeitCF]: userEntitlement) {
 
     let entitlementDay = 0;
@@ -321,6 +356,13 @@ export class YearEndClosingService {
     return resource;
   }
 
+  /**
+   * Check all entitlement assign previous year
+   *
+   * @param {*} activeUser
+   * @returns {Observable<any>[]}
+   * @memberof YearEndClosingService
+   */
   public checkEntitlement(activeUser): Observable<any>[] {
     let allArr = [];
     let usertemp;

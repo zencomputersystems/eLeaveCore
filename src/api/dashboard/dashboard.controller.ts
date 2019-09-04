@@ -27,7 +27,7 @@ export class DashboardController {
      * @memberof DashboardController
      */
     @Get('/employee/status-onleave')
-    @ApiOperation({ title: 'Get total employee' })
+    @ApiOperation({ title: 'Get total employee status onleave' })
     // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
     @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
     @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
@@ -43,13 +43,30 @@ export class DashboardController {
      * @memberof DashboardController
      */
     @Get('/employee/leave-list')
-    @ApiOperation({ title: 'Get total employee' })
+    @ApiOperation({ title: 'Get total employee on leave' })
     // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
     @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
     @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
     findEmployeeLeaveList(@Req() req, @Res() res) {
         this.runService(req, res, 'employee_leave_list');
     }
+
+    /**
+     * Calendar leave list
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    @Get('/employee/calendar-leave-list')
+    @ApiOperation({ title: 'Get all list of employee to calendar' })
+    // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
+    @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
+    @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
+    findCalendarLeaveList(@Req() req, @Res() res) {
+        this.runService(req, res, 'calendar_leave');
+    }
+
 
     /**
      * Function refactor run service 

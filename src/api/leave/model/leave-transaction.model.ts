@@ -68,7 +68,7 @@ export class LeaveTransactionModel extends CreateUpdateModel {
      * @type {number}
      * @memberof LeaveTransactionModel
      */
-    CF_Days: number;
+    CF_DAYS: number;
     /**
      * Status
      *
@@ -90,27 +90,27 @@ export class LeaveTransactionModel extends CreateUpdateModel {
      * @memberof LeaveTransactionModel
      */
     ENTITLEMENT_XML_SNAPSHOT: string;
+    // /**
+    //  * Is half day
+    //  *
+    //  * @type {boolean}
+    //  * @memberof LeaveTransactionModel
+    //  */
+    // Is_Half_Day: boolean;
+    // /**
+    //  * Half day date
+    //  *
+    //  * @type {Date}
+    //  * @memberof LeaveTransactionModel
+    //  */
+    // Half_Date: Date;
     /**
-     * Is half day
-     *
-     * @type {boolean}
-     * @memberof LeaveTransactionModel
-     */
-    Is_Half_Day: boolean;
-    /**
-     * Half day date
-     *
-     * @type {Date}
-     * @memberof LeaveTransactionModel
-     */
-    Half_Date: Date;
-    /**
-     * Slot for half day
+     * Slot of leave
      *
      * @type {string}
      * @memberof LeaveTransactionModel
      */
-    AM_PM: string;
+    TIME_SLOT: string;
 
     /**
      * Tenant guid

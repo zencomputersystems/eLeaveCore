@@ -54,7 +54,9 @@ export class MasterSetupDbService {
 
     let tenantId = user.TENANT_GUID;
     // build url for dreamfactory
-    const url = this.queryService.generateDbQueryV3(['user_info', [], ['(' + fields + '=' + data.oldName + ') AND (TENANT_GUID=' + tenantId + ')'], null, null]);
+    const url = this.queryService.generateDbQueryV3(['user_info', ['USER_INFO_GUID', 'FULLNAME'], ['(' + fields + '=' + data.oldName + ') AND (TENANT_GUID=' + tenantId + ')'], null, null]);
+
+    // console.log(url);
 
     // run url by dreamfactory
     let result = this.httpService.get(url)
@@ -71,17 +73,24 @@ export class MasterSetupDbService {
       map(res => {
 
         let userinfoGuidAll = '';
-        let resultProcess: Observable<any>;
+        let resultProcess;
         res.forEach(element => {
           userinfoGuidAll = userinfoGuidAll == '' ? '"' + element.USER_INFO_GUID + '"' : userinfoGuidAll + ',"' + element.USER_INFO_GUID + '"';
         });
 
         if (userinfoGuidAll != '')
-          resultProcess = this.update(user, userinfoGuidAll, fields, data.newName);
+          resultProcess = this.update(user, userinfoGuidAll, fields, data.newName).subscribe(
+            data => {
+              return data;
+            }, err => {
+              return err;
+            }
+          );
         else
-          resultProcess = of('No data "' + data.oldName + '" for ' + fields);
+          res = 'No data "' + data.oldName + '" for ' + fields;
 
-        return resultProcess;
+        // return resultProcess;
+        return res;
       })
     )
 
@@ -105,18 +114,21 @@ export class MasterSetupDbService {
     const resource = new Resource(new Array);
     const data = new UserInfoModel;
 
-    // data.UPDATE_TS = new Date().toISOString();
+    data.UPDATE_TS = new Date().toISOString();
     data.UPDATE_USER_GUID = user.USER_GUID;
     data[fields] = newName;
 
     resource.resource.push(data);
 
-    console.log(userGuidAll);
+    // console.log(userGuidAll);
 
-    console.log(resource);
+    // console.log(resource);
+
+    const filters = ['(USER_INFO_GUID IN (' + userGuidAll + '))'];
+    // console.log(filters);
     // return resource;
     // return this.updateByModel(resource, [], [], []);
-    return this.userinfoDbService.updateByModel(resource, [], ['(USER_INFO_GUID IN (' + userGuidAll + '))'], ['USER_GUID', 'FULLNAME']);
+    return this.userinfoDbService.updateByModel(resource, [], filters, []);
   }
 
 

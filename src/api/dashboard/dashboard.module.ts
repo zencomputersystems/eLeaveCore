@@ -4,6 +4,11 @@ import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { DashboardController } from './dashboard.controller';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { DashboardService } from './dashboard.service';
+import { DashboardDbService } from './db/dashboard.db.service';
+import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
+import { XMLParserService } from '../../common/helper/xml-parser.service';
 
 /**
  * Module for dashboard
@@ -18,7 +23,12 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
         HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
     ],
     providers: [
-        CommonFunctionService
+        CommonFunctionService,
+        DashboardService,
+        DashboardDbService,
+        QueryParserService,
+        HolidayDbService,
+        XMLParserService
     ],
     controllers: [DashboardController]
 })

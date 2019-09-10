@@ -26,6 +26,7 @@ import { ApprovalOverrideModule } from './admin/approval-override/approval-overr
 import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment.module';
 import { YearEndClosingModule } from './admin/year-end-closing/year-end-closing.module';
 import { MasterSetupModule } from './admin/master-setup/master-setup.module';
+import { WorkingHoursModule } from './admin/working-hours/working-hours.module';
 
 @Module({
   imports: [
@@ -72,7 +73,8 @@ import { MasterSetupModule } from './admin/master-setup/master-setup.module';
     ApprovalOverrideModule,
     LeaveAdjustmentModule,
     YearEndClosingModule,
-    MasterSetupModule
+    MasterSetupModule,
+    WorkingHoursModule
   ],
   controllers: [AppController],
   providers: [

@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { DashboardService } from './dashboard.service';
 
 /**
  * All dashboard api
@@ -16,7 +17,8 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 export class DashboardController {
     constructor(
         private http: HttpService,
-        private commonFunctionService: CommonFunctionService
+        private commonFunctionService: CommonFunctionService,
+        private dashboardService: DashboardService
     ) { }
 
     /**
@@ -67,6 +69,17 @@ export class DashboardController {
         this.runService(req, res, 'calendar_leave');
     }
 
+    @Get('/employee/upcoming-holiday')
+    @ApiOperation({ title: 'Get all list of upcoming holiday' })
+    getUpcomingHoliday(@Req() req, @Res() res) {
+        this.dashboardService.upcomingHolidays(req.user.USER_GUID).subscribe(
+            data => {
+                res.send(data.data.resource);
+            }, err => {
+                res.send(err);
+            }
+        );
+    }
 
     /**
      * Function refactor run service 

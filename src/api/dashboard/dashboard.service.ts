@@ -4,6 +4,7 @@ import { DashboardDbService } from './db/dashboard.db.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
+import moment = require('moment');
 
 /**
  * Service for dashboard
@@ -33,50 +34,13 @@ export class DashboardService {
    * @memberof DashboardService
    */
   public upcomingHolidays(user_guid: string): Observable<any> {
-    let result = this.dashboardDbService.getCalendarProfile(user_guid).pipe(map(res => {
-      // console.log(res);
-      return res;
-    }), map(res => {
-      let calendarProfileGuid = res[0].CALENDAR_PROFILE_GUID;
-      // console.log(calendarProfileGuid);
-      let calendarHoliday = this.holidayDbService.findAll(calendarProfileGuid)
-      // .subscribe(
-      //   data => {
-      //     console.log(data.data.resource);
-      //     return data.data.resource;
-      //   }, err => {
-      //     console.log(err);
-      //     return err;
-      //   }
-      // )
-      return calendarHoliday;
-    }), mergeMap(res => {
-      res.subscribe(
-        data => {
-          console.log(this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML));
-
-        }, err => {
-          console.log(err);
-        });
-      return res;
-    }))
-    // .subscribe(
-    //   data => {
-    //     console.log(data.data.resource);
-    //     // data.subscribe(
-    //     //   data => {
-    //     //     console.log(data);
-    //     //   }, err => {
-    //     //     console.log(err);
-    //     //   })
-    //     return data;
-    //   }, err => {
-    //     console.log(err);
-    //     return err;
-    //   }
-    // );
-
-    return result;
-    // return of(user_guid);
+    return this.dashboardDbService.getCalendarProfile(user_guid).pipe(
+      mergeMap(res => {
+        let calendarProfileGuid = res[0].CALENDAR_PROFILE_GUID;
+        let calendarHoliday = this.holidayDbService.findAll(calendarProfileGuid);
+        return calendarHoliday;
+      })
+    )
   }
+
 }

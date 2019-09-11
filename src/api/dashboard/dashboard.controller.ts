@@ -4,6 +4,8 @@ import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { DashboardService } from './dashboard.service';
+import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import moment = require('moment');
 
 /**
  * All dashboard api
@@ -18,7 +20,8 @@ export class DashboardController {
     constructor(
         private http: HttpService,
         private commonFunctionService: CommonFunctionService,
-        private dashboardService: DashboardService
+        private dashboardService: DashboardService,
+        private xmlParserService: XMLParserService
     ) { }
 
     /**
@@ -81,7 +84,15 @@ export class DashboardController {
     getUpcomingHoliday(@Req() req, @Res() res) {
         this.dashboardService.upcomingHolidays(req.user.USER_GUID).subscribe(
             data => {
-                res.send(data.data.resource);
+                let upcomingHolidayArr = [];
+                let holidayData = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+
+                holidayData.holiday.forEach(element => {
+                    if (moment(element.start, 'YYYY-MM-DD') > moment()) {
+                        upcomingHolidayArr.push(element);
+                    }
+                });
+                res.send(upcomingHolidayArr);
             }, err => {
                 res.send(err);
             }

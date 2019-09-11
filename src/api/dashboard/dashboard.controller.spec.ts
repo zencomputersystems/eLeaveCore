@@ -2,6 +2,8 @@ import { Test } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { DashboardController } from './dashboard.controller';
+import { XMLParserService } from '../../common/helper/xml-parser.service';
+import { DashboardService } from './dashboard.service';
 describe('DashboardController', () => {
   let pipe: DashboardController;
   beforeEach(async () => {
@@ -10,11 +12,14 @@ describe('DashboardController', () => {
       sendResSuccessV2: (data1, res2) => ({}),
       sendResErrorV3: (err1, res2) => ({})
     };
+    const DashboardServiceStub = {}
     const module = await Test.createTestingModule({
       providers: [
         DashboardController,
         { provide: HttpService, useValue: httpServiceStub },
-        { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
+        { provide: CommonFunctionService, useValue: commonFunctionServiceStub },
+        XMLParserService,
+        { provide: DashboardService, useValue: DashboardServiceStub }
       ]
     }).compile();
     pipe = await module.get<DashboardController>(DashboardController);

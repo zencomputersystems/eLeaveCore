@@ -5,13 +5,33 @@ import { map, mergeMap } from 'rxjs/operators';
 import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 
+/**
+ * Service for dashboard
+ *
+ * @export
+ * @class DashboardService
+ */
 @Injectable()
 export class DashboardService {
+  /**
+   *Creates an instance of DashboardService.
+   * @param {DashboardDbService} dashboardDbService
+   * @param {HolidayDbService} holidayDbService
+   * @param {XMLParserService} xmlParserService
+   * @memberof DashboardService
+   */
   constructor(
     private readonly dashboardDbService: DashboardDbService,
     private readonly holidayDbService: HolidayDbService,
     private readonly xmlParserService: XMLParserService
   ) { }
+  /**
+   * Get upcoming holiday and upcoming leave taken
+   *
+   * @param {string} user_guid
+   * @returns {Observable<any>}
+   * @memberof DashboardService
+   */
   public upcomingHolidays(user_guid: string): Observable<any> {
     let result = this.dashboardDbService.getCalendarProfile(user_guid).pipe(map(res => {
       // console.log(res);

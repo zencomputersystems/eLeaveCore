@@ -14,7 +14,7 @@ export class MasterSetupDTO {
    * @type {string}
    * @memberof MasterSetupDTO
    */
-  @ApiModelProperty({ description: 'Data to change' })
+  @ApiModelProperty({ description: 'Data to change e.g Sentul Branch', example: 'Sentul' })
   @IsNotEmpty()
   @IsString()
   oldName: string;
@@ -25,7 +25,7 @@ export class MasterSetupDTO {
    * @type {string}
    * @memberof MasterSetupDTO
    */
-  @ApiModelProperty({ description: 'New data to replace old data' })
+  @ApiModelProperty({ description: 'New data to replace old data', example: 'Klang' })
   @IsString()
   @IsString()
   newName: string;

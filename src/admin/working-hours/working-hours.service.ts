@@ -14,8 +14,22 @@ import { UpdateWorkingHoursModel } from './model/update-working-hours.model';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { UpdateUserWorkingHoursModel } from './model/update-userworkinghours.model';
 
+/**
+ * Service for working hours
+ *
+ * @export
+ * @class WorkingHoursService
+ */
 @Injectable()
 export class WorkingHoursService {
+  /**
+   *Creates an instance of WorkingHoursService.
+   * @param {XMLParserService} xmlParserService
+   * @param {WorkingHoursDbService} workingHoursDbService
+   * @param {AssignerDataService} assignerDataService
+   * @param {UserInfoDbService} userinfoDbService
+   * @memberof WorkingHoursService
+   */
   constructor(
     private readonly xmlParserService: XMLParserService,
     private readonly workingHoursDbService: WorkingHoursDbService,
@@ -23,6 +37,12 @@ export class WorkingHoursService {
     private readonly userinfoDbService: UserInfoDbService
   ) { }
 
+  /**
+   * Get list of working hours profile
+   *
+   * @returns
+   * @memberof WorkingHoursService
+   */
   public findWorkingHoursProfile() {
     return this.workingHoursDbService.findAllWorkingHoursProfile()
       .pipe(map(res => {
@@ -34,6 +54,13 @@ export class WorkingHoursService {
       )
   }
 
+  /**
+   * Get one working hours details
+   *
+   * @param {string} workingHoursId
+   * @returns
+   * @memberof WorkingHoursService
+   */
   public getWorkingHoursDetail(workingHoursId: string) {
     return this.workingHoursDbService.findAll(workingHoursId)
       .pipe(map(res => {
@@ -44,6 +71,14 @@ export class WorkingHoursService {
       }))
   }
 
+  /**
+   * Create new working hours profile
+   *
+   * @param {*} user
+   * @param {WorkingHoursDTO} data
+   * @returns
+   * @memberof WorkingHoursService
+   */
   create(user: any, data: WorkingHoursDTO) {
     // let tempData = this.xmlParserService.convertJsonToXML(data);
     // console.log(tempData);
@@ -65,6 +100,14 @@ export class WorkingHoursService {
     return this.workingHoursDbService.createByModel(resource, [], [], []);
   }
 
+  /**
+   * Update existing working hours profile
+   *
+   * @param {*} user
+   * @param {UpdateWorkingHoursDTO} d
+   * @returns
+   * @memberof WorkingHoursService
+   */
   updateWorkingHours(user: any, d: UpdateWorkingHoursDTO) {
     const resource = new Resource(new Array);
     const data = new UpdateWorkingHoursModel();
@@ -80,6 +123,14 @@ export class WorkingHoursService {
     return this.workingHoursDbService.updateByModel(resource, [], ['(WORKING_HOURS_GUID=' + d.working_hours_guid + ')'], ['WORKING_HOURS_GUID', 'CODE', 'PROPERTIES_XML']);
   }
 
+  /**
+   * Update working hours to employee
+   *
+   * @param {*} user
+   * @param {UpdateUserWorkingHoursDTO} d
+   * @returns
+   * @memberof WorkingHoursService
+   */
   updateToEmployee(user: any, d: UpdateUserWorkingHoursDTO) {
     const resource = new Resource(new Array);
     const data = new UpdateUserWorkingHoursModel;
@@ -101,6 +152,14 @@ export class WorkingHoursService {
     return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
   }
 
+  /**
+   * Delete working hours profile
+   *
+   * @param {*} user
+   * @param {string} workingHoursId
+   * @returns
+   * @memberof WorkingHoursService
+   */
   deleteWorkingHours(user: any, workingHoursId: string) {
     const resource = new Resource(new Array);
     const data = new UpdateWorkingHoursModel();

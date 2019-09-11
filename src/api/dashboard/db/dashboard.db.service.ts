@@ -4,9 +4,23 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { Observable } from 'rxjs';
 
+/**
+ * Service db for dashboard
+ *
+ * @export
+ * @class DashboardDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class DashboardDbService extends BaseDBService {
 
+  /**
+   *Creates an instance of DashboardDbService.
+   * @param {HttpService} httpService http service
+   * @param {QueryParserService} queryService query service
+   * @param {CommonFunctionService} commonFunctionService common function service
+   * @memberof DashboardDbService
+   */
   constructor(
     public readonly httpService: HttpService,
     public readonly queryService: QueryParserService,
@@ -14,6 +28,13 @@ export class DashboardDbService extends BaseDBService {
     super(httpService, queryService, "l_main_user_calendar");
   }
 
+  /**
+   * Get calendar profile
+   *
+   * @param {string} userGuid
+   * @returns
+   * @memberof DashboardDbService
+   */
   public getCalendarProfile(userGuid: string) {
     let currentYear = new Date().getFullYear();
     let fields = ['CALENDAR_PROFILE_GUID'];

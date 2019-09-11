@@ -69,6 +69,13 @@ export class DashboardController {
         this.runService(req, res, 'calendar_leave');
     }
 
+    /**
+     * Get upcoming holiday
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
     @Get('/employee/upcoming-holiday')
     @ApiOperation({ title: 'Get all list of upcoming holiday' })
     getUpcomingHoliday(@Req() req, @Res() res) {

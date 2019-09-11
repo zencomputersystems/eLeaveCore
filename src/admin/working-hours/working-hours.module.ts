@@ -14,6 +14,12 @@ import { WorkingHoursService } from './working-hours.service';
 import { WorkingHoursDbService } from './db/working-hours.db.service';
 import { WorkingHoursController } from './working-hours.controller';
 
+/**
+ * Module for working hours
+ *
+ * @export
+ * @class WorkingHoursModule
+ */
 @Module({
   modules: [
     AuthModule,

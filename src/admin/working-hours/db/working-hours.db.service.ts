@@ -3,16 +3,41 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { Observable } from 'rxjs';
 
+/**
+ * Working hours db service
+ *
+ * @export
+ * @class WorkingHoursDbService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class WorkingHoursDbService extends BaseDBService {
 
+  /**
+   * Declare tablename
+   *
+   * @private
+   * @memberof WorkingHoursDbService
+   */
   private _tableName = "l_working_hours_profile";
 
+  /**
+   *Creates an instance of WorkingHoursDbService.
+   * @param {HttpService} httpService http setvice
+   * @param {QueryParserService} queryService query service
+   * @memberof WorkingHoursDbService
+   */
   constructor(
     public readonly httpService: HttpService,
     public readonly queryService: QueryParserService) {
     super(httpService, queryService, "l_working_hours_profile");
   }
+  /**
+   * Find all working hours profile
+   *
+   * @returns {Observable<any>}
+   * @memberof WorkingHoursDbService
+   */
   public findAllWorkingHoursProfile(): Observable<any> {
 
     const fields = ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION'];
@@ -24,6 +49,13 @@ export class WorkingHoursDbService extends BaseDBService {
 
   }
 
+  /**
+   * Get working hours details
+   *
+   * @param {string} workingHoursProfileId
+   * @returns {Observable<any>}
+   * @memberof WorkingHoursDbService
+   */
   public findAll(workingHoursProfileId: string): Observable<any> {
 
     const fields = ['PROPERTIES_XML'];

@@ -16,7 +16,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {string}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'User info guid', example: '0051f8ef-00aa-1543-08ee-bddb6a00524e' })
     @IsNotEmpty()
     @IsString()
     id: string;
@@ -27,7 +27,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {string}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Personal employee number', example: '941229-10-5367' })
     @IsNotEmpty()
     @IsString()
     employeeNumber: string;
@@ -38,7 +38,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {string}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Designation', example: 'Service Desk Consultant' })
     @IsNotEmpty()
     @IsString()
     designation: string;
@@ -49,7 +49,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {string}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee type (Temporary,Permanent)', example: 'Permanent' })
     @IsNotEmpty()
     @IsString()
     employmentType: string;
@@ -60,7 +60,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {number}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee status (Confirmed,Terminated,Probation)', example: 'Confirmed' })
     @IsNotEmpty()
     @IsNumber()
     employmentStatus: number;
@@ -71,7 +71,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {Date}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Date of join', example: '2019-09-09' })
     @IsNotEmpty()
     @IsISO8601()
     dateOfJoin: Date;
@@ -82,7 +82,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {Date}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Confirmation date', example: '2019-10-09' })
     @ValidateIf(x => x.dateOfConfirmation != "")
     @IsISO8601()
     dateOfConfirmation: Date;
@@ -93,7 +93,7 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
      * @type {Date}
      * @memberof UpdateEmploymentDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Date of resign', example: '2019-12-09' })
     @ValidateIf(x => x.dateOfResign != "")
     @IsISO8601()
     dateOfResign: Date;

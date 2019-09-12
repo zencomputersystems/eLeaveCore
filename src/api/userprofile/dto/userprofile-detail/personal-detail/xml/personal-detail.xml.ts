@@ -229,7 +229,7 @@ export class PersonalDetailXML {
      * @type {UserEmergencyContactDetailDTO}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty({ type: UserEmergencyContactDetailDTO })
+    @ApiModelProperty({ description: 'User emergency contact detail', type: UserEmergencyContactDetailDTO })
     @Type(() => UserEmergencyContactDetailDTO)
     @ValidateNested()
     @IsNotEmpty()
@@ -241,7 +241,7 @@ export class PersonalDetailXML {
      * @type {UserEducationDetailDTO}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty({ type: UserEducationDetailDTO })
+    @ApiModelProperty({ description: 'User education detail', type: UserEducationDetailDTO })
     // education info
     @Type(() => UserEducationDetailDTO)
     @ValidateNested()
@@ -253,7 +253,7 @@ export class PersonalDetailXML {
      * @type {UserCertificationDetailDTO}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty({ type: UserCertificationDetailDTO })
+    @ApiModelProperty({ description: 'User certification detail', type: UserCertificationDetailDTO })
     @Type(() => UserCertificationDetailDTO)
     @ValidateNested()
     certification: UserCertificationDetailDTO;
@@ -264,7 +264,7 @@ export class PersonalDetailXML {
      * @type {UserFamilyDTO}
      * @memberof PersonalDetailXML
      */
-    @ApiModelProperty({ type: UserFamilyDTO })
+    @ApiModelProperty({ description: 'User family detail', type: UserFamilyDTO })
     @Type(() => UserFamilyDTO)
     @ValidateNested()
     family: UserFamilyDTO

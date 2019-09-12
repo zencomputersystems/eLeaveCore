@@ -19,7 +19,7 @@ export class RolePropertiesDTO {
      * @type {AllowLeaveSetupDTO}
      * @memberof RolePropertiesDTO
      */
-    @ApiModelProperty({ type: AllowLeaveSetupDTO })
+    @ApiModelProperty({ description: 'Allow user to setup leave', type: AllowLeaveSetupDTO })
     @IsNotEmpty()
     @Type(() => AllowLeaveSetupDTO)
     allowLeaveSetup: AllowLeaveSetupDTO;
@@ -30,7 +30,7 @@ export class RolePropertiesDTO {
      * @type {LevelPermissionDTO}
      * @memberof RolePropertiesDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to view report', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowViewReport: LevelPermissionDTO;
@@ -41,7 +41,7 @@ export class RolePropertiesDTO {
      * @type {LevelPermissionDTO}
      * @memberof RolePropertiesDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to view calendar', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowViewCalendar: LevelPermissionDTO;
@@ -52,7 +52,7 @@ export class RolePropertiesDTO {
      * @type {AllowLeaveManagementSetupDTO}
      * @memberof RolePropertiesDTO
      */
-    @ApiModelProperty({ type: AllowLeaveManagementSetupDTO })
+    @ApiModelProperty({ description: 'Allow user manage leave', type: AllowLeaveManagementSetupDTO })
     @IsNotEmpty()
     @Type(() => AllowLeaveManagementSetupDTO)
     allowLeaveManagement: AllowLeaveManagementSetupDTO;
@@ -63,7 +63,7 @@ export class RolePropertiesDTO {
      * @type {AllowProfileManagementSetupDTO}
      * @memberof RolePropertiesDTO
      */
-    @ApiModelProperty({ type: AllowProfileManagementSetupDTO })
+    @ApiModelProperty({ description: 'Allow user to manage profile', type: AllowProfileManagementSetupDTO })
     @IsNotEmpty()
     @Type(() => AllowProfileManagementSetupDTO)
     allowProfileManagement: AllowProfileManagementSetupDTO;

@@ -16,7 +16,7 @@ export class UpdateRoleDTO {
      * @type {string}
      * @memberof UpdateRoleDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Role guid', example: '7ed41000-98aa-11e9-b9d9-0901b57c06f4' })
     @IsString()
     @IsNotEmpty()
     role_guid: string;
@@ -27,7 +27,7 @@ export class UpdateRoleDTO {
      * @type {RoleDTO}
      * @memberof UpdateRoleDTO
      */
-    @ApiModelProperty({ type: RoleDTO })
+    @ApiModelProperty({ description: 'Role details', type: RoleDTO })
     @IsNotEmpty()
     @Type(() => RoleDTO)
     data: RoleDTO;

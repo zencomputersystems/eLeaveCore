@@ -13,6 +13,6 @@ export class StatusPermissionDTO {
      * @type {boolean}
      * @memberof StatusPermissionDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Status permission', example: true })
     value: boolean;
 }

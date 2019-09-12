@@ -15,7 +15,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Work Location', example: 'Cyberjaya' })
     @IsString()
     workLocation: string;
 
@@ -25,7 +25,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Department name', example: 'Research and Development' })
     @IsString()
     department: string;
 
@@ -35,7 +35,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Branch name', example: 'Cyberjaya' })
     @IsString()
     branch: string;
 
@@ -45,7 +45,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Division name', example: 'IT Division' })
     @IsString()
     division: string;
 
@@ -55,7 +55,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Manager user guid', example: 'b022d1b1-ff12-9cdf-2272-8c01cb75fbe0' })
     @IsString()
     reportingTo: string;
 
@@ -65,7 +65,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Bank name', example: 'Cimb Bank Berhad' })
     @IsString()
     bankAccountName: string;
 
@@ -75,7 +75,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'bank account number', example: '7071516435' })
     @IsString()
     bankAccountNumber: string;
 
@@ -85,7 +85,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'EPF Account number', example: 'TY279FY' })
     @IsString()
     epfNumber: string;
 
@@ -95,7 +95,7 @@ export class EmploymentDetailBase {
      * @type {string}
      * @memberof EmploymentDetailBase
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Income tax number', example: '22170145' })
     @IsString()
     incomeTaxNumber: string;
 }

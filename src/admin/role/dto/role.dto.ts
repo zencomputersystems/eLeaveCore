@@ -16,7 +16,7 @@ export class RoleDTO {
      * @type {string}
      * @memberof RoleDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Role code', example: 'Department Admin' })
     @IsString()
     code: string;
 
@@ -26,7 +26,7 @@ export class RoleDTO {
      * @type {string}
      * @memberof RoleDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Description for role', example: 'Department Admin for all staff' })
     @IsString()
     description: string;
 

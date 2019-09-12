@@ -21,7 +21,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee id', example: '3909' })
     @IsNotEmpty()
     employeeId: string;
 
@@ -31,7 +31,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee Fullname', example: 'Nurul Hidayah Binti Romli' })
     @IsNotEmpty()
     employeeName: string;
 
@@ -41,7 +41,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee phone number', example: '0126263545' })
     @IsNotEmpty()
     phoneNumber: string;
 
@@ -51,7 +51,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee company number', example: 'REG-001' })
     companyNumber: string;
 
     /**
@@ -60,7 +60,7 @@ export class UserDto {
      * @type {number}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee marital status (0-single/1-married)', example: 1 })
     @IsNotEmpty()
     maritalStatus: number;
 
@@ -70,7 +70,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee IC number', example: '920909-10-8883' })
     @IsNotEmpty()
     icNumber: string;
 
@@ -80,7 +80,7 @@ export class UserDto {
      * @type {Date}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee date of birth', example: '1992-09-09' })
     @IsNotEmpty()
     dob: Date;
 
@@ -90,7 +90,7 @@ export class UserDto {
      * @type {number}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee gender (0-female/1-male)', example: 1 })
     @IsNotEmpty()
     gender: number;
 
@@ -100,7 +100,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee email', example: 'mastura@gmail.com' })
     @IsNotEmpty()
     email: string;
 
@@ -110,7 +110,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee address', example: 'B-09-01, Apartment Jintan' })
     @IsNotEmpty()
     address1: string;
 
@@ -120,7 +120,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee address 2', example: 'Jalan Jintan 2, Taman Jintan Manis' })
     address2: string;
 
     /**
@@ -129,7 +129,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee city', example: 'Cyberjaya' })
     @IsNotEmpty()
     city: string;
 
@@ -139,7 +139,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee postcode', example: '43650' })
     @IsNotEmpty()
     postcode: string;
 
@@ -149,7 +149,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee state', example: 'Selangor' })
     @IsNotEmpty()
     state: string;
 
@@ -159,7 +159,7 @@ export class UserDto {
      * @type {string}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee country', example: 'Malaysia' })
     @IsNotEmpty()
     country: string;
 
@@ -169,7 +169,7 @@ export class UserDto {
      * @type {UserFamilyDTO[]}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee family details', type: UserFamilyDTO })
     @Type(() => UserFamilyDTO)
     @ValidateNested()
     family: UserFamilyDTO[];
@@ -180,7 +180,7 @@ export class UserDto {
      * @type {UserEmergencyContactDetailDTO}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee emergency contact details', type: UserEmergencyContactDetailDTO })
     @Type(() => UserEmergencyContactDetailDTO)
     @ValidateNested()
     emergencyContacts: UserEmergencyContactDetailDTO;
@@ -191,7 +191,7 @@ export class UserDto {
      * @type {UserEducationDetailDTO}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee educational details', type: UserEducationDetailDTO })
     @Type(() => UserEducationDetailDTO)
     @ValidateNested()
     education: UserEducationDetailDTO;
@@ -202,7 +202,7 @@ export class UserDto {
      * @type {UserCertificationDetailDTO}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee certification details', type: UserCertificationDetailDTO })
     @Type(() => UserCertificationDetailDTO)
     @ValidateNested()
     professionalCerts: UserCertificationDetailDTO
@@ -213,7 +213,7 @@ export class UserDto {
      * @type {UserEmployeeDTO}
      * @memberof UserDto
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee employment details', type: UserEmployeeDTO })
     @IsNotEmpty()
     @Type(() => UserEmployeeDTO)
     @ValidateNested()

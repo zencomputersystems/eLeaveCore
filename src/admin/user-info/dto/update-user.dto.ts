@@ -16,7 +16,7 @@ export class UpdateUserDTO extends UserDto {
      * @type {string}
      * @memberof UpdateUserDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee user info guid', example: '09c5011d-482c-4fc0-9624-42722d9eecad' })
     @IsNotEmpty()
     id: string;
 }

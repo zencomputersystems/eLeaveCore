@@ -14,7 +14,7 @@ export class UpdateCompanySiteDTO {
      * @type {string}
      * @memberof UpdateCompanySiteDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'company site id', example: '52a18f20-ac33-11e9-a1e5-2bc9cb9edc32' })
     @IsNotEmpty()
     id: string;
 
@@ -24,7 +24,7 @@ export class UpdateCompanySiteDTO {
      * @type {CreateCompanySiteDTO}
      * @memberof UpdateCompanySiteDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Company site data' })
     @IsNotEmpty()
     data: CreateCompanySiteDTO;
 }

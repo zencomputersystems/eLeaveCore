@@ -14,7 +14,7 @@ export class ActivatedByPassword {
      * @type {string}
      * @memberof ActivatedByPassword
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee password', example: 'P@s$w0rD' })
     @IsNotEmpty()
     password: string;
 
@@ -24,7 +24,7 @@ export class ActivatedByPassword {
      * @type {string}
      * @memberof ActivatedByPassword
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Employee invitation guid', example: '4e84f750-81c8-11e9-a30e-05621369ef51' })
     // invitation guid
     @IsNotEmpty()
     id: string;

@@ -15,7 +15,7 @@ export class RestDataDTO {
      * @type {string}
      * @memberof RestDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: '3 alphabet name of rest day', example: 'FRI' })
     @IsNotEmpty()
     readonly name: string;
 
@@ -25,7 +25,7 @@ export class RestDataDTO {
      * @type {string}
      * @memberof RestDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Fullname of rest day', example: 'FRIDAY' })
     @IsNotEmpty()
     readonly fullname: string;
 }

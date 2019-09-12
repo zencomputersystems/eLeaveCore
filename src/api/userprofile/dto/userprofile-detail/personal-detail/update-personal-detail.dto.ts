@@ -16,7 +16,7 @@ export class UpdatePersonalDetailDTO extends PersonalDetailXML {
      * @type {string}
      * @memberof UpdatePersonalDetailDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'User info guid', example: '09c5011d-482c-4fc0-9624-42722d9eecad' })
     @IsNotEmpty()
     @IsString()
     id: string;

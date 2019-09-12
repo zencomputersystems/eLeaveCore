@@ -17,7 +17,7 @@ export class AllowProfileManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowProfileManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to view profile', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowViewProfile: LevelPermissionDTO;
@@ -28,7 +28,7 @@ export class AllowProfileManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowProfileManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to edit profile', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowEditProfile: LevelPermissionDTO;
@@ -39,7 +39,7 @@ export class AllowProfileManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowProfileManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to change password', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowChangePassword: LevelPermissionDTO;
@@ -50,7 +50,7 @@ export class AllowProfileManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowProfileManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to use profile admin', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowProfileAdmin: LevelPermissionDTO;

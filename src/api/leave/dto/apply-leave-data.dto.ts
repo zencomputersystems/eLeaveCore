@@ -15,7 +15,7 @@ export class ApplyLeaveDataDTO {
      * @type {Date}
      * @memberof ApplyLeaveDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Start date', example: '2019-09-09' })
     @IsNotEmpty()
     @IsISO8601()
     startDate: Date;
@@ -26,7 +26,7 @@ export class ApplyLeaveDataDTO {
      * @type {Date}
      * @memberof ApplyLeaveDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'End date', example: '2019-09-09' })
     @IsNotEmpty()
     @IsISO8601()
     endDate: Date;
@@ -37,10 +37,11 @@ export class ApplyLeaveDataDTO {
      * @type {number}
      * @memberof ApplyLeaveDataDTO
      */
-    @IsNumber()
     @ApiModelProperty({
-        description: 'Type of Day, 0 = Full Day, 1 = Half Day, 2 = Quarter Day'
+        description: 'Type of Day, 0 = Full Day, 1 = Half Day, 2 = Quarter Day',
+        example: 1
     })
+    @IsNumber()
     dayType: number;
 
     /**
@@ -49,10 +50,11 @@ export class ApplyLeaveDataDTO {
      * @type {string}
      * @memberof ApplyLeaveDataDTO
      */
-    @IsString()
     @ApiModelProperty({
-        description: 'Half of slot, AM = Morning , PM = Afternoon'
+        description: 'Half of slot, AM = Morning , PM = Afternoon',
+        example: 'AM'
     })
+    @IsString()
     slot: string;
 
     /**
@@ -61,10 +63,11 @@ export class ApplyLeaveDataDTO {
      * @type {string}
      * @memberof ApplyLeaveDataDTO
      */
-    @IsString()
     @ApiModelProperty({
-        description: 'Type of Quarter, Q1 = First , Q2 = Second, Q3 = Third, Q4 = Forth'
+        description: 'Type of Quarter, Q1 = First , Q2 = Second, Q3 = Third, Q4 = Forth',
+        example: 'Q1 if dayType 2'
     })
+    @IsString()
     quarterDay: string;
 
 }

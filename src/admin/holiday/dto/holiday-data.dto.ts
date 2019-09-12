@@ -14,7 +14,7 @@ export class HolidayDataDTO {
      * @type {string}
      * @memberof HolidayDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Title holiday', example: 'Hari Raya' })
     @IsNotEmpty()
     readonly title: string;
 
@@ -24,7 +24,7 @@ export class HolidayDataDTO {
      * @type {string}
      * @memberof HolidayDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Start date', example: '2019-09-09' })
     @IsNotEmpty()
     readonly start: string;
 
@@ -34,7 +34,7 @@ export class HolidayDataDTO {
      * @type {string}
      * @memberof HolidayDataDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'End date', example: '2019-09-09' })
     @IsNotEmpty()
     readonly end: string;
 }

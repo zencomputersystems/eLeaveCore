@@ -14,7 +14,7 @@ export class ApprovedLeaveDTO {
      * @type {string}
      * @memberof ApprovedLeaveDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Leave transaction guid', example: '0624d2b0-bda9-11e9-8428-0521341e5440' })
     @IsNotEmpty()
     id: string;
 }

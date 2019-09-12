@@ -16,7 +16,7 @@ export class LevelPermissionDTO extends StatusPermissionDTO {
      * @type {string}
      * @memberof LevelPermissionDTO
      */
-    @ApiModelProperty()
+    @ApiModelProperty({ description: 'Level access', example: 'All' })
     @IsString()
     level: string;
 }

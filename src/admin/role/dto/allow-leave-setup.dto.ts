@@ -16,7 +16,7 @@ export class AllowLeaveSetupDTO {
      * @type {StatusPermissionDTO}
      * @memberof AllowLeaveSetupDTO
      */
-    @ApiModelProperty({ type: StatusPermissionDTO })
+    @ApiModelProperty({ description: 'Allow setup leavetype', type: StatusPermissionDTO })
     @IsNotEmpty()
     @Type(() => StatusPermissionDTO)
     allowLeaveTypeSetup: StatusPermissionDTO;
@@ -27,7 +27,7 @@ export class AllowLeaveSetupDTO {
      * @type {StatusPermissionDTO}
      * @memberof AllowLeaveSetupDTO
      */
-    @ApiModelProperty({ type: StatusPermissionDTO })
+    @ApiModelProperty({ description: 'Allow setup leave entitlement', type: StatusPermissionDTO })
     @IsNotEmpty()
     @Type(() => StatusPermissionDTO)
     allowLeaveEntitlementSetup: StatusPermissionDTO;
@@ -38,7 +38,7 @@ export class AllowLeaveSetupDTO {
      * @type {StatusPermissionDTO}
      * @memberof AllowLeaveSetupDTO
      */
-    @ApiModelProperty({ type: StatusPermissionDTO })
+    @ApiModelProperty({ description: 'Allow setup approval group', type: StatusPermissionDTO })
     @IsNotEmpty()
     @Type(() => StatusPermissionDTO)
     allowApprovalGroupSetup: StatusPermissionDTO;
@@ -49,7 +49,7 @@ export class AllowLeaveSetupDTO {
      * @type {StatusPermissionDTO}
      * @memberof AllowLeaveSetupDTO
      */
-    @ApiModelProperty({ type: StatusPermissionDTO })
+    @ApiModelProperty({ description: 'Allow setup year end closing', type: StatusPermissionDTO })
     @IsNotEmpty()
     @Type(() => StatusPermissionDTO)
     allowYearEndClosingSetup: StatusPermissionDTO;

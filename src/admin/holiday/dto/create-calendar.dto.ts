@@ -19,7 +19,7 @@ export class CreateCalendarDTO {
      * @type {string}
      * @memberof CreateCalendarDTO
      */
-    @ApiModelProperty({ description: 'Calendar profile code name', example: 'profile 1, profile2, ...' })
+    @ApiModelProperty({ description: 'Calendar profile code name', example: 'Selangor Calandar' })
     @IsNotEmpty()
     code: string;
 

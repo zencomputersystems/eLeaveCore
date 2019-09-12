@@ -17,7 +17,7 @@ export class AllowLeaveManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowLeaveManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to adjust leave', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowLeaveAdjustmant: LevelPermissionDTO;
@@ -28,7 +28,7 @@ export class AllowLeaveManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowLeaveManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to apply on behalf', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowApplyOnBehalf: LevelPermissionDTO;
@@ -39,7 +39,7 @@ export class AllowLeaveManagementSetupDTO {
      * @type {LevelPermissionDTO}
      * @memberof AllowLeaveManagementSetupDTO
      */
-    @ApiModelProperty({ type: LevelPermissionDTO })
+    @ApiModelProperty({ description: 'Allow user to override approval', type: LevelPermissionDTO })
     @IsNotEmpty()
     @Type(() => LevelPermissionDTO)
     allowApprovalOverride: LevelPermissionDTO;

@@ -13,6 +13,7 @@ import { UpdateUserCalendarModel } from './model/update-usercalendar.model';
 import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { UserInfoDbService } from './db/user-info.db.service';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
+import { of } from 'rxjs';
 
 /**
  * Service for holiday
@@ -48,6 +49,24 @@ export class HolidayService {
                 if (res.status == 200) {
                     let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
                     return jsonHoliday;
+                }
+            }))
+    }
+
+    /**
+     * Get employee attach
+     *
+     * @param {string} calendarId
+     * @returns
+     * @memberof HolidayService
+     */
+    public getEmployeeAttach(calendarId: string) {
+        return this.userinfoDbService.findEmployeeAssignCalendar(calendarId)
+            .pipe(map(res => {
+                if (res.status == 200) {
+                    // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+                    // return jsonHoliday;
+                    return res.data.resource;
                 }
             }))
     }
@@ -121,7 +140,7 @@ export class HolidayService {
     }
 
     /**
-     * Delete calendar
+     * Delete calendar process
      *
      * @param {*} user
      * @param {UpdateCalendarDTO} d
@@ -129,6 +148,29 @@ export class HolidayService {
      * @memberof HolidayService
      */
     deleteCalendar(user: any, calendar_guid: string) {
+        return this.userinfoDbService.findEmployeeAssignCalendar(calendar_guid).pipe(
+            mergeMap(res => {
+                if (res.data.resource.length > 0) {
+                    // will return user attach to this calendar profile
+                    return of(res);
+                } else {
+                    // will show deleted calendar
+                    let deletedData = this.deleteProcess(user, calendar_guid);
+                    return deletedData;
+                }
+            }),
+        );
+    }
+
+    /**
+     * Process delete
+     *
+     * @param {*} user
+     * @param {string} calendar_guid
+     * @returns
+     * @memberof HolidayService
+     */
+    public deleteProcess(user: any, calendar_guid: string) {
         const resource = new Resource(new Array);
         const data = new HolidayModel();
 

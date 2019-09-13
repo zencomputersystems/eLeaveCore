@@ -4,7 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Resource } from 'src/common/model/resource.model';
 import { UserInfoModel } from '../../user-info/model/user-info.model';
 import { DisableUserDTO } from '../../user/dto/disable-user.dto';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from 'src/admin/user/user.service';
 import { UserModel } from 'src/admin/user/model/user.model';
@@ -63,6 +63,25 @@ export class UserInfoDbService extends BaseDBService {
         resource.resource.push(data);
 
         return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'FULLNAME']);
+    }
+
+    /**
+     * Find list employee assign to calendar
+     *
+     * @param {string} calendarProfileId
+     * @returns {Observable<any>}
+     * @memberof UserInfoDbService
+     */
+    public findEmployeeAssignCalendar(calendarProfileId: string): Observable<any> {
+
+        const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
+        const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
+
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+
     }
 
     // public disableUserProcess(user, d) {

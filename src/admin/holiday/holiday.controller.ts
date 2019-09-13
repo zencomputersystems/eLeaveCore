@@ -219,6 +219,24 @@ export class HolidayController {
     }
 
     /**
+     * List employee attach to calendar
+     *
+     * @param {*} req
+     * @param {*} res
+     * @param {*} id
+     * @memberof HolidayController
+     */
+    @UseGuards(ResourceGuard)
+    @Get('/employee/:id')
+    @ApiOperation({ title: 'Get employee list by calendar profile' })
+    @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
+    @Roles('ViewProfile', 'ProfileAdmin')
+    findEmployeeAttach(@Req() req, @Res() res, @Param('id') id) {
+        let dataId = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runGetServiceV2(this.holidayService.getEmployeeAttach(dataId), res);
+    }
+
+    /**
      * Assign calendar to employee user info
      *
      * @param {UpdateUserCalendarDTO} updateUserCalendarDTO

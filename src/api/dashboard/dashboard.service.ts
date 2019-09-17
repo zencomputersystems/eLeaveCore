@@ -4,6 +4,7 @@ import { DashboardDbService } from './db/dashboard.db.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
+import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
 import moment = require('moment');
 
 /**
@@ -23,7 +24,8 @@ export class DashboardService {
    */
   constructor(
     private readonly dashboardDbService: DashboardDbService,
-    private readonly holidayDbService: HolidayDbService,
+    // private readonly holidayDbService: HolidayDbService,
+    private readonly calendarProfileDbService: CalendarProfileDbService,
     private readonly xmlParserService: XMLParserService
   ) { }
   /**
@@ -37,7 +39,7 @@ export class DashboardService {
     return this.dashboardDbService.getCalendarProfile(user_guid).pipe(
       mergeMap(res => {
         let calendarProfileGuid = res[0].CALENDAR_PROFILE_GUID;
-        let calendarHoliday = this.holidayDbService.findAll(calendarProfileGuid);
+        let calendarHoliday = this.calendarProfileDbService.findAll(calendarProfileGuid, moment().year());
         return calendarHoliday;
       })
     )

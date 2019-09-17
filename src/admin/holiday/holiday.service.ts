@@ -14,6 +14,8 @@ import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { UserInfoDbService } from './db/user-info.db.service';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 import { of } from 'rxjs';
+import { CalendarProfileDbService } from './db/calendar-profile-db.service';
+import { CreateHolidayDetailsModel } from './model/create-holiday-details.model';
 
 /**
  * Service for holiday
@@ -31,10 +33,12 @@ export class HolidayService {
      * @param {AssignerDataService} assignerDataService
      * @memberof HolidayService
      */
-    constructor(private readonly holidayDbService: HolidayDbService,
+    constructor(
+        private readonly holidayDbService: HolidayDbService,
         private readonly userinfoDbService: UserInfoDbService,
         private readonly xmlParserService: XMLParserService,
-        private readonly assignerDataService: AssignerDataService) { }
+        private readonly assignerDataService: AssignerDataService,
+        private readonly calendarProfileDbService: CalendarProfileDbService) { }
 
     /**
      * List holiday for selected calendar by calendar guid
@@ -43,10 +47,13 @@ export class HolidayService {
      * @returns
      * @memberof HolidayService
      */
-    public getHolidayList(calendarId: string) {
-        return this.holidayDbService.findAll(calendarId)
+    public getHolidayList(calendarId: string, year: number) {
+        // console.log(calendarId);
+        // console.log(year);
+        return this.calendarProfileDbService.findAll(calendarId, year)
             .pipe(map(res => {
                 if (res.status == 200) {
+                    // console.log(res.data.resource);
                     let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
                     return jsonHoliday;
                 }
@@ -118,6 +125,42 @@ export class HolidayService {
     }
 
     /**
+     * Update calendar profile
+     *
+     * @param {*} user
+     * @param {UpdateCalendarDTO} d
+     * @returns
+     * @memberof HolidayService
+     */
+    public updateCalendarProfile(user: any, d: UpdateCalendarDTO) {
+        return this.updateCalendar(user, d).pipe(mergeMap(res => {
+            return this.updateCalendarProfileName(user, d);
+        }))
+    }
+
+    /**
+     * Update calendar profile name
+     *
+     * @param {*} user
+     * @param {UpdateCalendarDTO} d
+     * @returns
+     * @memberof HolidayService
+     */
+    updateCalendarProfileName(user: any, d: UpdateCalendarDTO) {
+        const resource = new Resource(new Array);
+        const data = new HolidayModel();
+
+        // data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+        data.CODE = d.data.code;
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+
+        return this.holidayDbService.updateByModel(resource, [], ['(CALENDAR_GUID=' + d.calendar_guid + ')'], ['CALENDAR_GUID', 'CODE']);
+    }
+
+    /**
      * Update existing calendar by calendar id
      *
      * @param {*} user
@@ -130,13 +173,13 @@ export class HolidayService {
         const data = new HolidayModel();
 
         data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
-        data.CODE = d.data.code;
+        // data.CODE = d.data.code;
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
 
         resource.resource.push(data);
 
-        return this.holidayDbService.updateByModel(resource, [], ['(CALENDAR_GUID=' + d.calendar_guid + ')'], ['CALENDAR_GUID', 'CODE', 'PROPERTIES_XML']);
+        return this.calendarProfileDbService.updateByModel(resource, [], ['(CALENDAR_GUID=' + d.calendar_guid + ')', '(YEAR=' + d.year + ')'], ['CALENDAR_GUID', 'YEAR', 'PROPERTIES_XML']);
     }
 
     /**
@@ -185,6 +228,22 @@ export class HolidayService {
     }
 
     /**
+     * Create calendar profile and details
+     *
+     * @param {*} user
+     * @param {CreateCalendarDTO} data
+     * @returns
+     * @memberof HolidayService
+     */
+    public createCalendarProfile(user: any, data: CreateCalendarDTO) {
+        return this.create(user, data).pipe(
+            mergeMap(res => {
+                return this.createCalendarDetails([user, data, res.data.resource[0].CALENDAR_GUID, data.filter.year]);
+            }));
+
+    }
+
+    /**
      * Setup new calendar profile using data from calendarific
      *
      * @param {*} user
@@ -196,11 +255,12 @@ export class HolidayService {
         const resource = new Resource(new Array);
         const modelData = new CreateHolidayModel();
 
-        modelData.CODE = data.code;
         modelData.CALENDAR_GUID = v1();
+        modelData.CODE = data.code;
+        modelData.FILTER_CRITERIA = this.xmlParserService.convertJsonToXML(data.filter);
+        // modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
         modelData.CREATION_TS = new Date().toISOString();
         modelData.CREATION_USER_GUID = user.USER_GUID;
-        modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
         modelData.UPDATE_TS = null;
         modelData.UPDATE_USER_GUID = null;
 
@@ -208,4 +268,28 @@ export class HolidayService {
 
         return this.holidayDbService.createByModel(resource, [], [], []);
     }
+
+    /**
+     * Create details data for calendar profile
+     *
+     * @param {[any, CreateCalendarDTO, string, number]} [user, data, calendar_guid, year]
+     * @returns
+     * @memberof HolidayService
+     */
+    createCalendarDetails([user, data, calendar_guid, year]: [any, CreateCalendarDTO, string, number]) {
+        const resource = new Resource(new Array);
+        const modelData = new CreateHolidayDetailsModel();
+
+        modelData.CALENDAR_DETAILS_GUID = v1();
+        modelData.CALENDAR_GUID = calendar_guid;
+        modelData.YEAR = year;
+        modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+        modelData.CREATION_TS = new Date().toISOString();
+        modelData.CREATION_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(modelData);
+
+        return this.calendarProfileDbService.createByModel(resource, ['CALENDAR_DETAILS_GUID', 'CALENDAR_GUID', 'YEAR'], [], []);
+    }
+
 }

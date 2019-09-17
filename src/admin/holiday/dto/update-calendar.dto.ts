@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CreateCalendarDTO } from './create-calendar.dto';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 /**
  * Data to update calendar
@@ -21,6 +21,17 @@ export class UpdateCalendarDTO {
     @IsString()
     @IsNotEmpty()
     readonly calendar_guid: string;
+
+    /**
+     * Year of calendar
+     *
+     * @type {number}
+     * @memberof UpdateCalendarDTO
+     */
+    @ApiModelProperty({ description: 'Year of calendar', example: 2019 })
+    @IsNotEmpty()
+    @IsNumber()
+    readonly year: number;
 
     /**
      * Data for update calendar - data holiday json

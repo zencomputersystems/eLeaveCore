@@ -19,6 +19,16 @@ export class HolidayDataDTO {
     readonly title: string;
 
     /**
+     * Data holiday holiday name (provided by calendarific)
+     *
+     * @type {string}
+     * @memberof HolidayDataDTO
+     */
+    @ApiModelProperty({ description: 'Default name provided by calendarific', example: 'Hari Raya Puasa' })
+    @IsNotEmpty()
+    readonly holidayName: string;
+
+    /**
      * Data holiday start date
      *
      * @type {string}

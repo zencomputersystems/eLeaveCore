@@ -39,17 +39,17 @@ export class HolidayDbService extends BaseDBService {
      * @returns {Observable<any>}
      * @memberof HolidayDbService
      */
-    public findAll(calendarProfileId: string): Observable<any> {
+    // public findAll(calendarProfileId: string): Observable<any> {
 
-        const fields = ['PROPERTIES_XML'];
-        const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
+    //     const fields = ['PROPERTIES_XML'];
+    //     const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+    //     const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
-        //call DF to validate the user
-        return this.httpService.get(url);
+    //     //call DF to validate the user
+    //     return this.httpService.get(url);
 
-    }
+    // }
 
     /**
      * Find all calendar profile

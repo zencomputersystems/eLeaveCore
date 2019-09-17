@@ -112,7 +112,7 @@ export class HolidayController {
     @Patch('/calendar-profile')
     @ApiOperation({ title: 'Edit calendar profile' })
     updateCalendarProfile(@Body() updateCalendarDTO: UpdateCalendarDTO, @Req() req, @Res() res) {
-        this.commonFunctionService.runUpdateService(this.holidayService.updateCalendar(req.user, updateCalendarDTO), res);
+        this.commonFunctionService.runUpdateService(this.holidayService.updateCalendarProfile(req.user, updateCalendarDTO), res);
         // this.holidayService.updateCalendar(req.user, updateCalendarDTO)
         //     .subscribe(
         //         data => {
@@ -136,7 +136,7 @@ export class HolidayController {
     @Post('/calendar-profile')
     @ApiOperation({ title: 'Setup calendar profile' })
     create(@Body() createCalendarDTO: CreateCalendarDTO, @Req() req, @Res() res) {
-        this.commonFunctionService.runCreateService(this.holidayService.create(req.user, createCalendarDTO), res);
+        this.commonFunctionService.runCreateService(this.holidayService.createCalendarProfile(req.user, createCalendarDTO), res);
         // this.holidayService.create(req.user, createCalendarDTO)
         //     .subscribe(
         //         data => {
@@ -177,29 +177,45 @@ export class HolidayController {
      * @memberof HolidayController
      */
     @UseGuards(ResourceGuard)
-    @Get(':id')
+    @Get('/calendar-profile/days/:id/:year')
     @ApiOperation({ title: 'Get holiday list by calendar profile' })
-    @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
+    @ApiImplicitQuery({ name: 'id', description: 'CALENDAR_GUID', required: true })
+    @ApiImplicitQuery({ name: 'year', description: 'YEAR', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
     // @Resources({resourceName:'ViewProfile',resourceOperation:'GETALL'})
-    findOne(@Req() req, @Res() res, @Param('id') id) {
+    findOne(@Req() req, @Res() res, @Param() param) {
         // console.log(id);
         // console.log(req);
-        // let dataId = null;
-        // let dataIdParam = req.query.id;
-        // if (dataIdParam == null) {
-        //     dataId = id;
-        // } else {
-        //     dataId = dataIdParam;
-        // }
-        // if (dataId == null) {
-        //     res.status(400);
-        //     res.send('id not found');
-        // }
+        let dataId = null;
+        let dataIdParam = req.query.id;
+        if (dataIdParam == null) {
+            dataId = param.id;
+        } else {
+            dataId = dataIdParam;
+        }
+        if (dataId == null) {
+            res.status(400);
+            res.send('id not found');
+        }
 
-        let dataId = this.commonFunctionService.findIdParam(req, res, id);
+        let dataYear = null;
+        let dataYearParam = req.query.year;
+        if (dataYearParam == null) {
+            dataYear = param.year;
+        } else {
+            dataYear = dataYearParam;
+        }
+        if (dataYear == null) {
+            res.status(400);
+            res.send('Year not found');
+        }
 
-        this.commonFunctionService.runGetServiceV2(this.holidayService.getHolidayList(dataId), res);
+        // let dataId = this.commonFunctionService.findIdParam(req, res, param.id);
+        // console.log(dataId);
+
+        // console.log(dataId + ' - ' + dataYear);
+
+        this.commonFunctionService.runGetServiceV2(this.holidayService.getHolidayList(dataId, dataYear), res);
         // this.holidayService.getHolidayList(dataId).subscribe(
         //     data => {
         //         res.send(data);
@@ -227,7 +243,7 @@ export class HolidayController {
      * @memberof HolidayController
      */
     @UseGuards(ResourceGuard)
-    @Get('/employee/:id')
+    @Get('/calendar-profile/users/:id')
     @ApiOperation({ title: 'Get employee list by calendar profile' })
     @ApiImplicitQuery({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
     @Roles('ViewProfile', 'ProfileAdmin')
@@ -244,7 +260,7 @@ export class HolidayController {
      * @param {*} res
      * @memberof HolidayController
      */
-    @Patch('/user-calendar')
+    @Patch('/calendar-profile/user-calendar')
     @ApiOperation({ title: 'Assign calendar profile to employee' })
     updateToEmployee(@Body() updateUserCalendarDTO: UpdateUserCalendarDTO, @Req() req, @Res() res) {
         this.commonFunctionService.runUpdateService(this.holidayService.updateToEmployee(req.user, updateUserCalendarDTO), res);

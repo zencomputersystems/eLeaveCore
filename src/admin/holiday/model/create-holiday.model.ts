@@ -31,4 +31,12 @@ export class CreateHolidayModel extends CreateUpdateModel {
      * @memberof CreateHolidayModel
      */
     PROPERTIES_XML: string;
+
+    /**
+     * Filter criteria
+     *
+     * @type {string}
+     * @memberof CreateHolidayModel
+     */
+    FILTER_CRITERIA: string;
 } 

@@ -10,6 +10,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from './db/user-info.db.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { CalendarProfileDbService } from './db/calendar-profile-db.service';
 
 /**
  * Module for holiday
@@ -30,7 +31,8 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
     HolidayService,
     XMLParserService,
     AssignerDataService,
-    CommonFunctionService
+    CommonFunctionService,
+    CalendarProfileDbService
   ],
   controllers: [HolidayController]
 })

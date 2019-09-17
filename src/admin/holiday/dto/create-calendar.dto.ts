@@ -4,6 +4,7 @@ import { isObject } from 'util';
 import { HolidayDataDTO } from './holiday-data.dto';
 import { RestDataDTO } from './rest-data.dto';
 import { Type } from 'class-transformer';
+import { CalendarFilterDto } from './calendar-filter.dto';
 
 /**
  * Data to create calendar
@@ -22,6 +23,17 @@ export class CreateCalendarDTO {
     @ApiModelProperty({ description: 'Calendar profile code name', example: 'Selangor Calandar' })
     @IsNotEmpty()
     code: string;
+
+    /**
+     * Filters from calendarific
+     *
+     * @type {string}
+     * @memberof CreateCalendarDTO
+     */
+    @ApiModelProperty({ description: 'Filter details', type: CalendarFilterDto })
+    @IsNotEmpty()
+    @Type(() => CalendarFilterDto)
+    filter: CalendarFilterDto;
 
     /**
      * Data calendar holiday day detail

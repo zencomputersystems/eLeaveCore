@@ -9,6 +9,7 @@ import { DashboardDbService } from './db/dashboard.db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
+import { CalendarProfileDbService } from 'src/admin/holiday/db/calendar-profile-db.service';
 
 /**
  * Module for dashboard
@@ -27,8 +28,9 @@ import { XMLParserService } from '../../common/helper/xml-parser.service';
         DashboardService,
         DashboardDbService,
         QueryParserService,
-        HolidayDbService,
-        XMLParserService
+        // HolidayDbService,
+        XMLParserService,
+        CalendarProfileDbService
     ],
     controllers: [DashboardController]
 })

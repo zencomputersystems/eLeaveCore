@@ -59,7 +59,7 @@ export class HolidayDbService extends BaseDBService {
      */
     public findAllProfile(): Observable<any> {
 
-        const fields = ['CALENDAR_GUID', 'CODE'];
+        const fields = ['CALENDAR_GUID', 'CODE', 'FILTER_CRITERIA'];
         const filters = ['(DELETED_AT IS NULL)'];
 
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);

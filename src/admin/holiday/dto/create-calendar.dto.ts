@@ -41,7 +41,7 @@ export class CreateCalendarDTO {
      * @type {HolidayDataDTO[]}
      * @memberof CreateCalendarDTO
      */
-    @ApiModelProperty({ type: HolidayDataDTO, description: 'Holiday List' })
+    @ApiModelProperty({ type: [HolidayDataDTO], description: 'Holiday List' })
     @Type(() => HolidayDataDTO)
     @IsNotEmpty()
     holiday: HolidayDataDTO[];
@@ -52,7 +52,7 @@ export class CreateCalendarDTO {
      * @type {RestDataDTO[]}
      * @memberof CreateCalendarDTO
      */
-    @ApiModelProperty({ type: RestDataDTO, description: 'Rest day list' })
+    @ApiModelProperty({ type: [RestDataDTO], description: 'Rest day list' })
     @Type(() => RestDataDTO)
     @IsNotEmpty()
     rest: RestDataDTO[];

@@ -16,7 +16,7 @@ export class HolidayDataDTO {
      */
     @ApiModelProperty({ description: 'Title holiday', example: 'Hari Raya' })
     @IsNotEmpty()
-    readonly title: string;
+    title: string;
 
     /**
      * Data holiday holiday name (provided by calendarific)
@@ -26,7 +26,7 @@ export class HolidayDataDTO {
      */
     @ApiModelProperty({ description: 'Default name provided by calendarific', example: 'Hari Raya Puasa' })
     @IsNotEmpty()
-    readonly holidayName: string;
+    holidayName: string;
 
     /**
      * Data holiday start date
@@ -36,7 +36,7 @@ export class HolidayDataDTO {
      */
     @ApiModelProperty({ description: 'Start date', example: '2019-09-09' })
     @IsNotEmpty()
-    readonly start: string;
+    start: string;
 
     /**
      * Data holiday end date
@@ -46,5 +46,5 @@ export class HolidayDataDTO {
      */
     @ApiModelProperty({ description: 'End date', example: '2019-09-09' })
     @IsNotEmpty()
-    readonly end: string;
+    end: string;
 }

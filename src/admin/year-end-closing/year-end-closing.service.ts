@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpService } from '@nestjs/common';
 import { Observable, of, pipe, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mergeMap, filter } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 import { Resource } from 'src/common/model/resource.model';
@@ -17,6 +17,11 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
 import { ViewUserProfileListModel } from 'src/api/userprofile/model/view_userprofile_list.model';
 import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
 import { GeneralLeavePolicyModel } from '../general-leave-policy/model/general-leave-policy.model';
+import { HolidayService } from '../holiday/holiday.service';
+import { HolidayDbService } from '../holiday/db/holiday.db.service';
+import { CalendarProfileDbService } from '../holiday/db/calendar-profile-db.service';
+import { HolidayDataDTO } from '../holiday/dto/holiday-data.dto';
+import { CreateCalendarDTO } from '../holiday/dto/create-calendar.dto';
 
 type userEntitlement = [Resource, LeaveTypeEntitlementModel, string, string, number, any, string, number, Date];
 /**
@@ -43,7 +48,10 @@ export class YearEndClosingService {
     private readonly leaveEntitlementBaseService: LeaveEntitlementBaseService,
     private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
     private readonly userprofileDbService: UserprofileDbService,
-    private readonly generalLeavePolicyService: GeneralLeavePolicyService
+    private readonly generalLeavePolicyService: GeneralLeavePolicyService,
+    private readonly holidayDbService: HolidayDbService,
+    private readonly calendarProfileDbService: CalendarProfileDbService,
+    private http: HttpService
   ) { }
   /**
    * Method year end process
@@ -98,7 +106,7 @@ export class YearEndClosingService {
 
           resultEntitlement.forEach(x => x.subscribe(
             data => {
-              this.processPolicy(leavetypePolicy, x, year, user); //find all leave entitlement
+              // this.processPolicy(leavetypePolicy, x, year, user); //find all leave entitlement
               return 'Success assign entitlement';
             }, err => {
               return 'Failed assign entitlement';
@@ -117,7 +125,7 @@ export class YearEndClosingService {
         , map(res => {
           // assign carry forward entitlement
           let { resignUser, disabledUser, activeUser, leavetypePolicy, generalPolicy } = res;
-          this.checkCarryForward(activeUser, leavetypePolicy, generalPolicy, user, year);
+          // this.checkCarryForward(activeUser, leavetypePolicy, generalPolicy, user, year);
           // let finalRes = [];
           // finalRes['Disable user'] = resultDisable;
           // return finalRes;
@@ -129,10 +137,95 @@ export class YearEndClosingService {
 
           return { resignUser, activeUser, disabledUser };
 
+        }), map(res => {
+          this.generateNewCalendar(user, year - 1);
+          return res;
         })
       )
 
     return result;
+  }
+
+  public generateNewCalendar(user: any, year: number) {
+
+    return this.holidayDbService.findAllProfile()
+      .pipe(map(res => {
+        let calendarProfileList = res.data.resource;
+        let yearBase = year; // year closing
+        year = year + 1; // next year setup
+
+
+        // loop each calendar profile
+        calendarProfileList.forEach(element => {
+          // get eaxh calendar holiday one by one
+          this.calendarProfileDbService.findAll(element.CALENDAR_GUID, yearBase).pipe(
+            mergeMap(res => {
+              // find filter criteria and get data from calendarific
+              let filters = this.xmlParserService.convertXMLToJson(element.FILTER_CRITERIA);
+
+              let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
+              let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
+              let calendarFullURL = calendarBaseUrl + calendarApiKey;
+
+              let countryLink = '&country=' + filters.country;
+              let yearLink = '&year=' + year;
+              let locationLink = '&location=' + filters.region;
+
+              let calendarificData = this.http.get(calendarFullURL + countryLink + yearLink + locationLink);
+
+              return forkJoin(of(res), calendarificData);
+            })
+          ).subscribe(data => {
+            if (data[0].data.resource[0].PROPERTIES_XML != null) {
+              let dataCurrent: CreateCalendarDTO = this.xmlParserService.convertXMLToJson(data[0].data.resource[0].PROPERTIES_XML);
+
+              console.log('_______________________________________________________________________________________________');
+              console.log(element.CALENDAR_GUID);
+              let dataNewYear = new CreateCalendarDTO;
+              let newYearHoliday = [];
+
+              dataCurrent.holiday.forEach(element2 => {
+                if (element2.holidayName != undefined) {
+                  // console.log(element2.holidayName);
+                  // console.log(element.CODE);
+                  // console.log(element2.holidayName);
+                  let dataSame = data[1].data.response.holidays.filter(x => x.name == element2.holidayName);
+
+                  if (dataSame.length > 0) {
+                    let dataArr = new HolidayDataDTO;
+                    // console.log(dataSame);
+                    dataArr.title = element2.title;
+                    dataArr.holidayName = dataSame[0].name;
+                    dataArr.start = dataSame[0].date.iso;
+                    dataArr.end = dataSame[0].date.iso;
+                    // console.log(dataArr);
+                    newYearHoliday.push(dataArr);
+                  }
+                }
+              });
+
+              dataNewYear.code = dataCurrent.code;
+              dataNewYear.filter = dataCurrent.filter;
+              dataNewYear.rest = dataCurrent.rest;
+              dataNewYear.holiday = newYearHoliday;
+
+              console.log(dataNewYear);
+              // dataCurrent.holiday.forEach(element => {
+              //   if (element.holidayName != undefined) {
+              //     console.log(element.holidayName);
+              //   }
+              //   // console.log(element.holidayName);
+              // });
+            }
+          }, err => {
+            console.log(err);
+          });
+
+
+        });
+      })
+      ).subscribe();
+
   }
 
   /**

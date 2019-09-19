@@ -27,6 +27,7 @@ import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment
 import { YearEndClosingModule } from './admin/year-end-closing/year-end-closing.module';
 import { MasterSetupModule } from './admin/master-setup/master-setup.module';
 import { WorkingHoursModule } from './admin/working-hours/working-hours.module';
+import { AnnouncementModule } from './admin/announcement/announcement.module';
 
 @Module({
   imports: [
@@ -74,7 +75,8 @@ import { WorkingHoursModule } from './admin/working-hours/working-hours.module';
     LeaveAdjustmentModule,
     YearEndClosingModule,
     MasterSetupModule,
-    WorkingHoursModule
+    WorkingHoursModule,
+    AnnouncementModule
   ],
   controllers: [AppController],
   providers: [

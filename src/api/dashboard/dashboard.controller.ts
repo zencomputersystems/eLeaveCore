@@ -6,6 +6,7 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { DashboardService } from './dashboard.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import moment = require('moment');
+import { elementAt } from 'rxjs/operators';
 
 /**
  * All dashboard api
@@ -110,10 +111,49 @@ export class DashboardController {
     public runService(req, res, method_procedure) {
         let url = DreamFactory.df_host_proc + `${method_procedure}(${req.user.TENANT_GUID},${req.query.startdate},${req.query.enddate})`;
         this.http.get(url).subscribe(data => {
+            if (method_procedure == 'calendar_leave') {
+                // for calendar leave list add time to start date and end date
+                data.data.forEach(element => { this.addTime(element); });
+            }
             this.commonFunctionService.sendResSuccessV2(data, res);
+
         }, err => {
             this.commonFunctionService.sendResErrorV3(err, res);
         });
+    }
+
+    /**
+     * Add time to date for calendar usage
+     *
+     * @param {*} element
+     * @returns
+     * @memberof DashboardController
+     */
+    public addTime(element) {
+        // get working hours details for each user
+        let workingHours = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML);
+
+        if (element.TIME_SLOT == null) {
+            // for full day leave
+            let fullPath = workingHours.property.fullday;
+            element.START_DATE = element.START_DATE + ' ' + fullPath.start_time;
+            element.END_DATE = element.END_DATE + ' ' + fullPath.end_time;
+        } else if (element.TIME_SLOT == 'AM' || element.TIME_SLOT == 'PM') {
+            // for halfday leave (AM,PM)
+            let halfPath = workingHours.property.halfday[element.TIME_SLOT];
+            element.START_DATE = element.START_DATE + ' ' + halfPath.start_time;
+            element.END_DATE = element.END_DATE + ' ' + halfPath.end_time;
+        } else {
+            // for quarterday leave (Q1,Q2,Q3,Q4)
+            let quarterPath = workingHours.property.quarterday[element.TIME_SLOT];
+            element.START_DATE = element.START_DATE + ' ' + quarterPath.start_time;
+            element.END_DATE = element.END_DATE + ' ' + quarterPath.end_time;
+        }
+
+        // remove properties xml from array
+        delete element.PROPERTIES_XML;
+
+        return element;
     }
 
 }

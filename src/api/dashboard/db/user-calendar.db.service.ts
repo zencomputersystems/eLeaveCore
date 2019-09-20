@@ -5,21 +5,21 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { Observable } from 'rxjs';
 
 /**
- * Service db for dashboard
+ * Service db for UserCalendar
  *
  * @export
- * @class DashboardDbService
+ * @class UserCalendarDbService
  * @extends {BaseDBService}
  */
 @Injectable()
-export class DashboardDbService extends BaseDBService {
+export class UserCalendarDbService extends BaseDBService {
 
   /**
-   *Creates an instance of DashboardDbService.
+   *Creates an instance of UserCalendarDbService.
    * @param {HttpService} httpService http service
    * @param {QueryParserService} queryService query service
    * @param {CommonFunctionService} commonFunctionService common function service
-   * @memberof DashboardDbService
+   * @memberof UserCalendarDbService
    */
   constructor(
     public readonly httpService: HttpService,
@@ -33,7 +33,7 @@ export class DashboardDbService extends BaseDBService {
    *
    * @param {string} userGuid
    * @returns
-   * @memberof DashboardDbService
+   * @memberof UserCalendarDbService
    */
   public getCalendarProfile(userGuid: string) {
     let currentYear = new Date().getFullYear();

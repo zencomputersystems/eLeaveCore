@@ -7,19 +7,43 @@ import { AnnouncementModel } from './model/announcement.model';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { v1 } from 'uuid';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
-import { filter } from 'rxjs/operators';
 
+/**
+ * Service for announcement
+ *
+ * @export
+ * @class AnnouncementService
+ * @extends {BaseDBService}
+ */
 @Injectable()
 export class AnnouncementService extends BaseDBService {
 
+  /**
+   * Declare tablename
+   *
+   * @private
+   * @memberof AnnouncementService
+   */
   private _tableName = "l_announcement";
 
+  /**
+   *Creates an instance of AnnouncementService.
+   * @param {HttpService} httpService http service
+   * @param {QueryParserService} queryService query service
+   * @memberof AnnouncementService
+   */
   constructor(
     public readonly httpService: HttpService,
     public readonly queryService: QueryParserService) {
     super(httpService, queryService, "l_announcement")
   }
 
+  /**
+   * Find all active announcement
+   *
+   * @returns
+   * @memberof AnnouncementService
+   */
   findAll() {
 
     const fields = [];
@@ -32,6 +56,14 @@ export class AnnouncementService extends BaseDBService {
 
   }
 
+  /**
+   * Update announcement
+   *
+   * @param {UpdateAnnouncementDto} d
+   * @param {*} user
+   * @returns
+   * @memberof AnnouncementService
+   */
   updateAnnouncement(d: UpdateAnnouncementDto, user: any) {
 
     const resource = new Resource(new Array);
@@ -43,13 +75,19 @@ export class AnnouncementService extends BaseDBService {
     data.UPDATE_TS = new Date().toISOString();;
     data.UPDATE_USER_GUID = user.USER_GUID;
 
-
     resource.resource.push(data);
     return this.updateByModel(resource, [], ['(ANNOUNCEMENT_GUID = ' + d.announcementId + ')'], ['ANNOUNCEMENT_GUID']);
 
-
   }
 
+  /**
+   * Create announcement
+   *
+   * @param {CreateAnnouncementDto} data
+   * @param {*} user
+   * @returns
+   * @memberof AnnouncementService
+   */
   create(data: CreateAnnouncementDto, user: any) {
 
     const resource = new Resource(new Array);

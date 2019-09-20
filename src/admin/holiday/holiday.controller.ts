@@ -14,10 +14,6 @@ import { Resource } from 'src/common/model/resource.model';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 // var iso3166 = require('iso3166-2-db');
 
-export let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
-export let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
-export let calendarFullURL = calendarBaseUrl + calendarApiKey;
-
 /**
  * Controller for Holiday
  *
@@ -56,9 +52,9 @@ export class HolidayController {
         let monthLink = req.query.month != null ? '&month=' + req.query.month : '';
         let localNational = '&type=local,national';
 
-        // let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
-        // let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
-        // let calendarFullURL = calendarBaseUrl + calendarApiKey;
+        let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
+        let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
+        let calendarFullURL = calendarBaseUrl + calendarApiKey;
 
         this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink + localNational)
             .subscribe((response) => {

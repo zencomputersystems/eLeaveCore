@@ -84,6 +84,26 @@ export class UserInfoDbService extends BaseDBService {
 
     }
 
+    /**
+     * Get date of birth
+     *
+     * @param {string} userId
+     * @param {string} tenantId
+     * @returns {Observable<any>}
+     * @memberof UserInfoDbService
+     */
+    public getDateOfBirth(userId: string, tenantId: string): Observable<any> {
+
+        const fields = ['DOB'];
+        const filters = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')', '(RESIGNATION_DATE IS NULL)'];
+
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+
+        //call DF to validate the user
+        return this.httpService.get(url);
+
+    }
+
     // public disableUserProcess(user, d) {
     //     const resource = new Resource(new Array);
     //     const data = new UserInfoModel;

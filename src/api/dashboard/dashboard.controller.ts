@@ -7,6 +7,7 @@ import { DashboardService } from './dashboard.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import moment = require('moment');
 import { elementAt } from 'rxjs/operators';
+import { LongLeaveDTO } from './dto/long-leave.dto';
 
 /**
  * All dashboard api
@@ -119,6 +120,43 @@ export class DashboardController {
         );
     }
 
+    /**
+     * Get long leave
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    @Get('/employee/long-leave')
+    @ApiOperation({ title: 'Get upcoming long leave' })
+    getLongLeave(@Req() req, @Res() res) {
+        this.dashboardService.getLongLeave(req.user.USER_GUID, req.user.TENANT_GUID).subscribe(
+            data => {
+                let result = this.processLongLeave(data.data.resource);
+                res.send(result);
+            }, err => {
+                res.send(err);
+            }
+        );
+    }
+
+    /**
+     * Process long leave
+     *
+     * @param {*} data
+     * @returns
+     * @memberof DashboardController
+     */
+    public processLongLeave(data) {
+
+        let daystogo = moment(data[0].START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
+        let longLeaveData = new LongLeaveDTO;
+        longLeaveData.startDate = moment(data[0].START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+        longLeaveData.endDate = moment(data[0].END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+        longLeaveData.noOfDays = data[0].NO_OF_DAYS;
+        longLeaveData.daysToGo = daystogo + ' days to go';
+        return longLeaveData;
+    }
 
     /**
      * Function refactor run service 

@@ -10,6 +10,7 @@ import { ApplyLeaveDTO } from '../dto/apply-leave.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { UpdateApprovalDTO } from 'src/admin/approval-override/dto/update-approval.dto';
+import moment = require('moment');
 
 type CreateLeave = [ApplyLeaveDataDTO, any, any, ApplyLeaveDTO, boolean];
 /**
@@ -49,6 +50,22 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 	public findAll(tenantId: string) {
 		const fields = [];
 		const filters = ['(TENANT_GUID=' + tenantId + ')', '(STATUS=PENDING)'];
+		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
+		return this.httpService.get(url);
+	}
+
+	/**
+	 * Find long leave
+	 *
+	 * @param {string} userGuid
+	 * @param {string} tenantId
+	 * @returns
+	 * @memberof LeaveTransactionDbService
+	 */
+	public findLongLeave(userGuid: string, tenantId: string) {
+		let dateToday = moment().format('YYYY-MM-DD');
+		const fields = [];
+		const filters = ['(USER_GUID=' + userGuid + ')', '(TENANT_GUID=' + tenantId + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
 		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
 		return this.httpService.get(url);
 	}

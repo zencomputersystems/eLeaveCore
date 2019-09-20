@@ -104,6 +104,19 @@ export class UserInfoDbService extends BaseDBService {
 
     }
 
+    /**
+     * Get calendar profile
+     *
+     * @param {string} userGuid
+     * @returns
+     * @memberof UserInfoDbService
+     */
+    public getCalendarProfile(userGuid: string) {
+        let fields = ['CALENDAR_GUID'];
+        let filters = ['(USER_GUID=' + userGuid + ')', '(RESIGNATION_DATE IS NULL)'];
+        return this.findByFilterV2(fields, filters);
+    }
+
     // public disableUserProcess(user, d) {
     //     const resource = new Resource(new Array);
     //     const data = new UserInfoModel;

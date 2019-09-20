@@ -26,7 +26,7 @@ export class UpdateApprovalDTO {
    * @type {string}
    * @memberof UpdateApprovalDTO
    */
-  @ApiModelProperty({ description: 'Status approval override', example: 'APPROVE' })
+  @ApiModelProperty({ description: 'Status approval override', example: 'APPROVED' })
   @IsString()
   @IsNotEmpty()
   status: string;

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
-import { UserCalendarDbService } from './db/user-calendar.db.service';
 import { mergeMap } from 'rxjs/operators';
 import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
 import moment = require('moment');
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 import { BirthdayDataDTO } from './dto/birthday-data.dto';
+import { LeaveTransactionDbService } from '../leave/db/leave-transaction.db.service';
 
 /**
  * Service for dashboard
@@ -23,9 +23,9 @@ export class DashboardService {
    * @memberof DashboardService
    */
   constructor(
-    private readonly userCalendarDbService: UserCalendarDbService,
     private readonly calendarProfileDbService: CalendarProfileDbService,
-    private readonly userInfoDbService: UserInfoDbService
+    private readonly userInfoDbService: UserInfoDbService,
+    private readonly leaveTransactionDbService: LeaveTransactionDbService
   ) { }
   /**
    * Get upcoming holiday and upcoming leave taken
@@ -35,9 +35,10 @@ export class DashboardService {
    * @memberof DashboardService
    */
   public upcomingHolidays(user_guid: string): Observable<any> {
-    return this.userCalendarDbService.getCalendarProfile(user_guid).pipe(
+
+    return this.userInfoDbService.getCalendarProfile(user_guid).pipe(
       mergeMap(res => {
-        let calendarProfileGuid = res[0].CALENDAR_PROFILE_GUID;
+        let calendarProfileGuid = res[0].CALENDAR_GUID;
         let calendarHoliday = this.calendarProfileDbService.findAll(calendarProfileGuid, moment().year());
         return calendarHoliday;
       })
@@ -87,6 +88,18 @@ export class DashboardService {
         return of(birthdayData);
       })
     )
+  }
+
+  /**
+   * Get long leave
+   *
+   * @param {*} user_guid
+   * @param {*} tenant_guid
+   * @returns {Observable<any>}
+   * @memberof DashboardService
+   */
+  public getLongLeave(user_guid, tenant_guid): Observable<any> {
+    return this.leaveTransactionDbService.findLongLeave(user_guid, tenant_guid);
   }
 
 }

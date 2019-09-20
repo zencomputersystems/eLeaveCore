@@ -101,6 +101,26 @@ export class DashboardController {
     }
 
     /**
+     * Get date of birth
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    @Get('/employee/date-of-birth')
+    @ApiOperation({ title: 'Get date of birth' })
+    getDateOfBirth(@Req() req, @Res() res) {
+        this.dashboardService.getBirthday(req.user.USER_GUID, req.user.TENANT_GUID).subscribe(
+            data => {
+                res.send(data);
+            }, err => {
+                res.send(err);
+            }
+        );
+    }
+
+
+    /**
      * Function refactor run service 
      *
      * @param {*} req

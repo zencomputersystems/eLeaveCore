@@ -7,10 +7,11 @@ import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { UserInfoDbService } from './db/user-info.db.service';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 import { HolidayService } from './holiday.service';
+import { CalendarProfileDbService } from './db/calendar-profile-db.service';
 describe('HolidayService', () => {
   let service: HolidayService;
   let dbService: HolidayDbService;
-  let assignerDataService:AssignerDataService;
+  let assignerDataService: AssignerDataService;
   beforeEach(async () => {
     const holidayDbServiceStub = {
       findAll: calendarId1 => ({ pipe: () => ({}) }),
@@ -34,6 +35,7 @@ describe('HolidayService', () => {
       calendar_guid: {},
       user_guid: { length: {} }
     };
+    const calendarProfileDbServiceStub = {}
     const module = await Test.createTestingModule({
       providers: [
         HolidayService,
@@ -43,7 +45,8 @@ describe('HolidayService', () => {
         { provide: AssignerDataService, useValue: assignerDataServiceStub },
         { provide: UpdateCalendarDTO, useValue: updateCalendarDTOStub },
         { provide: UserInfoDbService, useValue: userInfoDbServiceStub },
-        { provide: UpdateUserCalendarDTO, useValue: updateUserCalendarDTOStub }
+        { provide: UpdateUserCalendarDTO, useValue: updateUserCalendarDTOStub },
+        { provide: CalendarProfileDbService, useValue: calendarProfileDbServiceStub }
       ]
     }).compile();
     // service = Test.get(HolidayService);

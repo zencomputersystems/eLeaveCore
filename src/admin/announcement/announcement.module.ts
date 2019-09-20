@@ -8,6 +8,12 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { AnnouncementController } from './announcement.controller';
 
 
+/**
+ * Module for announcement
+ *
+ * @export
+ * @class AnnouncementModule
+ */
 @Module({
   modules: [
     AuthModule,

@@ -5,11 +5,11 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { DashboardController } from './dashboard.controller';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { DashboardService } from './dashboard.service';
-import { DashboardDbService } from './db/dashboard.db.service';
+import { UserCalendarDbService } from './db/user-calendar.db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { CalendarProfileDbService } from 'src/admin/holiday/db/calendar-profile-db.service';
+import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 
 /**
  * Module for dashboard
@@ -26,11 +26,11 @@ import { CalendarProfileDbService } from 'src/admin/holiday/db/calendar-profile-
     providers: [
         CommonFunctionService,
         DashboardService,
-        DashboardDbService,
+        UserCalendarDbService,
         QueryParserService,
-        // HolidayDbService,
         XMLParserService,
-        CalendarProfileDbService
+        CalendarProfileDbService,
+        UserInfoDbService
     ],
     controllers: [DashboardController]
 })

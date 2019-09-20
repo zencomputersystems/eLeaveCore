@@ -146,6 +146,14 @@ export class YearEndClosingService {
     return result;
   }
 
+  /**
+   * Generate new calendar
+   *
+   * @param {*} user
+   * @param {number} year
+   * @returns
+   * @memberof YearEndClosingService
+   */
   public generateNewCalendar(user: any, year: number) {
 
     return this.holidayDbService.findAllProfile()

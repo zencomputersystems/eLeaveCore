@@ -35,10 +35,11 @@ export class CompanySiteController {
     @Get()
     @ApiOperation({ title: 'Get company-site list' })
     findAll(@Req() req, @Res() res) {
-        this.companySiteService.findAll(req.user.TENANT_GUID).subscribe(
-            data => { res.send(data); },
-            err => { this.commonFunctionService.sendResErrorV3(err, res); }
-        )
+        // this.companySiteService.findAll(req.user.TENANT_GUID).subscribe(
+        //     data => { res.send(data); },
+        //     err => { this.commonFunctionService.sendResErrorV3(err, res); }
+        // )
+        this.commonFunctionService.runGetServiceV2(this.companySiteService.findAll(req.user.TENANT_GUID), res);
     }
 
 
@@ -74,10 +75,11 @@ export class CompanySiteController {
     @Post()
     @ApiOperation({ title: 'Create company-site' })
     createCompany(@Body() data: CreateCompanySiteDTO, @Req() req, @Res() res) {
-        this.companySiteService.create(req.user, data).subscribe(
-            data => { if (data.status == 200) { res.send(data.data); } },
-            err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
-        );
+        // this.companySiteService.create(req.user, data).subscribe(
+        //     data => { if (data.status == 200) { res.send(data.data); } },
+        //     err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
+        // );
+        this.commonFunctionService.runCreateService(this.companySiteService.create(req.user, data), res);
     }
 
 	/**
@@ -91,11 +93,12 @@ export class CompanySiteController {
     @Patch()
     @ApiOperation({ title: 'Update company-site' })
     updateCompany(@Body() updateCompanySiteDTO: UpdateCompanySiteDTO, @Req() req, @Res() res) {
-        this.companySiteService.update(req.user, updateCompanySiteDTO)
-            .subscribe(
-                data => { if (data.status == 200) { res.send(data.data); } },
-                err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
-            )
+        // this.companySiteService.update(req.user, updateCompanySiteDTO)
+        //     .subscribe(
+        //         data => { if (data.status == 200) { res.send(data.data); } },
+        //         err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
+        //     )
+        this.commonFunctionService.runUpdateService(this.companySiteService.update(req.user, updateCompanySiteDTO), res);
     }
 
 }

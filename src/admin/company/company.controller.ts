@@ -34,10 +34,11 @@ export class CompanyController {
 	@Get()
 	@ApiOperation({ title: 'Get company list' })
 	findAll(@Req() req, @Res() res) {
-		this.companyService.findAll(req.user.TENANT_GUID).subscribe(
-			data => { res.send(data); },
-			err => { this.commonFunctionService.sendResErrorV3(err, res); }
-		)
+		// this.companyService.findAll(req.user.TENANT_GUID).subscribe(
+		// 	data => { res.send(data); },
+		// 	err => { this.commonFunctionService.sendResErrorV3(err, res); }
+		// )
+		this.commonFunctionService.runGetServiceV2(this.companyService.findAll(req.user.TENANT_GUID), res);
 	}
 
 	/**
@@ -58,7 +59,7 @@ export class CompanyController {
 			// res.send('id not found') 
 			throw new NotFoundException('Id not found');
 		}
-    
+
 		this.companyService.findById(req.user.TENANT_GUID, id).subscribe(
 			data => { res.send(data); },
 			err => {
@@ -79,10 +80,11 @@ export class CompanyController {
 	@Post('/:name')
 	@ApiOperation({ title: 'Create company' })
 	createCompany(@Param('name') name: string, @Req() req, @Res() res) {
-		this.companyService.create(req.user, name).subscribe(
-			data => { if (data.status == 200) { res.send(data.data); } },
-			err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
-		);
+		// this.companyService.create(req.user, name).subscribe(
+		// 	data => { if (data.status == 200) { res.send(data.data); } },
+		// 	err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
+		// );
+		this.commonFunctionService.runCreateService(this.companyService.create(req.user, name), res);
 	}
 
 	/**
@@ -96,11 +98,12 @@ export class CompanyController {
 	@Patch()
 	@ApiOperation({ title: 'Update company' })
 	updateCompany(@Body() updateCompanyDTO: UpdateCompanyDTO, @Req() req, @Res() res) {
-		this.companyService.update(req.user, updateCompanyDTO)
-			.subscribe(
-				data => { if (data.status == 200) { res.send(data.data); } },
-				err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
-			)
+		// this.companyService.update(req.user, updateCompanyDTO)
+		// 	.subscribe(
+		// 		data => { if (data.status == 200) { res.send(data.data); } },
+		// 		err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
+		// 	)
+		this.commonFunctionService.runUpdateService(this.companyService.update(req.user, updateCompanyDTO), res);
 	}
 
 	/**

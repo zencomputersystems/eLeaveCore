@@ -159,7 +159,11 @@ export class DashboardController {
     getAnnualLeave(@Req() req, @Res() res) {
         this.dashboardLeaveService.getAnnualLeave(req.user.USER_GUID).subscribe(
             data => {
-                res.send(data[0]);
+                // res.send(data[0]);
+                if (data.length > 0)
+                    res.send(data[0]);
+                else
+                    res.send({ "status": "Not available" });
             }, err => {
                 res.send(err);
             }
@@ -178,7 +182,26 @@ export class DashboardController {
     getMedicalLeave(@Req() req, @Res() res) {
         this.dashboardLeaveService.getMedicalLeave(req.user.USER_GUID).subscribe(
             data => {
-                res.send(data[0]);
+                // res.send(data[0]);
+                if (data.length > 0)
+                    res.send(data[0]);
+                else
+                    res.send({ "status": "Not available" });
+            }, err => {
+                res.send(err);
+            }
+        );
+    }
+
+    @Get('/employee/dashboard-replacement-leave')
+    @ApiOperation({ title: 'Get dashboard medical leave' })
+    getReplacementLeave(@Req() req, @Res() res) {
+        this.dashboardLeaveService.getReplacementLeave(req.user.USER_GUID).subscribe(
+            data => {
+                if (data.length > 0)
+                    res.send(data);
+                else
+                    res.send({ "status": "Not available" });
             }, err => {
                 res.send(err);
             }

@@ -8,6 +8,12 @@ import { AssignLeavePolicyDTO } from '../dto/leave-entitlement/assign-leave-poli
 import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
 import { LeaveTypeEntitlementModel } from 'src/admin/leavetype-entitlement/model/leavetype_entitlement.model';
 import { IDbService } from 'src/interface/IDbService';
+import { of } from 'rxjs';
+import { CreateReplacementLeaveDTO } from '../dto/leave-entitlement/create-replacement-leave.dto';
+import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
+import { v1 } from 'uuid';
+import { Resource } from 'src/common/model/resource.model';
+import moment = require('moment');
 
 /**
  * Service user leave entitlement: assign entitlement
@@ -61,7 +67,6 @@ export class UserEntitlementAssignEntitlement {
           ]
 
           const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
-          console.log(dataTemp);
           return dataTemp;
 
         }),
@@ -78,7 +83,6 @@ export class UserEntitlementAssignEntitlement {
         }),
         filter(x => x != null),
         mergeMap((res: LeaveTypeEntitlementModel) => {
-          console.log(res);
           const userInfoFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID IN (' + data.userId + '))']
           // console.log(userInfoFilter);
           return this.dbSearch(this.userInfoDbService, userInfoFilter)
@@ -88,11 +92,65 @@ export class UserEntitlementAssignEntitlement {
             }))
         }),
         mergeMap((res) => {
-          console.log(res.res);
           return this.userEntitlementAssignPolicy.assignPolicyProcess(res, user, data);
 
         })
       )
+
+  }
+
+  public assignReplacementLeave(user: any, data: CreateReplacementLeaveDTO) {
+    const { length } = data.userId;
+    const resource = new Resource(new Array());
+    const entitlementFilter = [
+      '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
+      '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(ACTIVE_FLAG=true)'
+    ];
+
+    // this.dbSearch(this.leaveEntitlementDbService, entitlementFilter).subscribe(
+    //   data => {
+    //     console.log(data);
+
+    //   }, err => {
+    //     console.log(err);
+    //   }
+    // )
+
+    // console.log(length);
+    for (let i = 0; i < length; i++) {
+
+      //get the entitlement days
+      const entitlementDay = data.noOfDays;
+
+      // assign new policy to user
+      const entitlementModel = new UserLeaveEntitlementModel();
+      entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+      entitlementModel.LEAVE_TYPE_GUID = data.leaveTypeId;
+      entitlementModel.ENTITLEMENT_GUID = data.leaveEntitlementId;
+      entitlementModel.USER_GUID = data.userId[i];
+      entitlementModel.EXPIREDATE = new Date(moment().add(3, 'M').format('YYYY-MM-DD'));
+      entitlementModel.PARENT_FLAG = 1;
+      entitlementModel.CF_FLAG = 0;
+      // entitlementModel.PROPERTIES_XML = res.res[0].PROPERTIES_XML;
+      entitlementModel.YEAR = moment().year();
+      entitlementModel.REMARKS = null;
+      entitlementModel.ACTIVE_FLAG = 1;
+
+      entitlementModel.TENANT_GUID = user.TENANT_GUID;
+      entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+
+      entitlementModel.DAYS_ADDED = entitlementDay;
+
+      resource.resource.push(entitlementModel);
+
+    }
+
+    return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
+      .pipe(map(res => {
+        if (res.status == 200) {
+          return res.data.resource;
+        }
+      }))
 
   }
 

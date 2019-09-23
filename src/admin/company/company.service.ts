@@ -8,7 +8,6 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { map, mergeMap } from 'rxjs/operators';
-import { DepartmentDbService } from '../department/db/department.db.service';
 import { CompanyDTO } from './dto/company.dto';
 import { UpdateCompanyDTO } from './dto/update-company.dto';
 
@@ -37,14 +36,12 @@ export class CompanyService extends BaseDBService implements IDbService {
 	 * @param {HttpService} httpService http service
 	 * @param {QueryParserService} queryService query service
 	 * @param {CommonFunctionService} commonFunctionService common function service
-	 * @param {DepartmentDbService} departmentDBService department db service
 	 * @memberof CompanyService
 	 */
 	constructor(
 		public readonly httpService: HttpService,
 		public readonly queryService: QueryParserService,
-		public readonly commonFunctionService: CommonFunctionService,
-		public readonly departmentDBService: DepartmentDbService) {
+		public readonly commonFunctionService: CommonFunctionService) {
 		super(httpService, queryService, "tenant_company");
 	}
 
@@ -88,7 +85,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 
 		let dataCompany = this.commonFunctionService.getListData(result);
 
-		let dataDepartment = this.departmentDBService.findByCompany(TENANT_GUID, id);
+		let dataDepartment = this.findByCompany(TENANT_GUID, id);
 
 		return forkJoin(
 			dataCompany,
@@ -179,6 +176,24 @@ export class CompanyService extends BaseDBService implements IDbService {
 		resource.resource.push(data);
 
 		return this.updateByModel(resource, [], ['(TENANT_COMPANY_GUID=' + company_guid + ')'], ['TENANT_COMPANY_GUID', 'NAME']);
+	}
+
+	/**
+	 * Find department by company
+	 *
+	 * @param {string} tenantId
+	 * @param {string} companyId
+	 * @returns {Observable<any>}
+	 * @memberof CompanyService
+	 */
+	public findByCompany(tenantId: string, companyId: string): Observable<any> {
+
+		const fields = ['DEPARTMENT'];
+		const filters = ['(TENANT_COMPANY_GUID=' + companyId + ')', '(TENANT_GUID=' + tenantId + ')'];
+
+		const url = this.queryService.generateDbQueryV2('view_departments', fields, filters, []);
+		let result = this.httpService.get(url);
+		return this.commonFunctionService.getListData(result);
 	}
 
 }

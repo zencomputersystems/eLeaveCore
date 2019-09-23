@@ -1,16 +1,11 @@
-import { Injectable, HttpService, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { Observable, pipe, of, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
-import { CompanyModel } from './model/company.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
-import { map, mergeMap } from 'rxjs/operators';
-import { DepartmentDbService } from '../department/db/department.db.service';
-import { CompanyDTO } from './dto/company.dto';
-import { UpdateCompanyDTO } from './dto/update-company.dto';
 import { CompanySiteModel } from './model/company-site.model';
 import { CreateCompanySiteDTO } from './dto/create-company-site.dto';
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';

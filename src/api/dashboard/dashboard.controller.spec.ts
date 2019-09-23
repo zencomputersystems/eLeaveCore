@@ -4,22 +4,42 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { DashboardController } from './dashboard.controller';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { DashboardService } from './dashboard.service';
+import { DashboardLeaveService } from './dashboard-leave.service';
 describe('DashboardController', () => {
   let pipe: DashboardController;
   beforeEach(async () => {
-    const httpServiceStub = { get: url1 => ({ subscribe: () => ({}) }) };
+    const httpServiceStub = {
+      get: url1 => ({
+        subscribe: () => ({})
+      })
+    };
     const commonFunctionServiceStub = {
       sendResSuccessV2: (data1, res2) => ({}),
       sendResErrorV3: (err1, res2) => ({})
     };
     const DashboardServiceStub = {}
+    const DashboardLeaveServiceStub = {}
+
     const module = await Test.createTestingModule({
       providers: [
         DashboardController,
-        { provide: HttpService, useValue: httpServiceStub },
-        { provide: CommonFunctionService, useValue: commonFunctionServiceStub },
+        {
+          provide: HttpService,
+          useValue: httpServiceStub
+        },
+        {
+          provide: CommonFunctionService,
+          useValue: commonFunctionServiceStub
+        },
         XMLParserService,
-        { provide: DashboardService, useValue: DashboardServiceStub }
+        {
+          provide: DashboardService,
+          useValue: DashboardServiceStub
+        },
+        {
+          provide: DashboardLeaveService,
+          useValue: DashboardLeaveServiceStub
+        }
       ]
     }).compile();
     pipe = await module.get<DashboardController>(DashboardController);

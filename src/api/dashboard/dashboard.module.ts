@@ -13,6 +13,7 @@ import { LeaveTransactionDbService } from '../leave/db/leave-transaction.db.serv
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { DashboardLeaveService } from './dashboard-leave.service';
 import { UserLeaveEntitlementSummaryDbService } from '../userprofile/db/user-leave-summary.db.service';
+import { UserLeaveEntitlementDbService } from '../userprofile/db/user-leave-entitlement.db.service';
 
 /**
  * Module for dashboard
@@ -36,7 +37,8 @@ import { UserLeaveEntitlementSummaryDbService } from '../userprofile/db/user-lea
         LeaveTransactionDbService,
         DateCalculationService,
         DashboardLeaveService,
-        UserLeaveEntitlementSummaryDbService
+        UserLeaveEntitlementSummaryDbService,
+        UserLeaveEntitlementDbService
     ],
     controllers: [DashboardController]
 })

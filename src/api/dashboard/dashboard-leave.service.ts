@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserLeaveEntitlementSummaryDbService } from '../userprofile/db/user-leave-summary.db.service';
+import { UserLeaveEntitlementDbService } from '../userprofile/db/user-leave-entitlement.db.service';
 
 /**
  * Service for dashboard leave
@@ -16,7 +17,8 @@ export class DashboardLeaveService {
    * @memberof DashboardLeaveService
    */
   constructor(
-    private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService
+    private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
+    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService
   ) { }
 
   /**
@@ -45,6 +47,30 @@ export class DashboardLeaveService {
     const field = [];
     const filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', '(LEAVE_TYPE_GUID=' + medicalLeaveId + ')'];
     return this.userLeaveEntitlementSummaryDbService.findByFilterV2(field, filter);
+  }
+
+  /**
+   * Get replacement leave 
+   *
+   * @param {string} userGuid
+   * @returns
+   * @memberof DashboardLeaveService
+   */
+  public getReplacementLeave(userGuid: string) {
+    let replacementLeaveId = 'aa84b3c0-7849-11e9-a449-bd6134fe73e4';
+
+    const field = [
+      'USER_LEAVE_ENTITLEMENT_GUID',
+      'ENTITLEMENT_GUID',
+      'YEAR',
+      'DAYS_ADDED',
+      'CF_FLAG',
+      'PARENT_FLAG',
+      'EXPIREDATE',
+      'REMARKS'
+    ];
+    const filter = ['(USER_GUID=' + userGuid + ')', '(LEAVE_TYPE_GUID=' + replacementLeaveId + ')'];
+    return this.userLeaveEntitlementDbService.findByFilterV2(field, filter);
   }
 
 }

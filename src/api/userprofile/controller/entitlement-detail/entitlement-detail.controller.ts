@@ -6,6 +6,7 @@ import { AssignLeavePolicyDTO } from '../../dto/leave-entitlement/assign-leave-p
 import { UserLeaveEntitlementService } from '../../service/user-leave-entitlement.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
+import { CreateReplacementLeaveDTO } from '../../dto/leave-entitlement/create-replacement-leave.dto';
 // import { UpdateUserLeaveEntitlementDTO } from '../../dto/leave-entitlement/update-user-leave-entitlement.dto';
 
 /**
@@ -103,7 +104,7 @@ export class EntitlementDetailController {
     @Roles('ProfileAdmin')
     @ApiOperation({ title: 'Assign leave entitlement to user' })
     create(@Body() assignLeaveDTO: AssignLeavePolicyDTO, @Req() req, @Res() res) {
-        this.entitlementService.assignEntitlement(req.user, assignLeaveDTO)
+        this.entitlementService.assignEntitlement(req.user, assignLeaveDTO, 'others')
             .subscribe(
                 data => {
                     res.send(data);
@@ -118,6 +119,37 @@ export class EntitlementDetailController {
                 }
             )
     }
+
+    /**
+     *Assign replacement leave for employee
+     *
+     * @param {AssignLeavePolicyDTO} assignLeaveDTO
+     * @param {*} req
+     * @param {*} res
+     * @memberof EntitlementDetailController
+     */
+    @UseGuards(ResourceGuard)
+    @Post('/replacement')
+    @Roles('ProfileAdmin')
+    @ApiOperation({ title: 'Assign replacement leave entitlement to user' })
+    createReplacementLeave(@Body() assignLeaveDTO: CreateReplacementLeaveDTO, @Req() req, @Res() res) {
+        this.entitlementService.assignEntitlement(req.user, assignLeaveDTO, 'replacement')
+            .subscribe(
+                data => {
+                    res.send(data);
+                },
+                err => {
+                    // console.log(err);
+                    res.status(500);
+                    res.send();
+                },
+                () => {
+                    res.send();
+                }
+            )
+    }
+
+
 
 
     // /**

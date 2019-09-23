@@ -56,10 +56,6 @@ export class CommonFunctionService {
         );
     }
 
-
-
-
-
     /**
      * Get result method refactor
      *

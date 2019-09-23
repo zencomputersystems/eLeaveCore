@@ -21,6 +21,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.service';
 import { UserEntitlementAssignEntitlement } from './userentitlement-assign-entitlement.service';
 // import { UpdateUserLeaveEntitlementDTO } from '../dto/leave-entitlement/update-user-leave-entitlement.dto';
+import { CreateReplacementLeaveDTO } from '../dto/leave-entitlement/create-replacement-leave.dto';
 
 /**
  * Service for user leave entitlement
@@ -80,8 +81,12 @@ export class UserLeaveEntitlementService {
      * @returns
      * @memberof UserLeaveEntitlementService
      */
-    public assignEntitlement(user: any, data: AssignLeavePolicyDTO) {
-        return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
+    public assignEntitlement(user: any, data: any, process: string) {
+        if (process == 'replacement') {
+            return this.userEntitlementAssignEntitlement.assignReplacementLeave(user, data);
+        } else {
+            return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
+        }
     }
 
     // public updateLeaveEntitlement(user: any, d: UpdateUserLeaveEntitlementDTO) {

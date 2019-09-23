@@ -5,8 +5,8 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { DashboardService } from './dashboard.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { DashboardLeaveService } from './dashboard-leave.service';
 import moment = require('moment');
-import { elementAt } from 'rxjs/operators';
 import { LongLeaveDTO } from './dto/long-leave.dto';
 
 /**
@@ -23,6 +23,7 @@ export class DashboardController {
         private http: HttpService,
         private commonFunctionService: CommonFunctionService,
         private dashboardService: DashboardService,
+        private dashboardLeaveService: DashboardLeaveService,
         private xmlParserService: XMLParserService
     ) { }
 
@@ -132,7 +133,13 @@ export class DashboardController {
     getLongLeave(@Req() req, @Res() res) {
         this.dashboardService.getLongLeave(req.user.USER_GUID, req.user.TENANT_GUID).subscribe(
             data => {
-                let result = this.processLongLeave(data.data.resource);
+                let result;
+                if (data.data.resource.length > 0) {
+                    result = this.dashboardService.processLongLeave(data.data.resource);
+                } else {
+                    result = { "status": "Not available" };
+                }
+
                 res.send(result);
             }, err => {
                 res.send(err);
@@ -141,22 +148,43 @@ export class DashboardController {
     }
 
     /**
-     * Process long leave
+     * Annual leave
      *
-     * @param {*} data
-     * @returns
+     * @param {*} req
+     * @param {*} res
      * @memberof DashboardController
      */
-    public processLongLeave(data) {
-
-        let daystogo = moment(data[0].START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
-        let longLeaveData = new LongLeaveDTO;
-        longLeaveData.startDate = moment(data[0].START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-        longLeaveData.endDate = moment(data[0].END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-        longLeaveData.noOfDays = data[0].NO_OF_DAYS;
-        longLeaveData.daysToGo = daystogo + ' days to go';
-        return longLeaveData;
+    @Get('/employee/dashboard-annual-leave')
+    @ApiOperation({ title: 'Get dashboard annual leave' })
+    getAnnualLeave(@Req() req, @Res() res) {
+        this.dashboardLeaveService.getAnnualLeave(req.user.USER_GUID).subscribe(
+            data => {
+                res.send(data[0]);
+            }, err => {
+                res.send(err);
+            }
+        );
     }
+
+    /**
+     * Medical leave
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    @Get('/employee/dashboard-medical-leave')
+    @ApiOperation({ title: 'Get dashboard medical leave' })
+    getMedicalLeave(@Req() req, @Res() res) {
+        this.dashboardLeaveService.getMedicalLeave(req.user.USER_GUID).subscribe(
+            data => {
+                res.send(data[0]);
+            }, err => {
+                res.send(err);
+            }
+        );
+    }
+
 
     /**
      * Function refactor run service 
@@ -171,7 +199,7 @@ export class DashboardController {
         this.http.get(url).subscribe(data => {
             if (method_procedure == 'calendar_leave') {
                 // for calendar leave list add time to start date and end date
-                data.data.forEach(element => { this.addTime(element); });
+                data.data.forEach(element => { this.dashboardService.addTime(element); });
             }
             this.commonFunctionService.sendResSuccessV2(data, res);
 
@@ -180,38 +208,6 @@ export class DashboardController {
         });
     }
 
-    /**
-     * Add time to date for calendar usage
-     *
-     * @param {*} element
-     * @returns
-     * @memberof DashboardController
-     */
-    public addTime(element) {
-        // get working hours details for each user
-        let workingHours = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML);
 
-        if (element.TIME_SLOT == null) {
-            // for full day leave
-            let fullPath = workingHours.property.fullday;
-            element.START_DATE = element.START_DATE + ' ' + fullPath.start_time;
-            element.END_DATE = element.END_DATE + ' ' + fullPath.end_time;
-        } else if (element.TIME_SLOT == 'AM' || element.TIME_SLOT == 'PM') {
-            // for halfday leave (AM,PM)
-            let halfPath = workingHours.property.halfday[element.TIME_SLOT];
-            element.START_DATE = element.START_DATE + ' ' + halfPath.start_time;
-            element.END_DATE = element.END_DATE + ' ' + halfPath.end_time;
-        } else {
-            // for quarterday leave (Q1,Q2,Q3,Q4)
-            let quarterPath = workingHours.property.quarterday[element.TIME_SLOT];
-            element.START_DATE = element.START_DATE + ' ' + quarterPath.start_time;
-            element.END_DATE = element.END_DATE + ' ' + quarterPath.end_time;
-        }
-
-        // remove properties xml from array
-        delete element.PROPERTIES_XML;
-
-        return element;
-    }
 
 }

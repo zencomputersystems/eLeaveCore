@@ -6,6 +6,8 @@ import moment = require('moment');
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 import { BirthdayDataDTO } from './dto/birthday-data.dto';
 import { LeaveTransactionDbService } from '../leave/db/leave-transaction.db.service';
+import { LongLeaveDTO } from './dto/long-leave.dto';
+import { XMLParserService } from '../../common/helper/xml-parser.service';
 
 /**
  * Service for dashboard
@@ -25,7 +27,8 @@ export class DashboardService {
   constructor(
     private readonly calendarProfileDbService: CalendarProfileDbService,
     private readonly userInfoDbService: UserInfoDbService,
-    private readonly leaveTransactionDbService: LeaveTransactionDbService
+    private readonly leaveTransactionDbService: LeaveTransactionDbService,
+    private readonly xmlParserService: XMLParserService
   ) { }
   /**
    * Get upcoming holiday and upcoming leave taken
@@ -53,7 +56,7 @@ export class DashboardService {
    * @returns {Observable<any>}
    * @memberof DashboardService
    */
-  public getBirthday(user_guid: string, tenant_guid: string): Observable<any> {
+  public getBirthday(user_guid: string, tenant_guid: string): Observable<BirthdayDataDTO> {
     return this.userInfoDbService.getDateOfBirth(user_guid, tenant_guid).pipe(
       mergeMap(res => {
         // Get DOB from db
@@ -101,5 +104,52 @@ export class DashboardService {
   public getLongLeave(user_guid, tenant_guid): Observable<any> {
     return this.leaveTransactionDbService.findLongLeave(user_guid, tenant_guid);
   }
+
+  /**
+   * Process long leave
+   *
+   * @param {*} data
+   * @returns
+   * @memberof DashboardService
+   */
+  public processLongLeave(data) {
+
+    let daystogo = moment(data[0].START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
+    let longLeaveData = new LongLeaveDTO;
+    longLeaveData.startDate = moment(data[0].START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+    longLeaveData.endDate = moment(data[0].END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+    longLeaveData.noOfDays = data[0].NO_OF_DAYS;
+    longLeaveData.daysToGo = daystogo + ' days to go';
+    return longLeaveData;
+  }
+
+  /**
+   * Add time to date for calendar usage
+   *
+   * @param {*} element
+   * @returns
+   * @memberof DashboardService
+   */
+  public addTime(element) {
+    // get working hours details for each user
+    let workingHours = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML);
+
+    // First tenary : for full day leave
+    // Second tenary : for halfday leave (AM,PM)
+    // Third tenary : for quarterday leave (Q1,Q2,Q3,Q4)
+    let slotPath =
+      element.TIME_SLOT == null ? workingHours.property.fullday :
+        element.TIME_SLOT == 'AM' || element.TIME_SLOT == 'PM' ? workingHours.property.halfday[element.TIME_SLOT] :
+          workingHours.property.quarterday[element.TIME_SLOT];
+
+    element.START_DATE = element.START_DATE + ' ' + slotPath.start_time;
+    element.END_DATE = element.END_DATE + ' ' + slotPath.end_time;
+
+    // remove properties xml from array
+    delete element.PROPERTIES_XML;
+
+    return element;
+  }
+
 
 }

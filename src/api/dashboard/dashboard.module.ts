@@ -11,6 +11,8 @@ import { CalendarProfileDbService } from 'src/admin/holiday/db/calendar-profile-
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 import { LeaveTransactionDbService } from '../leave/db/leave-transaction.db.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { DashboardLeaveService } from './dashboard-leave.service';
+import { UserLeaveEntitlementSummaryDbService } from '../userprofile/db/user-leave-summary.db.service';
 
 /**
  * Module for dashboard
@@ -32,7 +34,9 @@ import { DateCalculationService } from 'src/common/calculation/service/date-calc
         CalendarProfileDbService,
         UserInfoDbService,
         LeaveTransactionDbService,
-        DateCalculationService
+        DateCalculationService,
+        DashboardLeaveService,
+        UserLeaveEntitlementSummaryDbService
     ],
     controllers: [DashboardController]
 })

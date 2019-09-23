@@ -64,10 +64,7 @@ export class WorkingHoursService {
   public getWorkingHoursDetail(workingHoursId: string) {
     return this.workingHoursDbService.findAll(workingHoursId)
       .pipe(map(res => {
-        if (res.status == 200) {
-          let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
-          return jsonHoliday;
-        }
+        if (res.status == 200) { return this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
       }))
   }
 
@@ -138,14 +135,16 @@ export class WorkingHoursService {
     data.WORKING_HOURS_GUID = d.working_hours_guid;
     data.UPDATE_TS = new Date().toISOString();
     data.UPDATE_USER_GUID = user.USER_GUID;
-    let userList = '';
-    for (let i = 0; i < d.user_guid.length; i++) {
-      if (userList == '') {
-        userList = '"' + d.user_guid[i] + '"';
-      } else {
-        userList = userList + ',"' + d.user_guid[i] + '"';
-      }
-    }
+    // let userList = '';
+    // for (let i = 0; i < d.user_guid.length; i++) {
+    //   if (userList == '') {
+    //     userList = '"' + d.user_guid[i] + '"';
+    //   } else {
+    //     userList = userList + ',"' + d.user_guid[i] + '"';
+    //   }
+    // }
+
+    let userList = this.assignerDataService.setBundleUserGuid(d);
 
     resource.resource.push(data);
 

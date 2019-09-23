@@ -43,4 +43,23 @@ export class AssignerDataService {
         }
         return inputData;
     }
+
+    /**
+     * Set bundle userguid
+     *
+     * @param {*} d
+     * @returns
+     * @memberof AssignerDataService
+     */
+    public setBundleUserGuid(d: any) {
+        let userList = '';
+        for (let i = 0; i < d.user_guid.length; i++) {
+            if (userList == '') {
+                userList = '"' + d.user_guid[i] + '"';
+            } else {
+                userList = userList + ',"' + d.user_guid[i] + '"';
+            }
+        }
+        return userList;
+    }
 }

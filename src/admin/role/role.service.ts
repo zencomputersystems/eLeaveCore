@@ -47,8 +47,7 @@ export class RoleService {
         return this.roleDbService.findAllRoleProfile()
             .pipe(map(res => {
                 if (res.status == 200) {
-                    let result = this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO);
-                    return result;
+                    return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO);
                 }
             })
             )
@@ -139,14 +138,15 @@ export class RoleService {
         data.ROLE_GUID = d.role_guid;
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
-        let userList = '';
-        for (let i = 0; i < d.user_guid.length; i++) {
-            if (userList == '') {
-                userList = '"' + d.user_guid[i] + '"';
-            } else {
-                userList = userList + ',"' + d.user_guid[i] + '"';
-            }
-        }
+        // let userList = '';
+        // for (let i = 0; i < d.user_guid.length; i++) {
+        //     if (userList == '') {
+        //         userList = '"' + d.user_guid[i] + '"';
+        //     } else {
+        //         userList = userList + ',"' + d.user_guid[i] + '"';
+        //     }
+        // }
+        let userList = this.assignerDataService.setBundleUserGuid(d);
 
         resource.resource.push(data);
 

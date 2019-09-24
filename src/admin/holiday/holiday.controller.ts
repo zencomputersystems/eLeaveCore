@@ -164,9 +164,9 @@ export class HolidayController {
     @Delete('/calendar-profile/:id')
     @ApiOperation({ title: 'Delete calendar profile' })
     @ApiImplicitQuery({ name: 'id', description: 'Delete by CALENDAR_GUID', required: true })
-    deleteRoleProfile(@Param('id') id, @Req() req, @Res() res) {
-        id = this.commonFunctionService.findIdParam(req, res, id);
-        this.commonFunctionService.runUpdateService(this.holidayService.deleteCalendar(req.user, id), res);
+    deleteHolidayProfile(@Param('id') id, @Req() req, @Res() res) {
+        let holidayId = this.commonFunctionService.findIdParam(req, res, id);
+        this.commonFunctionService.runUpdateService(this.holidayService.deleteCalendar(req.user, holidayId), res);
     }
 
     /**

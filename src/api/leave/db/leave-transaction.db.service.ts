@@ -54,6 +54,13 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 		return this.httpService.get(url);
 	}
 
+	public findAllPendingLeave(userGuid: string) {
+		const fields = [];
+		const filters = ['(USER_GUID IN (' + userGuid + '))', '(STATUS=PENDING)'];
+		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
+		return this.httpService.get(url);
+	}
+
 	/**
 	 * Find long leave
 	 *

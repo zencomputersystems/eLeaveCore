@@ -2,6 +2,7 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { HttpService, Injectable } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { Observable } from 'rxjs';
+import { CommonFunctionService } from '../../../common/helper/common-function.services';
 
 /**
  * DB service for role
@@ -28,7 +29,8 @@ export class RoleDbService extends BaseDBService {
      */
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService) {
+        public readonly queryService: QueryParserService,
+        public readonly commonFunctionService: CommonFunctionService) {
         super(httpService, queryService, "l_role_profile");
     }
 
@@ -43,10 +45,12 @@ export class RoleDbService extends BaseDBService {
         const fields = ['ROLE_GUID', 'CODE', 'DESCRIPTION'];
         const filters = ['(DELETED_AT IS NULL)'];
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
         //call DF to validate the user
-        return this.httpService.get(url);
+        // return this.httpService.get(url);
+
+        return this.commonFunctionService.findAllData([fields, filters, this.queryService, this.httpService, this._tableName]);
 
     }
 
@@ -62,10 +66,14 @@ export class RoleDbService extends BaseDBService {
         const fields = ['PROPERTIES_XML'];
         const filters = ['(ROLE_GUID=' + roleProfileId + ')'];
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        // const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
-        //call DF to validate the user
-        return this.httpService.get(url);
+        // //call DF to validate the user
+        // return this.httpService.get(url);
 
+        return this.commonFunctionService.findAllData([fields, filters, this.queryService, this.httpService, this._tableName]);
     }
+
+
+
 }

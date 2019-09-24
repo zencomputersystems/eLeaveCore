@@ -262,4 +262,18 @@ export class CommonFunctionService {
         }
         return dataId;
     }
+
+
+    /**
+     * Refactor to get all data
+     *
+     * @param {*} [fields, filters, queryService, httpService, tableName]
+     * @returns
+     * @memberof CommonFunctionService
+     */
+    public findAllData([fields, filters, queryService, httpService, tableName]) {
+        const url = queryService.generateDbQueryV2(tableName, fields, filters, []);
+        return httpService.get(url);
+    }
+
 }

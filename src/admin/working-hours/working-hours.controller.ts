@@ -82,8 +82,8 @@ export class WorkingHoursController {
   @ApiOperation({ title: 'Delete working hours profile' })
   @ApiImplicitQuery({ name: 'id', description: 'Delete by WORKING_HOURS_GUID', required: true })
   deleteWorkingHoursProfile(@Param('id') id, @Req() req, @Res() res) {
-    id = this.commonFunctionService.findIdParam(req, res, id);
-    this.commonFunctionService.runUpdateService(this.workingHoursService.deleteWorkingHours(req.user, id), res);
+    let idTemp = this.commonFunctionService.findIdParam(req, res, id);
+    this.commonFunctionService.runUpdateService(this.workingHoursService.deleteWorkingHours(req.user, idTemp), res);
   }
 
   /**
@@ -97,9 +97,9 @@ export class WorkingHoursController {
   @Get(':id')
   @ApiOperation({ title: 'Get working hours detail by working hours profile guid' })
   @ApiImplicitQuery({ name: 'id', description: 'Filter by WORKING_HOURS_GUID', required: true })
-  findOne(@Req() req, @Res() res, @Param('id') id) {
-    let dataId = this.commonFunctionService.findIdParam(req, req, id);
-    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getWorkingHoursDetail(dataId), res);
+  findOneWorkingHour(@Req() req, @Res() res, @Param('id') id) {
+    let whId = this.commonFunctionService.findIdParam(req, req, id);
+    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getWorkingHoursDetail(whId), res);
   }
 
   /**

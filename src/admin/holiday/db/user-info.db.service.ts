@@ -85,6 +85,23 @@ export class UserInfoDbService extends BaseDBService {
     }
 
     /**
+     * Find fullname
+     *
+     * @param {string} userGuid
+     * @returns {Observable<any>}
+     * @memberof UserInfoDbService
+     */
+    public findFullname(userGuid: string): Observable<any> {
+
+        const fields = ['USER_GUID', 'FULLNAME'];
+        const filters = ['(USER_GUID IN (' + userGuid + '))', '(RESIGNATION_DATE IS NULL)'];
+
+        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        return this.httpService.get(url);
+
+    }
+
+    /**
      * Get date of birth
      *
      * @param {string} userId
@@ -129,5 +146,18 @@ export class UserInfoDbService extends BaseDBService {
 
     //     return this.updateByModel(resource, [], ['(USER_GUID=' + d.user_guid + ')'], ['USER_GUID', 'FULLNAME']);
     // }
+
+    /**
+     * Find my downline
+     *
+     * @param {string} userGuid
+     * @returns
+     * @memberof UserInfoDbService
+     */
+    public findMyDownline(userGuid: string) {
+        let fields = ['USER_GUID'];
+        let filters = ['(MANAGER_USER_GUID=' + userGuid + ')', '(RESIGNATION_DATE IS NULL)'];
+        return this.findByFilterV2(fields, filters);
+    }
 
 }

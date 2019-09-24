@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable, of, forkJoin } from 'rxjs';
+import { mergeMap, map } from 'rxjs/operators';
 import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
 import moment = require('moment');
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
@@ -151,5 +151,29 @@ export class DashboardService {
     return element;
   }
 
+  /**
+   * Get my task
+   *
+   * @param {string} userGuid
+   * @returns
+   * @memberof DashboardService
+   */
+  public getMyTask(userGuid: string) {
+    return this.userInfoDbService.findMyDownline(userGuid).pipe(
+      map(res => {
+        let mergeId: string;
+        res.forEach(element => {
+          mergeId = mergeId == undefined ? '"' + element.USER_GUID + '"' : mergeId + ',"' + element.USER_GUID + '"';
+        });
+        let pendingLeave = this.leaveTransactionDbService.findAllPendingLeave(mergeId);
+        return { pendingLeave, mergeId };
+      }), mergeMap(res => {
+
+        let fullname = this.userInfoDbService.findFullname(res.mergeId);
+        let dataTemp = forkJoin(res.pendingLeave, fullname)
+        return dataTemp;
+      })
+    );
+  }
 
 }

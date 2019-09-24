@@ -180,7 +180,7 @@ export class DashboardController {
      * @memberof DashboardController
      */
     @Get('/employee/dashboard-replacement-leave')
-    @ApiOperation({ title: 'Get dashboard medical leave' })
+    @ApiOperation({ title: 'Get dashboard replacement leave' })
     getReplacementLeave(@Req() req, @Res() res) {
         this.dashboardLeaveService.getReplacementLeave(req.user.USER_GUID).subscribe(
             data => {
@@ -188,6 +188,38 @@ export class DashboardController {
                     res.send(data);
                 else
                     res.send({ "status": "Not available" });
+            }, err => {
+                res.send(err);
+            }
+        );
+    }
+
+    /**
+     * Get my task on dashboard
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    @Get('/employee/dashboard-my-task')
+    @ApiOperation({ title: 'Get my task' })
+    getMyTask(@Req() req, @Res() res) {
+        this.dashboardService.getMyTask(req.user.USER_GUID).subscribe(
+            data => {
+                // Forkjoin data[0] is pending leave, data[1] fullname
+                if (data[0].data.resource.length > 0) {
+                    let combineData = [];
+                    data[0].data.resource.forEach(element => {
+                        let userData = data[1].data.resource.find(x => x.USER_GUID === element.USER_GUID);
+                        let dataToShow = {};
+                        dataToShow['leave_transaction_guid'] = element.LEAVE_TRANSACTION_GUID
+                        dataToShow['message'] = userData.FULLNAME + ' requested leave on ' + element.START_DATE;
+                        combineData.push(dataToShow);
+                    });
+                    res.send(combineData);
+                } else {
+                    res.send({ "status": "Not available" });
+                }
             }, err => {
                 res.send(err);
             }

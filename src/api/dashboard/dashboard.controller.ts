@@ -23,8 +23,7 @@ export class DashboardController {
         private http: HttpService,
         private commonFunctionService: CommonFunctionService,
         private dashboardService: DashboardService,
-        private dashboardLeaveService: DashboardLeaveService,
-        private xmlParserService: XMLParserService
+        private dashboardLeaveService: DashboardLeaveService
     ) { }
 
     /**
@@ -88,7 +87,7 @@ export class DashboardController {
         this.dashboardService.upcomingHolidays(req.user.USER_GUID).subscribe(
             data => {
                 let upcomingHolidayArr = [];
-                let holidayData = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+                let holidayData = this.dashboardService.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
 
                 holidayData.holiday.forEach(element => {
                     if (moment(element.start, 'YYYY-MM-DD') > moment()) {
@@ -157,17 +156,7 @@ export class DashboardController {
     @Get('/employee/dashboard-annual-leave')
     @ApiOperation({ title: 'Get dashboard annual leave' })
     getAnnualLeave(@Req() req, @Res() res) {
-        this.dashboardLeaveService.getAnnualLeave(req.user.USER_GUID).subscribe(
-            data => {
-                // res.send(data[0]);
-                if (data.length > 0)
-                    res.send(data[0]);
-                else
-                    res.send({ "status": "Not available" });
-            }, err => {
-                res.send(err);
-            }
-        );
+        this.getData(this.dashboardLeaveService.getAnnualLeave(req.user.USER_GUID), res);
     }
 
     /**
@@ -180,11 +169,23 @@ export class DashboardController {
     @Get('/employee/dashboard-medical-leave')
     @ApiOperation({ title: 'Get dashboard medical leave' })
     getMedicalLeave(@Req() req, @Res() res) {
-        this.dashboardLeaveService.getMedicalLeave(req.user.USER_GUID).subscribe(
+        this.getData(this.dashboardLeaveService.getMedicalLeave(req.user.USER_GUID), res);
+    }
+
+    /**
+     * Get replacement leave
+     *
+     * @param {*} req
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    @Get('/employee/dashboard-replacement-leave')
+    @ApiOperation({ title: 'Get dashboard medical leave' })
+    getReplacementLeave(@Req() req, @Res() res) {
+        this.dashboardLeaveService.getReplacementLeave(req.user.USER_GUID).subscribe(
             data => {
-                // res.send(data[0]);
                 if (data.length > 0)
-                    res.send(data[0]);
+                    res.send(data);
                 else
                     res.send({ "status": "Not available" });
             }, err => {
@@ -193,13 +194,19 @@ export class DashboardController {
         );
     }
 
-    @Get('/employee/dashboard-replacement-leave')
-    @ApiOperation({ title: 'Get dashboard medical leave' })
-    getReplacementLeave(@Req() req, @Res() res) {
-        this.dashboardLeaveService.getReplacementLeave(req.user.USER_GUID).subscribe(
+    /**
+     * Refactor function
+     *
+     * @param {*} method
+     * @param {*} res
+     * @memberof DashboardController
+     */
+    public getData(method, res) {
+        method.subscribe(
             data => {
+                // res.send(data[0]);
                 if (data.length > 0)
-                    res.send(data);
+                    res.send(data[0]);
                 else
                     res.send({ "status": "Not available" });
             }, err => {

@@ -28,7 +28,7 @@ export class DashboardService {
     private readonly calendarProfileDbService: CalendarProfileDbService,
     private readonly userInfoDbService: UserInfoDbService,
     private readonly leaveTransactionDbService: LeaveTransactionDbService,
-    private readonly xmlParserService: XMLParserService
+    public readonly xmlParserService: XMLParserService
   ) { }
   /**
    * Get upcoming holiday and upcoming leave taken

@@ -21,6 +21,11 @@ import { LeaveEntitlementBaseService } from 'src/common/policy/entitlement-type/
 import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
 import { HolidayDbService } from '../holiday/db/holiday.db.service';
 import { CalendarProfileDbService } from '../holiday/db/calendar-profile-db.service';
+import { GenerateNewCalendarService } from './service/generate-new-calendar.service';
+import { DisableResignUser } from './service/disable-resign-user.service';
+import { AssignLeaveFunctionService } from './service/assign-leave-function.service';
+import { AssignLeaveEntitlementService } from './service/assign-leave-entitlement.service';
+import { AssignCarryForwardService } from './service/assign-carry-forward.service';
 
 
 @Module({
@@ -43,7 +48,12 @@ import { CalendarProfileDbService } from '../holiday/db/calendar-profile-db.serv
     LeaveEntitlementBaseService,
     GeneralLeavePolicyService,
     HolidayDbService,
-    CalendarProfileDbService
+    CalendarProfileDbService,
+    GenerateNewCalendarService,
+    DisableResignUser,
+    AssignLeaveFunctionService,
+    AssignLeaveEntitlementService,
+    AssignCarryForwardService
   ],
   modules: [
     AuthModule,

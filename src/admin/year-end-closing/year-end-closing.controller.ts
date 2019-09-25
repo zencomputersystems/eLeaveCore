@@ -55,6 +55,8 @@ export class YearEndClosingController {
     // console.log(year);
     // console.log(new Date(year).getFullYear() + 1);
     this.yearEndClosingService.yearEndProcess(req.user, new Date(year).getFullYear() + 1).subscribe(data => {
+      // console.log(data);
+
       res.send(data);
     }, err => {
       res.send(err);

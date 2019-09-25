@@ -36,7 +36,7 @@ export class ApprovalService {
 
         return of({
             "approvalType": "EVERYONE",
-            "approvalLevel": 2
+            "approvalLevel": 1
         })
 
     }

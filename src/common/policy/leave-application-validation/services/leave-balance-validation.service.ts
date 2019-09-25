@@ -72,10 +72,11 @@ export class LeaveBalanceValidationService {
         // const leaveDuration = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,applyLeaveDTO.endDate,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 
         let sumLeaveDuration = 0
-        for (let i = 0; i < applyLeaveDTO.data.length; i++) {
-            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
-            sumLeaveDuration = sumLeaveDuration + leaveDurationTemp;
-        }
+        // for (let i = 0; i < applyLeaveDTO.data.length; i++) {
+        //     let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
+        //     sumLeaveDuration = sumLeaveDuration + leaveDurationTemp;
+        // }
+        sumLeaveDuration = this.sumAllLeave(applyLeaveDTO, policy, sumLeaveDuration);
 
         const leaveDuration = sumLeaveDuration;
 
@@ -96,28 +97,29 @@ export class LeaveBalanceValidationService {
                 //      hospitaliation leave calculation:
                 //      Actual Entitlement = (( Available Hospitalization - Used Hospitalization) - Used Medical)
                 let counterAppliedDay = 0;
+                counterAppliedDay = this.getCounterAppliedDays([leaveTransactions, parent, counterAppliedDay, policy]);
                 // console.log('MMMMMMMM'+leaveTransactions);
-                leaveTransactions.forEach(element => {
-                    // console.log('a - '+element.LEAVE_TYPE_GUID);
-                    // console.log('b - '+policy.includeOtherLeaveType);
-                    // console.log('c - '+parent.LEAVE_TYPE_GUID);
-                    if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == parent.LEAVE_TYPE_GUID) {
-                        counterAppliedDay += element.NO_OF_DAYS;
-                        // console.log(counterAppliedDay);
-                    }
-                    // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
-                    if (policy.includeOtherLeaveType != null || policy.includeOtherLeaveType != '') {
-                        // add the applied day into calcuation
-                        // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
-                        if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == policy.includeOtherLeaveType) {
-                            // console.log(element.LEAVE_TYPE_GUID + ' = ' + element.NO_OF_DAYS);
-                            counterAppliedDay += element.NO_OF_DAYS;
-                            // console.log(counterAppliedDay);
-                        }
-                    }
+                // leaveTransactions.forEach(element => {
+                //     // console.log('a - '+element.LEAVE_TYPE_GUID);
+                //     // console.log('b - '+policy.includeOtherLeaveType);
+                //     // console.log('c - '+parent.LEAVE_TYPE_GUID);
+                //     if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == parent.LEAVE_TYPE_GUID) {
+                //         counterAppliedDay += element.NO_OF_DAYS;
+                //         // console.log(counterAppliedDay);
+                //     }
+                //     // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
+                //     if (policy.includeOtherLeaveType != null || policy.includeOtherLeaveType != '') {
+                //         // add the applied day into calcuation
+                //         // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
+                //         if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == policy.includeOtherLeaveType) {
+                //             // console.log(element.LEAVE_TYPE_GUID + ' = ' + element.NO_OF_DAYS);
+                //             counterAppliedDay += element.NO_OF_DAYS;
+                //             // console.log(counterAppliedDay);
+                //         }
+                //     }
 
-                    // console.log(counterAppliedDay);
-                });
+                //     // console.log(counterAppliedDay);
+                // });
 
                 // calculate all available leave
                 // for parent flag, we need to calculate based on policy
@@ -137,6 +139,37 @@ export class LeaveBalanceValidationService {
 
             }))
 
+    }
+    /**
+     * Refactor get counter applied days
+     *
+     * @param {*} [leaveTransactions, parent, counterAppliedDay, policy]
+     * @returns
+     * @memberof LeaveBalanceValidationService
+     */
+    public getCounterAppliedDays([leaveTransactions, parent, counterAppliedDay, policy]) {
+        leaveTransactions.forEach(element => {
+            // console.log('a - '+element.LEAVE_TYPE_GUID);
+            // console.log('b - '+policy.includeOtherLeaveType);
+            // console.log('c - '+parent.LEAVE_TYPE_GUID);
+            if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == parent.LEAVE_TYPE_GUID) {
+                counterAppliedDay += element.NO_OF_DAYS;
+                // console.log(counterAppliedDay);
+            }
+            // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
+            if (policy.includeOtherLeaveType != null || policy.includeOtherLeaveType != '') {
+                // add the applied day into calcuation
+                // console.log(element.LEAVE_TYPE_GUID + ' - ' + policy.includeOtherLeaveType);
+                if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == policy.includeOtherLeaveType) {
+                    // console.log(element.LEAVE_TYPE_GUID + ' = ' + element.NO_OF_DAYS);
+                    counterAppliedDay += element.NO_OF_DAYS;
+                    // console.log(counterAppliedDay);
+                }
+            }
+
+            // console.log(counterAppliedDay);
+        });
+        return counterAppliedDay;
     }
 
     // /**
@@ -205,10 +238,11 @@ export class LeaveBalanceValidationService {
                     // let durationExpiredToStart = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,element.EXPIREDATE,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 
                     let sumLeaveDurTemp = 0
-                    for (let i = 0; i < applyLeaveDTO.data.length; i++) {
-                        let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
-                        sumLeaveDurTemp = sumLeaveDurTemp + leaveDurationTemp;
-                    }
+                    // for (let i = 0; i < applyLeaveDTO.data.length; i++) {
+                    //     let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
+                    //     sumLeaveDurTemp = sumLeaveDurTemp + leaveDurationTemp;
+                    // }
+                    sumLeaveDurTemp = this.sumAllLeave(applyLeaveDTO, policy, sumLeaveDurTemp);
 
                     let durationExpiredToStart = sumLeaveDurTemp;
 
@@ -221,6 +255,23 @@ export class LeaveBalanceValidationService {
         });
 
         return childLeaveCounter;
+    }
+
+    /**
+     * Refactor sum all leave
+     *
+     * @param {*} applyLeaveDTO
+     * @param {*} policy
+     * @param {*} sumLeaveDurTemp
+     * @returns
+     * @memberof LeaveBalanceValidationService
+     */
+    public sumAllLeave(applyLeaveDTO, policy, sumLeaveDurTemp) {
+        for (let i = 0; i < applyLeaveDTO.data.length; i++) {
+            let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
+            sumLeaveDurTemp = sumLeaveDurTemp + leaveDurationTemp;
+        }
+        return sumLeaveDurTemp;
     }
 
 }

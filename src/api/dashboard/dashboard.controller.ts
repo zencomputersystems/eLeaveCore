@@ -214,6 +214,11 @@ export class DashboardController {
                         let dataToShow = {};
                         dataToShow['leave_transaction_guid'] = element.LEAVE_TRANSACTION_GUID
                         dataToShow['message'] = userData.FULLNAME + ' requested leave on ' + element.START_DATE;
+                        dataToShow['status'] = element.STATUS;
+                        dataToShow['start_date'] = element.START_DATE;
+                        dataToShow['end_date'] = element.END_DATE;
+                        dataToShow['no_of_days'] = element.NO_OF_DAYS;
+
                         combineData.push(dataToShow);
                     });
                     res.send(combineData);

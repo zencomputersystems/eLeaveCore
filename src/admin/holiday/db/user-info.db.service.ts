@@ -72,17 +72,29 @@ export class UserInfoDbService extends BaseDBService {
      * @returns {Observable<any>}
      * @memberof UserInfoDbService
      */
-    public findEmployeeAssignCalendar(calendarProfileId: string): Observable<any> {
+    public findEmployeeAssign(filters: string[]): Observable<any> {
 
         const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
-        const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
+        // const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
+        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
         //call DF to validate the user
         return this.httpService.get(url);
 
     }
+
+    // public findEmployeeAssignPR(dataId: string): Observable<any> {
+
+    //     const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
+    //     const filters = ['(WORKING_HOURS_GUID=' + WHId + ')'];
+    //     console.log(filters);
+
+    //     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
+    //     console.log(url);
+    //     //call DF to validate the user
+    //     return this.httpService.get(url);
+
+    // }
 
     /**
      * Find fullname

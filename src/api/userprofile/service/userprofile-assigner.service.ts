@@ -149,6 +149,7 @@ export class UserprofileAssignerService {
       // loop process to refactor code
       this.doProcess(sub_key, sub_val, userPersonalDetail);
     }
+    userProfileData.link = 'https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/';
     userProfileData.personalDetail = userPersonalDetail;
   }
 

@@ -68,7 +68,8 @@ export class HolidayService {
      * @memberof HolidayService
      */
     public getEmployeeAttach(calendarId: string) {
-        return this.userinfoDbService.findEmployeeAssignCalendar(calendarId)
+        const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
+        return this.userinfoDbService.findEmployeeAssign(filters)
             .pipe(map(res => {
                 if (res.status == 200) {
                     // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
@@ -192,7 +193,8 @@ export class HolidayService {
      * @memberof HolidayService
      */
     deleteCalendar(user: any, calendar_guid: string) {
-        return this.userinfoDbService.findEmployeeAssignCalendar(calendar_guid).pipe(
+        const filters = ['(CALENDAR_GUID=' + calendar_guid + ')'];
+        return this.userinfoDbService.findEmployeeAssign(filters).pipe(
             mergeMap(res => {
                 if (res.data.resource.length > 0) {
                     // will return user attach to this calendar profile

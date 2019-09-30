@@ -83,13 +83,11 @@ export class MasterSetupService {
   /**
    * Master setup update function
    *
-   * @param {MasterSetupDTO} data
-   * @param {string} item
-   * @param {*} user
-   * @returns
+   * @param {[MasterSetupDTO, string, any]} [data, item, user]
+   * @returns {Observable<any>}
    * @memberof MasterSetupService
    */
-  public updateMasterItem(data: MasterSetupDTO, item: string, user: any): Observable<any> {
+  public updateMasterItem([data, item, user]: [MasterSetupDTO, string, any]): Observable<any> {
     let tenantId = user.TENANT_GUID;
     let result = null;
 

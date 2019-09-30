@@ -3,7 +3,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { WorkingHoursDbService } from './db/working-hours.db.service';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { WorkingHoursListDTO } from './dto/working-hours-list.dto';
 import { WorkingHoursDTO } from './dto/working-hours.dto';
 import { v1 } from 'uuid';
@@ -13,6 +13,7 @@ import { UpdateWorkingHoursDTO } from './dto/update-working-hours.dto';
 import { UpdateWorkingHoursModel } from './model/update-working-hours.model';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { UpdateUserWorkingHoursModel } from './model/update-userworkinghours.model';
+import { of } from 'rxjs';
 
 /**
  * Service for working hours
@@ -52,6 +53,19 @@ export class WorkingHoursService {
         }
       })
       )
+  }
+
+  public getEmployeeWorkingHoursAttach(workingHoursId: string) {
+    // const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
+    const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
+    return this.userinfoDbService.findEmployeeAssign(filters)
+      .pipe(map(res => {
+        if (res.status == 200) {
+          // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+          // return jsonHoliday;
+          return res.data.resource;
+        }
+      }))
   }
 
   /**
@@ -151,6 +165,22 @@ export class WorkingHoursService {
     return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
   }
 
+  deleteWorkingHours(user: any, working_hours_guid: string) {
+    const filters = ['(WORKING_HOURS_GUID=' + working_hours_guid + ')'];
+    return this.userinfoDbService.findEmployeeAssign(filters).pipe(
+      mergeMap(res => {
+        if (res.data.resource.length > 0) {
+          // will return user attach to this working hours profile
+          return of(res);
+        } else {
+          // will show deleted working hours
+          let deletedData = this.deleteProcessWorkingHours(user, working_hours_guid);
+          return deletedData;
+        }
+      }),
+    );
+  }
+
   /**
    * Delete working hours profile
    *
@@ -159,7 +189,7 @@ export class WorkingHoursService {
    * @returns
    * @memberof WorkingHoursService
    */
-  deleteWorkingHours(user: any, workingHoursId: string) {
+  deleteProcessWorkingHours(user: any, workingHoursId: string) {
     const resource = new Resource(new Array);
     const data = new UpdateWorkingHoursModel();
 

@@ -136,21 +136,14 @@ export class YearEndClosingService {
           // return res;
           // return { resignUser, disabledUser, activeUser, disableResult, leavetypePolicy, generalPolicy };
           // return generalPolicy;
-          return forkJoin(of(resignUser), of(disabledUser), of(activeUser), leavetypePolicy, generalPolicy);
+          // return forkJoin(of(resignUser), of(disabledUser), of(activeUser), leavetypePolicy, generalPolicy);
+          return forkJoin(of(resignUser), of(disabledUser), of(activeUser));
         })
       )
 
     return result;
   }
 
-  // public trimData(dataArr: string[]) {
-  //   const keyDelete = ["TENANT_GUID", "TENANT_COMPANY_GUID", "USER_INFO_GUID", "DESIGNATION", "DEPARTMENT", "DIVISION", "BRANCH", "ATTACHMENT_ID", "STATUS_ACTIVATION", "RESIGNATION_DATE", "ACTIVATION_FLAG", "JOIN_DATE"]
-  //   dataArr.forEach(userResign => {
-  //     keyDelete.forEach(keyTemp => {
-  //       delete userResign[keyTemp];
-  //     });
-  //   });
-  //   return dataArr;
-  // }
+
 
 }

@@ -85,6 +85,29 @@ export class EmailNodemailerService {
         return "success";
     }
 
+    public mailProcessForgotPassword(email: string) {
+        smtpTransport = this.createSMTP();
+
+        var replacements = {
+            email: email,
+            code: "whereami." + email,
+            name: email
+        };
+        var from = 'wantan.wonderland.2018@gmail.com';
+        var emailTosend = email;
+        var subject = 'Forgot password eLeave';
+
+        let data = {};
+        data['replacement'] = replacements;
+        data['from'] = from;
+        data['emailTosend'] = emailTosend;
+        data['subject'] = subject;
+
+        let dataRes = this.readHTMLFile('src/common/email-templates/forgotpassword.html', this.callbackReadHTML(data));
+
+        return "success";
+    }
+
     /**
      * Setup and send email
      *
@@ -98,7 +121,7 @@ export class EmailNodemailerService {
         //     code: "#" + name,
         //     name: name
         // };
-        var htmlToSend = template(data.replacements);
+        var htmlToSend = template(data.replacement);
         var mailOptions = {
             from: data.from, // 'wantan.wonderland.2018@gmail.com',
             to: data.emailTosend, // email,

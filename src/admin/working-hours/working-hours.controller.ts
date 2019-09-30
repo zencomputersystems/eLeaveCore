@@ -6,6 +6,8 @@ import { WorkingHoursService } from './working-hours.service';
 import { WorkingHoursDTO } from './dto/working-hours.dto';
 import { UpdateWorkingHoursDTO } from './dto/update-working-hours.dto';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
+import { ResourceGuard } from 'src/guard/resource.guard';
+import { Roles } from 'src/decorator/resource.decorator';
 
 /**
  * Controller for working hours
@@ -84,6 +86,16 @@ export class WorkingHoursController {
   deleteWorkingHoursProfile(@Param('id') id, @Req() req, @Res() res) {
     let idTemp = this.commonFunctionService.findIdParam(req, res, id);
     this.commonFunctionService.runUpdateService(this.workingHoursService.deleteWorkingHours(req.user, idTemp), res);
+  }
+
+  @UseGuards(ResourceGuard)
+  @Get('working-hours-profile/users/:id')
+  @ApiOperation({ title: 'Get employee list by working hours profile' })
+  @ApiImplicitQuery({ name: 'id', description: 'Filter by WORKING_HOURS_GUID', required: true })
+  @Roles('ViewProfile', 'ProfileAdmin')
+  findEmployeeWorkingHoursProfile(@Req() req, @Res() res, @Param('id') id) {
+    let dataId = this.commonFunctionService.findIdParam(req, res, id);
+    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getEmployeeWorkingHoursAttach(dataId), res);
   }
 
   /**

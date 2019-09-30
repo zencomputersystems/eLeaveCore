@@ -128,7 +128,7 @@ export class DashboardController {
      * @memberof DashboardController
      */
     @Get('/employee/long-leave')
-    @ApiOperation({ title: 'Get upcoming long leave' })
+    @ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
     getLongLeave(@Req() req, @Res() res) {
         this.dashboardService.getLongLeave(req.user.USER_GUID, req.user.TENANT_GUID).subscribe(
             data => {

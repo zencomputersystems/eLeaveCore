@@ -56,8 +56,12 @@ export class YearEndClosingController {
     // console.log(new Date(year).getFullYear() + 1);
     this.yearEndClosingService.yearEndProcess(req.user, new Date(year).getFullYear() + 1).subscribe(data => {
       // console.log(data);
+      let dataRes = {};
+      dataRes['resignUser'] = this.trimData(data[0]);
+      dataRes['disabledUser'] = this.trimData(data[1]);
+      dataRes['activeUser'] = this.trimData(data[2]);
 
-      res.send(data);
+      res.send(dataRes);
     }, err => {
       res.send(err);
     })
@@ -67,5 +71,14 @@ export class YearEndClosingController {
   }
 
 
+  public trimData(dataArr: string[]) {
+    const keyDelete = ["TENANT_GUID", "TENANT_COMPANY_GUID", "USER_INFO_GUID", "DESIGNATION", "DEPARTMENT", "DIVISION", "BRANCH", "ATTACHMENT_ID", "STATUS_ACTIVATION", "RESIGNATION_DATE", "ACTIVATION_FLAG", "JOIN_DATE"]
+    dataArr.forEach(userData => {
+      keyDelete.forEach(keyTemp => {
+        delete userData[keyTemp];
+      });
+    });
+    return dataArr;
+  }
 
 }

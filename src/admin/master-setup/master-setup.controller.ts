@@ -73,7 +73,7 @@ export class MasterSetupController {
     let { dataId, item } = this.verifyItem(req, get_item);
 
     if (item.includes(dataId)) {
-      this.masterSetupService.updateMasterItem(data, dataId, req.user).subscribe(
+      this.masterSetupService.updateMasterItem([data, dataId, req.user]).subscribe(
         data => { res.send(data); },
         err => { res.status(400); res.send('item not found'); });
     } else {

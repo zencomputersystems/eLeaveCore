@@ -150,7 +150,7 @@ export class UserprofileController {
                 })
             ).subscribe(data => {
                 // console.log(data);
-                if (data) { this.getEntitlementProcess(data, res, user); }
+                if (data) { this.getEntitlementProcess([data, res, user]); }
                 else { res.send(new NotFoundException(`Data user guid not found`)); }
             }, err => {
                 res.status(500);
@@ -179,7 +179,7 @@ export class UserprofileController {
 
         this.userprofileService.getDetail(filters)
             .subscribe(
-                data => { this.getEntitlementProcess(data, res, user); },
+                data => { this.getEntitlementProcess([data, res, user]); },
                 err => {
 
                     res.status(500);
@@ -198,7 +198,7 @@ export class UserprofileController {
      * @param {*} user
      * @memberof UserprofileController
      */
-    public getEntitlementProcess(data1, res, user) {
+    public getEntitlementProcess([data1, res, user]) {
         // console.log(data1);
 
         this.userprofileService.getEntitlementDetail(user.TENANT_GUID, data1.userId).subscribe(

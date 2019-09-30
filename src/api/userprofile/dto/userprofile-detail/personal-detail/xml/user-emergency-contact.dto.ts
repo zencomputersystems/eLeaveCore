@@ -29,4 +29,15 @@ export class UserEmergencyContactDTO {
     @IsNotEmpty()
     @IsString()
     contactNumber: string;
+
+    /**
+     * Data user emergency contact - relationship
+     *
+     * @type {string}
+     * @memberof UserEmergencyContactDTO
+     */
+    @ApiModelProperty({ description: 'Emergency contact relationship', example: 'Father' })
+    @IsNotEmpty()
+    @IsString()
+    contactRelationship: string;
 }

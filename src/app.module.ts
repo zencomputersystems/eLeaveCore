@@ -23,6 +23,7 @@ import { YearEndClosingModule } from './admin/year-end-closing/year-end-closing.
 import { MasterSetupModule } from './admin/master-setup/master-setup.module';
 import { WorkingHoursModule } from './admin/working-hours/working-hours.module';
 import { AnnouncementModule } from './admin/announcement/announcement.module';
+import { ForgotPasswordModule } from './api/forgot-password/forgot-password.module';
 
 
 @Module({
@@ -67,7 +68,8 @@ import { AnnouncementModule } from './admin/announcement/announcement.module';
     YearEndClosingModule,
     MasterSetupModule,
     WorkingHoursModule,
-    AnnouncementModule
+    AnnouncementModule,
+    ForgotPasswordModule
   ],
   controllers: [AppController],
   providers: [

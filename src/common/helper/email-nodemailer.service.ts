@@ -105,7 +105,7 @@ export class EmailNodemailerService {
 
         let dataRes = this.readHTMLFile('src/common/email-templates/forgotpassword.html', this.callbackReadHTML(data));
 
-        return "success";
+        return { "status": "email send" };
     }
 
     /**

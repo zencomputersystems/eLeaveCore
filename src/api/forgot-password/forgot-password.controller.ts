@@ -5,8 +5,7 @@ import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { ForgotPasswordService } from './forgot-password.service';
 
 @Controller('api/forgot-password')
-@UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
+
 export class ForgotPasswordController {
   constructor(
     private readonly forgotPasswordService: ForgotPasswordService

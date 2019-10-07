@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { RoleDbService } from './role.db.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 describe('RoleDbService', () => {
   let service: RoleDbService;
   let httpService: HttpService;
@@ -15,7 +16,8 @@ describe('RoleDbService', () => {
       providers: [
         RoleDbService,
         { provide: HttpService, useValue: httpServiceStub },
-        { provide: QueryParserService, useValue: queryParserServiceStub }
+        { provide: QueryParserService, useValue: queryParserServiceStub },
+        CommonFunctionService
       ]
     }).compile();
     service = await module.get<RoleDbService>(RoleDbService);

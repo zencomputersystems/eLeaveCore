@@ -4,13 +4,32 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { ForgotPasswordService } from './forgot-password.service';
 
+/**
+ * Controller forgot password
+ *
+ * @export
+ * @class ForgotPasswordController
+ */
 @Controller('api/forgot-password')
 
 export class ForgotPasswordController {
+  /**
+   * Forgot pasword service
+   * @param {ForgotPasswordService} forgotPasswordService
+   * @memberof ForgotPasswordController
+   */
   constructor(
     private readonly forgotPasswordService: ForgotPasswordService
   ) { }
 
+  /**
+   * Send email forgot password
+   *
+   * @param {*} email
+   * @param {*} req
+   * @param {*} res
+   * @memberof ForgotPasswordController
+   */
   @Post(':email')
   @ApiOperation({ title: 'Send email forgot password' })
   @ApiImplicitQuery({ name: 'email', description: 'Email user', required: true })

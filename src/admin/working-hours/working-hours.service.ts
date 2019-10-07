@@ -25,10 +25,10 @@ import { of } from 'rxjs';
 export class WorkingHoursService {
   /**
    *Creates an instance of WorkingHoursService.
-   * @param {XMLParserService} xmlParserService
-   * @param {WorkingHoursDbService} workingHoursDbService
-   * @param {AssignerDataService} assignerDataService
-   * @param {UserInfoDbService} userinfoDbService
+   * @param {XMLParserService} xmlParserService xml parser service
+   * @param {WorkingHoursDbService} workingHoursDbService working hours service
+   * @param {AssignerDataService} assignerDataService assigner data service
+   * @param {UserInfoDbService} userinfoDbService user info db service
    * @memberof WorkingHoursService
    */
   constructor(
@@ -55,6 +55,13 @@ export class WorkingHoursService {
       )
   }
 
+  /**
+   * Get employee working hours attach
+   *
+   * @param {string} workingHoursId
+   * @returns
+   * @memberof WorkingHoursService
+   */
   public getEmployeeWorkingHoursAttach(workingHoursId: string) {
     // const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
     const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
@@ -165,6 +172,14 @@ export class WorkingHoursService {
     return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
   }
 
+  /**
+   * Function delete working hours
+   *
+   * @param {*} user
+   * @param {string} working_hours_guid
+   * @returns
+   * @memberof WorkingHoursService
+   */
   deleteWorkingHours(user: any, working_hours_guid: string) {
     const filters = ['(WORKING_HOURS_GUID=' + working_hours_guid + ')'];
     return this.userinfoDbService.findEmployeeAssign(filters).pipe(

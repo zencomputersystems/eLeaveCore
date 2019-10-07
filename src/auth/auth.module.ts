@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpService, HttpModule } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
@@ -8,6 +8,7 @@ import { UserService } from 'src/admin/user/user.service';
 import { UserModule } from 'src/admin/user/user.module';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { ActiveDirectoryStrategy } from './passport/ad.strategy';
+import { DreamFactory } from 'src/config/dreamfactory';
 
 /**
  * Module for auth
@@ -28,6 +29,7 @@ import { ActiveDirectoryStrategy } from './passport/ad.strategy';
     ],
     imports: [
         PassportModule.register({ session: false }),
+        HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
         UserModule
     ]
 })

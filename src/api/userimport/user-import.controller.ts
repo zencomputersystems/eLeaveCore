@@ -1,9 +1,10 @@
-import { Controller, UseGuards, Post, UseInterceptors, FileInterceptor, UploadedFile, Req, Res, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, UseInterceptors, UploadedFile, Req, Res, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import parse = require('csv-parse/lib/sync');
 import { UserImportService } from './user-import.service';
 import { UserCsvDto } from './dto/csv/user-csv.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 /**
  * Controller for user import

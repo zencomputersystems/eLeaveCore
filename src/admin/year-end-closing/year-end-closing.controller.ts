@@ -71,6 +71,13 @@ export class YearEndClosingController {
   }
 
 
+  /**
+   * Get only wanted data, trim some keys
+   *
+   * @param {string[]} dataArr
+   * @returns
+   * @memberof YearEndClosingController
+   */
   public trimData(dataArr: string[]) {
     const keyDelete = ["TENANT_GUID", "TENANT_COMPANY_GUID", "USER_INFO_GUID", "DESIGNATION", "DEPARTMENT", "DIVISION", "BRANCH", "ATTACHMENT_ID", "STATUS_ACTIVATION", "RESIGNATION_DATE", "ACTIVATION_FLAG", "JOIN_DATE"]
     dataArr.forEach(userData => {

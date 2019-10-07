@@ -14,7 +14,7 @@ import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.servi
 import { UserInfoService } from '../user-info/user-info.service';
 
 @Module({
-	modules: [
+	imports: [
 		AuthModule,
 		PassportModule.register({ session: false }),
 		HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })

@@ -24,6 +24,7 @@ import { MasterSetupModule } from './admin/master-setup/master-setup.module';
 import { WorkingHoursModule } from './admin/working-hours/working-hours.module';
 import { AnnouncementModule } from './admin/announcement/announcement.module';
 import { ForgotPasswordModule } from './api/forgot-password/forgot-password.module';
+import { UploadFileModule } from './api/upload-file/upload-file.module';
 
 
 @Module({
@@ -69,7 +70,8 @@ import { ForgotPasswordModule } from './api/forgot-password/forgot-password.modu
     MasterSetupModule,
     WorkingHoursModule,
     AnnouncementModule,
-    ForgotPasswordModule
+    ForgotPasswordModule,
+    UploadFileModule
   ],
   controllers: [AppController],
   providers: [

@@ -96,7 +96,7 @@ export class YearEndClosingService {
 
           resultEntitlement.forEach(x => x.subscribe(
             data => {
-              // this.processPolicy(leavetypePolicy, x, year, user); //find all leave entitlement
+              this.assignLeaveEntitlementService.processPolicy([leavetypePolicy, x, year, user]); //find all leave entitlement
               return 'Success assign entitlement';
             }, err => {
               return 'Failed assign entitlement';

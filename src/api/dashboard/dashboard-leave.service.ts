@@ -74,6 +74,13 @@ export class DashboardLeaveService {
     return this.userLeaveEntitlementDbService.findByFilterV2(field, filter);
   }
 
+  /**
+   * Get my leavetype
+   *
+   * @param {*} [leavecode, type, userguid]
+   * @returns
+   * @memberof DashboardLeaveService
+   */
   public getMyLeave([leavecode, type, userguid]) {
     let results: Observable<any>;
     let method; // First array is for simple, second array for detailed
@@ -130,16 +137,37 @@ export class DashboardLeaveService {
 
     return results;
   }
+  /**
+   * Check process detail or simple data
+   *
+   * @param {*} [type, method]
+   * @returns
+   * @memberof DashboardLeaveService
+   */
   public doProcess([type, method]) {
     let results = type == 'simple' ? method[0] : method[1];
     return results;
   }
 
+  /**
+   * Get simple data process
+   *
+   * @param {*} [leaveguid, userguid]
+   * @returns
+   * @memberof DashboardLeaveService
+   */
   public getSimple([leaveguid, userguid]) {
     const filter = ['(USER_GUID=' + userguid + ')', '(YEAR=' + new Date().getFullYear() + ')', '(LEAVE_TYPE_GUID=' + leaveguid + ')'];
     return this.userLeaveEntitlementSummaryDbService.findByFilterV2([], filter);
   }
 
+  /**
+   * Get detailed data process
+   *
+   * @param {*} [leavecode, userguid]
+   * @returns
+   * @memberof DashboardLeaveService
+   */
   public getDetailed([leavecode, userguid]) {
     return of('Data details not ready for ' + leavecode + ' ' + userguid);
   }

@@ -1,11 +1,11 @@
-import { ReflectMetadata } from '@nestjs/common';
+import { SetMetadata } from '@nestjs/common';
 import { ResourceDecoratorModel } from './resource.decorator.model';
 
 /**
  * Resources
  */
-export const Resources = (resources: ResourceDecoratorModel) => ReflectMetadata('resources', resources);
+export const Resources = (resources: ResourceDecoratorModel) => SetMetadata('resources', resources);
 /**
  * Roles
  */
-export const Roles = (...roles: string[]) => ReflectMetadata('roles', roles);
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles);

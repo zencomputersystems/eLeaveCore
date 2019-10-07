@@ -20,7 +20,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
     QueryParserService,
     XMLParserService
   ],
-  modules: [
+  imports: [
     AuthModule,
     PassportModule.register({ session: false }),
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),

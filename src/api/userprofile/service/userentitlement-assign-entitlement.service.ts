@@ -99,6 +99,14 @@ export class UserEntitlementAssignEntitlement {
 
   }
 
+  /**
+   * Assign replacement leave
+   *
+   * @param {*} user
+   * @param {CreateReplacementLeaveDTO} data
+   * @returns
+   * @memberof UserEntitlementAssignEntitlement
+   */
   public assignReplacementLeave(user: any, data: CreateReplacementLeaveDTO) {
     const { length } = data.userId;
     const resource = new Resource(new Array());

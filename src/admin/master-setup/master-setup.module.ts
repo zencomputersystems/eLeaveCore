@@ -12,7 +12,7 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 @Module({
   controllers: [MasterSetupController],
-  modules: [
+  imports: [
     AuthModule,
     PassportModule.register({ session: false }),
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })

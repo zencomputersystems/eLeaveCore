@@ -18,7 +18,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
     UserService,
     QueryParserService
   ],
-  modules: [
+  imports: [
     PassportModule.register({ session: false }),
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
   ]

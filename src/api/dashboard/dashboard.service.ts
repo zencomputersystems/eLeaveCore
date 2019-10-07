@@ -17,11 +17,13 @@ import { XMLParserService } from '../../common/helper/xml-parser.service';
  */
 @Injectable()
 export class DashboardService {
+
   /**
    *Creates an instance of DashboardService.
-   * @param {UserCalendarDbService} userCalendarDbService
-   * @param {HolidayDbService} holidayDbService
-   * @param {XMLParserService} xmlParserService
+   * @param {CalendarProfileDbService} calendarProfileDbService  calendar profile db service
+   * @param {UserInfoDbService} userInfoDbService  user info db service
+   * @param {LeaveTransactionDbService} leaveTransactionDbService leave transaction db service
+   * @param {XMLParserService} xmlParserService xml parser service
    * @memberof DashboardService
    */
   constructor(

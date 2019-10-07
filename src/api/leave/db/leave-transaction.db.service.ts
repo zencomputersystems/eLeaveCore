@@ -54,6 +54,13 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 		return this.httpService.get(url);
 	}
 
+	/**
+	 * Find all pending leave
+	 *
+	 * @param {string} userGuid
+	 * @returns
+	 * @memberof LeaveTransactionDbService
+	 */
 	public findAllPendingLeave(userGuid: string) {
 		let dateLastMonth = moment().subtract(1, 'months').format('YYYY-MM-DD');
 		const fields = [];

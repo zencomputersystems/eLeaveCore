@@ -6,13 +6,27 @@ import { UserService } from 'src/admin/user/user.service';
 import { GeneralLeavePolicyService } from 'src/admin/general-leave-policy/general-leave-policy.service';
 import { AssignCarryForwardService } from './assign-carry-forward.service';
 
+/**
+ * Service disable resign user
+ *
+ * @export
+ * @class DisableResignUser
+ */
 @Injectable()
 export class DisableResignUser {
+  /**
+   *Creates an instance of DisableResignUser.
+   * @param {UserService} userService user service
+   * @param {GeneralLeavePolicyService} generalLeavePolicyService general leave policy service
+   * @param {AssignCarryForwardService} assignCarryForwardService assign carry forward service
+   * @memberof DisableResignUser
+   */
   constructor(
     private readonly userService: UserService,
     public generalLeavePolicyService: GeneralLeavePolicyService,
     public assignCarryForwardService: AssignCarryForwardService
   ) { }
+
   /**
    * Check if user has resignation date - we disable them
    *

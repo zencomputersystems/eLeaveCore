@@ -88,6 +88,14 @@ export class WorkingHoursController {
     this.commonFunctionService.runUpdateService(this.workingHoursService.deleteWorkingHours(req.user, idTemp), res);
   }
 
+  /**
+   * Find employee workin ghours profile
+   *
+   * @param {*} req
+   * @param {*} res
+   * @param {*} id
+   * @memberof WorkingHoursController
+   */
   @UseGuards(ResourceGuard)
   @Get('working-hours-profile/users/:id')
   @ApiOperation({ title: 'Get employee list by working hours profile' })

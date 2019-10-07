@@ -85,6 +85,13 @@ export class EmailNodemailerService {
         return "success";
     }
 
+    /**
+     * Mail process forgot password
+     *
+     * @param {string} email
+     * @returns
+     * @memberof EmailNodemailerService
+     */
     public mailProcessForgotPassword(email: string) {
         smtpTransport = this.createSMTP();
 

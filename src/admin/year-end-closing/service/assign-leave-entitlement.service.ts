@@ -6,24 +6,34 @@ import { Resource } from 'src/common/model/resource.model';
 import { map } from 'rxjs/operators';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 
+/**
+ * Service assign leave entitlement
+ *
+ * @export
+ * @class AssignLeaveEntitlementService
+ */
 @Injectable()
 export class AssignLeaveEntitlementService {
 
+  /**
+   *Creates an instance of AssignLeaveEntitlementService.
+   * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService leavetype entitlement db service 
+   * @param {AssignLeaveFunctionService} assignLeaveFunctionService assign leave function service
+   * @memberof AssignLeaveEntitlementService
+   */
   constructor(
     public leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
     private readonly assignLeaveFunctionService: AssignLeaveFunctionService
   ) { }
+
   /**
    * Process policy for new year
    *
-   * @param {Observable<any>} leavetypePolicy
-   * @param {Observable<any>} userEntitlement
-   * @param {number} year
-   * @param {*} user
+   * @param {[Observable<any>, Observable<any>, number, any]} [leavetypePolicy, userEntitlement, year, user]
    * @returns
-   * @memberof YearEndClosingService
+   * @memberof AssignLeaveEntitlementService
    */
-  public processPolicy(leavetypePolicy: Observable<any>, userEntitlement: Observable<any>, year: number, user: any) {
+  public processPolicy([leavetypePolicy, userEntitlement, year, user]: [Observable<any>, Observable<any>, number, any]) {
     let joinObserve = forkJoin(leavetypePolicy, userEntitlement);
     let assignETSuccess = [];
     let assignETFailed = [];

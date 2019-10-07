@@ -9,25 +9,35 @@ import { LeaveTypeEntitlementModel } from '../../leavetype-entitlement/model/lea
 import { AssignLeaveFunctionService } from './assign-leave-function.service';
 import { map } from 'rxjs/operators';
 
+/**
+ * Service assign carry forward
+ *
+ * @export
+ * @class AssignCarryForwardService
+ */
 @Injectable()
 export class AssignCarryForwardService {
 
+  /**
+   *Creates an instance of AssignCarryForwardService.
+   * @param {XMLParserService} xmlParserService xml parser service
+   * @param {UserLeaveEntitlementSummaryDbService} userLeaveEntitlementSummaryDbService user leave entitlement summary db service
+   * @param {AssignLeaveFunctionService} assignLeaveFunctionService  assign leave function service
+   * @memberof AssignCarryForwardService
+   */
   constructor(
     private readonly xmlParserService: XMLParserService,
     private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
     private readonly assignLeaveFunctionService: AssignLeaveFunctionService
   ) { }
 
+
   /**
    * Check carry forward if any
    *
-   * @param {ViewUserProfileListModel[]} activeUser
-   * @param {Observable<any[]>} leavetypePolicy
-   * @param {Observable<any>} generalPolicy
-   * @param {*} user
-   * @param {number} year
+   * @param {[ViewUserProfileListModel[], Observable<any[]>, Observable<any[]>, any, number]} [activeUser, leavetypePolicy, generalPolicy, user, year]
    * @returns
-   * @memberof YearEndClosingService
+   * @memberof AssignCarryForwardService
    */
   public checkCarryForward([activeUser, leavetypePolicy, generalPolicy, user, year]: [ViewUserProfileListModel[], Observable<any[]>, Observable<any[]>, any, number]) {
 
@@ -72,6 +82,12 @@ export class AssignCarryForwardService {
     return 'data';
   }
 
+  /**
+   * Process assign
+   *
+   * @param {*} [entitlement, leavetypePolicyData, year, resource, user, dateForfeitCF]
+   * @memberof AssignCarryForwardService
+   */
   public processAssign([entitlement, leavetypePolicyData, year, resource, user, dateForfeitCF]) {
     entitlement.forEach(element => {
       let getLeavePolicy: LeaveTypeEntitlementModel = leavetypePolicyData.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);

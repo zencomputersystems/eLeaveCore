@@ -55,7 +55,7 @@ import { AssignCarryForwardService } from './service/assign-carry-forward.servic
     AssignLeaveEntitlementService,
     AssignCarryForwardService
   ],
-  modules: [
+  imports: [
     AuthModule,
     PassportModule.register({ session: false }),
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),

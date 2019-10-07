@@ -29,7 +29,7 @@ import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-app
  * @class LeaveModule
  */
 @Module({
-  modules: [
+  imports: [
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
   ],
   controllers: [ApplyController, ApprovedController],

@@ -25,6 +25,7 @@ export class RoleDbService extends BaseDBService {
      *Creates an instance of RoleDbService.
      * @param {HttpService} httpService Service for http
      * @param {QueryParserService} queryService Service for query
+     * @param {CommonFunctionService} commonFunctionService Common function service
      * @memberof RoleDbService
      */
     constructor(

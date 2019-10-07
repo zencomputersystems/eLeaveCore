@@ -231,6 +231,14 @@ export class DashboardController {
 		);
 	}
 
+	/**
+	 * Get my leave
+	 *
+	 * @param {*} param
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof DashboardController
+	 */
 	@Get('/employee/:leavecode/:data')
 	@ApiOperation({ title: 'Get my leave' })
 	@ApiImplicitQuery({
@@ -264,6 +272,13 @@ export class DashboardController {
 
 	}
 
+	/**
+	 * Verify my leave item
+	 *
+	 * @param {*} [req, get_item, param]
+	 * @returns
+	 * @memberof DashboardController
+	 */
 	public verifyItem([req, get_item, param]) {
 		// list item to find
 		let item;

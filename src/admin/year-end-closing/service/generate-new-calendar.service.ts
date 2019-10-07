@@ -10,8 +10,22 @@ import { Resource } from 'src/common/model/resource.model';
 import { CreateHolidayDetailsModel } from 'src/admin/holiday/model/create-holiday-details.model';
 import { v1 } from 'uuid';
 
+/**
+ * Service generate new calendar
+ *
+ * @export
+ * @class GenerateNewCalendarService
+ */
 @Injectable()
 export class GenerateNewCalendarService {
+  /**
+   *Creates an instance of GenerateNewCalendarService.
+   * @param {XMLParserService} xmlParserService xml parser service
+   * @param {HolidayDbService} holidayDbService holiday db service
+   * @param {CalendarProfileDbService} calendarProfileDbService calendar profile db service
+   * @param {HttpService} http http service
+   * @memberof GenerateNewCalendarService
+   */
   constructor(
     private readonly xmlParserService: XMLParserService,
     private readonly holidayDbService: HolidayDbService,
@@ -52,6 +66,13 @@ export class GenerateNewCalendarService {
 
   }
 
+  /**
+   * Create new calendar
+   *
+   * @param {[Resource, string, number, CreateCalendarDTO, any]} [resource, calendar_guid, year, dataNewYear, user]
+   * @returns
+   * @memberof GenerateNewCalendarService
+   */
   public createNewYearCalendar([resource, calendar_guid, year, dataNewYear, user]: [Resource, string, number, CreateCalendarDTO, any]) {
 
     const data: CreateHolidayDetailsModel = new CreateHolidayDetailsModel;
@@ -81,6 +102,15 @@ export class GenerateNewCalendarService {
 
   }
 
+  /**
+   * Check calendar exist
+   *
+   * @param {*} element
+   * @param {number} year
+   * @param {*} user
+   * @param {*} yearBase
+   * @memberof GenerateNewCalendarService
+   */
   public checkCalendarExist(element, year: number, user, yearBase) {
 
     // console.log(element.CALENDAR_GUID + ' - ' + year);
@@ -99,6 +129,15 @@ export class GenerateNewCalendarService {
 
   }
 
+  /**
+   * Process create calendar
+   *
+   * @param {*} element
+   * @param {*} year
+   * @param {*} user
+   * @param {*} yearBase
+   * @memberof GenerateNewCalendarService
+   */
   public createCalendarProcess(element, year, user, yearBase) {
     this.calendarProfileDbService.findAll(element.CALENDAR_GUID, yearBase).pipe(
       mergeMap(res => {

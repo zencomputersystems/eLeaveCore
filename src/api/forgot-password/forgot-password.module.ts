@@ -6,7 +6,7 @@ import { HttpModule, Module } from '@nestjs/common';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 @Module({
-  modules: [
+  imports: [
     AuthModule,
     PassportModule.register({ session: false }),
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })

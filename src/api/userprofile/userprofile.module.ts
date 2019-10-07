@@ -60,7 +60,7 @@ import { UserProfileStatusService } from './service/userprofile-status.service';
     UserService,
     UserProfileStatusService
   ],
-  modules: [
+  imports: [
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
   ],
   controllers: [

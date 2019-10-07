@@ -11,9 +11,23 @@ import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from '../../leavetype-entitlement/model/leavetype_entitlement.model';
 
 type userEntitlement = [Resource, LeaveTypeEntitlementModel, string, string, number, any, string, number, Date];
+/**
+ * Service assign leave function
+ *
+ * @export
+ * @class AssignLeaveFunctionService
+ */
 @Injectable()
 export class AssignLeaveFunctionService {
 
+  /**
+   *Creates an instance of AssignLeaveFunctionService.
+   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService user leave entitlement db service
+   * @param {ServiceYearCalc} serviceYearCalcService service year calculation
+   * @param {XMLParserService} xmlParserService xml parser servicxe
+   * @param {LeaveEntitlementBaseService} leaveEntitlementBaseService leave entitlement db service
+   * @memberof AssignLeaveFunctionService
+   */
   constructor(
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly serviceYearCalcService: ServiceYearCalc,

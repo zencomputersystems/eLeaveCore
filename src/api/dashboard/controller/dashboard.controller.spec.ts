@@ -2,9 +2,9 @@ import { Test } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { DashboardController } from './dashboard.controller';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
-import { DashboardService } from './dashboard.service';
-import { DashboardLeaveService } from './dashboard-leave.service';
+import { XMLParserService } from '../../../common/helper/xml-parser.service';
+import { DashboardService } from '../service/dashboard.service';
+import { DashboardLeaveService } from '../service/dashboard-leave.service';
 describe('DashboardController', () => {
   let pipe: DashboardController;
   beforeEach(async () => {

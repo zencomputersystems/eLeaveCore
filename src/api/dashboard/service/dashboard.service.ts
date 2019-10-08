@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Observable, of, forkJoin } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
-import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
+import { CalendarProfileDbService } from '../../../admin/holiday/db/calendar-profile-db.service';
 import moment = require('moment');
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
-import { BirthdayDataDTO } from './dto/birthday-data.dto';
-import { LeaveTransactionDbService } from '../leave/db/leave-transaction.db.service';
-import { LongLeaveDTO } from './dto/long-leave.dto';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
+import { BirthdayDataDTO } from '../dto/birthday-data.dto';
+import { LeaveTransactionDbService } from '../../leave/db/leave-transaction.db.service';
+import { LongLeaveDTO } from '../dto/long-leave.dto';
+import { XMLParserService } from '../../../common/helper/xml-parser.service';
 
 /**
  * Service for dashboard

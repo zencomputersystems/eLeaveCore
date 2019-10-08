@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UserLeaveEntitlementSummaryDbService } from '../userprofile/db/user-leave-summary.db.service';
-import { UserLeaveEntitlementDbService } from '../userprofile/db/user-leave-entitlement.db.service';
+import { UserLeaveEntitlementSummaryDbService } from '../../userprofile/db/user-leave-summary.db.service';
+import { UserLeaveEntitlementDbService } from '../../userprofile/db/user-leave-entitlement.db.service';
 import { of, Observable } from 'rxjs';
 
 /**
@@ -86,38 +86,38 @@ export class DashboardLeaveService {
     let method; // First array is for simple, second array for detailed
     let leavetypeguid;
 
-    if (leavecode == 'ANL') {
-      // Annual Leave (ANL)
+    if (leavecode == 'AL') {
+      // Annual Leave (AL)
       leavetypeguid = '238fc8fa-6e70-fa83-7c9b-17f77108b691';
       method = [this.getSimple([leavetypeguid, userguid]), this.getDetailed([leavecode, userguid])];
     }
-    if (leavecode == 'BDL') {
-      // Birthday Leave (BDL)
+    if (leavecode == 'BL') {
+      // Birthday Leave (BL)
       leavetypeguid = '6c4df920-ad02-11e9-9fd9-4bbcd4683180';
       method = [this.getSimple([leavetypeguid, userguid]), this.getDetailed([leavecode, userguid])];
     }
-    if (leavecode == 'CPL') {
-      // Compassionate Leave (CPL)
+    if (leavecode == 'CL') {
+      // Compassionate Leave (CL)
       leavetypeguid = '79748eee-a339-f6c7-b7e2-1d2234fa37ba';
       method = [this.getSimple([leavetypeguid, userguid]), this.getDetailed([leavecode, userguid])];
     }
-    if (leavecode == 'HPL') {
-      // Hospitalization Leave (HPL)
+    if (leavecode == 'HL') {
+      // Hospitalization Leave (HL)
       leavetypeguid = '85747738-66bf-8cb1-768a-d73319c61759';
       method = [this.getSimple([leavetypeguid, userguid]), this.getDetailed([leavecode, userguid])];
     }
-    if (leavecode == 'MDL') {
-      // Medical Leave (MDL)
+    if (leavecode == 'ML') {
+      // Medical Leave (ML)
       leavetypeguid = '952f7a50-3e60-11e9-9120-e18c2da081f3';
       method = [this.getSimple([leavetypeguid, userguid]), this.getDetailed([leavecode, userguid])];
     }
-    if (leavecode == 'PTL') {
-      // Paternity Leave (PTL)
+    if (leavecode == 'PL') {
+      // Paternity Leave (PL)
       leavetypeguid = 'a534ece0-a6a3-11e9-bf53-01cecf40aca5';
       method = [this.getSimple([leavetypeguid, userguid]), this.getDetailed([leavecode, userguid])];
     }
-    if (leavecode == 'RPL') {
-      // Replacement Leave (RPL)
+    if (leavecode == 'RL') {
+      // Replacement Leave (RL)
       leavetypeguid = 'aa84b3c0-7849-11e9-a449-bd6134fe73e4';
       method = [this.getSimple([leavetypeguid, userguid]), this.getReplacementLeave(userguid)];
     }
@@ -169,7 +169,7 @@ export class DashboardLeaveService {
    * @memberof DashboardLeaveService
    */
   public getDetailed([leavecode, userguid]) {
-    return of('Data details not ready for ' + leavecode + ' ' + userguid);
+    return of('No data details for ' + leavecode + ' ' + userguid);
   }
 
 }

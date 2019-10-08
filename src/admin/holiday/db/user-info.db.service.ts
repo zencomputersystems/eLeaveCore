@@ -5,7 +5,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { UserInfoModel } from '../../user-info/model/user-info.model';
 import { DisableUserDTO } from '../../user/dto/disable-user.dto';
 import { of, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { UserService } from 'src/admin/user/user.service';
 import { UserModel } from 'src/admin/user/model/user.model';
 
@@ -63,6 +63,45 @@ export class UserInfoDbService extends BaseDBService {
         resource.resource.push(data);
 
         return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'FULLNAME']);
+    }
+
+    /**
+     * Find employee attach
+     *
+     * @param {string[]} filters
+     * @returns {Observable<any>}
+     * @memberof UserInfoDbService
+     */
+    public findEmployeeAttach(filters: string[]): Observable<any> {
+        return this.findEmployeeAssign(filters)
+            .pipe(map(res => {
+                if (res.status == 200) {
+                    return res.data.resource;
+                }
+            }))
+    }
+
+    /**
+     * Find employee and delete
+     *
+     * @param {string[]} filters
+     * @param {*} method
+     * @returns {Observable<any>}
+     * @memberof UserInfoDbService
+     */
+    public findEmployeeAndDelete(filters: string[], method): Observable<any> {
+        return this.findEmployeeAssign(filters).pipe(
+            mergeMap(res => {
+                if (res.data.resource.length > 0) {
+                    // will return user attach to this calendar profile
+                    return of(res);
+                } else {
+                    // will show deleted calendar
+                    let deletedData = method;
+                    return deletedData;
+                }
+            }),
+        );
     }
 
     /**

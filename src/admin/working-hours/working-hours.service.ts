@@ -13,7 +13,7 @@ import { UpdateWorkingHoursDTO } from './dto/update-working-hours.dto';
 import { UpdateWorkingHoursModel } from './model/update-working-hours.model';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { UpdateUserWorkingHoursModel } from './model/update-userworkinghours.model';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 
 /**
  * Service for working hours
@@ -46,12 +46,7 @@ export class WorkingHoursService {
    */
   public findWorkingHoursProfile() {
     return this.workingHoursDbService.findAllWorkingHoursProfile()
-      .pipe(map(res => {
-        if (res.status == 200) {
-          let result = this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO);
-          return result;
-        }
-      })
+      .pipe(map(res => { if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); } })
       )
   }
 
@@ -62,17 +57,18 @@ export class WorkingHoursService {
    * @returns
    * @memberof WorkingHoursService
    */
-  public getEmployeeWorkingHoursAttach(workingHoursId: string) {
+  public getEmployeeWorkingHoursAttach(workingHoursId: string): Observable<any> {
     // const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
     const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
-    return this.userinfoDbService.findEmployeeAssign(filters)
-      .pipe(map(res => {
-        if (res.status == 200) {
-          // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
-          // return jsonHoliday;
-          return res.data.resource;
-        }
-      }))
+    return this.userinfoDbService.findEmployeeAttach(filters);
+    // return this.userinfoDbService.findEmployeeAssign(filters)
+    //   .pipe(map(res => {
+    //     if (res.status == 200) {
+    //       // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+    //       // return jsonHoliday;
+    //       return res.data.resource;
+    //     }
+    //   }))
   }
 
   /**
@@ -182,18 +178,19 @@ export class WorkingHoursService {
    */
   deleteWorkingHours(user: any, working_hours_guid: string) {
     const filters = ['(WORKING_HOURS_GUID=' + working_hours_guid + ')'];
-    return this.userinfoDbService.findEmployeeAssign(filters).pipe(
-      mergeMap(res => {
-        if (res.data.resource.length > 0) {
-          // will return user attach to this working hours profile
-          return of(res);
-        } else {
-          // will show deleted working hours
-          let deletedData = this.deleteProcessWorkingHours(user, working_hours_guid);
-          return deletedData;
-        }
-      }),
-    );
+    return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteProcessWorkingHours(user, working_hours_guid));
+    // return this.userinfoDbService.findEmployeeAssign(filters).pipe(
+    //   mergeMap(res => {
+    //     if (res.data.resource.length > 0) {
+    //       // will return user attach to this working hours profile
+    //       return of(res);
+    //     } else {
+    //       // will show deleted working hours
+    //       let deletedData = this.deleteProcessWorkingHours(user, working_hours_guid);
+    //       return deletedData;
+    //     }
+    //   }),
+    // );
   }
 
   /**

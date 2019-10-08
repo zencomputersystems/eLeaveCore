@@ -79,7 +79,7 @@ export class AuthService {
    */
   public async createToken(signedUser) {
     // 3300(55m) 28800(8h) 600(10m)
-    const expiresIn = 600, secretOrKey = 'this_is_secret';
+    const expiresIn = 28800, secretOrKey = 'this_is_secret';
     const user = {
       email: signedUser.EMAIL,
       userId: signedUser.USER_GUID,

@@ -11,6 +11,16 @@ import { CreateCompanySiteDTO } from './dto/create-company-site.dto';
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';
 
 /**
+ * Refactor constructor
+ *
+ * @class CompanyServiceRef1
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
+@Injectable()
+export class CompanySiteServiceRef1 { constructor(public httpService: HttpService, public queryService: QueryParserService) { } }
+
+/**
  * Service for company site 
  *
  * @export
@@ -37,10 +47,9 @@ export class CompanySiteService extends BaseDBService implements IDbService {
      * @memberof CompanySiteService
      */
     constructor(
-        public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService,
+        public readonly companySiteServiceRef1: CompanySiteServiceRef1,
         public readonly commonFunctionService: CommonFunctionService) {
-        super(httpService, queryService, "tenant_company_site");
+        super(companySiteServiceRef1.httpService, companySiteServiceRef1.queryService, "tenant_company_site");
     }
 
     /**

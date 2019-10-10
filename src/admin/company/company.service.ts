@@ -12,6 +12,16 @@ import { CompanyDTO } from './dto/company.dto';
 import { UpdateCompanyDTO } from './dto/update-company.dto';
 
 /**
+ * Refactor constructor
+ *
+ * @class CompanyServiceRef1
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
+@Injectable()
+export class CompanyServiceRef1 { constructor(public httpService: HttpService, public queryService: QueryParserService) { } }
+
+/**
  * Service for company
  *
  * @export
@@ -39,10 +49,9 @@ export class CompanyService extends BaseDBService implements IDbService {
 	 * @memberof CompanyService
 	 */
 	constructor(
-		public readonly httpService: HttpService,
-		public readonly queryService: QueryParserService,
-		public readonly commonFunctionService: CommonFunctionService) {
-		super(httpService, queryService, "tenant_company");
+		public commonFunctionService: CommonFunctionService,
+		public companyServiceRef1: CompanyServiceRef1) {
+		super(companyServiceRef1.httpService, companyServiceRef1.queryService, "tenant_company");
 	}
 
 	/**
@@ -55,7 +64,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 	public findAll(TENANT_GUID: string): Observable<any> {
 
 		const fields = ['TENANT_COMPANY_GUID', 'NAME'];
-		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
+		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.companyServiceRef1.queryService, this.companyServiceRef1.httpService, this._tableName]);
 
 		return this.commonFunctionService.getListData(result);
 
@@ -75,11 +84,11 @@ export class CompanyService extends BaseDBService implements IDbService {
 		const filters = ['(TENANT_COMPANY_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
 
 		//url
-		const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+		const url = this.companyServiceRef1.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
 		//call DF to validate the user
 		// return this.httpService.get(url);
-		let result = this.httpService.get(url);
+		let result = this.companyServiceRef1.httpService.get(url);
 
 		let list: CompanyDTO = new CompanyDTO;
 
@@ -191,9 +200,11 @@ export class CompanyService extends BaseDBService implements IDbService {
 		const fields = ['DEPARTMENT'];
 		const filters = ['(TENANT_COMPANY_GUID=' + companyId + ')', '(TENANT_GUID=' + tenantId + ')'];
 
-		const url = this.queryService.generateDbQueryV2('view_departments', fields, filters, []);
-		let result = this.httpService.get(url);
+		const url = this.companyServiceRef1.queryService.generateDbQueryV2('view_departments', fields, filters, []);
+		let result = this.companyServiceRef1.httpService.get(url);
 		return this.commonFunctionService.getListData(result);
 	}
 
 }
+
+

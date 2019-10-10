@@ -37,20 +37,6 @@ export class AnnouncementModel extends CreateUpdateModel {
    */
   IS_PINNED: number;
   /**
-   * From date to announce
-   *
-   * @type {string}
-   * @memberof AnnouncementModel
-   */
-  FROM_DATE: string;
-  /**
-   * To date to announce
-   *
-   * @type {string}
-   * @memberof AnnouncementModel
-   */
-  TO_DATE: string;
-  /**
    * Deleted at
    *
    * @type {string}

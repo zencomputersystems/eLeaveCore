@@ -47,7 +47,7 @@ export class AnnouncementService extends BaseDBService {
   findAll() {
 
     const fields = [];
-    const filters = ['(FROM_DATE <= ' + moment().format('YYYY-MM-DD') + ') AND (TO_DATE >= ' + moment().format('YYYY-MM-DD') + ')'];
+    const filters = ['(FROM_DATE <= ' + moment().format('YYYY-MM-DD') + ') AND (TO_DATE >= ' + moment().format('YYYY-MM-DD') + ') AND (DELETED_AT IS NULL)'];
     const orders = 'CREATION_TS DESC';
 
     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, orders, 20]);
@@ -81,6 +81,28 @@ export class AnnouncementService extends BaseDBService {
   }
 
   /**
+   * Delete announcement
+   *
+   * @param {string} d
+   * @param {*} user
+   * @returns
+   * @memberof AnnouncementService
+   */
+  deleteAnnouncement(announcementId: string, user: any) {
+
+    const resource = new Resource(new Array);
+    const data = new AnnouncementModel();
+
+    data.UPDATE_TS = new Date().toISOString();
+    data.UPDATE_USER_GUID = user.USER_GUID;
+    data.DELETED_AT = new Date().toISOString();
+
+    resource.resource.push(data);
+    return this.updateByModel(resource, [], ['(ANNOUNCEMENT_GUID = ' + announcementId + ')'], ['ANNOUNCEMENT_GUID']);
+
+  }
+
+  /**
    * Create announcement
    *
    * @param {CreateAnnouncementDto} data
@@ -96,9 +118,7 @@ export class AnnouncementService extends BaseDBService {
     modelData.ANNOUNCEMENT_GUID = v1();
     modelData.TITLE = data.title;
     modelData.MESSAGE = data.message;
-    modelData.IS_PINNED = 0;
-    modelData.FROM_DATE = new Date(data.fromDate).toISOString();
-    modelData.TO_DATE = new Date(data.toDate).toISOString();
+    modelData.IS_PINNED = data.isPinned;
     modelData.CREATION_USER_GUID = user.USER_GUID;
     modelData.CREATION_TS = new Date().toISOString();
 

@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsISO8601 } from 'class-validator';
+import { IsString, IsNotEmpty, IsISO8601, IsNumber } from 'class-validator';
 
 /**
  * Data to create announcement
@@ -38,24 +38,13 @@ export class CreateAnnouncementDto {
   message: string;
 
   /**
-   * Date start to show announcement
+   * Pinned the announcement
    *
-   * @type {Date}
+   * @type {number}
    * @memberof CreateAnnouncementDto
    */
-  @ApiModelProperty({ description: 'Date from to show announcement', example: '2019-09-01' })
+  @ApiModelProperty({ description: 'Pinned post announcement', example: 1 })
   @IsNotEmpty()
-  @IsISO8601()
-  fromDate: Date;
-
-  /**
-   * Date end to show announcement
-   *
-   * @type {Date}
-   * @memberof CreateAnnouncementDto
-   */
-  @ApiModelProperty({ description: 'Date end to show announcement', example: '2019-12-01' })
-  @IsNotEmpty()
-  @IsISO8601()
-  toDate: Date;
+  @IsNumber()
+  isPinned: number;
 }

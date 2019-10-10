@@ -1,6 +1,6 @@
-import { Controller, UseGuards, Get, Req, Res, Patch, Body, Post } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Patch, Body, Post, Delete, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { AnnouncementService } from './announcement.service';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
@@ -51,6 +51,22 @@ export class AnnouncementController {
   @ApiOperation({ title: 'Update announcement data' })
   updateAnnouncement(@Body() d: UpdateAnnouncementDto, @Req() req, @Res() res) {
     this.commonFunctionService.runUpdateService(this.announcementService.updateAnnouncement(d, req.user), res);
+  }
+
+  /**
+   * Delete announcement
+   *
+   * @param {string} id
+   * @param {*} req
+   * @param {*} res
+   * @memberof AnnouncementController
+   */
+  @Delete(':id')
+  @ApiOperation({ title: 'Delete announcement data' })
+  @ApiImplicitQuery({ name: 'id', description: 'Delete by ANNOUNCEMENT_GUID', required: true })
+  deleteAnnouncement(@Param('id') id: string, @Req() req, @Res() res) {
+    id = this.commonFunctionService.findIdParam(req, res, id);
+    this.commonFunctionService.runUpdateService(this.announcementService.deleteAnnouncement(id, req.user), res);
   }
 
   /**

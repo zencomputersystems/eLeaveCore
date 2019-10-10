@@ -119,7 +119,7 @@ export class ApprovalService {
      * @returns
      * @memberof ApprovalService
      */
-    onApproveReject(leaveTransactionId: string, tenantId: string, approverUserId: string, isApprove: boolean) {
+    onApproveReject([leaveTransactionId, tenantId, approverUserId, isApprove]: [string, string, string, boolean]) {
 
         return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
             .pipe(

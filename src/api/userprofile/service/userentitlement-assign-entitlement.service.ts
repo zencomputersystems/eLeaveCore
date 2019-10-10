@@ -92,7 +92,7 @@ export class UserEntitlementAssignEntitlement {
             }))
         }),
         mergeMap((res) => {
-          return this.userEntitlementAssignPolicy.assignPolicyProcess(res, user, data);
+          return this.userEntitlementAssignPolicy.assignPolicyProcess([res, user, data]);
 
         })
       )

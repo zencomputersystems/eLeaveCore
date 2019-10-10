@@ -11,6 +11,7 @@ import {
   UploadedFileMetadata,
   AzureStorageService,
 } from '@nestjs/azure-storage';
+import { ApiImplicitFile } from '@nestjs/swagger';
 
 /**
  * Upload file controller
@@ -51,17 +52,30 @@ export class UploadFileController {
    * @memberof UploadFileController
    */
   @Post('azure/upload')
+  @ApiImplicitFile({ name: 'file', required: true, description: 'The file to upload' })
   @UseInterceptors(FileInterceptor('file'))
   async UploadedFilesUsingService(
     @UploadedFile()
     file: UploadedFileMetadata,
   ) {
+    var ts = Math.round((new Date()).getTime() / 1000);
+
+    file.originalname = file.originalname.replace(/[^a-zA-Z0-9 .]/gi, '');
+
     file = {
       ...file,
-      originalname: 'eleave/' + file.originalname,
+      originalname: 'eleave/' + ts + '_' + file.originalname,
     };
+
+
     const storageUrl = await this.azureStorage.upload(file);
     Logger.log(`Storage URL: ${storageUrl}`, 'AppController');
+    let data = {}
+    data['link'] = 'https://zencloudservicesstore.blob.core.windows.net/cloudservices/' + file.originalname;
+    // data['link'] = storageUrl;
+    data['filename'] = file.originalname;
+    return data;
+    // return storageUrl;
   }
 
 

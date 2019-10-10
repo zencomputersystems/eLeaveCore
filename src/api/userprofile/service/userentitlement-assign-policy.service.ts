@@ -33,16 +33,15 @@ export class UserEntitlementAssignPolicy {
     private readonly xmlParserService: XMLParserService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService, ) { }
 
+
   /**
    * Method assign policy process
    *
-   * @param {*} res
-   * @param {*} user
-   * @param {*} data
+   * @param {*} [res, user, data]
    * @returns
    * @memberof UserEntitlementAssignPolicy
    */
-  public assignPolicyProcess(res, user, data) {
+  public assignPolicyProcess([res, user, data]) {
 
     // console.log('here' + res);
     // console.log(user);

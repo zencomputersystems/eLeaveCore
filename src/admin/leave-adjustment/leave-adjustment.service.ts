@@ -76,7 +76,7 @@ export class LeaveAdjustmentService {
       let leave: UserLeaveEntitlementModel = res.find(x => x.USER_GUID.toString() === element.toString());
       if (leave) {
         successList.push(element);
-        let dataAssign = this.createLeaveAdjustment(user, leave, leaveAdjustmentDTO);
+        let dataAssign = this.createLeaveAdjustment([user, leave, leaveAdjustmentDTO]);
         resource.resource.push(dataAssign);
       } else {
         failedList.push(element);
@@ -107,16 +107,15 @@ export class LeaveAdjustmentService {
       });
   }
 
+
   /**
    * Assign data to column user leave entitlement
    *
-   * @param {*} user
-   * @param {UserLeaveEntitlementModel} data
-   * @param {LeaveAdjustmentDTO} updateData
+   * @param {[any, UserLeaveEntitlementModel, LeaveAdjustmentDTO]} [user, data, updateData]
    * @returns
    * @memberof LeaveAdjustmentService
    */
-  public createLeaveAdjustment(user: any, data: UserLeaveEntitlementModel, updateData: LeaveAdjustmentDTO) {
+  public createLeaveAdjustment([user, data, updateData]: [any, UserLeaveEntitlementModel, LeaveAdjustmentDTO]) {
     const {
       LEAVE_TYPE_GUID,
       ENTITLEMENT_GUID,

@@ -293,7 +293,7 @@ export class ApplyLeaveService {
                 }),
                 mergeMap(result => {
                     if (result.validationResult.valid) {
-                        return of(this.applyLeaveData(result, y, user, onbehalf));
+                        return of(this.applyLeaveData([result, y, user, onbehalf]));
                     } else {
                         return of(result.validationResult);
                     }
@@ -311,7 +311,7 @@ export class ApplyLeaveService {
      * @returns
      * @memberof ApplyLeaveService
      */
-    private applyLeaveData(result, y: ApplyLeaveDTO, user, onbehalf) {
+    private applyLeaveData([result, y, user, onbehalf]: [any, ApplyLeaveDTO, any, boolean]) {
         let resArr = [];
         let sumDays = 0;
         for (let i = 0; i < y.data.length; i++) {

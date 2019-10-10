@@ -60,7 +60,7 @@ export class ApprovedController {
     @ApiOperation({ title: 'Approved Leave' })
     approved(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
 
-        this.approvedService.onApproveReject(approvedLeaveDTO.id, req.user.TENANT_GUID, req.user.USER_GUID, true)
+        this.approvedService.onApproveReject([approvedLeaveDTO.id, req.user.TENANT_GUID, req.user.USER_GUID, true])
             .subscribe(
                 data => {
                     res.send(data);
@@ -85,7 +85,7 @@ export class ApprovedController {
     @ApiOperation({ title: 'Approved Leave' })
     rejected(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
 
-        this.approvedService.onApproveReject(approvedLeaveDTO.id, req.user.TENANT_GUID, req.user.USER_GUID, false)
+        this.approvedService.onApproveReject([approvedLeaveDTO.id, req.user.TENANT_GUID, req.user.USER_GUID, false])
             .subscribe(
                 data => {
                     res.send(data);

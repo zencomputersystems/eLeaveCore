@@ -122,6 +122,13 @@ export class UserInfoDbService extends BaseDBService {
 
     }
 
+    public findUserInfo(filters: string[]): Observable<any> {
+        const fields = ['PROPERTIES_XML'];
+        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
+        console.log(url);
+        return this.httpService.get(url);
+    }
+
     // public findEmployeeAssignPR(dataId: string): Observable<any> {
 
     //     const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];

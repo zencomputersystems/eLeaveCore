@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { CompanyService } from './company.service';
+import { CompanyService, CompanyServiceRef1 } from './company.service';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 describe('CompanyService', () => {
   let service: CompanyService;
@@ -16,6 +16,7 @@ describe('CompanyService', () => {
         { provide: HttpService, useValue: httpServiceStub },
         { provide: QueryParserService, useValue: queryParserServiceStub },
         CommonFunctionService,
+        CompanyServiceRef1
       ]
     }).compile();
     service = await module.get<CompanyService>(CompanyService);

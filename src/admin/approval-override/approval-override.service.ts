@@ -12,6 +12,35 @@ import { UserInfoService } from '../user-info/user-info.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { threadId } from 'worker_threads';
 
+@Injectable()
+export class ApprovalOverrideServiceRef4 {
+  constructor(
+    public userInfoService: UserInfoService,
+    public userService: UserService) {
+  }
+}
+@Injectable()
+export class ApprovalOverrideServiceRef3 {
+  constructor(
+    public xmlParserService: XMLParserService,
+    public emailNodemailerService: EmailNodemailerService) {
+  }
+}
+@Injectable()
+export class ApprovalOverrideServiceRef2 {
+  constructor(
+    public leaveTransactionDbService: LeaveTransactionDbService,
+    public commonFunctionService: CommonFunctionService) {
+  }
+}
+@Injectable()
+export class ApprovalOverrideServiceRef1 {
+  constructor(
+    public approvalOverrideServiceRef3: ApprovalOverrideServiceRef3,
+    public approvalOverrideServiceRef4: ApprovalOverrideServiceRef4) {
+  }
+}
+
 /**
  * Service for approval override
  *
@@ -20,19 +49,24 @@ import { threadId } from 'worker_threads';
  */
 @Injectable()
 export class ApprovalOverrideService {
-  /**
-   *Creates an instance of ApprovalOverrideService.
-   * @param {LeaveTransactionDbService} leaveTransactionDbService
-   * @param {CommonFunctionService} commonFunctionService
-   * @memberof ApprovalOverrideService
-   */
+  // /**
+  //  *Creates an instance of ApprovalOverrideService.
+  //  * @param {LeaveTransactionDbService} leaveTransactionDbService
+  //  * @param {CommonFunctionService} commonFunctionService
+  //  * @memberof ApprovalOverrideService
+  //  */
+  // constructor(
+  //   private readonly leaveTransactionDbService: LeaveTransactionDbService,
+  //   private readonly commonFunctionService: CommonFunctionService,
+  //   private readonly userService: UserService,
+  //   private readonly emailNodemailerService: EmailNodemailerService,
+  //   private readonly userInfoService: UserInfoService,
+  //   private readonly xmlParserService: XMLParserService) {
+  // }
+
   constructor(
-    private readonly leaveTransactionDbService: LeaveTransactionDbService,
-    private readonly commonFunctionService: CommonFunctionService,
-    private readonly userService: UserService,
-    private readonly emailNodemailerService: EmailNodemailerService,
-    private readonly userInfoService: UserInfoService,
-    private readonly xmlParserService: XMLParserService) {
+    private readonly approvalOverrideServiceRef1: ApprovalOverrideServiceRef1,
+    private readonly approvalOverrideServiceRef2: ApprovalOverrideServiceRef2) {
   }
 
   /**
@@ -43,8 +77,8 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   public findAllPendingLeave(TENANT_GUID: string): Observable<any> {
-    let result = this.leaveTransactionDbService.findAll(TENANT_GUID);
-    return this.commonFunctionService.getListData(result);
+    let result = this.approvalOverrideServiceRef2.leaveTransactionDbService.findAll(TENANT_GUID);
+    return this.approvalOverrideServiceRef2.commonFunctionService.getListData(result);
   }
 
   /**
@@ -56,7 +90,7 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   public updateToEmployee(user: any, data: UpdateApprovalDTO) {
-    let result = this.leaveTransactionDbService.updateToEmployee(user, data);
+    let result = this.approvalOverrideServiceRef2.leaveTransactionDbService.updateToEmployee(user, data);
     result.subscribe(data => {
       data.data.resource.forEach(element => {
         this.checkMailAvailable(user, element);
@@ -74,7 +108,7 @@ export class ApprovalOverrideService {
    */
   public checkMailAvailable(user, element) {
     if (element.status == 'APPROVE') {
-      let userData = this.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
+      let userData = this.approvalOverrideServiceRef1.approvalOverrideServiceRef4.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
         data => {
           let tempData = data.data.resource[0];
           this.sendEmailToNotifier(user, tempData);
@@ -92,7 +126,7 @@ export class ApprovalOverrideService {
    */
   public sendEmailToNotifier(user, tempData) {
     if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
-      let dataObj = this.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
+      let dataObj = this.approvalOverrideServiceRef1.approvalOverrideServiceRef3.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
       if (dataObj.notificationRule) {
         this.sendEmailNotify(user, dataObj.notificationRule);
       }
@@ -111,7 +145,7 @@ export class ApprovalOverrideService {
     let successList = [];
     let failedList = [];
 
-    let emailArr = this.userService.findEmail(userId).pipe(
+    let emailArr = this.approvalOverrideServiceRef1.approvalOverrideServiceRef4.userService.findEmail(userId).pipe(
       map(res => {
         userId.forEach(element => {
           let emailToSend = res.data.resource.find(x => x.USER_GUID.toString() === element.toString());
@@ -146,7 +180,7 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   private sendEmailV2(email: string, token: string) {
-    let results = this.emailNodemailerService.mailProcessApprove(email, token);
+    let results = this.approvalOverrideServiceRef1.approvalOverrideServiceRef3.emailNodemailerService.mailProcessApprove(email, token);
     return results;
   }
 

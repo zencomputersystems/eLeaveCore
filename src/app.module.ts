@@ -25,6 +25,7 @@ import { WorkingHoursModule } from './admin/working-hours/working-hours.module';
 import { AnnouncementModule } from './admin/announcement/announcement.module';
 import { ForgotPasswordModule } from './api/forgot-password/forgot-password.module';
 import { UploadFileModule } from './api/upload-file/upload-file.module';
+import { UserInfoDetailsModule } from './admin/user-info-details/user-info-details.module';
 
 
 @Module({
@@ -71,7 +72,8 @@ import { UploadFileModule } from './api/upload-file/upload-file.module';
     WorkingHoursModule,
     AnnouncementModule,
     ForgotPasswordModule,
-    UploadFileModule
+    UploadFileModule,
+    UserInfoDetailsModule
   ],
   controllers: [AppController],
   providers: [

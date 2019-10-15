@@ -13,10 +13,16 @@ describe('CompanyController', () => {
     const queryParserServiceStub = {
       generateDbQueryV2: (arg1, fields2, filters3, array4) => ({})
     };
+    const companyServiceStub = {
+
+    };
     const module = await Test.createTestingModule({
       providers: [
         CompanyController,
-        CompanyService,
+        {
+          provide: CompanyService,
+          useValue: companyServiceStub
+        },
         {
           provide: HttpService,
           useValue: httpServiceStub

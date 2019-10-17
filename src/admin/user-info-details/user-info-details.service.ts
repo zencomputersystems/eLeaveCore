@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
-import { UpdateUserInfoDetailsDTO } from './dto/update-user-info-details.dto';
+import { UpdateUserInfoDetailsDTO, UpdateUserInfoItemDTO } from './dto/update-user-info-details.dto';
 import { of, Observable } from 'rxjs';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
@@ -14,47 +14,203 @@ export class UserInfoDetailsService {
     private readonly xmlParserService: XMLParserService
   ) { }
 
-  public updateUserInfo(data: UpdateUserInfoDetailsDTO, userGuid: string): Observable<any> {
-    console.log(data);
-    console.log(userGuid);
-    return of(data);
+  public getUserXMLInfo(userGuid: string) {
+    const filters = ['(USER_GUID=' + userGuid + ') AND (RESIGNATION_DATE IS NULL)'];
+    return this.userinfoDbService.findByFilterV3([], filters);
   }
 
-  public updateEmploymentInfo(data: EmploymentDetailsDTO, userGuid: string) {
-    console.log(data);
-    console.log(userGuid);
-    return of(data);
+  public updateUserInfo([data, userGuid, user]: [UpdateUserInfoItemDTO, string, any]): Observable<any> {
+
+    return this.sendResult([data, userGuid, user]);
+
+    // let results = 
+    // return this.getUserInfoDetails(userGuid).pipe(
+    // map(res => {
+    // let dataInfo: UpdateUserInfoItemDTO;
+    // let dataXML = {};
+    // let dataRoot = {};
+
+    // let employeeDetailsData;
+    // let personalDetailsData;
+    // let notificationRuleData;
+
+    // if (res.data.resource[0].PROPERTIES_XML != null) {
+    //   dataInfo = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+    //   employeeDetailsData = dataInfo.root.employmentDetail;
+    //   personalDetailsData = dataInfo.root.personalDetails;
+    //   notificationRuleData = dataInfo.root.notificationRule;
+    // }
+    // let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
+    // let { employeeDetailsData, personalDetailsData, notificationRuleData } = results;
+
+    // dataRoot['employmentDetail'] = employeeDetailsData;
+    // dataRoot['notificationRule'] = notificationRuleData;
+    // dataRoot['personalDetails'] = personalDetailsData;
+
+    // dataXML['root'] = data;
+
+    // return dataXML;
+    // return data;
+    // return this.sendResult([data, userGuid, user]);
+    // })
+    // , mergeMap(res => {
+    //   // let xmlData = this.xmlParserService.convertJsonToXML(res);
+
+    //   // this.updateUserInfoData([xmlData, userGuid, user]).subscribe();
+
+    //   // return res;
+    //   return this.sendResult([res, userGuid, user]);
+    // })
+    // );
+
+    // return results;
+
+    // return of(data);
   }
 
-  public updatePersonalInfo(data: PersonalDetailsDTO, userGuid: string) {
-    // console.log(data);
-    // console.log(userGuid);
+  public updateEmploymentInfo([data, userGuid, user]: [EmploymentDetailsDTO, string, any]) {
     let results = this.getUserInfoDetails(userGuid).pipe(
       map(res => {
-        // console.log(res.data.resource);
-        let dataInfo = new UpdateUserInfoDetailsDTO();
-        if (res.data.resource.length > 0) {
-          console.log(res.data.resource[0].PROPERTIES_XML);
-          dataInfo = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
-        }
-        console.log(dataInfo);
-        dataInfo.personalDetails = data;
-        console.log(dataInfo);
-        return of(dataInfo);
-        // return dataInfo;
+        // let dataInfo: UpdateUserInfoItemDTO;
+        let dataXML = {};
+        let dataRoot = {};
+
+        // let employeeDetailsData;
+        // let personalDetailsData;
+        // let notificationRuleData;
+
+        // if (res.data.resource[0].PROPERTIES_XML != null) {
+        //   dataInfo = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+        //   employeeDetailsData = dataInfo.root.employmentDetail;
+        //   personalDetailsData = dataInfo.root.personalDetails;
+        //   notificationRuleData = dataInfo.root.notificationRule;
+        // }
+        let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
+        let { employeeDetailsData, personalDetailsData, notificationRuleData } = results;
+
+        dataRoot['employmentDetail'] = data;
+        dataRoot['notificationRule'] = notificationRuleData;
+        dataRoot['personalDetails'] = personalDetailsData;
+
+        dataXML['root'] = dataRoot;
+
+        return dataXML;
       }), mergeMap(res => {
-        console.log(res);
-        // update process here
-        return res;
+        // let xmlData = this.xmlParserService.convertJsonToXML(res);
+
+        // this.updateUserInfoData([xmlData, userGuid, user]).subscribe();
+
+        // return res;
+        return this.sendResult([res, userGuid, user]);
       })
     );
-    // return of(data);
+
+    return results;
+  }
+
+  public updateNotificationRule([notificationRule, userGuid, user]: [string[], string, any]) {
+    let results = this.getUserInfoDetails(userGuid).pipe(
+      map(res => {
+        let dataInfo: UpdateUserInfoItemDTO;
+        let dataXML = {};
+        let dataRoot = {};
+
+        // let employeeDetailsData;
+        // let personalDetailsData;
+        // let notificationRuleData;
+        // if (res.data.resource[0].PROPERTIES_XML != null) {
+        //   dataInfo = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+        //   employeeDetailsData = dataInfo.root.employmentDetail;
+        //   personalDetailsData = dataInfo.root.personalDetails;
+        //   notificationRuleData = dataInfo.root.notificationRule;
+        // }
+        let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
+        let { employeeDetailsData, personalDetailsData, notificationRuleData } = results;
+
+        dataRoot['employmentDetail'] = employeeDetailsData;
+        dataRoot['notificationRule'] = notificationRule;
+        dataRoot['personalDetails'] = personalDetailsData;
+
+        dataXML['root'] = dataRoot;
+
+        return dataXML;
+      }), mergeMap(res => {
+        // let xmlData = this.xmlParserService.convertJsonToXML(res);
+        // return this.updateUserInfoData([xmlData, userGuid, user]);
+        return this.sendResult([res, userGuid, user]);
+      })
+    );
+    return results;
+  }
+
+  public updatePersonalInfo([data, userGuid, user]: [PersonalDetailsDTO, string, any]) {
+    let results = this.getUserInfoDetails(userGuid).pipe(
+      map(res => {
+        let dataInfo: UpdateUserInfoItemDTO;
+        let dataXML = {};
+        let dataRoot = {};
+
+        // let employeeDetailsData;
+        // let personalDetailsData;
+        // let notificationRuleData;
+
+        // if (res.data.resource[0].PROPERTIES_XML != null) {
+        //   dataInfo = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+        //   employeeDetailsData = dataInfo.root.employmentDetail;
+        //   personalDetailsData = dataInfo.root.personalDetails;
+        //   notificationRuleData = dataInfo.root.notificationRule;
+        // }
+        let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
+        let { employeeDetailsData, personalDetailsData, notificationRuleData } = results;
+
+        dataRoot['employmentDetail'] = employeeDetailsData;
+        dataRoot['notificationRule'] = notificationRuleData;
+        dataRoot['personalDetails'] = data;
+
+        dataXML['root'] = dataRoot;
+
+        return dataXML;
+      }), mergeMap(res => {
+
+        // let xmlData = this.xmlParserService.convertJsonToXML(res);
+
+        // return this.updateUserInfoData([xmlData, userGuid, user]);
+        return this.sendResult([res, userGuid, user]);
+      })
+    );
     return results;
   }
 
   public getUserInfoDetails(userGuid: string): Observable<any> {
     const filters = ['(USER_GUID=' + userGuid + ') AND (RESIGNATION_DATE IS NULL)'];
     return this.userinfoDbService.findUserInfo(filters);
+  }
+
+  public updateUserInfoData([xmlData, userGuid, user]: [string, string, any]) {
+    return this.userinfoDbService.setUserInfo(xmlData, userGuid, user);
+  }
+
+  public getDataInfo(userInfoDataDetails: string) {
+
+    let dataInfo: UpdateUserInfoItemDTO;
+    let employeeDetailsData;
+    let personalDetailsData;
+    let notificationRuleData;
+
+    if (userInfoDataDetails != null) {
+      dataInfo = this.xmlParserService.convertXMLToJson(userInfoDataDetails);
+      employeeDetailsData = dataInfo.root.employmentDetail;
+      personalDetailsData = dataInfo.root.personalDetails;
+      notificationRuleData = dataInfo.root.notificationRule;
+    }
+
+    return { employeeDetailsData, personalDetailsData, notificationRuleData };
+  }
+
+  public sendResult([res, userGuid, user]) {
+    let xmlData = this.xmlParserService.convertJsonToXML(res);
+
+    return this.updateUserInfoData([xmlData, userGuid, user]);
   }
 
 }

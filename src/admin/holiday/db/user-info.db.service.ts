@@ -8,6 +8,7 @@ import { of, Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { UserService } from 'src/admin/user/user.service';
 import { UserModel } from 'src/admin/user/model/user.model';
+import { UpdateUserInfoItemDTO } from 'src/admin/user-info-details/dto/update-user-info-details.dto';
 
 /**
  * DB Service for user info to update calendar
@@ -63,6 +64,19 @@ export class UserInfoDbService extends BaseDBService {
         resource.resource.push(data);
 
         return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'FULLNAME']);
+    }
+
+    public setUserInfo(d: string, user_guid: string, user: any) {
+        const resource = new Resource(new Array);
+        const data = new UserInfoModel;
+
+        data.PROPERTIES_XML = d;
+        data.UPDATE_TS = new Date().toISOString();
+        data.UPDATE_USER_GUID = user.USER_GUID;
+
+        resource.resource.push(data);
+
+        return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ') AND (RESIGNATION_DATE IS NULL)'], ['PROPERTIES_XML']);
     }
 
     /**
@@ -125,22 +139,9 @@ export class UserInfoDbService extends BaseDBService {
     public findUserInfo(filters: string[]): Observable<any> {
         const fields = ['PROPERTIES_XML'];
         const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
-        console.log(url);
+
         return this.httpService.get(url);
     }
-
-    // public findEmployeeAssignPR(dataId: string): Observable<any> {
-
-    //     const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
-    //     const filters = ['(WORKING_HOURS_GUID=' + WHId + ')'];
-    //     console.log(filters);
-
-    //     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
-    //     console.log(url);
-    //     //call DF to validate the user
-    //     return this.httpService.get(url);
-
-    // }
 
     /**
      * Find fullname

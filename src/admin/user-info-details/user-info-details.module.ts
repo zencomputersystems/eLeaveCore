@@ -8,6 +8,7 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
+import { UserInfoDetailsEmployeeController } from './user-info-details-employee.controller';
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
     UserInfoDetailsService,
     UserInfoDbService
   ],
-  controllers: [UserInfoDetailsController]
+  controllers: [UserInfoDetailsController, UserInfoDetailsEmployeeController]
 })
 export class UserInfoDetailsModule { }

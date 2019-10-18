@@ -47,7 +47,7 @@ export class AnnouncementService extends BaseDBService {
   findAll() {
 
     const fields = [];
-    const filters = ['(FROM_DATE <= ' + moment().format('YYYY-MM-DD') + ') AND (TO_DATE >= ' + moment().format('YYYY-MM-DD') + ') AND (DELETED_AT IS NULL)'];
+    const filters = ['(DELETED_AT IS NULL)'];
     const orders = 'CREATION_TS DESC';
 
     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, orders, 20]);

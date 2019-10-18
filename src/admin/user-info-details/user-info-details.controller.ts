@@ -39,7 +39,43 @@ export class UserInfoDetailsController {
 
     this.userInfoDetailsService.getUserXMLInfo(req.user.USER_GUID).subscribe(
       data => {
-        this.filterResults(data, res, dataId);
+        this.userInfoDetailsService.filterResults(data, res, dataId);
+      }, err => {
+        res.send(err);
+      }
+    );
+  }
+
+  @Get(':item/:id')
+  @ApiOperation({ title: 'Get employee personal info by user guid' })
+  @ApiImplicitQuery({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
+  @ApiImplicitQuery({ name: 'id', description: 'Get user info by user guid', required: true })
+  getPersonalUserInfo(@Param() data, @Req() req, @Res() res) {
+    let dataId = null;
+    let dataItem = null;
+    let dataIdParam = req.query.id;
+    let dataItemParam = req.query.item;
+
+    if (dataIdParam == null) {
+      dataId = data.id;
+    } else {
+      dataId = dataIdParam;
+    }
+
+    if (dataItemParam == null) {
+      dataItem = data.item;
+    } else {
+      dataItem = dataItemParam;
+    }
+
+    if (dataId == null || dataItem == null) {
+      res.status(400);
+      res.send('item not found');
+    }
+
+    this.userInfoDetailsService.getUserXMLInfo(dataId).subscribe(
+      data => {
+        this.userInfoDetailsService.filterResults(data, res, dataItem);
       }, err => {
         res.send(err);
       }
@@ -91,37 +127,6 @@ export class UserInfoDetailsController {
         res.send(err);
       }
     )
-  }
-
-  public filterResults(data, res, dataId) {
-    let results = data.data.resource[0];
-    let resultItem = {};
-
-    let dataXML = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
-    resultItem['id'] = results.USER_INFO_GUID;
-    resultItem['userId'] = results.USER_GUID;
-    resultItem['employeeName'] = results.FULLNAME;
-
-    if (dataId == 'personal-details') {
-      resultItem['employeeDesignation'] = results.DESIGNATION;
-      resultItem['employeeLocation'] = results.BRANCH;
-      resultItem['employeeDepartment'] = results.DEPARTMENT;
-      resultItem['calendarId'] = results.CALENDAR_GUID;
-      resultItem['tenantId'] = results.TENANT_GUID;
-      resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
-      resultItem['personalDetail'] = dataXML.root.personalDetails;
-      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
-      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
-
-    } else if (dataId == 'employment-detail') {
-      resultItem['employmentDetail'] = dataXML.root.employmentDetail;
-
-    } else if (dataId == 'notification-rule') {
-      resultItem['notificationRule'] = dataXML.root.notificationRule;
-
-    }
-
-    res.send(resultItem);
   }
 
 }

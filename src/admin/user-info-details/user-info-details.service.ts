@@ -213,4 +213,39 @@ export class UserInfoDetailsService {
     return this.updateUserInfoData([xmlData, userGuid, user]);
   }
 
+  public filterResults(data, res, dataId) {
+    let results = data.data.resource[0];
+
+    let resultItem = {};
+
+    let dataXML = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+    resultItem['id'] = results.USER_INFO_GUID;
+    resultItem['userId'] = results.USER_GUID;
+    resultItem['employeeName'] = results.FULLNAME;
+
+    if (dataId == 'personal-details') {
+      resultItem['employeeDesignation'] = results.DESIGNATION;
+      resultItem['employeeLocation'] = results.BRANCH;
+      resultItem['employeeDepartment'] = results.DEPARTMENT;
+      resultItem['calendarId'] = results.CALENDAR_GUID;
+      resultItem['tenantId'] = results.TENANT_GUID;
+      resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
+      if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
+        resultItem['personalDetail'] = dataXML.root.personalDetails;
+        resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
+        resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
+      }
+    } else if (dataId == 'employment-detail') {
+      if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
+        resultItem['employmentDetail'] = dataXML.root.employmentDetail;
+      }
+    } else if (dataId == 'notification-rule') {
+      if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('notificationRule')) {
+        resultItem['notificationRule'] = dataXML.root.notificationRule;
+      }
+    }
+
+    res.send(resultItem);
+  }
+
 }

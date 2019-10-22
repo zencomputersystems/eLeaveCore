@@ -28,6 +28,7 @@ import { UserEntitlementAssignPolicy } from './service/userentitlement-assign-po
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 import { UserService } from 'src/admin/user/user.service';
 import { UserProfileStatusService } from './service/userprofile-status.service';
+import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-details.service';
 
 /**
  * Module for user profile
@@ -58,7 +59,8 @@ import { UserProfileStatusService } from './service/userprofile-status.service';
     UserEntitlementAssignPolicy,
     UserInfoDbService,
     UserService,
-    UserProfileStatusService
+    UserProfileStatusService,
+    UserInfoDetailsService
   ],
   imports: [
     HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),

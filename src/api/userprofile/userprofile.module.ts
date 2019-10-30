@@ -29,6 +29,8 @@ import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 import { UserService } from 'src/admin/user/user.service';
 import { UserProfileStatusService } from './service/userprofile-status.service';
 import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-details.service';
+import { getModuleHttp } from '../../common/helper/basic-functions';
+import { PassportModule } from '@nestjs/passport';
 
 /**
  * Module for user profile
@@ -63,7 +65,9 @@ import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-de
     UserInfoDetailsService
   ],
   imports: [
-    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    PassportModule.register({ session: false }),
+    // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    getModuleHttp()
   ],
   controllers: [
     PersonalDetailController,

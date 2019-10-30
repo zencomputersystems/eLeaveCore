@@ -15,7 +15,7 @@ import { LeaveModule } from './api/leave/leave.module';
 import { HolidayModule } from './admin/holiday/holiday.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
 import { RoleModule } from './admin/role/role.module';
-import { NotificationModule } from './admin/notification/notification.module';
+// import { NotificationModule } from './admin/notification/notification.module';
 import { GeneralLeavePolicyModule } from './admin/general-leave-policy/general-leave-policy.module';
 import { ApprovalOverrideModule } from './admin/approval-override/approval-override.module';
 import { LeaveAdjustmentModule } from './admin/leave-adjustment/leave-adjustment.module';
@@ -64,7 +64,7 @@ import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
     HolidayModule,
     DashboardModule,
     RoleModule,
-    NotificationModule,
+    // NotificationModule,
     GeneralLeavePolicyModule,
     ApprovalOverrideModule,
     LeaveAdjustmentModule,

@@ -9,6 +9,7 @@ import { UserModule } from 'src/admin/user/user.module';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { ActiveDirectoryStrategy } from './passport/ad.strategy';
 import { DreamFactory } from 'src/config/dreamfactory';
+import { getModuleHttp } from '../common/helper/basic-functions';
 
 /**
  * Module for auth
@@ -29,7 +30,8 @@ import { DreamFactory } from 'src/config/dreamfactory';
     ],
     imports: [
         PassportModule.register({ session: false }),
-        HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+        // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+        getModuleHttp(),
         UserModule
     ]
 })

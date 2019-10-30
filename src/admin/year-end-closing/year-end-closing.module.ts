@@ -1,8 +1,8 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { YearEndClosingController } from './year-end-closing.controller';
 import { YearEndClosingService } from './year-end-closing.service';
-import { AuthModule } from 'src/auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
+// import { AuthModule } from 'src/auth/auth.module';
+// import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserService } from '../user/user.service';
@@ -26,6 +26,7 @@ import { DisableResignUser } from './service/disable-resign-user.service';
 import { AssignLeaveFunctionService } from './service/assign-leave-function.service';
 import { AssignLeaveEntitlementService } from './service/assign-leave-entitlement.service';
 import { AssignCarryForwardService } from './service/assign-carry-forward.service';
+import { getModuleHttp } from '../../common/helper/basic-functions';
 
 
 @Module({
@@ -56,9 +57,10 @@ import { AssignCarryForwardService } from './service/assign-carry-forward.servic
     AssignCarryForwardService
   ],
   imports: [
-    AuthModule,
-    PassportModule.register({ session: false }),
-    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    // AuthModule,
+    // PassportModule.register({ session: false }),
+    // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    getModuleHttp()
   ]
 })
 export class YearEndClosingModule { }

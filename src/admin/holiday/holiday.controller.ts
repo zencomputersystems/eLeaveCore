@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpService, Delete } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpService, Delete, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
 import { HolidayService } from './holiday.service';
@@ -52,21 +52,27 @@ export class HolidayController {
         let monthLink = req.query.month != null ? '&month=' + req.query.month : '';
         let localNational = '&type=local,national';
 
+        let arrKey = ['29106b407bdd770140057e044bcb3db0d64a3a51', 'fc56e1848bee6b48e3af29bcb042a2d76c17ff55'];
+        // console.log(Math.round(Math.random()));
         let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
-        let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
+        let calendarApiKey = '?api_key=' + arrKey[0];
+
+
         let calendarFullURL = calendarBaseUrl + calendarApiKey;
+        // console.log(calendarFullURL + countryLink + yearLink + locationLink + monthLink + localNational);
 
         this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink + localNational)
             .subscribe((response) => {
                 res.send(response.data);
             }, err => {
-                this.commonFunctionService.sendResErrorV3(err, res);
+                // this.commonFunctionService.sendResErrorV3(err, res);
                 // if (err.response.data) {
                 //     res.status(err.response.data.error.status_code);
                 //     res.send(err.response.data.error.message)
                 // } else {
-                //     res.status(500);
-                //     res.send(err);
+                // res.status(500);
+                // res.send(err);
+                res.send(new BadRequestException('Please input filter data'));
                 // }
             });
 

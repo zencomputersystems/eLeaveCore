@@ -8,6 +8,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { MulterModule } from '@nestjs/platform-express';
+import { getModuleHttp } from '../../common/helper/basic-functions';
 
 
 /**
@@ -27,7 +28,8 @@ import { MulterModule } from '@nestjs/platform-express';
   ],
   imports: [
     PassportModule.register({ session: false }),
-    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    getModuleHttp(),
     MulterModule.register({
       fileFilter: function fileFilter(req, file, cb) {
         if (file.mimetype != "text/csv")

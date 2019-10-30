@@ -1,6 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { QueueNotificationDTO } from 'src/admin/notification/dto/queue-notification.dto';
+import { BadRequestException } from '@nestjs/common';
 
 /**
  * Common function used
@@ -152,13 +153,15 @@ export class CommonFunctionService {
      * @memberof CommonFunctionService
      */
     public sendResErrorV3(err, res) { //sendError
-        if (err.response.data) {
-            res.status(err.response.data.error.status_code);
-            res.send(err.response.data.error.message)
-        } else {
-            res.status(500);
-            res.send(err);
-        }
+        // if (err.response.data) {
+        //     res.status(err.response.data.error.status_code);
+        //     res.send(err.response.data.error.message)
+        // } else {
+        //     res.status(500);
+        //     res.send(err);
+        // }
+        console.log('are u here siri?');
+        res.send(new BadRequestException('Input missing'));
     }
 
 

@@ -1,11 +1,12 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { LeavetypeService } from './leavetype.service';
-import { AuthModule } from 'src/auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
+// import { AuthModule } from 'src/auth/auth.module';
+// import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { LeaveTypeController } from './leavetype.controller';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { getModuleHttp } from '../../common/helper/basic-functions';
 
 /**
  * Module for leavetype
@@ -16,9 +17,10 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 @Module({
   controllers: [LeaveTypeController],
   imports: [
-    AuthModule,
-    PassportModule.register({ session: false }),
-    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
+    // AuthModule,
+    // PassportModule.register({ session: false }),
+    // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } })
+    getModuleHttp()
   ],
   providers: [
     LeavetypeService,

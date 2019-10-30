@@ -21,6 +21,7 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { NotificationService } from 'src/admin/notification/notification.service';
 import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation-parent.service';
+import { getModuleHttp } from '../../common/helper/basic-functions';
 
 /**
  * Module for leave
@@ -30,7 +31,8 @@ import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-app
  */
 @Module({
   imports: [
-    HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+    getModuleHttp()
   ],
   controllers: [ApplyController, ApprovedController],
   providers: [

@@ -30,8 +30,8 @@ import { getModuleHttp } from '../common/helper/basic-functions';
     ],
     imports: [
         PassportModule.register({ session: false }),
-        // HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
-        getModuleHttp(),
+        HttpModule.register({ headers: { 'Content-Type': 'application/json', 'X-Dreamfactory-API-Key': DreamFactory.df_key } }),
+        // getModuleHttp(),
         UserModule
     ]
 })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { of } from 'rxjs';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 
@@ -27,9 +27,13 @@ export class ForgotPasswordService {
    * @memberof ForgotPasswordService
    */
   public forgotPasswordProcess(email: string) {
-    console.log(email);
-    let results = this.emailNodemailerService.mailProcessForgotPassword(email);
-    // return of(results + " send email to " + email);
-    return of(results);
+
+    if (email != '{email}' && email.trim() != '') {
+      let results = this.emailNodemailerService.mailProcessForgotPassword(email);
+      return of(results);
+    } else {
+      throw new BadRequestException('Please set an email', 'No email specify');
+    }
+
   }
 }

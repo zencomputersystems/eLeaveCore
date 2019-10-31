@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException, Delete, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery, ApiImplicitParam } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
 import { UserprofileService } from '../../service/userprofile.service';
 import { switchMap, map } from 'rxjs/operators';
@@ -47,22 +47,25 @@ export class UserprofileController {
     @UseGuards(ResourceGuard)
     @Get('/users/:role')
     @ApiOperation({ title: 'Get list of employee' })
-    @ApiImplicitQuery({ name: 'role', description: 'Whether admin or employee', required: false })
+    @ApiImplicitParam({ name: 'role', description: 'Whether admin or employee', required: false })
     @Roles('ViewProfile', 'ProfileAdmin', 'EditProfile')
     findAll(@Param('role') role: string, @Req() req, @Res() res) {
 
-        let dataRole = null;
-        let dataRoleParam = req.query.role;
-        if (dataRoleParam == null) {
-            dataRole = role;
-        } else {
-            dataRole = dataRoleParam;
-        }
-        role = dataRole;
+        // let dataRole = null;
+        // let dataRoleParam = req.query.role;
+        // if (dataRoleParam == null) {
+        //     dataRole = role;
+        // } else {
+        //     dataRole = dataRoleParam;
+        // }
+        // role = dataRole;
 
         // console.log(role);
         this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, [])
             .pipe(switchMap(filter => {
+                // temp
+                const tempQuery = `(FULLNAME LIKE '%test%')`;
+                filter.push(tempQuery);
 
                 if (role.toLowerCase() == 'employee') {
                     const extra = '(ACTIVATION_FLAG=1)';

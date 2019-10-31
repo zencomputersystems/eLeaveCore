@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, MethodNotAllowedException, BadRequestException } from '@nestjs/common';
 import { UserLeaveEntitlementDbService } from '../db/user-leave-entitlement.db.service';
 import { UserprofileDbService } from '../db/userprofile.db.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.service';
 import { AssignLeavePolicyDTO } from '../dto/leave-entitlement/assign-leave-policy.dto';
-import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
+import { map, filter, switchMap, mergeMap, throwIfEmpty, defaultIfEmpty } from 'rxjs/operators';
 import { LeaveTypeEntitlementModel } from 'src/admin/leavetype-entitlement/model/leavetype_entitlement.model';
 import { IDbService } from 'src/interface/IDbService';
 import { of } from 'rxjs';
@@ -92,6 +92,7 @@ export class UserEntitlementAssignEntitlement {
             }))
         }),
         mergeMap((res) => {
+          console.log(res);
           return this.userEntitlementAssignPolicy.assignPolicyProcess([res, user, data]);
 
         })

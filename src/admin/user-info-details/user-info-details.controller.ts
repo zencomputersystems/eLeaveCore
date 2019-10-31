@@ -1,5 +1,5 @@
-import { Controller, Patch, Req, Res, Body, Param, UseGuards, Get } from '@nestjs/common';
-import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Patch, Req, Res, Body, Param, UseGuards, Get, BadRequestException, NotFoundException } from '@nestjs/common';
+import { ApiOperation, ApiImplicitQuery, ApiBearerAuth, ApiImplicitParam } from '@nestjs/swagger';
 import { UpdateUserInfoItemDTO } from './dto/update-user-info-details.dto';
 import { UserInfoDetailsService } from './user-info-details.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
@@ -21,65 +21,39 @@ export class UserInfoDetailsController {
 
   @Get(':item')
   @ApiOperation({ title: 'Get employee personal info' })
-  @ApiImplicitQuery({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
+  @ApiImplicitParam({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
   getPersonalInfo(@Param('item') item, @Req() req, @Res() res) {
-    let dataId = null;
-    let dataIdParam = req.query.item;
-
-    if (dataIdParam == null) {
-      dataId = item;
+    if (item != '{item}' && item.trim() != '') {
+      this.userInfoDetailsService.getUserXMLInfo(req.user.USER_GUID).subscribe(
+        data => {
+          this.userInfoDetailsService.filterResults(data, res, item);
+        }, err => {
+          throw new NotFoundException('No data found', 'Unreachable');
+        }
+      );
     } else {
-      dataId = dataIdParam;
+      throw new BadRequestException('Please input valid filter', 'Invalid filter');
     }
-
-    if (dataId == null) {
-      res.status(400);
-      res.send('item not found');
-    }
-
-    this.userInfoDetailsService.getUserXMLInfo(req.user.USER_GUID).subscribe(
-      data => {
-        this.userInfoDetailsService.filterResults(data, res, dataId);
-      }, err => {
-        res.send(err);
-      }
-    );
   }
 
   @Get(':item/:id')
   @ApiOperation({ title: 'Get employee personal info by user guid' })
-  @ApiImplicitQuery({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
-  @ApiImplicitQuery({ name: 'id', description: 'Get user info by user guid', required: true })
-  getPersonalUserInfo(@Param() data, @Req() req, @Res() res) {
-    let dataId = null;
-    let dataItem = null;
-    let dataIdParam = req.query.id;
-    let dataItemParam = req.query.item;
-
-    if (dataIdParam == null) {
-      dataId = data.id;
+  @ApiImplicitParam({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
+  @ApiImplicitParam({ name: 'id', description: 'Get user info by user guid', required: true })
+  getPersonalUserInfo(@Param() param, @Req() req, @Res() res) {
+    if (param.id != '{id}' && param.id != '' && param.item != '{item}' && param.item != '') {
+      this.userInfoDetailsService.getUserXMLInfo(param.id).subscribe(
+        data => {
+          this.userInfoDetailsService.filterResults(data, res, param.item);
+        }, err => {
+          // res.send(err);
+          throw new NotFoundException('No data found', 'Unreachable');
+        }
+      );
     } else {
-      dataId = dataIdParam;
+      throw new BadRequestException('Please input valid filter', 'Invalid filter');
     }
 
-    if (dataItemParam == null) {
-      dataItem = data.item;
-    } else {
-      dataItem = dataItemParam;
-    }
-
-    if (dataId == null || dataItem == null) {
-      res.status(400);
-      res.send('item not found');
-    }
-
-    this.userInfoDetailsService.getUserXMLInfo(dataId).subscribe(
-      data => {
-        this.userInfoDetailsService.filterResults(data, res, dataItem);
-      }, err => {
-        res.send(err);
-      }
-    );
   }
 
   @Patch('/all/:id')

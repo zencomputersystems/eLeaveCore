@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException, Post, Body, Patch } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';
 import { CompanySiteService } from './company-site.service';
@@ -54,11 +54,11 @@ export class CompanySiteController {
      */
     @Get('/:id')
     @ApiOperation({ title: 'Get company-site by company' })
-    @ApiImplicitQuery({ name: 'id', description: 'Filter by COMPANY_GUID', required: true })
+    @ApiImplicitParam({ name: 'id', description: 'Filter by COMPANY_GUID', required: true })
     findById(@Param('id') id, @Req() req, @Res() res) {
         // console.log(id);
-        id = verifyParam([req, 'id', id]);
-        console.log(id);
+        // id = verifyParam([req, 'id', id]);
+        // console.log(id);
         // id = this.commonFunctionService.findIdParam(req, res, id);
         this.companySiteService.findById(req.user.TENANT_GUID, id).subscribe(
             data => { res.send(data.data.resource); },

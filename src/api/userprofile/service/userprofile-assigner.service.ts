@@ -88,6 +88,8 @@ export class UserprofileAssignerService {
     userProfileData.employeeLocation = data.TENANT_COMPANY_GUID;
     userProfileData.employeeDepartment = data.DEPARTMENT;
     userProfileData.calendarId = data.CALENDAR_GUID;
+    userProfileData.roleId = data.ROLE_GUID;
+    userProfileData.workingHoursId = data.WORKING_HOURS_GUID;
     userProfileData.tenantId = data.TENANT_GUID;
 
     return userProfileData;

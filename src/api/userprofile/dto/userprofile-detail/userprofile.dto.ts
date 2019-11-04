@@ -39,6 +39,24 @@ export class UserProfileDTO {
     calendarId: string;
 
     /**
+     * Role id
+     *
+     * @type {string}
+     * @memberof UserProfileDTO
+     */
+    @ApiModelProperty()
+    roleId: string;
+
+    /**
+     * Working hours id
+     *
+     * @type {string}
+     * @memberof UserProfileDTO
+     */
+    @ApiModelProperty()
+    workingHoursId: string;
+
+    /**
      * Data user profile - tenant id
      *
      * @type {string}

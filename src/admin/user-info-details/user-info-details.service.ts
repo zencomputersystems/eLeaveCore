@@ -6,6 +6,8 @@ import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { map, mergeMap } from 'rxjs/operators';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
+import { dateDuration } from 'src/common/helper/basic-functions';
+import moment = require('moment');
 
 @Injectable()
 export class UserInfoDetailsService {
@@ -238,6 +240,9 @@ export class UserInfoDetailsService {
       } else if (dataId == 'employment-detail') {
         if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
           resultItem['employmentDetail'] = dataXML.root.employmentDetail;
+          const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
+          const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';
+          resultItem['employmentDetail']['yearOfService'] = serviceDuration;
         }
       } else if (dataId == 'notification-rule') {
         if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('notificationRule')) {

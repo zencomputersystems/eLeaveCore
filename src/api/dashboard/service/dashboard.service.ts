@@ -103,9 +103,35 @@ export class DashboardService {
    * @returns {Observable<any>}
    * @memberof DashboardService
    */
-  public getLongLeave(user_guid, tenant_guid): Observable<any> {
-    return this.leaveTransactionDbService.findLongLeave(user_guid, tenant_guid);
+  public getLongLeave([user_guid, tenant_guid, role]: [string, string, string]): Observable<any> {
+    let dateToday = moment().format('YYYY-MM-DD');
+    let filters = [];
+    if (role == 'admin') {
+      filters = ['(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+    } else {
+      filters = ['(USER_GUID=' + user_guid + ')', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+    }
+
+    return this.leaveTransactionDbService.findLongLeave(filters);
   }
+
+  // /**
+  //  * Process long leave
+  //  *
+  //  * @param {*} data
+  //  * @returns
+  //  * @memberof DashboardService
+  //  */
+  // public processLongLeave(data) {
+
+  //   let daystogo = moment(data[0].START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
+  //   let longLeaveData = new LongLeaveDTO;
+  //   longLeaveData.startDate = moment(data[0].START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+  //   longLeaveData.endDate = moment(data[0].END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+  //   longLeaveData.noOfDays = data[0].NO_OF_DAYS;
+  //   longLeaveData.daysToGo = daystogo + ' days to go';
+  //   return longLeaveData;
+  // }
 
   /**
    * Process long leave
@@ -115,14 +141,18 @@ export class DashboardService {
    * @memberof DashboardService
    */
   public processLongLeave(data) {
+    let dataArr = [];
+    data.forEach(element => {
+      let daystogo = moment(element.START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
+      let longLeaveData = new LongLeaveDTO;
+      longLeaveData.startDate = moment(element.START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+      longLeaveData.endDate = moment(element.END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+      longLeaveData.noOfDays = element.NO_OF_DAYS;
+      longLeaveData.daysToGo = daystogo + ' days to go';
+      dataArr.push(longLeaveData);
+    });
 
-    let daystogo = moment(data[0].START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
-    let longLeaveData = new LongLeaveDTO;
-    longLeaveData.startDate = moment(data[0].START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-    longLeaveData.endDate = moment(data[0].END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-    longLeaveData.noOfDays = data[0].NO_OF_DAYS;
-    longLeaveData.daysToGo = daystogo + ' days to go';
-    return longLeaveData;
+    return dataArr;
   }
 
   /**

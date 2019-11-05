@@ -24,7 +24,8 @@ export class UserprofileListDTO {
         this.branch = element.BRANCH;
         this.companyId = element.TENANT_COMPANY_GUID;
         this.email = element.EMAIL;
-        this.status = element.STATUS_ACTIVATION;
+        this.status = element.ACTIVATION_FLAG == 1 ? 'Active' : 'Inactive';
+        this.statusInvite = element.STATUS_ACTIVATION;
         this.access = accessData;
     }
 
@@ -92,12 +93,19 @@ export class UserprofileListDTO {
      */
     public email: string;
     /**
-     * Data userprofilelist - status activation
+     * Data userprofilelist - status user
      *
      * @type {string}
      * @memberof UserprofileListDTO
      */
     public status: string;
+    /**
+     * Data userprofileList = status invitation
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
+    public statusInvite: string;
     /**
      * Data userprofilelist - access
      *

@@ -77,10 +77,10 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 	 * @returns
 	 * @memberof LeaveTransactionDbService
 	 */
-	public findLongLeave(userGuid: string, tenantId: string) {
-		let dateToday = moment().format('YYYY-MM-DD');
+	public findLongLeave(filters: string[]) {
+
 		const fields = [];
-		const filters = ['(USER_GUID=' + userGuid + ')', '(TENANT_GUID=' + tenantId + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+
 		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
 		return this.httpService.get(url);
 	}

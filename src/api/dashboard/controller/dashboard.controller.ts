@@ -1,6 +1,6 @@
-import { Controller, UseGuards, HttpService, Get, Req, Res, Param } from '@nestjs/common';
+import { Controller, UseGuards, HttpService, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitQuery, ApiImplicitParam } from '@nestjs/swagger';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { DashboardService } from '../service/dashboard.service';
@@ -71,17 +71,38 @@ export class DashboardController {
 		);
 	}
 
-	/**
-	 * Get long leave
-	 *
-	 * @param {*} req
-	 * @param {*} res
-	 * @memberof DashboardController
-	 */
-	@Get('/employee/long-leave')
+	// /**
+	//  * Get long leave
+	//  *
+	//  * @param {*} req
+	//  * @param {*} res
+	//  * @memberof DashboardController
+	//  */
+	// @Get('/employee/long-leave')
+	// @ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
+	// getLongLeave(@Req() req, @Res() res) {
+	// 	this.dashboardService.getLongLeave([req.user.USER_GUID, req.user.TENANT_GUID, null]).subscribe(
+	// 		data => {
+	// 			let result;
+	// 			if (data.data.resource.length > 0) {
+	// 				result = this.dashboardService.processLongLeave(data.data.resource);
+	// 			} else {
+	// 				result = { "status": "Not available" };
+	// 			}
+
+	// 			res.send(result);
+	// 		}, err => {
+	// 			res.send(err);
+	// 		}
+	// 	);
+	// }
+
+	@Get('/employee/long-leave/:role')
 	@ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
-	getLongLeave(@Req() req, @Res() res) {
-		this.dashboardService.getLongLeave(req.user.USER_GUID, req.user.TENANT_GUID).subscribe(
+	@ApiImplicitParam({ name: 'role', description: 'Role user', required: false })
+	findLongLeave(@Param('role') role, @Req() req, @Res() res) {
+		// if (role == 'admin') {
+		this.dashboardService.getLongLeave([req.user.USER_GUID, req.user.TENANT_GUID, role]).subscribe(
 			data => {
 				let result;
 				if (data.data.resource.length > 0) {
@@ -92,9 +113,13 @@ export class DashboardController {
 
 				res.send(result);
 			}, err => {
-				res.send(err);
+				throw new NotFoundException('Failed to get long elave');
+				// res.send(err);
 			}
 		);
+		// } else {
+
+		// }
 	}
 
 	/**

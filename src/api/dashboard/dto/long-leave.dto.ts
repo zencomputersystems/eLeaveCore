@@ -8,6 +8,40 @@ import { ApiModelProperty } from '@nestjs/swagger';
  */
 export class LongLeaveDTO {
   /**
+   * Leave type guid
+   *
+   * @type {string}
+   * @memberof LongLeaveDTO
+   */
+  @ApiModelProperty({ description: 'Leave type guid', example: 'aa84b3c0-7849-11e9-a449-bd6134fe73e4' })
+  leaveTypeGuid: string;
+  /**
+   * User guid
+   *
+   * @type {string}
+   * @memberof LongLeaveDTO
+   */
+  @ApiModelProperty({ description: 'User guid', example: '697b25ac-bff1-b1d1-f17e-fa0206fc7a2a' })
+  userGuid: string;
+
+  /**
+   * Fullname
+   *
+   * @type {string}
+   * @memberof LongLeaveDTO
+   */
+  @ApiModelProperty({ description: 'Fullname', example: 'Ahmad Tarmimi (Test)' })
+  fullname: string;
+
+  /**
+   * Designation
+   *
+   * @type {string}
+   * @memberof LongLeaveDTO
+   */
+  @ApiModelProperty({ description: 'Designation', example: 'Service Desk Consultant' })
+  designation: string;
+  /**
    * Start date
    *
    * @type {string}

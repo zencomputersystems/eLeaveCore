@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Observable, of, forkJoin } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 import { CalendarProfileDbService } from '../../../admin/holiday/db/calendar-profile-db.service';
@@ -8,6 +8,8 @@ import { BirthdayDataDTO } from '../dto/birthday-data.dto';
 import { LeaveTransactionDbService } from '../../leave/db/leave-transaction.db.service';
 import { LongLeaveDTO } from '../dto/long-leave.dto';
 import { XMLParserService } from '../../../common/helper/xml-parser.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { LongLeaveResultDTO } from '../dto/long-leave-result.dto';
 
 /**
  * Service for dashboard
@@ -30,7 +32,8 @@ export class DashboardService {
     private readonly calendarProfileDbService: CalendarProfileDbService,
     private readonly userInfoDbService: UserInfoDbService,
     private readonly leaveTransactionDbService: LeaveTransactionDbService,
-    public readonly xmlParserService: XMLParserService
+    public readonly xmlParserService: XMLParserService,
+    public readonly userprofileDbService: UserprofileDbService
   ) { }
   /**
    * Get upcoming holiday and upcoming leave taken
@@ -105,33 +108,48 @@ export class DashboardService {
    */
   public getLongLeave([user_guid, tenant_guid, role]: [string, string, string]): Observable<any> {
     let dateToday = moment().format('YYYY-MM-DD');
-    let filters = [];
+    let filters = ['LEAVE_TYPE_GUID', 'USER_GUID', 'START_DATE', 'END_DATE', 'NO_OF_DAYS'];
     if (role == 'admin') {
       filters = ['(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+    } else if (role == 'superior') {
+      filters = ['(USER_GUID IN ( SELECT USER_GUID FROM l_view_user_profile_list WHERE MANAGER_USER_GUID = "' + user_guid + '" ))', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
     } else {
       filters = ['(USER_GUID=' + user_guid + ')', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
     }
 
-    return this.leaveTransactionDbService.findLongLeave(filters);
+    return this.leaveTransactionDbService.findLongLeave(filters).pipe(mergeMap(res => {
+      let allData = res.data.resource;
+      let userGuid = '';
+
+      allData.forEach(element => {
+        userGuid = userGuid == '' ? '"' + element.USER_GUID + '"' : userGuid + ',"' + element.USER_GUID + '"';
+      });
+
+      let userData = this.userprofileDbService.findByFilterV4(['USER_GUID', 'FULLNAME', 'DESIGNATION'], ['(USER_GUID IN (' + userGuid + '))'], null, null);
+
+      return forkJoin(of(res), userData);
+    }));
   }
 
-  // /**
-  //  * Process long leave
-  //  *
-  //  * @param {*} data
-  //  * @returns
-  //  * @memberof DashboardService
-  //  */
-  // public processLongLeave(data) {
-
-  //   let daystogo = moment(data[0].START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
-  //   let longLeaveData = new LongLeaveDTO;
-  //   longLeaveData.startDate = moment(data[0].START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-  //   longLeaveData.endDate = moment(data[0].END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-  //   longLeaveData.noOfDays = data[0].NO_OF_DAYS;
-  //   longLeaveData.daysToGo = daystogo + ' days to go';
-  //   return longLeaveData;
-  // }
+  public getLongLeaveSuperior([user_guid, tenant_guid, role]: [string, string, string]): Observable<any> {
+    const field = ['USER_GUID', 'FULLNAME', 'DESIGNATION'];
+    const filter = ['(TENANT_GUID = ' + tenant_guid + ')', '(MANAGER_USER_GUID=' + user_guid + ')'];
+    return this.userprofileDbService.findByFilterV3(field, filter)
+      .pipe(map(res => {
+        let downline = res.data.resource;
+        let userList: string = '';
+        downline.forEach(element => {
+          userList = userList == '' ? '"' + user_guid + '","' + element.USER_GUID + '"' : userList + ',"' + element.USER_GUID + '"';
+        });
+        return { downline, userList };
+      }), mergeMap(res => {
+        let { downline, userList } = res;
+        let dateToday = moment().format('YYYY-MM-DD');
+        const filterLeave = ['(USER_GUID IN ( ' + userList + ' ))', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+        let resultsLeave = this.leaveTransactionDbService.findLongLeave(filterLeave);
+        return forkJoin(resultsLeave, of(downline));
+      }));
+  }
 
   /**
    * Process long leave
@@ -140,17 +158,34 @@ export class DashboardService {
    * @returns
    * @memberof DashboardService
    */
-  public processLongLeave(data) {
-    let dataArr = [];
+  public processLongLeave(data, dataUser) {
+
+    let dataArr = new LongLeaveResultDTO;
+    let personalArr = [];
+    let downlineArr = [];
     data.forEach(element => {
+      let userData = dataUser.find(x => x.USER_GUID.toString() === element.USER_GUID.toString());
       let daystogo = moment(element.START_DATE, 'YYYY-MM-DD').diff(moment(), 'days');
       let longLeaveData = new LongLeaveDTO;
-      longLeaveData.startDate = moment(element.START_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
-      longLeaveData.endDate = moment(element.END_DATE, 'YYYY-MM-DD').format('DD MMMM YYYY');
+
+      longLeaveData.leaveTypeGuid = element.LEAVE_TYPE_GUID;
+      longLeaveData.userGuid = element.USER_GUID;
+      longLeaveData.startDate = moment(element.START_DATE, 'YYYY-MM-DD').format('ddd DD MMMM YYYY');
+      longLeaveData.endDate = moment(element.END_DATE, 'YYYY-MM-DD').format('ddd DD MMMM YYYY');
       longLeaveData.noOfDays = element.NO_OF_DAYS;
       longLeaveData.daysToGo = daystogo + ' days to go';
-      dataArr.push(longLeaveData);
+
+      if (userData != null) {
+        longLeaveData.fullname = userData.FULLNAME;
+        longLeaveData.designation = userData.DESIGNATION;
+        downlineArr.push(longLeaveData);
+      } else {
+        personalArr.push(longLeaveData);
+      }
+
     });
+    dataArr.personal = personalArr;
+    dataArr.downline = downlineArr;
 
     return dataArr;
   }

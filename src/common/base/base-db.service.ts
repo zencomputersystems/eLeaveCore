@@ -105,7 +105,6 @@ export class BaseDBService {
     public findByFilterV4(fields: string[], filters: string[], order: string, limit: number): Observable<Array<any>> {
         //url
         const url = this.queryService.generateDbQueryV3([this.tableName, fields, filters, order, limit]);
-
         return this.httpService.get(url)
             .pipe(
                 map(res => {

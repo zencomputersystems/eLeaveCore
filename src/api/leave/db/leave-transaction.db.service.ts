@@ -11,6 +11,7 @@ import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { UpdateApprovalDTO } from 'src/admin/approval-override/dto/update-approval.dto';
 import moment = require('moment');
+import { getInfo } from 'src/common/helper/basic-functions';
 
 type CreateLeave = [ApplyLeaveDataDTO, any, any, ApplyLeaveDTO, boolean];
 /**
@@ -69,18 +70,16 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 		return this.httpService.get(url);
 	}
 
+
 	/**
 	 * Find long leave
 	 *
-	 * @param {string} userGuid
-	 * @param {string} tenantId
+	 * @param {string[]} filters
 	 * @returns
 	 * @memberof LeaveTransactionDbService
 	 */
 	public findLongLeave(filters: string[]) {
-
 		const fields = [];
-
 		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
 		return this.httpService.get(url);
 	}

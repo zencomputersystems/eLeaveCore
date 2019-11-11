@@ -101,25 +101,27 @@ export class DashboardController {
 	@ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
 	@ApiImplicitParam({ name: 'role', description: 'Role user', required: false })
 	findLongLeave(@Param('role') role, @Req() req, @Res() res) {
-		// if (role == 'admin') {
-		this.dashboardService.getLongLeave([req.user.USER_GUID, req.user.TENANT_GUID, role]).subscribe(
+		let method;
+		if (role == 'admin') {
+			method = this.dashboardService.getLongLeave([req.user.USER_GUID, req.user.TENANT_GUID, role]);
+		} else {
+			method = this.dashboardService.getLongLeaveSuperior([req.user.USER_GUID, req.user.TENANT_GUID, role]);
+		}
+
+		method.subscribe(
 			data => {
 				let result;
-				if (data.data.resource.length > 0) {
-					result = this.dashboardService.processLongLeave(data.data.resource);
+				if (data[0].data.resource.length > 0) {
+					result = this.dashboardService.processLongLeave(data[0].data.resource, data[1]);
 				} else {
 					result = { "status": "Not available" };
 				}
-
 				res.send(result);
 			}, err => {
 				throw new NotFoundException('Failed to get long elave');
-				// res.send(err);
 			}
 		);
-		// } else {
 
-		// }
 	}
 
 	/**

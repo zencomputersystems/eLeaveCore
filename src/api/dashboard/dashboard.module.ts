@@ -18,6 +18,7 @@ import { DashboardLeaveController } from './controller/dashboard-leave.controlle
 import { DashboardCommonService } from './service/dashboard-common.service';
 import { DashboardProcController } from './controller/dashboard-proc.controller';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 
 /**
  * Module for dashboard
@@ -44,7 +45,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
         DashboardLeaveService,
         UserLeaveEntitlementSummaryDbService,
         UserLeaveEntitlementDbService,
-        DashboardCommonService
+        DashboardCommonService,
+        UserprofileDbService
     ],
     controllers: [DashboardController, DashboardLeaveController, DashboardProcController]
 })

@@ -36,3 +36,7 @@ export function dateDuration([nowDate, pastDate]: [string, string]) {
 
   return { years, months, days };
 }
+
+export function getInfo(dataField: string) {
+  return '(SELECT ' + dataField + ' FROM user_info ui WHERE USER_GUID = USER_GUID ORDER BY CREATION_TS DESC LIMIT 1) AS ' + dataField;
+}

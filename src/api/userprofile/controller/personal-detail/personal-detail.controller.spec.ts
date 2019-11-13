@@ -5,7 +5,6 @@ import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-d
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { PersonalDetailController } from './personal-detail.controller';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
-import { NotificationService } from 'src/admin/notification/notification.service';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from '../../../../common/helper/query-parser.service';
 describe('PersonalDetailController', () => {
@@ -39,7 +38,6 @@ describe('PersonalDetailController', () => {
         },
         { provide: XMLParserService, useValue: xMLParserServiceStub },
         CommonFunctionService,
-        NotificationService,
         { provide: HttpService, useValue: httpServiceStub },
         QueryParserService
       ]

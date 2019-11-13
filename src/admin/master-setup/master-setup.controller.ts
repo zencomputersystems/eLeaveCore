@@ -1,7 +1,6 @@
 import { Controller, UseGuards, Get, Param, Req, Res, Patch, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
-import { CommonFunctionService } from '../../common/helper/common-function.services';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { MasterSetupService } from './master-setup.service';
 import { MasterSetupDTO } from './dto/master-setup.dto';
 
@@ -27,22 +26,21 @@ export class MasterSetupController {
   /**
    * Find all item endpoint
    *
-   * @param {*} get_item
+   * @param {*} dataId
    * @param {*} req
    * @param {*} res
    * @memberof MasterSetupController
    */
   @Get(':item')
   @ApiOperation({ title: 'Get data list' })
-  @ApiImplicitQuery({
+  @ApiImplicitParam({
     name: 'item', description: 'Get list of master item', required: true,
     enum: ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status']
   })
-  findAll(@Param('item') get_item, @Req() req, @Res() res) {
+  findAll(@Param('item') dataId, @Req() req, @Res() res) {
+    let item = this.verifyItem();
 
-    let { dataId, item } = this.verifyItem(req, get_item);
-
-    if (item.includes(dataId)) {
+    if (item.includes(dataId.toLowerCase())) {
       this.masterSetupService.runGetItem(dataId, req.user).subscribe(
         data => { res.send(data); },
         err => { res.status(400); res.send('item not found'); });
@@ -64,15 +62,14 @@ export class MasterSetupController {
    */
   @Patch(':item')
   @ApiOperation({ title: 'Update data list' })
-  @ApiImplicitQuery({
+  @ApiImplicitParam({
     name: 'item', description: 'Update list of master item', required: true,
     enum: ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status']
   })
-  updateMaster(@Param('item') get_item, @Body() data: MasterSetupDTO, @Req() req, @Res() res) {
+  updateMaster(@Param('item') dataId, @Body() data: MasterSetupDTO, @Req() req, @Res() res) {
+    let item = this.verifyItem();
 
-    let { dataId, item } = this.verifyItem(req, get_item);
-
-    if (item.includes(dataId)) {
+    if (item.includes(dataId.toLowerCase())) {
       this.masterSetupService.updateMasterItem([data, dataId, req.user]).subscribe(
         data => { res.send(data); },
         err => { res.status(400); res.send('item not found'); });
@@ -84,26 +81,13 @@ export class MasterSetupController {
   }
 
   /**
-   * Check parameter data
+   * Return list item to find
    *
-   * @param {*} req
-   * @param {*} get_item
    * @returns
    * @memberof MasterSetupController
    */
-  public verifyItem(req, get_item) {
-    // list item to find
-    let item = ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status'];
-    // item to get
-    let dataId: string = null;
-    // if have item from implicit query set to dataid param 
-    let dataIdParam: string = req.query.item;
-    // if no data, get from link
-    dataId = dataIdParam == null ? get_item : dataIdParam;
-    // lowercase all item
-    dataId = dataId.toLowerCase();
-
-    return { dataId, item };
+  public verifyItem() {
+    return ['department', 'designation', 'section', 'branch', 'bank', 'costcentre', 'country', 'employee_type', 'employee_status'];
   }
 
 }

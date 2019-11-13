@@ -3,7 +3,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { WorkingHoursDbService } from './db/working-hours.db.service';
-import { map, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { WorkingHoursListDTO } from './dto/working-hours-list.dto';
 import { WorkingHoursDTO } from './dto/working-hours.dto';
 import { v1 } from 'uuid';
@@ -13,7 +13,7 @@ import { UpdateWorkingHoursDTO } from './dto/update-working-hours.dto';
 import { UpdateWorkingHoursModel } from './model/update-working-hours.model';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { UpdateUserWorkingHoursModel } from './model/update-userworkinghours.model';
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 /**
  * Service for working hours
@@ -45,30 +45,22 @@ export class WorkingHoursService {
    * @memberof WorkingHoursService
    */
   public findWorkingHoursProfile() {
-    return this.workingHoursDbService.findAllWorkingHoursProfile()
-      .pipe(map(res => { if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); } })
-      )
+    return this.workingHoursDbService.findAllWorkingHoursProfile().pipe(map(res => {
+      if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); }
+    }))
   }
 
   /**
    * Get employee working hours attach
    *
    * @param {string} workingHoursId
-   * @returns
+   * @param {string} tenant_guid
+   * @returns {Observable<any>}
    * @memberof WorkingHoursService
    */
-  public getEmployeeWorkingHoursAttach(workingHoursId: string): Observable<any> {
-    // const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
-    const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')'];
+  public getEmployeeWorkingHoursAttach(workingHoursId: string, tenant_guid: string): Observable<any> {
+    const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')'];
     return this.userinfoDbService.findEmployeeAttach(filters);
-    // return this.userinfoDbService.findEmployeeAssign(filters)
-    //   .pipe(map(res => {
-    //     if (res.status == 200) {
-    //       // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
-    //       // return jsonHoliday;
-    //       return res.data.resource;
-    //     }
-    //   }))
   }
 
   /**
@@ -79,10 +71,9 @@ export class WorkingHoursService {
    * @memberof WorkingHoursService
    */
   public getWorkingHoursDetail(workingHoursId: string) {
-    return this.workingHoursDbService.findAll(workingHoursId)
-      .pipe(map(res => {
-        if (res.status == 200) { return this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
-      }))
+    return this.workingHoursDbService.findAll(workingHoursId).pipe(map(res => {
+      if (res.status == 200) { return this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
+    }))
   }
 
   /**
@@ -94,8 +85,6 @@ export class WorkingHoursService {
    * @memberof WorkingHoursService
    */
   create(user: any, data: WorkingHoursDTO) {
-    // let tempData = this.xmlParserService.convertJsonToXML(data);
-    // console.log(tempData);
 
     const resource = new Resource(new Array);
     const modelData = new CreateWorkingHoursModel();
@@ -152,14 +141,6 @@ export class WorkingHoursService {
     data.WORKING_HOURS_GUID = d.working_hours_guid;
     data.UPDATE_TS = new Date().toISOString();
     data.UPDATE_USER_GUID = user.USER_GUID;
-    // let userList = '';
-    // for (let i = 0; i < d.user_guid.length; i++) {
-    //   if (userList == '') {
-    //     userList = '"' + d.user_guid[i] + '"';
-    //   } else {
-    //     userList = userList + ',"' + d.user_guid[i] + '"';
-    //   }
-    // }
 
     let userList = this.assignerDataService.setBundleUserGuid(d);
 
@@ -169,7 +150,7 @@ export class WorkingHoursService {
   }
 
   /**
-   * Function delete working hours
+   * Function delete working hours if no user attach
    *
    * @param {*} user
    * @param {string} working_hours_guid
@@ -179,18 +160,6 @@ export class WorkingHoursService {
   deleteWorkingHours(user: any, working_hours_guid: string) {
     const filters = ['(WORKING_HOURS_GUID=' + working_hours_guid + ')'];
     return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteProcessWorkingHours(user, working_hours_guid));
-    // return this.userinfoDbService.findEmployeeAssign(filters).pipe(
-    //   mergeMap(res => {
-    //     if (res.data.resource.length > 0) {
-    //       // will return user attach to this working hours profile
-    //       return of(res);
-    //     } else {
-    //       // will show deleted working hours
-    //       let deletedData = this.deleteProcessWorkingHours(user, working_hours_guid);
-    //       return deletedData;
-    //     }
-    //   }),
-    // );
   }
 
   /**

@@ -35,7 +35,6 @@ export class DashboardProcController {
    */
   @Get('/employee/status-onleave')
   @ApiOperation({ title: 'Get total employee status onleave' })
-  // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
   @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
   @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
   findTotalEmployee(@Req() req, @Res() res) {
@@ -51,7 +50,6 @@ export class DashboardProcController {
    */
   @Get('/employee/leave-list')
   @ApiOperation({ title: 'Get total employee on leave' })
-  // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
   @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
   @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
   findEmployeeLeaveList(@Req() req, @Res() res) {
@@ -67,7 +65,6 @@ export class DashboardProcController {
    */
   @Get('/employee/calendar-leave-list')
   @ApiOperation({ title: 'Get all list of employee to calendar' })
-  // @ApiImplicitQuery({ name: 'tenantguid', description: 'Tenant guid', required: true })
   @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: true })
   @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: true })
   findCalendarLeaveList(@Req() req, @Res() res) {

@@ -21,7 +21,6 @@ import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/s
 import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
-import { NotificationService } from '../../admin/notification/notification.service';
 import { UserprofileAssignerService } from './service/userprofile-assigner.service';
 import { UserEntitlementAssignEntitlement } from './service/userentitlement-assign-entitlement.service';
 import { UserEntitlementAssignPolicy } from './service/userentitlement-assign-policy.service';
@@ -55,7 +54,6 @@ import { PassportModule } from '@nestjs/passport';
     ProratedDateEndYearService,
     ProratedDateCurrentMonthService,
     CommonFunctionService,
-    NotificationService,
     UserprofileAssignerService,
     UserEntitlementAssignEntitlement,
     UserEntitlementAssignPolicy,
@@ -73,7 +71,7 @@ import { PassportModule } from '@nestjs/passport';
     PersonalDetailController,
     EmploymentDetailController,
     // LeaveEntitlementController,
-    CertificationDetailController,
+    // CertificationDetailController,
     UserprofileController,
     EntitlementDetailController],
 })

@@ -44,9 +44,22 @@ export class RoleService {
 	 * @memberof RoleService
 	 */
 	public findRoleProfile() {
-		return this.roleDbService.findAllRoleProfile()
-			.pipe(map(res => { if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO); } })
-			)
+		return this.roleDbService.findAllRoleProfile().pipe(map(res => {
+			if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO); }
+		}))
+	}
+
+	/**
+	 * Get employee attach to role
+	 *
+	 * @param {string} roleId
+	 * @param {string} tenant_guid
+	 * @returns
+	 * @memberof RoleService
+	 */
+	public getEmployeeRoleAttach(roleId: string, tenant_guid: string) {
+		const filters = ['(ROLE_GUID=' + roleId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')'];
+		return this.userinfoDbService.findEmployeeAttach(filters);
 	}
 
 	/**
@@ -57,13 +70,9 @@ export class RoleService {
 	 * @memberof RoleService
 	 */
 	public getRoleDetail(roleId: string) {
-		return this.roleDbService.findAll(roleId)
-			.pipe(map(res => {
-				if (res.status == 200) {
-					let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
-					return jsonHoliday;
-				}
-			}))
+		return this.roleDbService.findAll(roleId).pipe(map(res => {
+			if (res.status == 200) { return this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
+		}))
 	}
 
 	/**
@@ -75,8 +84,6 @@ export class RoleService {
 	 * @memberof RoleService
 	 */
 	create(user: any, data: RoleDTO) {
-		// let tempData = this.xmlParserService.convertJsonToXML(data);
-		// console.log(tempData);
 
 		const resource = new Resource(new Array);
 		const modelData = new CreateRoleModel();
@@ -91,7 +98,6 @@ export class RoleService {
 		modelData.DESCRIPTION = data.description;
 
 		resource.resource.push(modelData);
-		// console.log(resource)
 
 		return this.roleDbService.createByModel(resource, [], [], []);
 	}
@@ -134,20 +140,27 @@ export class RoleService {
 		data.ROLE_GUID = d.role_guid;
 		data.UPDATE_TS = new Date().toISOString();
 		data.UPDATE_USER_GUID = user.USER_GUID;
-		// let userList = '';
-		// for (let i = 0; i < d.user_guid.length; i++) {
-		//     if (userList == '') {
-		//         userList = '"' + d.user_guid[i] + '"';
-		//     } else {
-		//         userList = userList + ',"' + d.user_guid[i] + '"';
-		//     }
-		// }
+
 		let userList = this.assignerDataService.setBundleUserGuid(d);
 
 		resource.resource.push(data);
 
 		return this.userinfoDbService.updateByModel(resource, [], ['(USER_GUID IN (' + userList + '))'], []);
 	}
+
+	/**
+	 * Verify if role profile have user attach
+	 *
+	 * @param {*} user
+	 * @param {string} role_guid
+	 * @returns
+	 * @memberof RoleService
+	 */
+	deleteRole(user: any, role_guid: string) {
+		const filters = ['(ROLE_GUID=' + role_guid + ')'];
+		return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteProcessRole(user, role_guid));
+	}
+
 	/**
 	 * Delete role profile: update deleted_at field
 	 *
@@ -156,7 +169,7 @@ export class RoleService {
 	 * @returns
 	 * @memberof RoleService
 	 */
-	deleteRole(user: any, roleId: string) {
+	deleteProcessRole(user: any, roleId: string) {
 		const resource = new Resource(new Array);
 		const data = new UpdateRoleModel();
 
@@ -168,4 +181,5 @@ export class RoleService {
 
 		return this.roleDbService.updateByModel(resource, [], ['(ROLE_GUID=' + roleId + ')'], ['ROLE_GUID', 'CODE']);
 	}
+
 }

@@ -19,7 +19,6 @@ import { ApprovedController } from './controller/approval/approval.controller';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
-import { NotificationService } from 'src/admin/notification/notification.service';
 import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation-parent.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 
@@ -53,7 +52,6 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     ApprovalService,
     AccessLevelValidateService,
     CommonFunctionService,
-    NotificationService,
     LeaveBalanceValidationParentService
   ],
 })

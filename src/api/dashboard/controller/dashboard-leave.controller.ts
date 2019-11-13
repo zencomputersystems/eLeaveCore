@@ -1,5 +1,5 @@
 import { Get, Req, Res, Param, Controller, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiOperation, ApiBearerAuth, ApiImplicitParam } from '@nestjs/swagger';
 import { DashboardLeaveService } from '../service/dashboard-leave.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -81,22 +81,22 @@ export class DashboardLeaveController {
    */
   @Get('/employee/:leavecode/:data')
   @ApiOperation({ title: 'Get my leave' })
-  @ApiImplicitQuery({
+  @ApiImplicitParam({
     name: 'leavecode',
     description: 'Annual Leave (AL), Birthday Leave (BL), Compassionate Leave (CL), Hospitalization Leave (HL), Medical Leave (ML), Paternity Leave (PL), Replacement Leave (RL), Maternity Leave (MTL), Marriage Leave (MRL)', required: true,
     enum: ['AL', 'BL', 'CL', 'HL', 'ML', 'PL', 'RL', 'MTL', 'MRL']
   })
-  @ApiImplicitQuery({
+  @ApiImplicitParam({
     name: 'data', description: 'Show eLeave summary or detailed', required: true,
     enum: ['simple', 'detailed']
   })
   getMyLeave(@Param() param, @Req() req, @Res() res) {
 
-    let dataLeave = this.verifyItem([req, param.leavecode, 'leave']);
-    let dataType = this.verifyItem([req, param.data, 'type']);
+    let dataLeave = this.verifyItem('leave');
+    let dataType = this.verifyItem('type');
 
-    if (dataLeave.item.includes(dataLeave.dataId) && dataType.item.includes(dataType.dataId)) {
-      this.dashboardLeaveService.getMyLeave([dataLeave.dataId, dataType.dataId, req.user.USER_GUID]).subscribe(
+    if (dataLeave.includes(param.leavecode) && dataType.includes(param.data)) {
+      this.dashboardLeaveService.getMyLeave([param.leavecode, param.data, req.user.USER_GUID]).subscribe(
         data => {
           if (data.length == 0) {
             data = { "status": "You are not entitled for this leavetype" };
@@ -120,30 +120,31 @@ export class DashboardLeaveController {
    * @returns
    * @memberof DashboardLeaveController
    */
-  public verifyItem([req, get_item, param]) {
+  public verifyItem(param: string) {
     // list item to find
     let item;
 
     // item to get
-    let dataId: string = null;
+    // let dataId: string = null;
 
     // if have item from implicit query set to dataid param 
-    let dataIdParam: string = null;
+    // let dataIdParam: string = null;
 
     if (param == 'leave') {
       item = ['AL', 'BL', 'CL', 'HL', 'ML', 'PL', 'RL', 'MTL', 'MRL'];
-      dataIdParam = req.query.leavecode;
+      // dataIdParam = req.query.leavecode;
     } else if (param == 'type') {
       item = ['simple', 'detailed'];
-      dataIdParam = req.query.data;
+      // dataIdParam = req.query.data;
     }
 
+    return item;
     // if no data, get from link
-    dataId = dataIdParam == null ? get_item : dataIdParam;
+    // dataId = dataIdParam == null ? get_item : dataIdParam;
     // lowercase all item
     // dataId = dataId.toLowerCase();
 
-    return { dataId, item };
+    // return { dataId, item };
   }
 
   /**

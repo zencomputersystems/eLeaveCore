@@ -1,8 +1,6 @@
-import { Controller, UseGuards, HttpService, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery, ApiImplicitParam } from '@nestjs/swagger';
-import { DreamFactory } from 'src/config/dreamfactory';
-import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { DashboardService } from '../service/dashboard.service';
 import moment = require('moment');
 

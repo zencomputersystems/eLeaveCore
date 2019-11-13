@@ -1,7 +1,7 @@
 import { Controller, Get, Req, Res, UseGuards, Param, Patch, Body } from '@nestjs/common';
 import { UserprofileService } from '../../service/userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
-import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { switchMap } from 'rxjs/operators';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
@@ -43,7 +43,7 @@ export class CertificationDetailController {
     // @Get('certification-detail/:id')
     // @Roles('EditProfile', 'ProfileAdmin')
     // @ApiOperation({ title: 'Get certification detail for requested user' })
-    // @ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
+    // @ApiImplicitParam({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
     // findOne(@Param('id') id, @Req() req, @Res() res) {
 
     //     const user = req.user;

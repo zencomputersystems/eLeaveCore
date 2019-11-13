@@ -89,4 +89,11 @@ export class UserModel {
     * @memberof UserModel
     */
    IS_TENANT_ADMIN: string;
+   /**
+    * User Model - deleted at
+    *
+    * @type {string}
+    * @memberof UserModel
+    */
+   DELETED_AT: string;
 }

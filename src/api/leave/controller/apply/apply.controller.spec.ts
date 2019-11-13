@@ -4,7 +4,6 @@ import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ApplyController } from './apply.controller';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
-import { NotificationService } from '../../../../admin/notification/notification.service';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from '../../../../common/helper/query-parser.service';
 import { XMLParserService } from '../../../../common/helper/xml-parser.service';
@@ -32,7 +31,6 @@ describe('ApplyController', () => {
           useValue: accessLevelValidateServiceStub
         },
         CommonFunctionService,
-        NotificationService,
         { provide: HttpService, useValue: httpServiceStub },
         QueryParserService,
         XMLParserService

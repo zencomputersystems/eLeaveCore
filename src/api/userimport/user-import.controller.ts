@@ -36,9 +36,6 @@ export class UserImportController {
     @ApiOperation({ title: 'Import user' })
     create(@Body() userInviteDto: [UserCsvDto], @Req() req, @Res() res) {
 
-        // res.send(userInviteDto);
-        // const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has view role', 'view role');
-        // this.notificationService.create(notify).subscribe();
         this.userImportService.processImportData(req.user, userInviteDto)
             .subscribe(
                 data => {

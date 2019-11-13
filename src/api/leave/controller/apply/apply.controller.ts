@@ -1,14 +1,12 @@
 import { Controller, UseGuards, Get, Req, Res, Post, Body, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { switchMap } from 'rxjs/operators';
 import { ApplyLeaveService } from '../../service/apply-leave.service';
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 import { Resources } from 'src/decorator/resource.decorator';
 import { RolesGuard } from 'src/guard/role.guard';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
-import { CommonFunctionService } from '../../../../common/helper/common-function.services';
-import { NotificationService } from '../../../../admin/notification/notification.service';
 import { ApplyLeaveBundleDTO } from '../../dto/apply-leave-bundle.dto';
 
 /**
@@ -28,9 +26,8 @@ export class ApplyController {
      * @memberof ApplyController
      */
     constructor(private readonly applyLeaveService: ApplyLeaveService,
-        private readonly accessLevelValidationService: AccessLevelValidateService,
-        private readonly commonFunctionService: CommonFunctionService,
-        private readonly notificationService: NotificationService) { }
+        private readonly accessLevelValidationService: AccessLevelValidateService
+    ) { }
 
     /**
      * Method apply leave
@@ -48,8 +45,6 @@ export class ApplyController {
         this.applyLeaveService.processLeave(applyLeaveDTO, req.user)
             .subscribe(
                 data => {
-                    const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has apply a leave', 'user-leave', '');
-                    this.notificationService.create(notify).subscribe();
                     res.send(data);
                 },
                 err => {
@@ -72,7 +67,7 @@ export class ApplyController {
     // @UseGuards(RolesGuard)
     // @Post('leave/apply-on-behalf/:id')
     // @ApiOperation({ title: 'Apply leave on behalf' })
-    // @ApiImplicitQuery({
+    // @ApiImplicitParam({
     //     name: 'id', description: 'Apply by USER_GUID', required: true
     // })
     // @Resources({ resourceRef: 'allowLeaveManagement', resourceName: 'allowApplyOnBehalf' })
@@ -80,8 +75,6 @@ export class ApplyController {
     //     // console.log(req);
     //     // console.log(req.accessLevel);
     //     // res.send(id +' - '+ req.user.USER_GUID);
-
-    //     id = this.commonFunctionService.findIdParam(req, res, id);
 
     //     this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, [])
     //         .pipe(switchMap(filter => {
@@ -91,8 +84,6 @@ export class ApplyController {
     //         }))
     //         .subscribe(
     //             data => {
-    //                 const notify = this.commonFunctionService.setNotificationData(id, '[USER_NAME] has apply a leave for you', 'user-leave', { "user_guid": req.user.USER_GUID });
-    //                 this.notificationService.create(notify).subscribe();
     //                 return res.send(data);
     //             },
     //             err => {
@@ -141,8 +132,6 @@ export class ApplyController {
             .subscribe(
                 data => {
                     // console.log(data);
-                    // const notify = this.commonFunctionService.setNotificationData(id, '[USER_NAME] has apply a leave for you', 'user-leave', { "user_guid": req.user.USER_GUID });
-                    // this.notificationService.create(notify).subscribe();
                     // setTimeout(function afterTwoSeconds() {
                     // console.log('2')
                     res.send(data);

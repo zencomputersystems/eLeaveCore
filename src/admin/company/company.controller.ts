@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException, Post, Body, Patch, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery, ApiImplicitParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { CompanyService } from './company.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { UpdateCompanyDTO } from './dto/update-company.dto';

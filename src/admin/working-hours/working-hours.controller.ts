@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Post, Body, Req, Res, Get, Patch, Param, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { WorkingHoursService } from './working-hours.service';
 import { WorkingHoursDTO } from './dto/working-hours.dto';
@@ -82,10 +82,9 @@ export class WorkingHoursController {
    */
   @Delete('working-hours-profile/:id')
   @ApiOperation({ title: 'Delete working hours profile' })
-  @ApiImplicitQuery({ name: 'id', description: 'Delete by WORKING_HOURS_GUID', required: true })
+  @ApiImplicitParam({ name: 'id', description: 'Delete by WORKING_HOURS_GUID', required: true })
   deleteWorkingHoursProfile(@Param('id') id, @Req() req, @Res() res) {
-    let idTemp = this.commonFunctionService.findIdParam(req, res, id);
-    this.commonFunctionService.runUpdateService(this.workingHoursService.deleteWorkingHours(req.user, idTemp), res);
+    this.commonFunctionService.runUpdateService(this.workingHoursService.deleteWorkingHours(req.user, id), res);
   }
 
   /**
@@ -99,11 +98,10 @@ export class WorkingHoursController {
   @UseGuards(ResourceGuard)
   @Get('working-hours-profile/users/:id')
   @ApiOperation({ title: 'Get employee list by working hours profile' })
-  @ApiImplicitQuery({ name: 'id', description: 'Filter by WORKING_HOURS_GUID', required: true })
+  @ApiImplicitParam({ name: 'id', description: 'Filter by WORKING_HOURS_GUID', required: true })
   @Roles('ViewProfile', 'ProfileAdmin')
-  findEmployeeWorkingHoursProfile(@Req() req, @Res() res, @Param('id') id) {
-    let dataId = this.commonFunctionService.findIdParam(req, res, id);
-    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getEmployeeWorkingHoursAttach(dataId), res);
+  findEmployeeWorkingHoursProfile(@Param('id') id, @Req() req, @Res() res) {
+    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getEmployeeWorkingHoursAttach(id, req.user.TENANT_GUID), res);
   }
 
   /**
@@ -116,10 +114,9 @@ export class WorkingHoursController {
    */
   @Get(':id')
   @ApiOperation({ title: 'Get working hours detail by working hours profile guid' })
-  @ApiImplicitQuery({ name: 'id', description: 'Filter by WORKING_HOURS_GUID', required: true })
-  findOneWorkingHour(@Req() req, @Res() res, @Param('id') id) {
-    let whId = this.commonFunctionService.findIdParam(req, req, id);
-    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getWorkingHoursDetail(whId), res);
+  @ApiImplicitParam({ name: 'id', description: 'Filter by WORKING_HOURS_GUID', required: true })
+  findOneWorkingHour(@Param('id') id, @Req() req, @Res() res) {
+    this.commonFunctionService.runGetServiceV2(this.workingHoursService.getWorkingHoursDetail(id), res);
   }
 
   /**

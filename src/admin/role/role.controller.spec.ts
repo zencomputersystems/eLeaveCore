@@ -4,7 +4,6 @@ import { RoleService } from './role.service';
 import { UpdateRoleDTO } from './dto/update-role.dto';
 import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
-import { NotificationService } from '../notification/notification.service';
 import { RoleController } from './role.controller';
 describe('RoleController', () => {
   let pipe: RoleController;
@@ -24,7 +23,7 @@ describe('RoleController', () => {
       runCreateService: (arg1, res2) => ({}),
       runUpdateService: (arg1, res2) => ({})
     };
-    const notificationServiceStub = {};
+
     const module = await Test.createTestingModule({
       providers: [
         RoleController,
@@ -32,8 +31,7 @@ describe('RoleController', () => {
         { provide: RoleService, useValue: roleServiceStub },
         { provide: UpdateRoleDTO, useValue: updateRoleDTOStub },
         { provide: UpdateUserRoleDTO, useValue: updateUserRoleDTOStub },
-        { provide: CommonFunctionService, useValue: commonFunctionServiceStub },
-        { provide: NotificationService, useValue: notificationServiceStub }
+        { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
       ]
     }).compile();
     pipe = await module.get<RoleController>(RoleController);

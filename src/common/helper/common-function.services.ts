@@ -1,6 +1,5 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { QueueNotificationDTO } from 'src/admin/notification/dto/queue-notification.dto';
 import { BadRequestException } from '@nestjs/common';
 
 /**
@@ -222,24 +221,6 @@ export class CommonFunctionService {
         //call DF to validate the user
         return httpService.get(url);
 
-    }
-
-    /**
-     * save activity to notification
-     *
-     * @param {*} employeeId
-     * @param {*} message
-     * @param {*} category
-     * @returns
-     * @memberof CommonFunctionService
-     */
-    public setNotificationData(employeeId, message, category, remarks) {
-        let notify = new QueueNotificationDTO;
-        notify.employeeId = employeeId;
-        notify.message = message;
-        notify.category = category;
-        notify.remarks = remarks;
-        return notify;
     }
 
     /**

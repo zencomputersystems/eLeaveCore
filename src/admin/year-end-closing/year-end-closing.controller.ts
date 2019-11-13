@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Get, Post, Body, Req, Res, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { YearEndClosingService } from './year-end-closing.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
@@ -20,8 +20,7 @@ export class YearEndClosingController {
    * @memberof YearEndClosingController
    */
   constructor(
-    private readonly yearEndClosingService: YearEndClosingService,
-    private readonly commonFunctionService: CommonFunctionService
+    private readonly yearEndClosingService: YearEndClosingService
   ) { }
 
   /**
@@ -35,23 +34,23 @@ export class YearEndClosingController {
    * @memberof YearEndClosingController
    */
   @Post('/:year')
-  @ApiImplicitQuery({ name: 'year', description: 'Closing year', required: true })
+  @ApiImplicitParam({ name: 'year', description: 'Closing year', required: true })
   @ApiOperation({ title: 'Assign leave entitlement for next year' })
   create(@Param('year') year, @Req() req, @Res() res) {
     // console.log(year);
     // year = this.commonFunctionService.findIdParam(req, res, year);
-    let dataYear = null;
-    let dataIdParam = req.query.year;
-    if (dataIdParam == null) {
-      dataYear = year;
-    } else {
-      dataYear = dataIdParam;
-    }
-    if (dataYear == null) {
-      res.status(400);
-      res.send('id not found');
-    }
-    year = dataYear;
+    // let dataYear = null;
+    // let dataIdParam = req.query.year;
+    // if (dataIdParam == null) {
+    //   dataYear = year;
+    // } else {
+    //   dataYear = dataIdParam;
+    // }
+    // if (dataYear == null) {
+    //   res.status(400);
+    //   res.send('id not found');
+    // }
+    // year = dataYear;
     // console.log(year);
     // console.log(new Date(year).getFullYear() + 1);
     this.yearEndClosingService.yearEndProcess(req.user, new Date(year).getFullYear() + 1).subscribe(data => {

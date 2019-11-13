@@ -9,7 +9,6 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
-import { NotificationService } from '../notification/notification.service';
 import { WorkingHoursService } from './working-hours.service';
 import { WorkingHoursDbService } from './db/working-hours.db.service';
 import { WorkingHoursController } from './working-hours.controller';
@@ -36,8 +35,7 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     WorkingHoursDbService,
     AssignerDataService,
     UserInfoDbService,
-    CommonFunctionService,
-    NotificationService
+    CommonFunctionService
   ],
   controllers: [WorkingHoursController]
 })

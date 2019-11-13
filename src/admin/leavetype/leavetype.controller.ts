@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LeavetypeService } from './leavetype.service';
 import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
-import { ApiBearerAuth, ApiOperation, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
@@ -17,8 +17,16 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 @ApiBearerAuth()
 export class LeaveTypeController {
 
-  constructor(private readonly leavetypeService: LeavetypeService,
-    private readonly commonFunctionService: CommonFunctionService) { }
+  /**
+   *Creates an instance of LeaveTypeController.
+   * @param {LeavetypeService} leavetypeService Leave type service 
+   * @param {CommonFunctionService} commonFunctionService Common function service
+   * @memberof LeaveTypeController
+   */
+  constructor(
+    private readonly leavetypeService: LeavetypeService,
+    private readonly commonFunctionService: CommonFunctionService
+  ) { }
 
   /**
    * Get all leavetype
@@ -31,14 +39,9 @@ export class LeaveTypeController {
   @ApiOperation({ title: 'Find all Leavetype' })
   findAllLeavetype(@Req() req, @Res() res) {
     this.leavetypeService.findAll(req.user.TENANT_GUID).subscribe(
-      data => {
-        res.send(data.data.resource);
-      },
-      err => {
-        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
-      }
+      data => { res.send(data.data.resource); },
+      err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource'); }
     );
-
   }
 
   /**
@@ -51,17 +54,11 @@ export class LeaveTypeController {
    */
   @Get(':id')
   @ApiOperation({ title: 'Find one Leavetype' })
-  @ApiImplicitQuery({ name: 'id', description: 'Filter by leavetype guid', required: true })
+  @ApiImplicitParam({ name: 'id', description: 'Filter by leavetype guid', required: true })
   findOne(@Param('id') id, @Req() req, @Res() res) {
-
-    id = this.commonFunctionService.findIdParam(req, res, id);
     this.leavetypeService.findById(req.user.TENANT_GUID, id).subscribe(
-      data => {
-        res.send(data.data.resource[0]);
-      },
-      err => {
-        this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource');
-      }
+      data => { res.send(data.data.resource[0]); },
+      err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource'); }
     );
   }
 
@@ -76,12 +73,10 @@ export class LeaveTypeController {
   @Post()
   @ApiOperation({ title: 'Create leavetype' })
   create(@Body() createLeavetypeDTO: CreateLeaveTypeDto, @Req() req, @Res() res) {
-
-    this.leavetypeService.create(req.user, createLeavetypeDTO)
-      .subscribe(
-        data => { if (data.status == 200) { res.send(data.data); } },
-        err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
-      )
+    this.leavetypeService.create(req.user, createLeavetypeDTO).subscribe(
+      data => { if (data.status == 200) { res.send(data.data); } },
+      err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
+    )
   }
 
   /**
@@ -95,11 +90,10 @@ export class LeaveTypeController {
   @Patch()
   @ApiOperation({ title: 'Update Leavetype' })
   updateLeavetype(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDto, @Req() req, @Res() res) {
-    this.leavetypeService.update(req.user, updateLeaveTypeDTO)
-      .subscribe(
-        data => { if (data.status == 200) { res.send(data.data); } },
-        err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
-      )
+    this.leavetypeService.update(req.user, updateLeaveTypeDTO).subscribe(
+      data => { if (data.status == 200) { res.send(data.data); } },
+      err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
+    )
   }
 
   /**
@@ -112,9 +106,8 @@ export class LeaveTypeController {
    */
   @Delete('/:id')
   @ApiOperation({ title: 'Delete leavetype' })
-  @ApiImplicitQuery({ name: 'id', description: 'Delete by leavetype guid', required: true })
+  @ApiImplicitParam({ name: 'id', description: 'Delete by leavetype guid', required: true })
   deleteLeavetype(@Param('id') id, @Req() req, @Res() res) {
-    id = this.commonFunctionService.findIdParam(req, res, id);
     this.commonFunctionService.runUpdateService(this.leavetypeService.delete(req.user, id), res);
   }
 

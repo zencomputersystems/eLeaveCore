@@ -107,10 +107,10 @@ export class UserInfoDbService extends BaseDBService {
         return this.findEmployeeAssign(filters).pipe(
             mergeMap(res => {
                 if (res.data.resource.length > 0) {
-                    // will return user attach to this calendar profile
+                    // will return user attach to this profile
                     return of(res);
                 } else {
-                    // will show deleted calendar
+                    // will show deleted profile
                     let deletedData = method;
                     return deletedData;
                 }

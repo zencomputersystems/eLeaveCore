@@ -1,5 +1,5 @@
 import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, Body } from '@nestjs/common';
-import { ApiOperation, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiOperation, ApiBearerAuth, ApiImplicitParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UserprofileService } from '../../service/userprofile.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
@@ -9,7 +9,6 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
-import { NotificationService } from 'src/admin/notification/notification.service';
 import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-details.service';
 
 /**
@@ -31,10 +30,9 @@ export class PersonalDetailController {
 	 * @memberof PersonalDetailController
 	 */
 	constructor(
-		private readonly userprofileService: UserprofileService,
-		private readonly accessLevelValidationService: AccessLevelValidateService,
-		private readonly commonFunctionService: CommonFunctionService,
-		private readonly notificationService: NotificationService,
+		// private readonly userprofileService: UserprofileService,
+		// private readonly accessLevelValidationService: AccessLevelValidateService,
+		// private readonly commonFunctionService: CommonFunctionService,
 		private readonly userInfoDetailsService: UserInfoDetailsService) { }
 
 
@@ -74,71 +72,69 @@ export class PersonalDetailController {
 		);
 	}
 
-	/**
-	 * Get personal detail to edit for requested user
-	 *
-	 * @param {*} id
-	 * @param {*} req
-	 * @param {*} res
-	 * @memberof PersonalDetailController
-	 */
-	@UseGuards(ResourceGuard)
-	@Get('personal-detail/:id')
-	@Roles('EditProfile', 'ProfileAdmin')
-	@ApiOperation({ title: 'Get personal detail to edit for requested user' })
-	@ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-	findOne(@Param('id') id, @Req() req, @Res() res) {
-		id = this.commonFunctionService.findIdParam(req, res, id);
-		const user = req.user;
-		console.log(req.accessLevel);
-		this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
-			.pipe(switchMap(filter => {
-				return this.userprofileService.getPersonalDetail(filter);
-			}))
-			.subscribe(
-				data => {
-					res.send(data);
-				},
-				err => {
-					res.status(500);
-					res.send(err);
-				}
-			)
-	}
+	// /**
+	//  * Get personal detail to edit for requested user
+	//  *
+	//  * @param {*} id
+	//  * @param {*} req
+	//  * @param {*} res
+	//  * @memberof PersonalDetailController
+	//  */
+	// @UseGuards(ResourceGuard)
+	// @Get('personal-detail/:id')
+	// @Roles('EditProfile', 'ProfileAdmin')
+	// @ApiOperation({ title: 'Get personal detail to edit for requested user' })
+	// @ApiImplicitParam({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
+	// findOne(@Param('id') id, @Req() req, @Res() res) {
+	// 	const user = req.user;
+	// 	console.log(req.accessLevel + '1');
+	// 	this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
+	// 		.pipe(switchMap(filter => {
+	// 			return this.userprofileService.getPersonalDetail(filter);
+	// 		}))
+	// 		.subscribe(
+	// 			data => {
+	// 				res.send(data);
+	// 			},
+	// 			err => {
+	// 				res.status(500);
+	// 				res.send(err);
+	// 			}
+	// 		)
+	// }
 
-	/**
-	 * Get personal detail to edit for requested user
-	 *
-	 * @param {*} id
-	 * @param {*} req
-	 * @param {*} res
-	 * @memberof PersonalDetailController
-	 */
-	@UseGuards(ResourceGuard)
-	@Get('personal-detail/:id')
-	@Roles('EditProfile', 'ProfileAdmin')
-	@ApiOperation({ title: 'Get personal detail to edit for requested user' })
-	@ApiImplicitQuery({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
-	findOneData(@Param('id') id, @Req() req, @Res() res) {
-		id = this.commonFunctionService.findIdParam(req, res, id);
-		const user = req.user;
-		console.log(req.accessLevel);
-		res.send('ok');
+	// /**
+	//  * Get personal detail to edit for requested user
+	//  *
+	//  * @param {*} id
+	//  * @param {*} req
+	//  * @param {*} res
+	//  * @memberof PersonalDetailController
+	//  */
+	// @UseGuards(ResourceGuard)
+	// @Get('personal-detail/:id')
+	// @Roles('EditProfile', 'ProfileAdmin')
+	// @ApiOperation({ title: 'Get personal detail to edit for requested user' })
+	// @ApiImplicitParam({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
+	// findOneData(@Param('id') id, @Req() req, @Res() res) {
+	// 	const user = req.user;
+	// 	console.log(req.accessLevel + '2');
+	// 	res.send('ok');
 
-		// this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
-		// 	.pipe(switchMap(filter => {
-		// 		return this.userprofileService.getPersonalDetail(filter);
-		// 	}))
-		// 	.subscribe(
-		// 		data => {
-		// 			res.send(data);
-		// 		},
-		// 		err => {
-		// 			res.status(500);
-		// 			res.send(err);
-		// 		}
-		// 	)
-	}
+	// this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
+	// 	.pipe(switchMap(filter => {
+	// 		return this.userprofileService.getPersonalDetail(filter);
+	// 	}))
+	// 	.subscribe(
+	// 		data => {
+	// 			res.send(data);
+	// 		},
+	// 		err => {
+	// 			res.status(500);
+	// 			res.send(err);
+	// 		}
+	// 	)
+	// }
 
 	// /**
 	//  * Update userprofile
@@ -155,7 +151,7 @@ export class PersonalDetailController {
 	// @ApiOperation({ title: 'Update userprofile' })
 	// update(@Body() updatePersonalDetailDTO: UpdatePersonalDetailDTO, @Req() req, @Res() res) {
 	// 	const notify = this.commonFunctionService.setNotificationData(req.user.USER_GUID, '[USER_NAME] has update the profile', 'user-update', '');
-	// 	this.notificationService.create(notify).subscribe();
+
 
 	// 	return this.userprofileService.updatePersonalDetail(updatePersonalDetailDTO, req.USER_GUID)
 	// 		.subscribe(

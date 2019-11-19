@@ -59,8 +59,21 @@ export class UserInfoModel extends CreateUpdateModel {
    */
   PERSONAL_ID: string;
 
-  // DOB here (skipped)
-  // GENDER here (skipped)
+  /**
+   * Date of birth
+   *
+   * @type {string}
+   * @memberof UserInfoModel
+   */
+  DOB: string;
+
+  /**
+   * Gender
+   *
+   * @type {number}
+   * @memberof UserInfoModel
+   */
+  GENDER: number;
 
   /**
    * Join date
@@ -70,7 +83,13 @@ export class UserInfoModel extends CreateUpdateModel {
    */
   JOIN_DATE: Date;
 
-  // MARITAL STATUS here (skipped)
+  /**
+  * Marital status
+  *
+  * @type {number}
+  * @memberof UserInfoModel
+  */
+  MARITAL_STATUS: number;
 
   /**
   * Division name
@@ -91,10 +110,10 @@ export class UserInfoModel extends CreateUpdateModel {
   /**
     * Employee status
     *
-    * @type {number}
+    * @type {string}
     * @memberof UserInfoModel
     */
-  EMPLOYEE_STATUS: number;
+  EMPLOYEE_STATUS: string;
 
   /**
    * Department name - employee belong to which department

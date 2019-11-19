@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Post, UseInterceptors, UploadedFile, Req, Res, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitFile } from '@nestjs/swagger';
 import parse = require('csv-parse/lib/sync');
 import { UserImportService } from './user-import.service';
 import { UserCsvDto } from './dto/csv/user-csv.dto';
@@ -57,6 +57,7 @@ export class UserImportController {
      * @memberof UserImportController
      */
     @Post('csv')
+    @ApiImplicitFile({ name: 'file', required: true, description: 'The file to upload' })
     @UseInterceptors(FileInterceptor('file'))
     @ApiOperation({ title: 'Import user from CSV list' })
     importCSV(@UploadedFile() file, @Req() req, @Res() res) {
@@ -71,7 +72,7 @@ export class UserImportController {
             skip_empty_lines: true
         })
 
-        console.log(records);
+        // console.log(records);
         this.userImportService.processImportData(req.user, records)
             .subscribe(
                 data => {

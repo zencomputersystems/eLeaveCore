@@ -32,7 +32,7 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     getModuleHttp(),
     MulterModule.register({
       fileFilter: function fileFilter(req, file, cb) {
-        if (file.mimetype != "text/csv")
+        if (file.mimetype != "text/csv" && file.mimetype != "application/vnd.ms-excel")
           return cb(new BadRequestException('Only CSV are allowed'), false);
         else
           cb(null, true);

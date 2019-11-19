@@ -66,9 +66,30 @@ export class UserInfoDbService extends BaseDBService {
         return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'FULLNAME']);
     }
 
-    public setUserInfo(d: string, user_guid: string, user: any) {
+    public setUserInfo([d, user_info_guid, user, res]: [string, string, any, UpdateUserInfoItemDTO]) {
         const resource = new Resource(new Array);
         const data = new UserInfoModel;
+
+        const employmentData = res.root.employmentDetail;
+        const personalData = res.root.personalDetails;
+
+        data.DEPARTMENT = employmentData.department;
+        data.DESIGNATION = employmentData.designation;
+        data.SECTION = employmentData.section;
+        data.COSTCENTRE = employmentData.costcentre;
+        data.EMPLOYEE_STATUS = employmentData.employmentStatus;
+        data.EMPLOYEE_TYPE = employmentData.employmentType;
+        data.MANAGER_USER_GUID = employmentData.reportingTo;
+        data.JOIN_DATE = new Date(employmentData.dateOfJoin);
+        data.CONFIRMATION_DATE = new Date(employmentData.dateOfConfirmation);
+        data.RESIGNATION_DATE = new Date(employmentData.dateOfResign);
+
+        data.FULLNAME = personalData.fullname;
+        data.NICKNAME = personalData.nickname;
+        data.PERSONAL_ID = personalData.nric;
+        data.DOB = personalData.dob;
+
+
 
         data.PROPERTIES_XML = d;
         data.UPDATE_TS = new Date().toISOString();
@@ -76,7 +97,7 @@ export class UserInfoDbService extends BaseDBService {
 
         resource.resource.push(data);
 
-        return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ') AND (RESIGNATION_DATE IS NULL)'], ['PROPERTIES_XML']);
+        return this.updateByModel(resource, [], ['(USER_INFO_GUID=' + user_info_guid + ')'], ['PROPERTIES_XML']);
     }
 
     /**

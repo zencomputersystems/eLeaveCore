@@ -166,10 +166,18 @@ export class UserImportService {
                 userInfoModel.CREATION_TS = new Date().toISOString();
 
                 userInfoModel.FULLNAME = element.FULLNAME;
+                userInfoModel.NICKNAME = element.NICKNAME;
 
                 userInfoModel.DEPARTMENT = element.DEPARTMENT || null;
                 userInfoModel.BRANCH = element.BRANCH || null;
+                userInfoModel.COSTCENTRE = element.COST_CENTRE;
                 userInfoModel.DESIGNATION = element.DESIGNATION;
+                userInfoModel.DIVISION = element.DIVISION;
+                userInfoModel.SECTION = element.SECTION;
+                userInfoModel.PERSONAL_ID = element.NRIC;
+                userInfoModel.DOB = element.DOB;
+                userInfoModel.GENDER = element.GENDER.toLowerCase() == 'male' ? 1 : 0;
+                userInfoModel.MARITAL_STATUS = element.MARITAL_STATUS.toLowerCase() == 'single' ? 0 : 1;
 
                 userInfoModel.JOIN_DATE = new Date(element.JOIN_DATE);
                 userInfoModel.CONFIRMATION_DATE = new Date(element.CONFIRMATION_DATE) || null;

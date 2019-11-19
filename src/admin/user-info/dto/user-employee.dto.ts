@@ -140,12 +140,12 @@ export class UserEmployeeDTO {
     /**
      * Data  user employee - employment status
      *
-     * @type {number}
+     * @type {string}
      * @memberof UserEmployeeDTO
      */
-    @ApiModelProperty({ description: 'Employment status', example: 2 })
+    @ApiModelProperty({ description: 'Employment status', example: 'Confirmed' })
     @IsNotEmpty()
-    employmentStatus: number;
+    employmentStatus: string;
 
     /**
      * Data user employee - cost centre id

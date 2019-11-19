@@ -49,13 +49,23 @@ export class UserCsvDto {
     FULLNAME: string;
 
     /**
+     * Data user csv - nickname
+     *
+     * @type {string}
+     * @memberof UserCsvDto
+     */
+    @ApiModelProperty()
+    @IsNotEmpty()
+    NICKNAME: string;
+
+    /**
      * Data user csv - ic number
      *
      * @type {string}
      * @memberof UserCsvDto
      */
     @ApiModelProperty()
-    IC_NUMBER: string;
+    NRIC: string;
 
     /**
      * Data user csv - dob
@@ -82,7 +92,7 @@ export class UserCsvDto {
      * @memberof UserCsvDto
      */
     @ApiModelProperty()
-    PHONE_NUMBER: string;
+    MOBILE_NUMBER: string;
 
     /**
      * Data user csv - company number
@@ -91,7 +101,7 @@ export class UserCsvDto {
      * @memberof UserCsvDto
      */
     @ApiModelProperty()
-    COMPANY_NUMBER: string;
+    WORK_NUMBER: string;
 
     /**
      * Data user csv - marital status
@@ -166,15 +176,6 @@ export class UserCsvDto {
     COST_CENTRE: string;
 
     /**
-     * Data user csv - company
-     *
-     * @type {string}
-     * @memberof UserCsvDto
-     */
-    @ApiModelProperty()
-    COMPANY: string;
-
-    /**
      *  Data user csv - branch
      *
      * @type {string}
@@ -182,6 +183,33 @@ export class UserCsvDto {
      */
     @ApiModelProperty()
     BRANCH: string;
+
+    /**
+     * Data user csv - division
+     *
+     * @type {string}
+     * @memberof UserCsvDto
+     */
+    @ApiModelProperty()
+    DIVISION: string;
+
+    /**
+     * Data user csv - section
+     *
+     * @type {string}
+     * @memberof UserCsvDto
+     */
+    @ApiModelProperty()
+    SECTION: string;
+
+    /**
+     * Data user csv - company
+     *
+     * @type {string}
+     * @memberof UserCsvDto
+     */
+    @ApiModelProperty()
+    COMPANY: string;
 
     /**
      * Data user csv - join date
@@ -210,13 +238,13 @@ export class UserCsvDto {
     @ApiModelProperty()
     RESIGNATION_DATE: string;
 
-    /**
-     * Data user csv - superior email
-     *
-     * @type {string}
-     * @memberof UserCsvDto
-     */
-    @ApiModelProperty()
-    SUPERIOR_EMAIL: string;
+    // /**
+    //  * Data user csv - superior email
+    //  *
+    //  * @type {string}
+    //  * @memberof UserCsvDto
+    //  */
+    // @ApiModelProperty()
+    // SUPERIOR_EMAIL: string;
 
 }

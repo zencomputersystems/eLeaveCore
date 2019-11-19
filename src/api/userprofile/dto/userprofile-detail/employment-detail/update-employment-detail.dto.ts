@@ -57,13 +57,13 @@ export class UpdateEmploymentDetailDTO extends EmploymentDetailBase {
     /**
      * Data update employment detail - employment status
      *
-     * @type {number}
+     * @type {string}
      * @memberof UpdateEmploymentDetailDTO
      */
     @ApiModelProperty({ description: 'Employee status (Confirmed,Terminated,Probation)', example: 'Confirmed' })
     @IsNotEmpty()
-    @IsNumber()
-    employmentStatus: number;
+    @IsString()
+    employmentStatus: string;
 
     /**
      * Data update employment detail - date of join

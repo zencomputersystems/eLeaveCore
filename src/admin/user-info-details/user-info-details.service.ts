@@ -31,25 +31,20 @@ export class UserInfoDetailsService {
   }
 
   public updateEmploymentInfo([data, userInfoGuid, user]: [EmploymentDetailsDTO, string, any]) {
-    let results = this.getUserInfoDetails(userInfoGuid).pipe(
-      map(res => { return this.setupDataUserInfo(['employmentDetail', data, res]); }),
-      mergeMap(res => { return this.sendResult([res, userInfoGuid, user]); })
-    );
-
-    return results;
+    return this.getDataAndUpdate(['employmentDetail', data, userInfoGuid, user]);
   }
 
   public updateNotificationRule([notificationRule, userInfoGuid, user]: [string[], string, any]) {
-    let results = this.getUserInfoDetails(userInfoGuid).pipe(
-      map(res => { return this.setupDataUserInfo(['notificationRule', notificationRule, res]); }),
-      mergeMap(res => { return this.sendResult([res, userInfoGuid, user]); })
-    );
-    return results;
+    return this.getDataAndUpdate(['notificationRule', notificationRule, userInfoGuid, user]);
   }
 
   public updatePersonalInfo([data, userInfoGuid, user]: [PersonalDetailsDTO, string, any]) {
+    return this.getDataAndUpdate(['personalDetails', data, userInfoGuid, user]);
+  }
+
+  public getDataAndUpdate([process, data, userInfoGuid, user]: [string, any, string, any]) {
     let results = this.getUserInfoDetails(userInfoGuid).pipe(
-      map(res => { return this.setupDataUserInfo(['personalDetails', data, res]); }),
+      map(res => { return this.setupDataUserInfo([process, data, res]); }),
       mergeMap(res => { return this.sendResult([res, userInfoGuid, user]); })
     );
     return results;

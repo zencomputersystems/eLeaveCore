@@ -32,23 +32,8 @@ export class UserInfoDetailsService {
 
   public updateEmploymentInfo([data, userInfoGuid, user]: [EmploymentDetailsDTO, string, any]) {
     let results = this.getUserInfoDetails(userInfoGuid).pipe(
-      map(res => {
-        let dataXML = {};
-        let dataRoot = {};
-
-        // let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
-        let { employeeDetailsData, personalDetailsData, notificationRuleData } = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
-
-        dataRoot['employmentDetail'] = data;
-        dataRoot['notificationRule'] = notificationRuleData;
-        dataRoot['personalDetails'] = personalDetailsData;
-
-        dataXML['root'] = dataRoot;
-
-        return dataXML;
-      }), mergeMap(res => {
-        return this.sendResult([res, userInfoGuid, user]);
-      })
+      map(res => { return this.setupDataUserInfo(['employmentDetail', data, res]); }),
+      mergeMap(res => { return this.sendResult([res, userInfoGuid, user]); })
     );
 
     return results;
@@ -56,63 +41,39 @@ export class UserInfoDetailsService {
 
   public updateNotificationRule([notificationRule, userInfoGuid, user]: [string[], string, any]) {
     let results = this.getUserInfoDetails(userInfoGuid).pipe(
-      map(res => {
-        let dataXML = {};
-        let dataRoot = {};
-
-        // let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
-        let { employeeDetailsData, personalDetailsData, notificationRuleData } = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
-
-        dataRoot['employmentDetail'] = employeeDetailsData;
-        dataRoot['notificationRule'] = notificationRule;
-        dataRoot['personalDetails'] = personalDetailsData;
-
-        dataXML['root'] = dataRoot;
-
-        return dataXML;
-      }), mergeMap(res => {
-        return this.sendResult([res, userInfoGuid, user]);
-      })
+      map(res => { return this.setupDataUserInfo(['notificationRule', notificationRule, res]); }),
+      mergeMap(res => { return this.sendResult([res, userInfoGuid, user]); })
     );
     return results;
   }
 
   public updatePersonalInfo([data, userInfoGuid, user]: [PersonalDetailsDTO, string, any]) {
     let results = this.getUserInfoDetails(userInfoGuid).pipe(
-      map(res => {
-        let dataInfo: UpdateUserInfoItemDTO;
-        let dataXML = {};
-        let dataRoot = {};
-
-        // let employeeDetailsData;
-        // let personalDetailsData;
-        // let notificationRuleData;
-
-        // if (res.data.resource[0].PROPERTIES_XML != null) {
-        //   dataInfo = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
-        //   employeeDetailsData = dataInfo.root.employmentDetail;
-        //   personalDetailsData = dataInfo.root.personalDetails;
-        //   notificationRuleData = dataInfo.root.notificationRule;
-        // }
-        // let results = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
-        let { employeeDetailsData, personalDetailsData, notificationRuleData } = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
-
-        dataRoot['employmentDetail'] = employeeDetailsData;
-        dataRoot['notificationRule'] = notificationRuleData;
-        dataRoot['personalDetails'] = data;
-
-        dataXML['root'] = dataRoot;
-
-        return dataXML;
-      }), mergeMap(res => {
-
-        // let xmlData = this.xmlParserService.convertJsonToXML(res);
-
-        // return this.updateUserInfoData([xmlData, userGuid, user]);
-        return this.sendResult([res, userInfoGuid, user]);
-      })
+      map(res => { return this.setupDataUserInfo(['personalDetails', data, res]); }),
+      mergeMap(res => { return this.sendResult([res, userInfoGuid, user]); })
     );
     return results;
+  }
+
+  public setupDataUserInfo([process, updateData, res]: [string, any, any]) {
+    let dataXML = {};
+    let dataRoot = {};
+    let { employeeDetailsData, personalDetailsData, notificationRuleData } = this.getDataInfo(res.data.resource[0].PROPERTIES_XML);
+
+    dataRoot['employmentDetail'] = employeeDetailsData || {};
+    dataRoot['notificationRule'] = notificationRuleData || [];
+    dataRoot['personalDetails'] = personalDetailsData || {};
+
+    if (process == 'employmentDetail')
+      dataRoot['employmentDetail'] = updateData;
+    if (process == 'notificationRule')
+      dataRoot['notificationRule'] = updateData;
+    if (process == 'personalDetails')
+      dataRoot['personalDetails'] = updateData;
+
+    dataXML['root'] = dataRoot;
+
+    return dataXML;
   }
 
   public getUserInfoDetails(userInfoGuid: string): Observable<any> {

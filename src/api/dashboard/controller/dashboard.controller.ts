@@ -116,7 +116,7 @@ export class DashboardController {
 				}
 				res.send(result);
 			}, err => {
-				throw new NotFoundException('Failed to get long elave');
+				res.send(new NotFoundException('Failed to get long elave'));
 			}
 		);
 

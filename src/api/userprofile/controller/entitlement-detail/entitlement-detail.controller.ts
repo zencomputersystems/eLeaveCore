@@ -84,16 +84,18 @@ export class EntitlementDetailController {
 	@ApiOperation({ title: 'Assign leave entitlement to user' })
 	create(@Body() assignLeaveDTO: AssignLeavePolicyDTO, @Req() req, @Res() res) {
 
-		this.entitlementService.assignEntitlement(req.user, assignLeaveDTO, 'others').subscribe(
-			data => { res.send(data); },
-			err => {
-				res.status(500);
-				res.send();
-			},
-			() => {
-				res.send();
-			}
-		)
+		this.runservice([req, res, 'others', assignLeaveDTO]);
+
+		// this.entitlementService.assignEntitlement(req.user, assignLeaveDTO, 'others').subscribe(
+		// 	data => { res.send(data); },
+		// 	err => {
+		// 		res.status(500);
+		// 		res.send();
+		// 	},
+		// 	() => {
+		// 		res.send();
+		// 	}
+		// )
 
 	}
 
@@ -111,7 +113,23 @@ export class EntitlementDetailController {
 	@ApiOperation({ title: 'Assign replacement leave entitlement to user' })
 	createReplacementLeave(@Body() assignLeaveDTO: CreateReplacementLeaveDTO, @Req() req, @Res() res) {
 
-		this.entitlementService.assignEntitlement(req.user, assignLeaveDTO, 'replacement').subscribe(
+		this.runservice([req, res, 'replacement', assignLeaveDTO]);
+
+		// this.entitlementService.assignEntitlement(req.user, assignLeaveDTO, 'replacement').subscribe(
+		// 	data => { res.send(data); },
+		// 	err => {
+		// 		res.status(500);
+		// 		res.send();
+		// 	},
+		// 	() => {
+		// 		res.send();
+		// 	}
+		// )
+
+	}
+
+	public runservice([req, res, process, assignLeaveDTO]: [any, any, string, CreateReplacementLeaveDTO | AssignLeavePolicyDTO]) {
+		this.entitlementService.assignEntitlement([req.user, assignLeaveDTO, process]).subscribe(
 			data => { res.send(data); },
 			err => {
 				res.status(500);
@@ -121,9 +139,7 @@ export class EntitlementDetailController {
 				res.send();
 			}
 		)
-
 	}
-
 
 
 

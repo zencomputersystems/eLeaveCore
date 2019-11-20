@@ -27,7 +27,7 @@ export class DashboardAdminController {
       data => {
         res.send(data.data.resource);
       }, err => {
-        throw new NotFoundException('No data retrieved', 'Failed to get data');
+        res.send(new NotFoundException('No data retrieved', 'Failed to get data'));
       }
     );
 

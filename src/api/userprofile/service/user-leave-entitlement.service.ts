@@ -81,7 +81,7 @@ export class UserLeaveEntitlementService {
      * @returns
      * @memberof UserLeaveEntitlementService
      */
-    public assignEntitlement(user: any, data: any, process: string) {
+    public assignEntitlement([user, data, process]: [any, any, string]) {
         if (process == 'replacement') {
             return this.userEntitlementAssignEntitlement.assignReplacementLeave(user, data);
         } else {

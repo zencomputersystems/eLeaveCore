@@ -75,8 +75,6 @@ export class CompanySiteService extends BaseDBService implements IDbService {
      */
     public findById(TENANT_GUID: any, id: string): Observable<any> {
         const fields = [];
-        // console.log(id+' - '+TENANT_GUID);
-        // if(id == undefined) { throw new NotFoundException('Company id not found'); }
         const filters = ['(TENANT_COMPANY_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
         const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
         return this.httpService.get(url);

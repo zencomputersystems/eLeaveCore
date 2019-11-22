@@ -37,24 +37,8 @@ export class YearEndClosingController {
   @ApiImplicitParam({ name: 'year', description: 'Closing year', required: true })
   @ApiOperation({ title: 'Assign leave entitlement for next year' })
   create(@Param('year') year, @Req() req, @Res() res) {
-    // console.log(year);
-    // year = this.commonFunctionService.findIdParam(req, res, year);
-    // let dataYear = null;
-    // let dataIdParam = req.query.year;
-    // if (dataIdParam == null) {
-    //   dataYear = year;
-    // } else {
-    //   dataYear = dataIdParam;
-    // }
-    // if (dataYear == null) {
-    //   res.status(400);
-    //   res.send('id not found');
-    // }
-    // year = dataYear;
-    // console.log(year);
-    // console.log(new Date(year).getFullYear() + 1);
+
     this.yearEndClosingService.yearEndProcess(req.user, new Date(year).getFullYear() + 1).subscribe(data => {
-      // console.log(data);
       let dataRes = {};
       dataRes['resignUser'] = this.trimData(data[0]);
       dataRes['disabledUser'] = this.trimData(data[1]);
@@ -64,8 +48,6 @@ export class YearEndClosingController {
     }, err => {
       res.send(err);
     })
-
-    // this.runCreateService(this.userInfoService.create(req.user, createUserDTO), res);
 
   }
 

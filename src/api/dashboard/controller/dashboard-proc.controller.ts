@@ -86,7 +86,7 @@ export class DashboardProcController {
         // for calendar leave list add time to start date and end date
         data.data.forEach(element => { this.dashboardCommonService.dashboardService.addTime(element); });
       }
-      this.dashboardCommonService.commonFunctionService.sendResSuccessV2(data, res);
+      res.send(data.data);
 
     }, err => {
       this.dashboardCommonService.commonFunctionService.sendResErrorV3(err, res);

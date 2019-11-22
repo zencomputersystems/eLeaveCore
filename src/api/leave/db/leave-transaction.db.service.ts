@@ -11,7 +11,6 @@ import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { UpdateApprovalDTO } from 'src/admin/approval-override/dto/update-approval.dto';
 import moment = require('moment');
-import { getInfo } from 'src/common/helper/basic-functions';
 
 type CreateLeave = [ApplyLeaveDataDTO, any, any, ApplyLeaveDTO, boolean];
 /**

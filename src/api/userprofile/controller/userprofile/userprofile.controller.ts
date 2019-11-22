@@ -90,7 +90,6 @@ export class UserprofileController {
 	@ApiOperation({ title: 'Set resign date' })
 	@ApiImplicitParam({ name: 'id', description: 'Delete by user guid', required: true })
 	setResignDate(@Param('id') id, @Req() req, @Res() res) {
-		// id = this.commonFunctionService.findIdParam(req, res, id);
 
 		// this.commonFunctionService.runUpdateService(this.userinfoDbService.setResignUser(req.user, id, null), res);
 		this.commonFunctionService.runUpdateService(this.userService.deleteUser(req.user, id), res);
@@ -124,15 +123,6 @@ export class UserprofileController {
 	@ApiImplicitParam({ name: 'id', description: 'filter user by USER_GUID', required: true })
 	@Roles('ViewProfile', 'ProfileAdmin')
 	findOne(@Param('id') id, @Req() req, @Res() res) {
-		// let dataId = null;
-		// let dataIdTemp = req.query.id;
-		// if (dataIdTemp == null) { dataId = id; }
-		// else { dataId = dataIdTemp; }
-		// if (dataId == null) {
-		//     res.status(400);
-		//     res.send('id not found');
-		// }
-		// let dataId = this.commonFunctionService.findIdParam(req, res, id);
 		const user = req.user;
 		this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + id + ')'])
 			.pipe(

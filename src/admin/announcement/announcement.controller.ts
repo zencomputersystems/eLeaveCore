@@ -36,7 +36,7 @@ export class AnnouncementController {
   @Get()
   @ApiOperation({ title: 'get announcement list' })
   findAll(@Res() res) {
-    this.commonFunctionService.runGetService(this.announcementService.findAll(), res);
+    this.commonFunctionService.getResults(this.announcementService.findAll(), res, 'Fail to fetch resource');
   }
 
   /**
@@ -65,7 +65,6 @@ export class AnnouncementController {
   @ApiOperation({ title: 'Delete announcement data' })
   @ApiImplicitParam({ name: 'id', description: 'Delete by ANNOUNCEMENT_GUID', required: true })
   deleteAnnouncement(@Param('id') id: string, @Req() req, @Res() res) {
-    // id = this.commonFunctionService.findIdParam(req, res, id);
     this.commonFunctionService.runUpdateService(this.announcementService.deleteAnnouncement(id, req.user), res);
   }
 

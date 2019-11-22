@@ -5,7 +5,6 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';
 import { CompanySiteService } from './company-site.service';
 import { CreateCompanySiteDTO } from './dto/create-company-site.dto';
-import { verifyParam } from 'src/common/helper/basic-functions';
 
 /**
  * controller for company site
@@ -36,10 +35,6 @@ export class CompanySiteController {
     @Get()
     @ApiOperation({ title: 'Get company-site list' })
     findAll(@Req() req, @Res() res) {
-        // this.companySiteService.findAll(req.user.TENANT_GUID).subscribe(
-        //     data => { res.send(data); },
-        //     err => { this.commonFunctionService.sendResErrorV3(err, res); }
-        // )
         this.commonFunctionService.runGetServiceV2(this.companySiteService.findAll(req.user.TENANT_GUID), res);
     }
 
@@ -56,10 +51,6 @@ export class CompanySiteController {
     @ApiOperation({ title: 'Get company-site by company' })
     @ApiImplicitParam({ name: 'id', description: 'Filter by COMPANY_GUID', required: true })
     findById(@Param('id') id, @Req() req, @Res() res) {
-        // console.log(id);
-        // id = verifyParam([req, 'id', id]);
-        // console.log(id);
-        // id = this.commonFunctionService.findIdParam(req, res, id);
         this.companySiteService.findById(req.user.TENANT_GUID, id).subscribe(
             data => { res.send(data.data.resource); },
             err => { this.commonFunctionService.sendResErrorV3(err, res); }
@@ -77,10 +68,6 @@ export class CompanySiteController {
     @Post()
     @ApiOperation({ title: 'Create company-site' })
     createCompany(@Body() data: CreateCompanySiteDTO, @Req() req, @Res() res) {
-        // this.companySiteService.create(req.user, data).subscribe(
-        //     data => { if (data.status == 200) { res.send(data.data); } },
-        //     err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
-        // );
         this.commonFunctionService.runCreateService(this.companySiteService.create(req.user, data), res);
     }
 
@@ -95,11 +82,6 @@ export class CompanySiteController {
     @Patch()
     @ApiOperation({ title: 'Update company-site' })
     updateCompany(@Body() updateCompanySiteDTO: UpdateCompanySiteDTO, @Req() req, @Res() res) {
-        // this.companySiteService.update(req.user, updateCompanySiteDTO)
-        //     .subscribe(
-        //         data => { if (data.status == 200) { res.send(data.data); } },
-        //         err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
-        //     )
         this.commonFunctionService.runUpdateService(this.companySiteService.update(req.user, updateCompanySiteDTO), res);
     }
 

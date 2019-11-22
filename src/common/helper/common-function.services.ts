@@ -9,16 +9,6 @@ import { BadRequestException } from '@nestjs/common';
  * @class CommonFunctionService
  */
 export class CommonFunctionService {
-    /**
-     * general get function
-     *
-     * @param {*} method
-     * @param {*} res
-     * @memberof CommonFunctionService
-     */
-    public runGetService(method, res) {
-        this.getResults(method, res, 'Fail to fetch resource');
-    }
 
     /**
      * general create function
@@ -51,7 +41,7 @@ export class CommonFunctionService {
      */
     public runGetServiceV2(method, res) {
         method.subscribe(
-            data => { this.sendResSuccessV3(data, res); },
+            data => { res.send(data); },
             err => { this.sendResError('Fail to fetch resource', res); }
         );
     }
@@ -66,55 +56,17 @@ export class CommonFunctionService {
      */
     public getResults(method, res, message) {
         method.subscribe(
-            data => { this.sendResSuccess(data, res); },
+            data => {
+                if (data.status === 200) {
+                    res.send(data.data.resource);
+                } else {
+                    res.status(data.status);
+                    res.send();
+                }
+            },
             err => { this.sendResError(message, res); }
         );
     }
-
-
-
-
-
-    // success
-
-    /**
-     * Success response for resource
-     *
-     * @param {*} data
-     * @param {*} res
-     * @memberof CommonFunctionService
-     */
-    public sendResSuccess(data, res) {
-        if (data.status === 200) {
-            res.send(data.data.resource);
-        } else {
-            res.status(data.status);
-            res.send();
-        }
-    }
-
-    /**
-     * Success response for data.data
-     *
-     * @param {*} data
-     * @param {*} res
-     * @memberof CommonFunctionService
-     */
-    public sendResSuccessV2(data, res) { //sendSuccess
-        res.send(data.data);
-    }
-
-    /**
-     * Success response for data
-     *
-     * @param {*} data
-     * @param {*} res
-     * @memberof CommonFunctionService
-     */
-    public sendResSuccessV3(data, res) {
-        res.send(data);
-    }
-
 
 
 
@@ -222,31 +174,6 @@ export class CommonFunctionService {
         return httpService.get(url);
 
     }
-
-    /**
-     * find id parameter
-     *
-     * @param {*} req
-     * @param {*} res
-     * @param {*} id
-     * @returns
-     * @memberof CommonFunctionService
-     */
-    public findIdParam(req, res, id) {
-        let dataId = null;
-        let dataIdParam = req.query.id;
-        if (dataIdParam == null) {
-            dataId = id;
-        } else {
-            dataId = dataIdParam;
-        }
-        if (dataId == null) {
-            res.status(400);
-            res.send('id not found');
-        }
-        return dataId;
-    }
-
 
     /**
      * Refactor to get all data

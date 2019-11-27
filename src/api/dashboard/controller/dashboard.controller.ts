@@ -95,6 +95,14 @@ export class DashboardController {
 	// 	);
 	// }
 
+	/**
+	 * Find long leave
+	 *
+	 * @param {*} role
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof DashboardController
+	 */
 	@Get('/employee/long-leave/:role')
 	@ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
 	@ApiImplicitParam({ name: 'role', description: 'Role user', required: false })

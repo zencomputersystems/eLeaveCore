@@ -34,7 +34,7 @@ export class UserProfileStatusService {
    * @memberof UserProfileStatusService
    */
   public resignAndChangeStatus(user: any, d: DisableUserDTO) {
-    return this.userInfoDbService.setResignUser(user, d.user_guid, d.resign_date).pipe(map(res => {
+    return this.userInfoDbService.setResignUser([user, d.user_guid, d.resign_date]).pipe(map(res => {
       let dateResign = new Date(d.resign_date);
       let dateTemp = new Date();
       let resChangeStatus;

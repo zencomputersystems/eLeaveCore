@@ -10,46 +10,52 @@ import { CompanySiteModel } from './model/company-site.model';
 import { CreateCompanySiteDTO } from './dto/create-company-site.dto';
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';
 
-/**
- * Refactor constructor
- *
- * @class CompanyServiceRef1
- * @extends {BaseDBService}
- * @implements {IDbService}
- */
-@Injectable()
-export class CompanySiteServiceRef1 { constructor(public httpService: HttpService, public queryService: QueryParserService) { } }
 
 /**
- * Service for company site 
+ * DB service for company site
  *
  * @export
- * @class CompanySiteService
+ * @class CompanySiteDbService
  * @extends {BaseDBService}
  * @implements {IDbService}
  */
 @Injectable()
-export class CompanySiteService extends BaseDBService implements IDbService {
-
+export class CompanySiteDbService extends BaseDBService implements IDbService {
     /**
      * Declare tablename
      *
-     * @private
-     * @memberof CompanySiteService
+     * @memberof CompanySiteDbService
      */
-    private _tableName = "tenant_company_site";
+    public tableDB = "tenant_company_site";
+    /**
+     *Creates an instance of CompanySiteDbService.
+     * @param {HttpService} httpService http service
+     * @param {QueryParserService} queryService query service
+     * @memberof CompanySiteDbService
+     */
+    constructor(public httpService: HttpService, public queryService: QueryParserService) {
+        super(httpService, queryService, "tenant_company_site");
+    }
+}
+
+/**
+ * Service for company site
+ *
+ * @export
+ * @class CompanySiteService
+ */
+@Injectable()
+export class CompanySiteService {
 
     /**
      *Creates an instance of CompanySiteService.
-     * @param {HttpService} httpService http service
-     * @param {QueryParserService} queryService query service
-     * @param {CommonFunctionService} commonFunctionService common function service
+     * @param {CompanySiteDbService} companySiteDbService DB service for company site
+     * @param {CommonFunctionService} commonFunctionService Common function service
      * @memberof CompanySiteService
      */
     constructor(
-        public readonly companySiteServiceRef1: CompanySiteServiceRef1,
+        public readonly companySiteDbService: CompanySiteDbService,
         public readonly commonFunctionService: CommonFunctionService) {
-        super(companySiteServiceRef1.httpService, companySiteServiceRef1.queryService, "tenant_company_site");
     }
 
     /**
@@ -61,7 +67,7 @@ export class CompanySiteService extends BaseDBService implements IDbService {
      */
     public findAll(TENANT_GUID: string): Observable<any> {
         const fields = [];
-        let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
+        let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.companySiteDbService.queryService, this.companySiteDbService.httpService, this.companySiteDbService.tableDB]);
         return this.commonFunctionService.getListData(result);
     }
 
@@ -76,8 +82,8 @@ export class CompanySiteService extends BaseDBService implements IDbService {
     public findById(TENANT_GUID: any, id: string): Observable<any> {
         const fields = [];
         const filters = ['(TENANT_COMPANY_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-        return this.httpService.get(url);
+        const url = this.companySiteDbService.queryService.generateDbQueryV2(this.companySiteDbService.tableDB, fields, filters, []);
+        return this.companySiteDbService.httpService.get(url);
     }
 
     /**
@@ -114,7 +120,7 @@ export class CompanySiteService extends BaseDBService implements IDbService {
 
         resource.resource.push(data);
 
-        return this.createByModel(resource, [], [], []);
+        return this.companySiteDbService.createByModel(resource, [], [], []);
 
     }
 
@@ -152,7 +158,7 @@ export class CompanySiteService extends BaseDBService implements IDbService {
 
         resource.resource.push(data);
 
-        return this.updateByModel(resource, [], [], []);
+        return this.companySiteDbService.updateByModel(resource, [], [], []);
     }
 
 }

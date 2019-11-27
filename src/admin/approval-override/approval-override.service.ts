@@ -12,29 +12,77 @@ import { UserInfoService } from '../user-info/user-info.service';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { threadId } from 'worker_threads';
 
+/**
+ * Chain reference 4
+ *
+ * @export
+ * @class ApprovalOverrideServiceRef4
+ */
 @Injectable()
 export class ApprovalOverrideServiceRef4 {
+  /**
+   *Creates an instance of ApprovalOverrideServiceRef4.
+   * @param {UserInfoService} userInfoService userInfoService
+   * @param {UserService} userService userService
+   * @memberof ApprovalOverrideServiceRef4
+   */
   constructor(
     public userInfoService: UserInfoService,
     public userService: UserService) {
   }
 }
+/**
+ * Chain reference 3
+ *
+ * @export
+ * @class ApprovalOverrideServiceRef3
+ */
 @Injectable()
 export class ApprovalOverrideServiceRef3 {
+  /**
+   *Creates an instance of ApprovalOverrideServiceRef3.
+   * @param {XMLParserService} xmlParserService xmlParserService
+   * @param {EmailNodemailerService} emailNodemailerService emailNodemailerService
+   * @memberof ApprovalOverrideServiceRef3
+   */
   constructor(
     public xmlParserService: XMLParserService,
     public emailNodemailerService: EmailNodemailerService) {
   }
 }
+/**
+ * Chain reference 2
+ *
+ * @export
+ * @class ApprovalOverrideServiceRef2
+ */
 @Injectable()
 export class ApprovalOverrideServiceRef2 {
+  /**
+   *Creates an instance of ApprovalOverrideServiceRef2.
+   * @param {LeaveTransactionDbService} leaveTransactionDbService leaveTransactionDbService
+   * @param {CommonFunctionService} commonFunctionService commonFunctionService
+   * @memberof ApprovalOverrideServiceRef2
+   */
   constructor(
     public leaveTransactionDbService: LeaveTransactionDbService,
     public commonFunctionService: CommonFunctionService) {
   }
 }
+/**
+ * Chain reference 1
+ *
+ * @export
+ * @class ApprovalOverrideServiceRef1
+ */
 @Injectable()
 export class ApprovalOverrideServiceRef1 {
+  /**
+   *Creates an instance of ApprovalOverrideServiceRef1.
+   * @param {ApprovalOverrideServiceRef3} approvalOverrideServiceRef3 approvalOverrideServiceRef3
+   * @param {ApprovalOverrideServiceRef4} approvalOverrideServiceRef4 approvalOverrideServiceRef4
+   * @memberof ApprovalOverrideServiceRef1
+   */
   constructor(
     public approvalOverrideServiceRef3: ApprovalOverrideServiceRef3,
     public approvalOverrideServiceRef4: ApprovalOverrideServiceRef4) {
@@ -64,6 +112,12 @@ export class ApprovalOverrideService {
   //   private readonly xmlParserService: XMLParserService) {
   // }
 
+  /**
+   *Creates an instance of ApprovalOverrideService.
+   * @param {ApprovalOverrideServiceRef1}  approvalOverrideServiceRef1 approvalOverrideServiceRef1
+   * @param {ApprovalOverrideServiceRef2} approvalOverrideServiceRef2 approvalOverrideServiceRef2
+   * @memberof ApprovalOverrideService
+   */
   constructor(
     private readonly approvalOverrideServiceRef1: ApprovalOverrideServiceRef1,
     private readonly approvalOverrideServiceRef2: ApprovalOverrideServiceRef2) {

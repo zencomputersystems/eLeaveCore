@@ -42,12 +42,11 @@ export class UserInfoDbService extends BaseDBService {
     /**
      * Set date resign to user
      *
-     * @param {*} user
-     * @param {string} user_guid
+     * @param {[any, string, Date]} [user,user_guid,date]
      * @returns
      * @memberof UserInfoDbService
      */
-    public setResignUser(user: any, user_guid: string, date: Date) {
+    public setResignUser([user, user_guid, date]: [any, string, Date]) {
         // do a checking first to determine this data belong to user
 
         const resource = new Resource(new Array);
@@ -66,6 +65,13 @@ export class UserInfoDbService extends BaseDBService {
         return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'FULLNAME']);
     }
 
+    /**
+     * Set user info
+     *
+     * @param {[string, string, any, UpdateUserInfoItemDTO]} [d, user_info_guid, user, res]
+     * @returns
+     * @memberof UserInfoDbService
+     */
     public setUserInfo([d, user_info_guid, user, res]: [string, string, any, UpdateUserInfoItemDTO]) {
         const resource = new Resource(new Array);
         const data = new UserInfoModel;
@@ -157,6 +163,13 @@ export class UserInfoDbService extends BaseDBService {
 
     }
 
+    /**
+     * Find user info
+     *
+     * @param {string[]} filters
+     * @returns {Observable<any>}
+     * @memberof UserInfoDbService
+     */
     public findUserInfo(filters: string[]): Observable<any> {
         const fields = ['PROPERTIES_XML'];
         const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);

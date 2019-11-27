@@ -69,7 +69,7 @@ import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
     LeaveAdjustmentModule,
     YearEndClosingModule,
     AnnouncementModule,
-    UserInfoModule,
+    // UserInfoModule,
     UserprofileModule,
     UserInfoDetailsModule,
     DashboardModule,

@@ -22,10 +22,11 @@ export class DashboardService {
 
   /**
    *Creates an instance of DashboardService.
-   * @param {CalendarProfileDbService} calendarProfileDbService  calendar profile db service
-   * @param {UserInfoDbService} userInfoDbService  user info db service
+   * @param {CalendarProfileDbService} calendarProfileDbService calendar profile db service
+   * @param {UserInfoDbService} userInfoDbService user info db service
    * @param {LeaveTransactionDbService} leaveTransactionDbService leave transaction db service
    * @param {XMLParserService} xmlParserService xml parser service
+   * @param {UserprofileDbService} userprofileDbService user profile db service
    * @memberof DashboardService
    */
   constructor(
@@ -58,7 +59,7 @@ export class DashboardService {
    *
    * @param {string} user_guid
    * @param {string} tenant_guid
-   * @returns {Observable<any>}
+   * @returns {Observable<BirthdayDataDTO>}
    * @memberof DashboardService
    */
   public getBirthday(user_guid: string, tenant_guid: string): Observable<BirthdayDataDTO> {
@@ -101,8 +102,7 @@ export class DashboardService {
   /**
    * Get long leave
    *
-   * @param {*} user_guid
-   * @param {*} tenant_guid
+   * @param {[string, string, string]} [user_guid, tenant_guid, role]
    * @returns {Observable<any>}
    * @memberof DashboardService
    */
@@ -131,6 +131,13 @@ export class DashboardService {
     }));
   }
 
+  /**
+   * Get long leave for superior
+   *
+   * @param {[string, string, string]} [user_guid, tenant_guid, role]
+   * @returns {Observable<any>}
+   * @memberof DashboardService
+   */
   public getLongLeaveSuperior([user_guid, tenant_guid, role]: [string, string, string]): Observable<any> {
     const field = ['USER_GUID', 'FULLNAME', 'DESIGNATION'];
     const filter = ['(TENANT_GUID = ' + tenant_guid + ')', '(MANAGER_USER_GUID=' + user_guid + ')'];

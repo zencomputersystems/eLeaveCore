@@ -7,18 +7,36 @@ import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { XMLParserService } from '../../common/helper/xml-parser.service';
 
-// update column all related
-
+/**
+ * Controller user info details
+ *
+ * @export
+ * @class UserInfoDetailsController
+ */
 @Controller('api/admin/user-info-details')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class UserInfoDetailsController {
 
+  /**
+   *Creates an instance of UserInfoDetailsController.
+   * @param {UserInfoDetailsService} userInfoDetailsService Service user info details
+   * @param {XMLParserService} xmlParserService Service xml parser 
+   * @memberof UserInfoDetailsController
+   */
   constructor(
     private readonly userInfoDetailsService: UserInfoDetailsService,
     private readonly xmlParserService: XMLParserService
   ) { }
 
+  /**
+   * Get personal info
+   *
+   * @param {*} item
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Get(':item')
   @ApiOperation({ title: 'Get employee personal info' })
   @ApiImplicitParam({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
@@ -33,6 +51,14 @@ export class UserInfoDetailsController {
     }
   }
 
+  /**
+   * Get personal user info by user info guid
+   *
+   * @param {*} param
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Get(':item/:id')
   @ApiOperation({ title: 'Get employee personal info by user guid' })
   @ApiImplicitParam({ name: 'item', description: 'Get user info by category', enum: ['notification-rule', 'employment-detail', 'personal-details'], required: true })
@@ -54,6 +80,15 @@ export class UserInfoDetailsController {
 
   }
 
+  /**
+   * Update all user info by user info guid
+   *
+   * @param {*} id
+   * @param {UpdateUserInfoItemDTO} updateUserInfoItemDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Patch('/all/:id')
   @ApiOperation({ title: 'Edit user info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
@@ -61,6 +96,15 @@ export class UserInfoDetailsController {
     this.runService([this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all']);
   }
 
+  /**
+   * Update employment user info xml by user info guid
+   *
+   * @param {*} id
+   * @param {EmploymentDetailsDTO} employmentDetailsDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Patch('/employment/:id')
   @ApiOperation({ title: 'Edit employment info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
@@ -68,6 +112,15 @@ export class UserInfoDetailsController {
     this.runService([this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail']);
   }
 
+  /**
+   * Update personal user info xml by user info guid
+   *
+   * @param {*} id
+   * @param {PersonalDetailsDTO} personalDetailsDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Patch('/personal/:id')
   @ApiOperation({ title: 'Edit personal info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
@@ -75,6 +128,15 @@ export class UserInfoDetailsController {
     this.runService([this.userInfoDetailsService.updatePersonalInfo([personalDetailsDTO, id, req.user]), res, 'personalDetails']);
   }
 
+  /**
+   * Update notification rule user info xml by user info guid
+   *
+   * @param {*} id
+   * @param {string[]} notificationRule
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Patch('/notification-rule/:id')
   @ApiOperation({ title: 'Edit notification rule by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
@@ -82,6 +144,12 @@ export class UserInfoDetailsController {
     this.runService([this.userInfoDetailsService.updateNotificationRule([notificationRule, id, req.user]), res, 'notificationRule']);
   }
 
+  /**
+   * Run service function
+   *
+   * @param {[any, any, string]} [method, res, process]
+   * @memberof UserInfoDetailsController
+   */
   public runService([method, res, process]: [any, any, string]) {
     method.subscribe(
       data => {

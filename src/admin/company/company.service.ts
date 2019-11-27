@@ -1,57 +1,64 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { Observable, pipe, of, forkJoin } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { CompanyModel } from './model/company.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
-import { map, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { CompanyDTO } from './dto/company.dto';
 import { UpdateCompanyDTO } from './dto/update-company.dto';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 /**
- * Refactor constructor
+ * DB service for company
  *
- * @class CompanyServiceRef1
+ * @export
+ * @class CompanyDbService
  * @extends {BaseDBService}
  * @implements {IDbService}
  */
 @Injectable()
-export class CompanyServiceRef1 { constructor(public httpService: HttpService, public queryService: QueryParserService) { } }
+export class CompanyDbService extends BaseDBService implements IDbService {
+	/**
+	 * Declare tablename
+	 *
+	 * @memberof CompanyDbService
+	 */
+	public tableDB = "tenant_company";
+	/**
+	 *Creates an instance of CompanyDbService.
+	 * @param {HttpService} httpService Http service
+	 * @param {QueryParserService} queryService Query parser service
+	 * @memberof CompanyDbService
+	 */
+	constructor(public httpService: HttpService, public queryService: QueryParserService) {
+		super(httpService, queryService, "tenant_company");
+	}
+}
 
 /**
- * Service for company
+ * Company service
  *
  * @export
  * @class CompanyService
- * @extends {BaseDBService}
- * @implements {IDbService}
  */
 @Injectable()
-export class CompanyService extends BaseDBService implements IDbService {
-
-	/**
-	 * Declare table name tenant_company
-	 *
-	 * @private
-	 * @memberof CompanyService
-	 */
-	private _tableName = "tenant_company";
-
-
+export class CompanyService {
 	/**
 	 *Creates an instance of CompanyService.
-	 * @param {HttpService} httpService http service
-	 * @param {QueryParserService} queryService query service
-	 * @param {CommonFunctionService} commonFunctionService common function service
+	 * @param {CompanyDbService} companyDbService DB service for ompany 
+	 * @param {CommonFunctionService} commonFunctionService Common function service
+	 * @param {UserInfoDbService} userinfoDbService user info db service
 	 * @memberof CompanyService
 	 */
 	constructor(
+		public companyDbService: CompanyDbService,
 		public commonFunctionService: CommonFunctionService,
-		public companyServiceRef1: CompanyServiceRef1) {
-		super(companyServiceRef1.httpService, companyServiceRef1.queryService, "tenant_company");
+		public userinfoDbService: UserInfoDbService
+	) {
 	}
 
 	/**
@@ -64,7 +71,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 	public findAll(TENANT_GUID: string): Observable<any> {
 
 		const fields = ['TENANT_COMPANY_GUID', 'NAME'];
-		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.companyServiceRef1.queryService, this.companyServiceRef1.httpService, this._tableName]);
+		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.companyDbService.queryService, this.companyDbService.httpService, this.companyDbService.tableDB]);
 
 		return this.commonFunctionService.getListData(result);
 
@@ -84,11 +91,11 @@ export class CompanyService extends BaseDBService implements IDbService {
 		const filters = ['(TENANT_COMPANY_GUID=' + id + ')', '(TENANT_GUID=' + TENANT_GUID + ')'];
 
 		//url
-		const url = this.companyServiceRef1.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+		const url = this.companyDbService.queryService.generateDbQueryV2(this.companyDbService.tableDB, fields, filters, []);
 
 		//call DF to validate the user
 		// return this.httpService.get(url);
-		let result = this.companyServiceRef1.httpService.get(url);
+		let result = this.companyDbService.httpService.get(url);
 
 		let list: CompanyDTO = new CompanyDTO;
 
@@ -138,7 +145,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 
 		resource.resource.push(data);
 
-		return this.createByModel(resource, [], [], []);
+		return this.companyDbService.createByModel(resource, [], [], []);
 
 	}
 
@@ -162,7 +169,20 @@ export class CompanyService extends BaseDBService implements IDbService {
 
 		resource.resource.push(data);
 
-		return this.updateByModel(resource, [], [], []);
+		return this.companyDbService.updateByModel(resource, [], [], []);
+	}
+
+	/**
+	 * Delete company and check if user has attach
+	 *
+	 * @param {*} user
+	 * @param {string} company_guid
+	 * @returns
+	 * @memberof CompanyService
+	 */
+	deleteCompany(user: any, company_guid: string) {
+		const filters = ['(TENANT_COMPANY_GUID=' + company_guid + ')'];
+		return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteCompanyProcess(user, company_guid));
 	}
 
 	/**
@@ -173,7 +193,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 	 * @returns
 	 * @memberof CompanyService
 	 */
-	deleteCompany(user: any, company_guid: string) {
+	deleteCompanyProcess(user: any, company_guid: string) {
 
 		const resource = new Resource(new Array);
 		const data = new CompanyModel();
@@ -184,7 +204,7 @@ export class CompanyService extends BaseDBService implements IDbService {
 
 		resource.resource.push(data);
 
-		return this.updateByModel(resource, [], ['(TENANT_COMPANY_GUID=' + company_guid + ')'], ['TENANT_COMPANY_GUID', 'NAME']);
+		return this.companyDbService.updateByModel(resource, [], ['(TENANT_COMPANY_GUID=' + company_guid + ')'], ['TENANT_COMPANY_GUID', 'NAME']);
 	}
 
 	/**
@@ -200,8 +220,8 @@ export class CompanyService extends BaseDBService implements IDbService {
 		const fields = ['DEPARTMENT'];
 		const filters = ['(TENANT_COMPANY_GUID=' + companyId + ')', '(TENANT_GUID=' + tenantId + ')'];
 
-		const url = this.companyServiceRef1.queryService.generateDbQueryV2('view_departments', fields, filters, []);
-		let result = this.companyServiceRef1.httpService.get(url);
+		const url = this.companyDbService.queryService.generateDbQueryV2('view_departments', fields, filters, []);
+		let result = this.companyDbService.httpService.get(url);
 		return this.commonFunctionService.getListData(result);
 	}
 

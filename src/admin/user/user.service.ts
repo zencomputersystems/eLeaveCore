@@ -152,6 +152,14 @@ export class UserService extends BaseDBService {
         return this.updateByModel(resource, [], ['(USER_GUID=' + user_guid + ')'], ['USER_GUID', 'EMAIL']);
     }
 
+    /**
+     * Delete user
+     *
+     * @param {*} user
+     * @param {string} user_guid
+     * @returns
+     * @memberof UserService
+     */
     public deleteUser(user: any, user_guid: string) {
         const resource = new Resource(new Array);
         const data = new UserModel;

@@ -128,6 +128,12 @@ export class EntitlementDetailController {
 
 	}
 
+	/**
+	 * Run service function
+	 *
+	 * @param {([any, any, string, CreateReplacementLeaveDTO | AssignLeavePolicyDTO])} [req, res, process, assignLeaveDTO]
+	 * @memberof EntitlementDetailController
+	 */
 	public runservice([req, res, process, assignLeaveDTO]: [any, any, string, CreateReplacementLeaveDTO | AssignLeavePolicyDTO]) {
 		this.entitlementService.assignEntitlement([req.user, assignLeaveDTO, process]).subscribe(
 			data => { res.send(data); },

@@ -12,15 +12,33 @@ import { RestDataDTO } from './rest-data.dto';
  * @class CreateCalendarDetailsDTO
  */
 export class CreateCalendarDetailsDTO {
+    /**
+     * Code
+     *
+     * @type {string}
+     * @memberof CreateCalendarDetailsDTO
+     */
     @ApiModelProperty({ description: 'Calendar profile code name', example: 'Selangor Calandar' })
     @IsNotEmpty()
     code: string;
 
+    /**
+     * Holiday
+     *
+     * @type {HolidayDataDTO[]}
+     * @memberof CreateCalendarDetailsDTO
+     */
     @ApiModelProperty({ type: [HolidayDataDTO], description: 'Holiday List' })
     @Type(() => HolidayDataDTO)
     @IsNotEmpty()
     holiday: HolidayDataDTO[];
 
+    /**
+     * Rest day
+     *
+     * @type {RestDataDTO[]}
+     * @memberof CreateCalendarDetailsDTO
+     */
     @ApiModelProperty({ type: [RestDataDTO], description: 'Rest day list' })
     @Type(() => RestDataDTO)
     @IsNotEmpty()

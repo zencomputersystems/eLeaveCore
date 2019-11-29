@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { CompanyService, CompanyServiceRef1 } from '../../../src/admin/company/company.service';
+import { CompanyService, CompanyDbService } from '../../../src/admin/company/company.service';
 import { CommonFunctionService } from '../../../src/common/helper/common-function.services';
+import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
 describe('CompanyService', () => {
   let service: CompanyService;
   beforeEach(async () => {
@@ -16,7 +17,8 @@ describe('CompanyService', () => {
         { provide: HttpService, useValue: httpServiceStub },
         { provide: QueryParserService, useValue: queryParserServiceStub },
         CommonFunctionService,
-        CompanyServiceRef1
+        CompanyDbService,
+        UserInfoDbService
       ]
     }).compile();
     service = await module.get<CompanyService>(CompanyService);

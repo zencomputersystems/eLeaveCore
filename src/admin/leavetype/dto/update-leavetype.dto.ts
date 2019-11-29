@@ -1,6 +1,6 @@
 
 import { IsNotEmpty } from 'class-validator';
-import { LeaveTypeDto } from './leavetype.dto';
+import { LeaveTypeDTO } from './leavetype.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
 /**
  * dto to update leavetype extend leavetype base class
@@ -9,7 +9,7 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @class UpdateLeaveTypeDto
  * @extends {LeaveTypeDto}
  */
-export class UpdateLeaveTypeDto extends LeaveTypeDto {
+export class UpdateLeaveTypeDTO extends LeaveTypeDTO {
 
     /**
      * Data update leavetype - id 
@@ -17,7 +17,7 @@ export class UpdateLeaveTypeDto extends LeaveTypeDto {
      * @type {string}
      * @memberof UpdateLeaveTypeDto
      */
-    @ApiModelProperty({ description: 'Leavetype GUID', example: '85747738-66bf-8cb1-768a-d73319c61759' })
+    @ApiModelProperty({ description: 'Leavetype GUID', example: '8fae9580-f089-11e9-8b1d-3592f6ef2e3d' })
     @IsNotEmpty()
     readonly id: string;
 } 

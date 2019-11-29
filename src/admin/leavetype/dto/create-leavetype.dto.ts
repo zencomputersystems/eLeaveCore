@@ -1,5 +1,5 @@
 
-import { LeaveTypeDto } from './leavetype.dto';
+import { LeaveTypeDTO } from './leavetype.dto';
 /**
  * Data to create leavetype extend leavetype base class
  *
@@ -7,6 +7,6 @@ import { LeaveTypeDto } from './leavetype.dto';
  * @class CreateLeaveTypeDto
  * @extends {LeaveTypeDto}
  */
-export class CreateLeaveTypeDto extends LeaveTypeDto {
+export class CreateLeaveTypeDTO extends LeaveTypeDTO {
 
 } 

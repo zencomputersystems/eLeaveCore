@@ -6,7 +6,17 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @export
  * @class LeaveTypeDto
  */
-export class LeaveTypeDto {
+export class LeaveTypeDTO {
+
+    /**
+     * Data leavetype abbreviation
+     *
+     * @type {string}
+     * @memberof LeaveTypeDto
+     */
+    @ApiModelProperty({ description: 'Leavetype abbreviation', example: 'AL' })
+    @IsNotEmpty()
+    readonly abbr: string;
 
     /**
      * Data leavetype code
@@ -14,7 +24,7 @@ export class LeaveTypeDto {
      * @type {string}
      * @memberof LeaveTypeDto
      */
-    @ApiModelProperty({ description: 'Leavetype code', example: 'Annual Leave, Hospitalization, ...' })
+    @ApiModelProperty({ description: 'Leavetype code', example: 'Hospitalization Leave' })
     @IsNotEmpty()
     readonly code: string;
 

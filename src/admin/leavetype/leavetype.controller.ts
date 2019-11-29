@@ -1,8 +1,8 @@
 import { Controller, UseGuards, Post, Body, Req, Res, Patch, Get, Param, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { LeavetypeService } from './leavetype.service';
-import { CreateLeaveTypeDto } from './dto/create-leavetype.dto';
-import { UpdateLeaveTypeDto } from './dto/update-leavetype.dto';
+import { CreateLeaveTypeDTO } from './dto/create-leavetype.dto';
+import { UpdateLeaveTypeDTO } from './dto/update-leavetype.dto';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
@@ -65,14 +65,14 @@ export class LeaveTypeController {
   /**
    * Create new leavetype
    *
-   * @param {CreateLeaveTypeDto} createLeavetypeDTO
+   * @param {CreateLeaveTypeDTO} createLeavetypeDTO
    * @param {*} req
    * @param {*} res
    * @memberof LeaveTypeController
    */
   @Post()
   @ApiOperation({ title: 'Create leavetype' })
-  create(@Body() createLeavetypeDTO: CreateLeaveTypeDto, @Req() req, @Res() res) {
+  create(@Body() createLeavetypeDTO: CreateLeaveTypeDTO, @Req() req, @Res() res) {
     this.leavetypeService.create(req.user, createLeavetypeDTO).subscribe(
       data => { if (data.status == 200) { res.send(data.data); } },
       err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to create resource'); }
@@ -82,14 +82,14 @@ export class LeaveTypeController {
   /**
    * Update existing leavetype
    *
-   * @param {UpdateLeaveTypeDto} updateLeaveTypeDTO
+   * @param {UpdateLeaveTypeDTO} updateLeaveTypeDTO
    * @param {*} req
    * @param {*} res
    * @memberof LeaveTypeController
    */
   @Patch()
   @ApiOperation({ title: 'Update Leavetype' })
-  updateLeavetype(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDto, @Req() req, @Res() res) {
+  updateLeavetype(@Body() updateLeaveTypeDTO: UpdateLeaveTypeDTO, @Req() req, @Res() res) {
     this.leavetypeService.update(req.user, updateLeaveTypeDTO).subscribe(
       data => { if (data.status == 200) { res.send(data.data); } },
       err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }

@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { map, mergeMap } from 'rxjs/operators';
-import { personalDetailAssign, employmentDetailAssign, notificationRuleAssign } from './user-info-details-assign.service';
+import { personalDetailAssign, employmentDetailAssign, notificationRuleAssign } from './function/user-info-details.function';
+/** XMLparser from zen library  */
 var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**

@@ -17,6 +17,14 @@ export class LeaveTypeModel extends CreateUpdateModel {
     LEAVE_TYPE_GUID: string;
 
     /**
+     * Abbreviation
+     *
+     * @type {string}
+     * @memberof LeaveTypeModel
+     */
+    ABBR: string;
+
+    /**
      * Code name
      *
      * @type {string}

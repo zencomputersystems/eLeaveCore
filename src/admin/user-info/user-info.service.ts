@@ -7,9 +7,10 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserInfoModel } from './model/user-info.model';
 import { UserDto } from './dto/user.dto';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
+/** XMLparser from zen library  */
+var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for user-info
@@ -34,13 +35,11 @@ export class UserInfoService extends BaseDBService implements IDbService {
      *Creates an instance of UserInfoService.
      * @param {HttpService} httpService  Service for http
      * @param {QueryParserService} queryService Service for query
-     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
      * @memberof UserInfoService
      */
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService,
-        public readonly xmlParserService: XMLParserService) {
+        public readonly queryService: QueryParserService) {
         super(httpService, queryService, 'user_info');
     }
 
@@ -77,21 +76,6 @@ export class UserInfoService extends BaseDBService implements IDbService {
      * @memberof UserInfoService
      */
     public findOne(userId: string, tenantId: string): Observable<any> {
-        // const fields = [
-        //     'USER_INFO_GUID',
-        //     'FULLNAME',
-        //     'PROPERTIES_XML',
-        //     'BRANCH',
-        //     'DEPARTMENT',
-        //     'DESIGNATION',
-        //     'JOIN_DATE',
-        //     'CONFIRMATION_DATE',
-        //     'RESIGNATION_DATE',
-        //     'EMPLOYEE_STATUS',
-        //     'EMPLOYEE_TYPE',
-        //     'ROLE_GUID',
-        //     'CALENDAR_GUID',
-        // ];
         const filters = ['(USER_GUID=' + userId + ')'];
 
         const url = this.queryService.generateDbQuery(this._tableName, this.fields, filters);
@@ -109,21 +93,6 @@ export class UserInfoService extends BaseDBService implements IDbService {
      * @memberof UserInfoService
      */
     public findOneData(userId: string, tenantId: string) {
-        // const fields = [
-        //     'USER_INFO_GUID',
-        //     'FULLNAME',
-        //     'PROPERTIES_XML',
-        //     'BRANCH',
-        //     'DEPARTMENT',
-        //     'DESIGNATION',
-        //     'JOIN_DATE',
-        //     'CONFIRMATION_DATE',
-        //     'RESIGNATION_DATE',
-        //     'EMPLOYEE_STATUS',
-        //     'EMPLOYEE_TYPE',
-        //     'ROLE_GUID',
-        //     'CALENDAR_GUID',
-        // ];
         const filters = ['(USER_GUID=' + userId + ') LIMIT 1'];
 
         const url = this.queryService.generateDbQuery(this._tableName, this.fields, filters);
@@ -231,7 +200,7 @@ export class UserInfoService extends BaseDBService implements IDbService {
 
         const xmldata = d;
         xmldata.employmentDetail = null;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(xmldata);
+        data.PROPERTIES_XML = convertJsonToXML(xmldata);
 
         return data;
     }

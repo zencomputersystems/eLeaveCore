@@ -5,7 +5,8 @@ import { GeneralLeavePolicyService } from './general-leave-policy.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { CreateGeneralLeavePolicyDTO } from './dto/create-general-leave-policy.dto';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Controller for general leave policy
@@ -21,13 +22,11 @@ export class GeneralLeavePolicyController {
 	 *Creates an instance of GeneralLeavePolicyController.
 	 * @param {GeneralLeavePolicyService} generalLeavePolicyService General leave policy service
 	 * @param {CommonFunctionService} commonFunctionService Common function service
-	 * @param {XMLParserService} xmlParserService XML parser service
 	 * @memberof GeneralLeavePolicyController
 	 */
 	constructor(
 		private readonly generalLeavePolicyService: GeneralLeavePolicyService,
-		private readonly commonFunctionService: CommonFunctionService,
-		private readonly xmlParserService: XMLParserService
+		private readonly commonFunctionService: CommonFunctionService
 	) { }
 
 	/**
@@ -42,7 +41,7 @@ export class GeneralLeavePolicyController {
 	findAll(@Req() req, @Res() res) {
 		this.generalLeavePolicyService.findAll(req.user.TENANT_GUID).subscribe(
 			data => {
-				data.forEach(element => { element.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML); });
+				data.forEach(element => { element.PROPERTIES_XML = convertXMLToJson(element.PROPERTIES_XML); });
 				res.send(data);
 			},
 			err => { this.commonFunctionService.sendResErrorV3(err, res); }
@@ -64,7 +63,7 @@ export class GeneralLeavePolicyController {
 		this.generalLeavePolicyService.findOne(req.user.TENANT_GUID, id).subscribe(
 			data => {
 				if (data) {
-					data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+					data.PROPERTIES_XML = convertXMLToJson(data.PROPERTIES_XML);
 					res.send(data);
 				} else {
 					res.send(new NotFoundException('Failed to retrieve data', 'Failed to get data'));

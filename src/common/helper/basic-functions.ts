@@ -2,6 +2,7 @@ import { NotFoundException, HttpModule } from '@nestjs/common';
 import { DreamFactory } from '../../config/dreamfactory';
 import moment = require('moment');
 
+//  ---------------------------------------------------------------------------------------------------------------------------
 /**
  * Declare httpmodule
  */
@@ -17,6 +18,7 @@ export function getModuleHttp() {
   return baseModule;
 }
 
+//  ---------------------------------------------------------------------------------------------------------------------------
 /**
  * Verify query param or param link
  *
@@ -38,6 +40,7 @@ export function verifyParam([req, key, id]: [any, string, string]) {
   return dataId;
 }
 
+//  ---------------------------------------------------------------------------------------------------------------------------
 /**
  * Get date duration
  *
@@ -58,4 +61,18 @@ export function dateDuration([nowDate, pastDate]: [string, string]) {
   var days = a.diff(b, 'days');
 
   return { years, months, days };
+}
+
+//  ---------------------------------------------------------------------------------------------------------------------------
+/**
+ * Set update data (declare once only in all update api)
+ *
+ * @export
+ * @param {[any, string]} [data, userGuid]
+ * @returns
+ */
+export function setUpdateData([data, userGuid]: [any, string]) {
+  data.UPDATE_TS = (new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1);
+  data.UPDATE_USER_GUID = userGuid;
+  return data;
 }

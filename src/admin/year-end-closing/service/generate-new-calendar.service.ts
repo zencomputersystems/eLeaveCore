@@ -43,9 +43,6 @@ export class GenerateNewCalendarService {
    */
   public generateNewCalendar(user: any, year: number) {
     // var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-    var localISOTime = (new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1);
-
-    console.log('In generate new calendar' + localISOTime);
 
     return this.holidayDbService.findAllProfile()
       .pipe(map(res => {
@@ -81,7 +78,6 @@ export class GenerateNewCalendarService {
     data.CALENDAR_GUID = calendar_guid;
     data.YEAR = year;
     data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(dataNewYear);
-    data.CREATION_TS = (new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1);
     data.CREATION_USER_GUID = user.USER_GUID;
 
     resource.resource.push(data);

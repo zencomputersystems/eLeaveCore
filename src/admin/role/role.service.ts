@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { RoleDTO } from './dto/role.dto';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { CreateRoleModel } from './model/create-role.model';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
@@ -13,6 +12,8 @@ import { UpdateRoleModel } from './model/update-role.model';
 import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
 import { UpdateUserRoleModel } from './model/update-userrole.model';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for role
@@ -24,14 +25,12 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 export class RoleService {
 	/**
 	 *Creates an instance of RoleService.
-	 * @param {XMLParserService} xmlParserService
 	 * @param {RoleDbService} roleDbService
 	 * @param {AssignerDataService} assignerDataService
 	 * @param {UserInfoDbService} userinfoDbService
 	 * @memberof RoleService
 	 */
 	constructor(
-		private readonly xmlParserService: XMLParserService,
 		private readonly roleDbService: RoleDbService,
 		private readonly assignerDataService: AssignerDataService,
 		private readonly userinfoDbService: UserInfoDbService
@@ -71,7 +70,7 @@ export class RoleService {
 	 */
 	public getRoleDetail(roleId: string) {
 		return this.roleDbService.findAll(roleId).pipe(map(res => {
-			if (res.status == 200) { return this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
+			if (res.status == 200) { return convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
 		}))
 	}
 
@@ -92,7 +91,7 @@ export class RoleService {
 		modelData.ROLE_GUID = v1();
 		modelData.CREATION_TS = new Date().toISOString();
 		modelData.CREATION_USER_GUID = user.USER_GUID;
-		modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+		modelData.PROPERTIES_XML = convertJsonToXML(data);
 		modelData.UPDATE_TS = null;
 		modelData.UPDATE_USER_GUID = null;
 		modelData.DESCRIPTION = data.description;
@@ -114,7 +113,7 @@ export class RoleService {
 		const resource = new Resource(new Array);
 		const data = new UpdateRoleModel();
 
-		data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+		data.PROPERTIES_XML = convertJsonToXML(d.data);
 		data.CODE = d.data.code;
 		data.UPDATE_TS = new Date().toISOString();
 		data.UPDATE_USER_GUID = user.USER_GUID;

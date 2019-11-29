@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { LeavetypeService } from '../../../src/admin/leavetype/leavetype.service';
-import { CreateLeaveTypeDto } from '../../../src/admin/leavetype/dto/create-leavetype.dto';
-import { UpdateLeaveTypeDto } from '../../../src/admin/leavetype/dto/update-leavetype.dto';
+import { CreateLeaveTypeDTO } from '../../../src/admin/leavetype/dto/create-leavetype.dto';
+import { UpdateLeaveTypeDTO } from '../../../src/admin/leavetype/dto/update-leavetype.dto';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { LeaveTypeController } from '../../../src/admin/leavetype/leavetype.controller';
 describe('LeaveTypeController', () => {
@@ -22,8 +22,8 @@ describe('LeaveTypeController', () => {
       providers: [
         LeaveTypeController,
         { provide: LeavetypeService, useValue: leavetypeServiceStub },
-        { provide: CreateLeaveTypeDto, useValue: createLeaveTypeDtoStub },
-        { provide: UpdateLeaveTypeDto, useValue: updateLeaveTypeDtoStub },
+        { provide: CreateLeaveTypeDTO, useValue: createLeaveTypeDtoStub },
+        { provide: UpdateLeaveTypeDTO, useValue: updateLeaveTypeDtoStub },
         { provide: CommonFunctionService, useValue: commonFunctionServiceStub }
       ]
     }).compile();

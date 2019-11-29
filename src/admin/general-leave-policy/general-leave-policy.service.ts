@@ -2,7 +2,6 @@ import { GeneralLeavePolicyModel } from './model/general-leave-policy.model';
 import { CreateGeneralLeavePolicyDTO } from './dto/create-general-leave-policy.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { HttpService, Injectable } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
@@ -10,6 +9,9 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { Observable } from 'rxjs';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
 import { map } from 'rxjs/operators';
+/** XMLparser from zen library  */
+var { convertJsonToXML } = require('@zencloudservices/xmlparser');
+
 /**
  * Service for general leave policy
  *
@@ -31,14 +33,12 @@ export class GeneralLeavePolicyService extends BaseDBService {
 	/**
 	 *Creates an instance of GeneralLeavePolicyService.
 	 * @param {CommonFunctionService} commonFunctionService Commonfunction service
-	 * @param {XMLParserService} xmlParserService XML parser service
 	 * @param {HttpService} httpService http service
 	 * @param {QueryParserService} queryService query service
 	 * @memberof GeneralLeavePolicyService
 	 */
 	constructor(
 		private readonly commonFunctionService: CommonFunctionService,
-		private readonly xmlParserService: XMLParserService,
 		public readonly httpService: HttpService,
 		public readonly queryService: QueryParserService) {
 		super(httpService, queryService, "l_main_general_policy");
@@ -95,15 +95,13 @@ export class GeneralLeavePolicyService extends BaseDBService {
 	 * @memberof GeneralLeavePolicyService
 	 */
 	create(user: any, d: CreateGeneralLeavePolicyDTO) {
-		// console.log(JSON.stringify(d));
-		// console.log(d);
 		const resource = new Resource(new Array);
 		const modelData = new GeneralLeavePolicyModel();
 
 		modelData.MAIN_GENERAL_POLICY_GUID = v1();
 		modelData.TENANT_GUID = user.TENANT_GUID;
 		modelData.TENANT_COMPANY_GUID = d.tenantCompanyId;
-		modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d);
+		modelData.PROPERTIES_XML = convertJsonToXML(d);
 		modelData.CREATION_TS = new Date().toISOString();
 		modelData.CREATION_USER_GUID = user.USER_GUID;
 		modelData.UPDATE_TS = null;
@@ -132,7 +130,7 @@ export class GeneralLeavePolicyService extends BaseDBService {
 
 
 		data.MAIN_GENERAL_POLICY_GUID = d.generalPolicyId;
-		data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+		data.PROPERTIES_XML = convertJsonToXML(d.data);
 		data.UPDATE_TS = new Date().toISOString();
 		data.UPDATE_USER_GUID = user.USER_GUID;
 

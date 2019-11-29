@@ -65,7 +65,7 @@ export class PersonalDetailController {
 
 		this.userInfoDetailsService.getUserXMLInfoUserGuid(req.user.USER_GUID).subscribe(
 			data => {
-				this.userInfoDetailsService.filterResults(data, res, 'personal-details');
+				this.userInfoDetailsService.filterResults([data, res, 'personal-details']);
 			}, err => {
 				res.send(err);
 			}

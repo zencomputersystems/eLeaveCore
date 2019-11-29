@@ -5,7 +5,7 @@ import { UserInfoDetailsService } from './user-info-details.service';
 import { AuthGuard } from '@nestjs/passport';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Controller user info details
@@ -21,12 +21,10 @@ export class UserInfoDetailsController {
   /**
    *Creates an instance of UserInfoDetailsController.
    * @param {UserInfoDetailsService} userInfoDetailsService Service user info details
-   * @param {XMLParserService} xmlParserService Service xml parser 
    * @memberof UserInfoDetailsController
    */
   constructor(
-    private readonly userInfoDetailsService: UserInfoDetailsService,
-    private readonly xmlParserService: XMLParserService
+    private readonly userInfoDetailsService: UserInfoDetailsService
   ) { }
 
   /**
@@ -43,7 +41,7 @@ export class UserInfoDetailsController {
   getPersonalInfo(@Param('item') item, @Req() req, @Res() res) {
     if (item != '{item}' && item.trim() != '') {
       this.userInfoDetailsService.getUserXMLInfoUserGuid(req.user.USER_GUID).subscribe(
-        data => { this.userInfoDetailsService.filterResults(data, res, item); },
+        data => { this.userInfoDetailsService.filterResults([data, res, item]); },
         err => { throw new NotFoundException('No data found', 'Unreachable'); }
       );
     } else {
@@ -68,7 +66,7 @@ export class UserInfoDetailsController {
       this.userInfoDetailsService.getUserXMLInfo(param.id).subscribe(
         data => {
           if (data.length > 0)
-            this.userInfoDetailsService.filterResults(data, res, param.item);
+            this.userInfoDetailsService.filterResults([data, res, param.item]);
           else
             res.status(HttpStatus.BAD_REQUEST).send(new BadRequestException('Please input valid filter', 'Invalid filter'));
         },
@@ -154,7 +152,7 @@ export class UserInfoDetailsController {
     method.subscribe(
       data => {
         if (data.data.resource.length > 0) {
-          let results = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+          let results = convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
           let filterResult =
             process == 'notificationRule' ? results.root.notificationRule :
               process == 'employmentDetail' ? results.root.employmentDetail :

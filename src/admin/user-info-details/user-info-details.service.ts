@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { map, mergeMap } from 'rxjs/operators';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { dateDuration } from 'src/common/helper/basic-functions';
 import moment = require('moment');
+var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service user info details
@@ -20,12 +20,10 @@ export class UserInfoDetailsService {
   /**
    *Creates an instance of UserInfoDetailsService.
    * @param {UserInfoDbService} userinfoDbService DB service user info
-   * @param {XMLParserService} xmlParserService XML parser service
    * @memberof UserInfoDetailsService
    */
   constructor(
-    private readonly userinfoDbService: UserInfoDbService,
-    private readonly xmlParserService: XMLParserService
+    private readonly userinfoDbService: UserInfoDbService
   ) { }
 
   /**
@@ -177,7 +175,8 @@ export class UserInfoDetailsService {
     let notificationRuleData;
 
     if (userInfoDataDetails != null) {
-      dataInfo = this.xmlParserService.convertXMLToJson(userInfoDataDetails);
+      // dataInfo = this.xmlParserService.convertXMLToJson(userInfoDataDetails);
+      dataInfo = convertXMLToJson(userInfoDataDetails);
       employeeDetailsData = dataInfo.root.employmentDetail;
       personalDetailsData = dataInfo.root.personalDetails;
       notificationRuleData = dataInfo.root.notificationRule;
@@ -194,7 +193,8 @@ export class UserInfoDetailsService {
    * @memberof UserInfoDetailsService
    */
   public sendResult([res, userInfoGuid, user]) {
-    let xmlData = this.xmlParserService.convertJsonToXML(res);
+    // let xmlData = this.xmlParserService.convertJsonToXML(res);
+    let xmlData = convertJsonToXML(res);
 
     return this.updateUserInfoData([xmlData, userInfoGuid, user, res]);
   }
@@ -202,12 +202,10 @@ export class UserInfoDetailsService {
   /**
    * Filter results
    *
-   * @param {*} data
-   * @param {*} res
-   * @param {*} dataId
+   * @param {*} [data, res, dataId]
    * @memberof UserInfoDetailsService
    */
-  public filterResults(data, res, dataId) {
+  public filterResults([data, res, dataId]) {
     let results = data[0];
     let resultItem = {};
 
@@ -216,34 +214,85 @@ export class UserInfoDetailsService {
     resultItem['employeeName'] = results.FULLNAME;
 
     if (results.PROPERTIES_XML != null) {
-      let dataXML = this.xmlParserService.convertXMLToJson(results.PROPERTIES_XML);
+      // let dataXML = this.xmlParserService.convertXMLToJson(results.PROPERTIES_XML);
+      let dataXML = convertXMLToJson(results.PROPERTIES_XML);
       if (dataId == 'personal-details') {
-        resultItem['employeeDesignation'] = results.DESIGNATION;
-        resultItem['employeeLocation'] = results.BRANCH;
-        resultItem['employeeDepartment'] = results.DEPARTMENT;
-        resultItem['calendarId'] = results.CALENDAR_GUID;
-        resultItem['tenantId'] = results.TENANT_GUID;
-        resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
-        if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
-          resultItem['personalDetail'] = dataXML.root.personalDetails;
-          resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
-          resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
-        }
+        // resultItem['employeeDesignation'] = results.DESIGNATION;
+        // resultItem['employeeLocation'] = results.BRANCH;
+        // resultItem['employeeDepartment'] = results.DEPARTMENT;
+        // resultItem['calendarId'] = results.CALENDAR_GUID;
+        // resultItem['tenantId'] = results.TENANT_GUID;
+        // resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
+        // if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
+        //   resultItem['personalDetail'] = dataXML.root.personalDetails;
+        //   resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
+        //   resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
+        // }
+        this.personalDetailAssign([resultItem, results, dataXML]);
       } else if (dataId == 'employment-detail') {
-        if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
-          resultItem['employmentDetail'] = dataXML.root.employmentDetail;
-          const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
-          const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';
-          resultItem['employmentDetail']['yearOfService'] = serviceDuration;
-        }
+        // if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
+        //   resultItem['employmentDetail'] = dataXML.root.employmentDetail;
+        //   const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
+        //   const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';
+        //   resultItem['employmentDetail']['yearOfService'] = serviceDuration;
+        // }
+        this.employmentDetailAssign([resultItem, results, dataXML]);
       } else if (dataId == 'notification-rule') {
-        if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('notificationRule')) {
-          resultItem['notificationRule'] = dataXML.root.notificationRule;
-        }
+        // if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('notificationRule')) {
+        //   resultItem['notificationRule'] = dataXML.root.notificationRule;
+        // }
+        this.notificationRuleAssign([resultItem, dataXML]);
       }
     }
 
     res.send(resultItem);
+  }
+
+  /**
+   * Personal detail results setup
+   *
+   * @param {*} [resultItem, results, dataXML]
+   * @memberof UserInfoDetailsService
+   */
+  public personalDetailAssign([resultItem, results, dataXML]) {
+    resultItem['employeeDesignation'] = results.DESIGNATION;
+    resultItem['employeeLocation'] = results.BRANCH;
+    resultItem['employeeDepartment'] = results.DEPARTMENT;
+    resultItem['calendarId'] = results.CALENDAR_GUID;
+    resultItem['tenantId'] = results.TENANT_GUID;
+    resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
+    if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
+      resultItem['personalDetail'] = dataXML.root.personalDetails;
+      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
+      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
+    }
+  }
+
+  /**
+   * Employment detail result setup
+   *
+   * @param {*} [resultItem, results, dataXML]
+   * @memberof UserInfoDetailsService
+   */
+  public employmentDetailAssign([resultItem, results, dataXML]) {
+    if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
+      resultItem['employmentDetail'] = dataXML.root.employmentDetail;
+      const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
+      const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';
+      resultItem['employmentDetail']['yearOfService'] = serviceDuration;
+    }
+  }
+
+  /**
+   * Notification rule result setup
+   *
+   * @param {*} [resultItem, dataXML]
+   * @memberof UserInfoDetailsService
+   */
+  public notificationRuleAssign([resultItem, dataXML]) {
+    if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('notificationRule')) {
+      resultItem['notificationRule'] = dataXML.root.notificationRule;
+    }
   }
 
 }

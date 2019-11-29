@@ -29,6 +29,7 @@
     "@nestjs/passport": "^5.1.0",
     "@nestjs/platform-express": "^6.8.0",
     "@nestjs/swagger": "^3.1.0",
+    "@zencloudservices/xmlparser": "0.0.1",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "crypto-js": "^3.1.9-1",

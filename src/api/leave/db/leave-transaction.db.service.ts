@@ -2,7 +2,6 @@ import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 import { Injectable, HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveTransactionModel } from '../model/leave-transaction.model';
 import { v1 } from 'uuid';
 import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
@@ -11,6 +10,8 @@ import { Resource } from 'src/common/model/resource.model';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { UpdateApprovalDTO } from 'src/admin/approval-override/dto/update-approval.dto';
 import moment = require('moment');
+/** XMLparser from zen library  */
+var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 type CreateLeave = [ApplyLeaveDataDTO, any, any, ApplyLeaveDTO, boolean];
 /**
@@ -27,14 +28,12 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 	/**
 	 *Creates an instance of LeaveTransactionDbService.
 	 * @param {HttpService} httpService Service for http
-	 * @param {XMLParserService} xmlParserService Service for xml-json converter
 	 * @param {DateCalculationService} dateCalculationService Service for date calculation
 	 * @param {QueryParserService} queryService Service for query
 	 * @memberof LeaveTransactionDbService
 	 */
 	constructor(
 		public readonly httpService: HttpService,
-		private readonly xmlParserService: XMLParserService,
 		private readonly dateCalculationService: DateCalculationService,
 		public readonly queryService: QueryParserService) {
 		super(httpService, queryService, "l_main_leave_transaction");
@@ -158,7 +157,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 		leaveData.END_DATE = applyLeaveDataDTO.endDate;
 		leaveData.REASON = y.reason;
 		leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration([applyLeaveDataDTO.startDate, applyLeaveDataDTO.endDate, applyLeaveDataDTO.dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
-		leaveData.ENTITLEMENT_XML_SNAPSHOT = this.xmlParserService.convertJsonToXML(result.policy);
+		leaveData.ENTITLEMENT_XML_SNAPSHOT = convertJsonToXML(result.policy);
 		leaveData.ACTIVE_FLAG = true;
 		leaveData.STATES = null;
 		leaveData.STATUS = "PENDING";

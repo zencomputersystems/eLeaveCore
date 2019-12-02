@@ -9,6 +9,7 @@ import { CommonFunctionService } from '../../common/helper/common-function.servi
 import { CompanySiteModel } from './model/company-site.model';
 import { CreateCompanySiteDTO } from './dto/create-company-site.dto';
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';
+import { setUpdateData } from '../../common/helper/basic-functions';
 
 
 /**
@@ -100,23 +101,11 @@ export class CompanySiteService {
         const data = new CompanySiteModel();
 
         data.TENANT_COMPANY_SITE_GUID = v1();
-        data.TENANT_COMPANY_GUID = d.companyId;
-        data.SITE_NAME = d.siteName;
-        data.REGISTRATION_NO = d.registrationNo;
-        data.ADDRESS = d.address;
-        data.ADDRESS2 = d.address2;
-        data.ADDRESS3 = d.address3;
-        data.CONTACT_NO = d.contactNo;
-        data.EMAIL = d.email;
         data.ACTIVATION_FLAG = 1;
-        data.CONTACT_PERSON = d.contactPersonName;
-        data.CONTACT_PERSON_CONTACT_NO = d.contactPersonContactNo;
-        data.CONTACT_PERSON_EMAIL = d.contactPersonEmail;
-        data.WEBSITE = d.website;
-        data.CREATION_TS = new Date().toISOString();
-        data.CREATION_USER_GUID = user.USER_GUID;
-        data.ISHQ = d.isHQ;
         data.TENANT_GUID = user.TENANT_GUID;
+        data.CREATION_USER_GUID = user.USER_GUID;
+
+        this.inputDataCompanySite([data, d]);
 
         resource.resource.push(data);
 
@@ -138,27 +127,39 @@ export class CompanySiteService {
         const data = new CompanySiteModel();
 
         data.TENANT_COMPANY_SITE_GUID = d.id;
-        data.UPDATE_TS = new Date().toISOString();
-        data.UPDATE_USER_GUID = user.USER_GUID;
-        data.SITE_NAME = d.data.siteName;
-
-        data.TENANT_COMPANY_GUID = d.data.companyId;
-        data.REGISTRATION_NO = d.data.registrationNo;
-        data.ADDRESS = d.data.address;
-        data.ADDRESS2 = d.data.address2;
-        data.ADDRESS3 = d.data.address3;
-        data.CONTACT_NO = d.data.contactNo;
-        data.EMAIL = d.data.email;
-        data.CONTACT_PERSON = d.data.contactPersonName;
-        data.CONTACT_PERSON_CONTACT_NO = d.data.contactPersonContactNo;
-        data.CONTACT_PERSON_EMAIL = d.data.contactPersonEmail;
-        data.WEBSITE = d.data.website;
-        data.ISHQ = d.data.isHQ;
         data.TENANT_GUID = user.TENANT_GUID;
+
+        this.inputDataCompanySite([data, d.data]);
+        setUpdateData([data, user.USER_GUID]);
 
         resource.resource.push(data);
 
         return this.companySiteDbService.updateByModel(resource, [], [], []);
+    }
+
+    /**
+     * Input data company site
+     *
+     * @param {[CompanySiteModel, CreateCompanySiteDTO]} [model, data]
+     * @returns
+     * @memberof CompanySiteService
+     */
+    public inputDataCompanySite([model, data]: [CompanySiteModel, CreateCompanySiteDTO]) {
+        model.SITE_NAME = data.siteName;
+        model.TENANT_COMPANY_GUID = data.companyId;
+        model.REGISTRATION_NO = data.registrationNo;
+        model.ADDRESS = data.address;
+        model.ADDRESS2 = data.address2;
+        model.ADDRESS3 = data.address3;
+        model.CONTACT_NO = data.contactNo;
+        model.EMAIL = data.email;
+        model.CONTACT_PERSON = data.contactPersonName;
+        model.CONTACT_PERSON_CONTACT_NO = data.contactPersonContactNo;
+        model.CONTACT_PERSON_EMAIL = data.contactPersonEmail;
+        model.WEBSITE = data.website;
+        model.ISHQ = data.isHQ;
+
+        return model;
     }
 
 }

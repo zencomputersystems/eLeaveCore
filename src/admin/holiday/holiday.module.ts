@@ -6,7 +6,6 @@ import { HolidayController } from './holiday.controller';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { HolidayDbService } from './db/holiday.db.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from './db/user-info.db.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
@@ -31,7 +30,6 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     HolidayDbService,
     UserInfoDbService,
     HolidayService,
-    XMLParserService,
     AssignerDataService,
     CommonFunctionService,
     CalendarProfileDbService

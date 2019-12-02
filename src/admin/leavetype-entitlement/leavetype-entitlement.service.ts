@@ -3,7 +3,8 @@ import { LeavetypeEntitlementDbService } from './db/leavetype-entitlement.db.ser
 import { map } from 'rxjs/operators';
 import { LeaveTypeEntitlementListDTO } from './dto/leavetype-entitlement-list.dto';
 import { ViewLeaveTypeSetupModel } from './model/view-leave-type-setup.model';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for leavetype entitlement
@@ -16,12 +17,10 @@ export class LeaveTypeEntitlementService {
     /**
      *Creates an instance of LeaveTypeEntitlementService.
      * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService
-     * @param {XMLParserService} xmlParserService
      * @memberof LeaveTypeEntitlementService
      */
     constructor(
-        private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-        private readonly xmlParserService: XMLParserService) { }
+        private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService) { }
 
     /**
      * return list of entitlement for this filter
@@ -71,7 +70,7 @@ export class LeaveTypeEntitlementService {
                     if (res.data.resource.length > 0) {
                         const data: ViewLeaveTypeSetupModel = res.data.resource[0];
 
-                        data.PROPERTIES_XML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+                        data.PROPERTIES_XML = convertXMLToJson(data.PROPERTIES_XML);
 
                         return data;
                     }

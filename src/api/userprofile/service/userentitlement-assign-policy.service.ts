@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Resource } from 'src/common/model/resource.model';
 import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
 import { v1 } from 'uuid';
@@ -9,6 +8,8 @@ import moment = require('moment');
 import { map } from 'rxjs/operators';
 import { UserLeaveEntitlementDbService } from '../db/user-leave-entitlement.db.service';
 import { of } from 'rxjs';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * User leave entitlement : assign policy
@@ -23,14 +24,12 @@ export class UserEntitlementAssignPolicy {
    *Creates an instance of UserEntitlementAssignPolicy.
    * @param {ServiceYearCalc} serviceYearCalcService
    * @param {ProratedDateEndYearService} proratedMonthEndYearService
-   * @param {XMLParserService} xmlParserService
    * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
    * @memberof UserEntitlementAssignPolicy
    */
   constructor(
     private readonly serviceYearCalcService: ServiceYearCalc,
     private readonly proratedMonthEndYearService: ProratedDateEndYearService,
-    private readonly xmlParserService: XMLParserService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService, ) { }
 
 
@@ -62,7 +61,7 @@ export class UserEntitlementAssignPolicy {
 
       // console.log(res.res[0].PROPERTIES_XML);
 
-      const policy = this.xmlParserService.convertXMLToJson(res.res[0].PROPERTIES_XML);
+      const policy = convertXMLToJson(res.res[0].PROPERTIES_XML);
       // console.log('pol' + policy);
 
 
@@ -105,7 +104,7 @@ export class UserEntitlementAssignPolicy {
     // // get the service year
     // const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
 
-    // const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
+    // const policy = convertXMLToJson(res.res.PROPERTIES_XML);
 
     // // //get the entitlement days
     // const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);

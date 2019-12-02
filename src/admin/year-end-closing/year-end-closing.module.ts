@@ -9,7 +9,6 @@ import { UserService } from '../user/user.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { UserLeaveEntitlementSummaryDbService } from 'src/api/userprofile/db/user-leave-summary.db.service';
 import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
@@ -38,7 +37,6 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     UserLeaveEntitlementDbService,
     UserInfoDbService,
     LeavetypeEntitlementDbService,
-    XMLParserService,
     CommonFunctionService,
     UserLeaveEntitlementSummaryDbService,
     UserprofileDbService,

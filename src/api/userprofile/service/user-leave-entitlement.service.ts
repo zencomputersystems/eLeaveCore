@@ -17,11 +17,12 @@ import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { ProratedDateCurrentMonthService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateCurrentMonth.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.service';
 import { UserEntitlementAssignEntitlement } from './userentitlement-assign-entitlement.service';
 // import { UpdateUserLeaveEntitlementDTO } from '../dto/leave-entitlement/update-user-leave-entitlement.dto';
 import { CreateReplacementLeaveDTO } from '../dto/leave-entitlement/create-replacement-leave.dto';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for user leave entitlement
@@ -41,7 +42,6 @@ export class UserLeaveEntitlementService {
      * @param {UserInfoService} userInfoDbService
      * @param {ServiceYearCalc} serviceYearCalcService
      * @param {ProratedDateEndYearService} proratedMonthEndYearService
-     * @param {XMLParserService} xmlParserService
      * @memberof UserLeaveEntitlementService
      */
     constructor(
@@ -53,8 +53,7 @@ export class UserLeaveEntitlementService {
         private readonly userEntitlementAssignEntitlement: UserEntitlementAssignEntitlement
         // private readonly serviceYearCalcService: ServiceYearCalc,
         // private readonly proratedMonthEndYearService: ProratedDateEndYearService,
-        // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService,
-        // private readonly xmlParserService: XMLParserService
+        // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService
     ) { }
 
     /**
@@ -224,7 +223,7 @@ export class UserLeaveEntitlementService {
 
     //         // console.log(res.res[0].PROPERTIES_XML);
 
-    //         const policy = this.xmlParserService.convertXMLToJson(res.res[0].PROPERTIES_XML);
+    //         const policy = convertXMLToJson(res.res[0].PROPERTIES_XML);
     //         // console.log('pol' + policy);
 
 
@@ -267,7 +266,7 @@ export class UserLeaveEntitlementService {
     //     // // get the service year
     //     // const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
 
-    //     // const policy = this.xmlParserService.convertXMLToJson(res.res.PROPERTIES_XML);
+    //     // const policy = convertXMLToJson(res.res.PROPERTIES_XML);
 
     //     // // //get the entitlement days
     //     // const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);

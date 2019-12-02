@@ -9,8 +9,9 @@ import { UserService } from '../user/user.service';
 import { map } from 'rxjs/operators';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { UserInfoService } from '../user-info/user-info.service';
-import { XMLParserService } from '../../common/helper/xml-parser.service';
 import { threadId } from 'worker_threads';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Chain reference 4
@@ -29,25 +30,6 @@ export class ApprovalOverrideServiceRef4 {
   constructor(
     public userInfoService: UserInfoService,
     public userService: UserService) {
-  }
-}
-/**
- * Chain reference 3
- *
- * @export
- * @class ApprovalOverrideServiceRef3
- */
-@Injectable()
-export class ApprovalOverrideServiceRef3 {
-  /**
-   *Creates an instance of ApprovalOverrideServiceRef3.
-   * @param {XMLParserService} xmlParserService xmlParserService
-   * @param {EmailNodemailerService} emailNodemailerService emailNodemailerService
-   * @memberof ApprovalOverrideServiceRef3
-   */
-  constructor(
-    public xmlParserService: XMLParserService,
-    public emailNodemailerService: EmailNodemailerService) {
   }
 }
 /**
@@ -79,12 +61,12 @@ export class ApprovalOverrideServiceRef2 {
 export class ApprovalOverrideServiceRef1 {
   /**
    *Creates an instance of ApprovalOverrideServiceRef1.
-   * @param {ApprovalOverrideServiceRef3} approvalOverrideServiceRef3 approvalOverrideServiceRef3
+   * @param {EmailNodemailerService} emailNodemailerService EmailNodemailerService
    * @param {ApprovalOverrideServiceRef4} approvalOverrideServiceRef4 approvalOverrideServiceRef4
    * @memberof ApprovalOverrideServiceRef1
    */
   constructor(
-    public approvalOverrideServiceRef3: ApprovalOverrideServiceRef3,
+    public emailNodemailerService: EmailNodemailerService,
     public approvalOverrideServiceRef4: ApprovalOverrideServiceRef4) {
   }
 }
@@ -108,8 +90,7 @@ export class ApprovalOverrideService {
   //   private readonly commonFunctionService: CommonFunctionService,
   //   private readonly userService: UserService,
   //   private readonly emailNodemailerService: EmailNodemailerService,
-  //   private readonly userInfoService: UserInfoService,
-  //   private readonly xmlParserService: XMLParserService) {
+  //   private readonly userInfoService: UserInfoService) {
   // }
 
   /**
@@ -180,7 +161,7 @@ export class ApprovalOverrideService {
    */
   public sendEmailToNotifier(user, tempData) {
     if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
-      let dataObj = this.approvalOverrideServiceRef1.approvalOverrideServiceRef3.xmlParserService.convertXMLToJson(tempData.PROPERTIES_XML);
+      let dataObj = convertXMLToJson(tempData.PROPERTIES_XML);
       if (dataObj.notificationRule) {
         this.sendEmailNotify(user, dataObj.notificationRule);
       }
@@ -234,7 +215,7 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   private sendEmailV2(email: string, token: string) {
-    let results = this.approvalOverrideServiceRef1.approvalOverrideServiceRef3.emailNodemailerService.mailProcessApprove(email, token);
+    let results = this.approvalOverrideServiceRef1.emailNodemailerService.mailProcessApprove(email, token);
     return results;
   }
 

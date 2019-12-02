@@ -4,7 +4,6 @@ import { ApplyLeaveDTO } from '../dto/apply-leave.dto';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
 import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-entitlement.model';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveApplicationValidationService } from 'src/common/policy/leave-application-validation/services/leave-application-validation.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
@@ -21,7 +20,8 @@ import { ValidationStatusDTO } from 'src/common/policy/leave-application-validat
 import { json } from 'body-parser';
 import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 import { setTimeout } from 'timers';
-
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for apply leave
@@ -35,7 +35,6 @@ export class ApplyLeaveService {
     /**
      *Creates an instance of ApplyLeaveService.
      * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
-     * @param {XMLParserService} xmlParserService
      * @param {LeaveApplicationValidationService} leaveValidationService
      * @param {UserInfoService} userInfoService
      * @param {LeaveTransactionDbService} leaveTransactionDbService
@@ -44,7 +43,6 @@ export class ApplyLeaveService {
      */
     constructor(
         private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
-        private readonly xmlParserService: XMLParserService,
         private readonly leaveValidationService: LeaveApplicationValidationService,
         private readonly userInfoService: UserInfoService,
         private readonly leaveTransactionDbService: LeaveTransactionDbService,
@@ -168,7 +166,7 @@ export class ApplyLeaveService {
         //                 throw res;
         //             }
 
-        //             const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+        //             const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
         //             const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
 
         //             return validation.pipe(map((validationResult) => {
@@ -225,7 +223,7 @@ export class ApplyLeaveService {
         //                 throw res;
         //             }
 
-        //             const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+        //             const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
         //             const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
 
         //             return validation.pipe(map((validationResult) => {
@@ -283,7 +281,7 @@ export class ApplyLeaveService {
                         throw res;
                     }
 
-                    const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+                    const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
                     const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
 
                     return validation.pipe(map((validationResult) => {

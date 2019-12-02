@@ -5,10 +5,11 @@ import { map, mergeMap } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { CreateCalendarDTO } from '../../holiday/dto/create-calendar.dto';
 import { HolidayDataDTO } from '../../holiday/dto/holiday-data.dto';
-import { XMLParserService } from '../../../common/helper/xml-parser.service';
 import { Resource } from 'src/common/model/resource.model';
 import { CreateHolidayDetailsModel } from 'src/admin/holiday/model/create-holiday-details.model';
 import { v1 } from 'uuid';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service generate new calendar
@@ -20,14 +21,12 @@ import { v1 } from 'uuid';
 export class GenerateNewCalendarService {
   /**
    *Creates an instance of GenerateNewCalendarService.
-   * @param {XMLParserService} xmlParserService xml parser service
    * @param {HolidayDbService} holidayDbService holiday db service
    * @param {CalendarProfileDbService} calendarProfileDbService calendar profile db service
    * @param {HttpService} http http service
    * @memberof GenerateNewCalendarService
    */
   constructor(
-    private readonly xmlParserService: XMLParserService,
     private readonly holidayDbService: HolidayDbService,
     private readonly calendarProfileDbService: CalendarProfileDbService,
     private http: HttpService
@@ -77,7 +76,7 @@ export class GenerateNewCalendarService {
     data.CALENDAR_DETAILS_GUID = v1();
     data.CALENDAR_GUID = calendar_guid;
     data.YEAR = year;
-    data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(dataNewYear);
+    data.PROPERTIES_XML = convertJsonToXML(dataNewYear);
     data.CREATION_USER_GUID = user.USER_GUID;
 
     resource.resource.push(data);
@@ -138,7 +137,7 @@ export class GenerateNewCalendarService {
     this.calendarProfileDbService.findAll(element.CALENDAR_GUID, yearBase).pipe(
       mergeMap(res => {
         // find filter criteria and get data from calendarific
-        let filters = this.xmlParserService.convertXMLToJson(element.FILTER_CRITERIA);
+        let filters = convertXMLToJson(element.FILTER_CRITERIA);
 
         let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
         let calendarApiKey = '?api_key=fc56e1848bee6b48e3af29bcb042a2d76c17ff55';
@@ -156,7 +155,7 @@ export class GenerateNewCalendarService {
       if (data[0].data.resource[0].PROPERTIES_XML != null) {
         let resource = new Resource(new Array);
 
-        let dataCurrent: CreateCalendarDTO = this.xmlParserService.convertXMLToJson(data[0].data.resource[0].PROPERTIES_XML);
+        let dataCurrent: CreateCalendarDTO = convertXMLToJson(data[0].data.resource[0].PROPERTIES_XML);
 
         console.log('_______________________________________________________________________________________________');
         console.log(element.CALENDAR_GUID);

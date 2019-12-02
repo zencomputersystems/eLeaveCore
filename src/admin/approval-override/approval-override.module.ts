@@ -1,10 +1,9 @@
 import { Module, HttpModule } from '@nestjs/common';
 // import { AuthModule } from 'src/auth/auth.module';
 // import { PassportModule } from '@nestjs/passport';
-import { ApprovalOverrideService, ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef3, ApprovalOverrideServiceRef4 } from './approval-override.service';
+import { ApprovalOverrideService, ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4 } from './approval-override.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { ApprovalOverrideController } from './approval-override.controller';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
@@ -25,13 +24,12 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
 		ApprovalOverrideService,
 		QueryParserService,
 		CommonFunctionService,
-		XMLParserService,
 		LeaveTransactionDbService,
 		DateCalculationService,
 		UserService,
 		EmailNodemailerService,
 		UserInfoService,
-		ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef3, ApprovalOverrideServiceRef4
+		ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4
 	],
 	controllers: [ApprovalOverrideController]
 })

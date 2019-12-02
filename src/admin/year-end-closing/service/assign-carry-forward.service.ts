@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserLeaveEntitlementSummaryDbService } from 'src/api/userprofile/db/user-leave-summary.db.service';
 import { ViewUserProfileListModel } from 'src/api/userprofile/model/view_userprofile_list.model';
 import { Observable, forkJoin } from 'rxjs';
@@ -8,6 +7,8 @@ import { GeneralLeavePolicyModel } from '../../general-leave-policy/model/genera
 import { LeaveTypeEntitlementModel } from '../../leavetype-entitlement/model/leavetype_entitlement.model';
 import { AssignLeaveFunctionService } from './assign-leave-function.service';
 import { map } from 'rxjs/operators';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service assign carry forward
@@ -20,13 +21,11 @@ export class AssignCarryForwardService {
 
   /**
    *Creates an instance of AssignCarryForwardService.
-   * @param {XMLParserService} xmlParserService xml parser service
    * @param {UserLeaveEntitlementSummaryDbService} userLeaveEntitlementSummaryDbService user leave entitlement summary db service
    * @param {AssignLeaveFunctionService} assignLeaveFunctionService  assign leave function service
    * @memberof AssignCarryForwardService
    */
   constructor(
-    private readonly xmlParserService: XMLParserService,
     private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
     private readonly assignLeaveFunctionService: AssignLeaveFunctionService
   ) { }
@@ -52,7 +51,7 @@ export class AssignCarryForwardService {
           let resource = new Resource(new Array);
           let entitlement = balanceLeaveData.filter(x => x.USER_GUID === userActive.USER_GUID);
           let generalPolicy: GeneralLeavePolicyModel = generalPolicyData.find(x => x.TENANT_COMPANY_GUID === userActive.TENANT_COMPANY_GUID);
-          let generalPolicyDetail = this.xmlParserService.convertXMLToJson(generalPolicy.PROPERTIES_XML);
+          let generalPolicyDetail = convertXMLToJson(generalPolicy.PROPERTIES_XML);
           let dateForfeitCF: Date = null;
 
           if (generalPolicyDetail.forfeitCFLeave != null) {
@@ -91,7 +90,7 @@ export class AssignCarryForwardService {
   public processAssign([entitlement, leavetypePolicyData, year, resource, user, dateForfeitCF]) {
     entitlement.forEach(element => {
       let getLeavePolicy: LeaveTypeEntitlementModel = leavetypePolicyData.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-      let policyLeave = this.xmlParserService.convertXMLToJson(getLeavePolicy.PROPERTIES_XML);
+      let policyLeave = convertXMLToJson(getLeavePolicy.PROPERTIES_XML);
       let dayCF = policyLeave.levels.leaveEntitlement.carryForward;
 
 

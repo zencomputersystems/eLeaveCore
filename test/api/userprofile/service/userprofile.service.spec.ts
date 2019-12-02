@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserprofileDbService } from '../../../../src/api/userprofile/db/userprofile.db.service';
 import { UpdatePersonalDetailDTO } from '../../../../src/api/userprofile/dto/userprofile-detail/personal-detail/update-personal-detail.dto';
@@ -14,13 +13,8 @@ describe('UserprofileService', () => {
   let service: UserprofileService;
   let userprofileDbService: UserprofileDbService;
   let userInfoService: UserInfoService;
-  let xmlParserService: XMLParserService;
   let userLeaveEntitlementService: UserLeaveEntitlementService;
   beforeEach(async () => {
-    const xMLParserServiceStub = {
-      convertJsonToXML: data1 => ({}),
-      convertXMLToJson: arg1 => ({})
-    };
     const userInfoModelStub = { PROPERTIES_XML: {} };
     const userprofileDbServiceStub = {
       findByFilterV2: (array1, filters2) => ({ pipe: () => ({}) })
@@ -59,7 +53,6 @@ describe('UserprofileService', () => {
     const module = await Test.createTestingModule({
       providers: [
         UserprofileService,
-        { provide: XMLParserService, useValue: xMLParserServiceStub },
         { provide: UserInfoModel, useValue: userInfoModelStub },
         { provide: UserprofileDbService, useValue: userprofileDbServiceStub },
         {
@@ -85,7 +78,6 @@ describe('UserprofileService', () => {
     service = await module.get<UserprofileService>(UserprofileService);
     userprofileDbService = await module.get<UserprofileDbService>(UserprofileDbService);
     userInfoService = await module.get<UserInfoService>(UserInfoService);
-    xmlParserService = await module.get<XMLParserService>(XMLParserService);
     userLeaveEntitlementService = await module.get<UserLeaveEntitlementService>(UserLeaveEntitlementService);
   });
   it('can load instance', () => {
@@ -128,14 +120,6 @@ describe('UserprofileService', () => {
 
   describe('Update Personal Detail', () => {
     const mockDetail: UpdatePersonalDetailDTO = new UpdatePersonalDetailDTO;
-    it('should call method convertJsonToXML in update personal detail', () => {
-      const xmlParserServiceStub: XMLParserService = xmlParserService;
-      spyOn(xmlParserServiceStub, 'convertJsonToXML').and.callThrough();
-      expect(xmlParserServiceStub.convertJsonToXML).not.toHaveBeenCalled();
-      service.updatePersonalDetail(mockDetail, 'userId');
-      expect(xmlParserServiceStub.convertJsonToXML).toHaveBeenCalled();
-      expect(xmlParserServiceStub.convertJsonToXML).toHaveBeenCalledTimes(1);
-    })
 
     it('should call method updateByModel in update personal detail', () => {
       const userInfoServiceStub: UserInfoService = userInfoService;
@@ -191,17 +175,6 @@ describe('UserprofileService', () => {
       expect(userInfoServiceStub.findByFilterV2).toHaveBeenCalledTimes(1);
     })
   });
-
-  // describe('personaldetailProcess', () => {
-  //   it('should call method convertJsonToXML in personal detail process', () => {
-  //     const xmlParserServiceStub: XMLParserService = xmlParserService;
-  //     spyOn(xmlParserServiceStub, 'convertXMLToJson').and.callThrough();
-  //     expect(xmlParserServiceStub.convertXMLToJson).not.toHaveBeenCalled();
-  //     service.personaldetailProcess(new UserInfoModel, true, true, []);
-  //     expect(xmlParserServiceStub.convertXMLToJson).toHaveBeenCalled();
-  //     expect(xmlParserServiceStub.convertXMLToJson).toHaveBeenCalledTimes(1);
-  //   })
-  // });
 
 
 });

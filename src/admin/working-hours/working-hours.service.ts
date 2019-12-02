@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { AssignerDataService } from 'src/common/helper/assigner-data.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { WorkingHoursDbService } from './db/working-hours.db.service';
@@ -14,6 +13,8 @@ import { UpdateWorkingHoursModel } from './model/update-working-hours.model';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { UpdateUserWorkingHoursModel } from './model/update-userworkinghours.model';
 import { Observable } from 'rxjs';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for working hours
@@ -25,14 +26,12 @@ import { Observable } from 'rxjs';
 export class WorkingHoursService {
   /**
    *Creates an instance of WorkingHoursService.
-   * @param {XMLParserService} xmlParserService xml parser service
    * @param {WorkingHoursDbService} workingHoursDbService working hours service
    * @param {AssignerDataService} assignerDataService assigner data service
    * @param {UserInfoDbService} userinfoDbService user info db service
    * @memberof WorkingHoursService
    */
   constructor(
-    private readonly xmlParserService: XMLParserService,
     private readonly workingHoursDbService: WorkingHoursDbService,
     private readonly assignerDataService: AssignerDataService,
     private readonly userinfoDbService: UserInfoDbService
@@ -72,7 +71,7 @@ export class WorkingHoursService {
    */
   public getWorkingHoursDetail(workingHoursId: string) {
     return this.workingHoursDbService.findAll(workingHoursId).pipe(map(res => {
-      if (res.status == 200) { return this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
+      if (res.status == 200) { return convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
     }))
   }
 
@@ -93,7 +92,7 @@ export class WorkingHoursService {
     modelData.WORKING_HOURS_GUID = v1();
     modelData.CREATION_TS = new Date().toISOString();
     modelData.CREATION_USER_GUID = user.USER_GUID;
-    modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+    modelData.PROPERTIES_XML = convertJsonToXML(data);
     modelData.UPDATE_TS = null;
     modelData.UPDATE_USER_GUID = null;
     modelData.DESCRIPTION = data.description;
@@ -115,7 +114,7 @@ export class WorkingHoursService {
     const resource = new Resource(new Array);
     const data = new UpdateWorkingHoursModel();
 
-    data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+    data.PROPERTIES_XML = convertJsonToXML(d.data);
     data.CODE = d.data.code;
     data.UPDATE_TS = new Date().toISOString();
     data.UPDATE_USER_GUID = user.USER_GUID;

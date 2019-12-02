@@ -1,8 +1,10 @@
 import { LeaveEntitlementBaseService } from './leave-entitlement-base.service';
 import { ILeaveEntitlementType } from '../../interface/iLeaveEntitlementType';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
+
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service entitled full service
@@ -17,10 +19,9 @@ export class EntitledFullService extends LeaveEntitlementBaseService implements 
 
     /**
      *Creates an instance of EntitledFullService.
-     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
      * @memberof EntitledFullService
      */
-    constructor(private readonly xmlParserService: XMLParserService) {
+    constructor() {
         super();
     }
 
@@ -39,7 +40,7 @@ export class EntitledFullService extends LeaveEntitlementBaseService implements 
     calculateEntitledLeave(date: Date, yearOfService: number, leavePolicy: LeaveTypePropertiesXmlDTO): number {
 
         // Convert xml to json
-        //const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
+        //const policyJson = convertXMLToJson(leavePolicy);
 
         return this.getEntitlementFromPolicy(leavePolicy, yearOfService);
 

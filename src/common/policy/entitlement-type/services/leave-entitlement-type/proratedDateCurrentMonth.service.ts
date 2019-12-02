@@ -1,9 +1,10 @@
 import { LeaveEntitlementBaseService } from './leave-entitlement-base.service';
 import { ILeaveEntitlementType } from '../../interface/iLeaveEntitlementType';
 import moment = require("moment");
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for pro rate date current month
@@ -18,10 +19,9 @@ export class ProratedDateCurrentMonthService extends LeaveEntitlementBaseService
 
     /**
      *Creates an instance of ProratedDateCurrentMonthService.
-     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
      * @memberof ProratedDateCurrentMonthService
      */
-    constructor(private readonly xmlParserService: XMLParserService) {
+    constructor() {
         super();
     }
 
@@ -52,7 +52,7 @@ export class ProratedDateCurrentMonthService extends LeaveEntitlementBaseService
         const currentMonth = moment().month() + 1;
 
         // Convert xml to json
-        //const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
+        //const policyJson = convertXMLToJson(leavePolicy);
 
         const currentYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, yearOfService, (currentMonth - monthJoin), "END");
 

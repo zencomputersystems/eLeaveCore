@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveEntitlementBaseService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/leave-entitlement-base.service';
 import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-entitlement.model';
 import { v1 } from 'uuid';
@@ -9,6 +8,8 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from '../../leavetype-entitlement/model/leavetype_entitlement.model';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 type userEntitlement = [Resource, LeaveTypeEntitlementModel, string, string, number, any, string, number, Date];
 /**
@@ -24,14 +25,12 @@ export class AssignLeaveFunctionService {
    *Creates an instance of AssignLeaveFunctionService.
    * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService user leave entitlement db service
    * @param {ServiceYearCalc} serviceYearCalcService service year calculation
-   * @param {XMLParserService} xmlParserService xml parser servicxe
    * @param {LeaveEntitlementBaseService} leaveEntitlementBaseService leave entitlement db service
    * @memberof AssignLeaveFunctionService
    */
   constructor(
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly serviceYearCalcService: ServiceYearCalc,
-    private readonly xmlParserService: XMLParserService,
     private readonly leaveEntitlementBaseService: LeaveEntitlementBaseService
   ) { }
 
@@ -51,7 +50,7 @@ export class AssignLeaveFunctionService {
       // get the service year
       let serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
       // get policy leavetype
-      const policy = this.xmlParserService.convertXMLToJson(tempPolicy.PROPERTIES_XML);
+      const policy = convertXMLToJson(tempPolicy.PROPERTIES_XML);
       // get entitled days from policy
       entitlementDay = this.leaveEntitlementBaseService.getEntitlementFromPolicy(policy, serviceYear);
     }

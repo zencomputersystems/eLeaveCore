@@ -1,9 +1,8 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HolidayDbService } from './db/holiday.db.service';
-import { map, mergeMap, concatMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { Resource } from 'src/common/model/resource.model';
 import { HolidayModel } from './model/holiday.model';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { v1 } from 'uuid';
 import { CreateHolidayModel } from './model/create-holiday.model';
 import { CreateCalendarDTO } from './dto/create-calendar.dto';
@@ -13,9 +12,10 @@ import { UpdateUserCalendarModel } from './model/update-usercalendar.model';
 import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { UserInfoDbService } from './db/user-info.db.service';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
-import { of } from 'rxjs';
 import { CalendarProfileDbService } from './db/calendar-profile-db.service';
 import { CreateHolidayDetailsModel } from './model/create-holiday-details.model';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for holiday
@@ -29,14 +29,12 @@ export class HolidayService {
 	 *Creates an instance of HolidayService.
 	 * @param {HolidayDbService} holidayDbService
 	 * @param {UserInfoDbService} userinfoDbService
-	 * @param {XMLParserService} xmlParserService
 	 * @param {AssignerDataService} assignerDataService
 	 * @memberof HolidayService
 	 */
 	constructor(
 		private readonly holidayDbService: HolidayDbService,
 		private readonly userinfoDbService: UserInfoDbService,
-		private readonly xmlParserService: XMLParserService,
 		private readonly assignerDataService: AssignerDataService,
 		private readonly calendarProfileDbService: CalendarProfileDbService) { }
 
@@ -54,7 +52,7 @@ export class HolidayService {
 			.pipe(map(res => {
 				if (res.status == 200) {
 					// console.log(res.data.resource);
-					let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+					let jsonHoliday = convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
 					return jsonHoliday;
 				}
 			}))
@@ -73,7 +71,7 @@ export class HolidayService {
 		// return this.userinfoDbService.findEmployeeAssign(filters)
 		//     .pipe(map(res => {
 		//         if (res.status == 200) {
-		//             // let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+		//             // let jsonHoliday = convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
 		//             // return jsonHoliday;
 		//             return res.data.resource;
 		//         }
@@ -148,7 +146,7 @@ export class HolidayService {
 		const resource = new Resource(new Array);
 		const data = new HolidayModel();
 
-		// data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+		// data.PROPERTIES_XML = convertJsonToXML(d.data);
 		data.CODE = d.data.code;
 		data.UPDATE_TS = new Date().toISOString();
 		data.UPDATE_USER_GUID = user.USER_GUID;
@@ -170,7 +168,7 @@ export class HolidayService {
 		const resource = new Resource(new Array);
 		const data = new HolidayModel();
 
-		data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+		data.PROPERTIES_XML = convertJsonToXML(d.data);
 		// data.CODE = d.data.code;
 		data.UPDATE_TS = new Date().toISOString();
 		data.UPDATE_USER_GUID = user.USER_GUID;
@@ -217,7 +215,7 @@ export class HolidayService {
 		const resource = new Resource(new Array);
 		const data = new HolidayModel();
 
-		// data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.data);
+		// data.PROPERTIES_XML = convertJsonToXML(d.data);
 		data.DELETED_AT = new Date().toISOString();
 		data.UPDATE_TS = new Date().toISOString();
 		data.UPDATE_USER_GUID = user.USER_GUID;
@@ -257,8 +255,8 @@ export class HolidayService {
 
 		modelData.CALENDAR_GUID = v1();
 		modelData.CODE = data.code;
-		modelData.FILTER_CRITERIA = this.xmlParserService.convertJsonToXML(data.filter);
-		// modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+		modelData.FILTER_CRITERIA = convertJsonToXML(data.filter);
+		// modelData.PROPERTIES_XML = convertJsonToXML(data);
 		modelData.CREATION_TS = new Date().toISOString();
 		modelData.CREATION_USER_GUID = user.USER_GUID;
 		modelData.UPDATE_TS = null;
@@ -283,7 +281,7 @@ export class HolidayService {
 		modelData.CALENDAR_DETAILS_GUID = v1();
 		modelData.CALENDAR_GUID = calendar_guid;
 		modelData.YEAR = year;
-		modelData.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+		modelData.PROPERTIES_XML = convertJsonToXML(data);
 		modelData.CREATION_TS = new Date().toISOString();
 		modelData.CREATION_USER_GUID = user.USER_GUID;
 

@@ -6,7 +6,6 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { UserService } from 'src/admin/user/user.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 
@@ -23,8 +22,7 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     UserImportService,
     UserService,
     QueryParserService,
-    UserInfoService,
-    XMLParserService
+    UserInfoService
   ],
   imports: [
     PassportModule.register({ session: false }),

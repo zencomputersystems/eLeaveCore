@@ -5,7 +5,6 @@ import { DreamFactory } from 'src/config/dreamfactory';
 // import { AuthModule } from 'src/auth/auth.module';
 // import { PassportModule } from '@nestjs/passport';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { getModuleHttp } from '../../common/helper/basic-functions';
@@ -28,7 +27,6 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     LeaveTypeEntitlementService,
     LeavetypeEntitlementDbService,
     QueryParserService,
-    XMLParserService,
     CommonFunctionService
   ]
 })

@@ -4,9 +4,11 @@ import { holidayMock } from '../mock/holiday.mock';
 import { HolidayModel } from 'src/admin/holiday/model/holiday.model';
 // import { HolidayService } from 'src/admin/holiday/holiday.service';
 // import { Observable } from 'rxjs';
-// import { XMLParserService } from 'src/common/helper/xml-parser.service';
 // import { QueryParserService } from 'src/common/helper/query-parser.service';
 // import { map } from 'rxjs/operators';
+
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 type LeaveDuration = [Date, Date, number, boolean, boolean];
 /**
@@ -18,8 +20,7 @@ type LeaveDuration = [Date, Date, number, boolean, boolean];
 @Injectable()
 export class DateCalculationService {
     // constructor(public readonly httpService: HttpService,
-    //     public readonly queryService: QueryParserService,
-    //     private readonly xmlParserService: XMLParserService) { }
+    //     public readonly queryService: QueryParserService) { }
     // get duration between 2 date
     /**
      * Get day duration
@@ -146,7 +147,7 @@ export class DateCalculationService {
     //     return this.findAll(calendarId)
     //         .pipe(map(res => {
     //             if (res.status == 200) {
-    //                 let jsonHoliday = this.xmlParserService.convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+    //                 let jsonHoliday = convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
     //                 console.log(jsonHoliday);
     //                 return jsonHoliday;
     //             }

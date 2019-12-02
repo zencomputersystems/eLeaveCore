@@ -2,9 +2,10 @@ import moment = require("moment");
 import { Injectable } from '@nestjs/common';
 import { LeaveEntitlementBaseService } from './leave-entitlement-base.service';
 import { ILeaveEntitlementType } from '../../interface/iLeaveEntitlementType';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
+/** XMLparser from zen library  */
+var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for pro rate date end year
@@ -19,12 +20,10 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
 
     /**
      *Creates an instance of ProratedDateEndYearService.
-     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
      * @param {EntitlementRoundingService} roundingService Service for rounding
      * @memberof ProratedDateEndYearService
      */
     constructor(
-        private readonly xmlParserService: XMLParserService,
         private readonly roundingService: EntitlementRoundingService) {
         super();
     }
@@ -65,7 +64,7 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
         const monthFullEntitlement = (12 - monthJoin);
 
         // Convert xml to json
-        //const policyJson = this.xmlParserService.convertXMLToJson(leavePolicy);
+        //const policyJson = convertXMLToJson(leavePolicy);
 
         const currentYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, yearOfService, monthFullEntitlement, "END")
 

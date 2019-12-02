@@ -1,16 +1,15 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { parse } from 'fast-xml-parser';
 import { Resource } from 'src/common/model/resource.model';
 import { LeaveTypeEntitlementModel } from '../model/leavetype_entitlement.model';
 import { v1 } from 'uuid';
 import { Observable } from 'rxjs';
 import { UpdateLeaveTypeEntitlementDto } from '../dto/update-leavetype_entitlement.dto';
-import { map } from 'rxjs/operators';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
 import { CreateLeaveEntitlementTypeDTO } from '../dto/create-leavetype_entitlement.dto';
+/** XMLparser from zen library  */
+var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * DB Service for leavetype entitlement
@@ -42,13 +41,11 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
      * Creates an instance of LeavetypeEntitlementDbService.
      * @param {HttpService} httpService Service for http
      * @param {QueryParserService} queryService Service for query
-     * @param {XMLParserService} xmlParserService Service for XMLJSON converter
      * @memberof LeavetypeEntitlementDbService
      */
     constructor(
         public readonly httpService: HttpService,
-        public readonly queryService: QueryParserService,
-        private readonly xmlParserService: XMLParserService) {
+        public readonly queryService: QueryParserService) {
         super(httpService, queryService, 'l_leavetype_entitlement_def');
     }
 
@@ -107,7 +104,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
 
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.property);
+        data.PROPERTIES_XML = convertJsonToXML(d.property);
 
         data.ENTITLEMENT_GUID = v1();
         data.LEAVE_TYPE_GUID = d.leavetype_id;
@@ -141,7 +138,7 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
         data.TENANT_GUID = user.TENANT_GUID;
         data.CODE = d.code;
         data.DESCRIPTION = d.description;
-        data.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(d.property);
+        data.PROPERTIES_XML = convertJsonToXML(d.property);
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
         data.ACTIVE_FLAG = 1;

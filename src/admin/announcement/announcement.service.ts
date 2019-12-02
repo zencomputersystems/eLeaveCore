@@ -1,12 +1,12 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import moment = require('moment');
 import { Resource } from 'src/common/model/resource.model';
 import { AnnouncementModel } from './model/announcement.model';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { v1 } from 'uuid';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
+import { setUpdateData } from 'src/common/helper/basic-functions';
 
 /**
  * Service for announcement
@@ -69,11 +69,8 @@ export class AnnouncementService extends BaseDBService {
     const resource = new Resource(new Array);
     const data = new AnnouncementModel();
 
-    data.TITLE = d.title;
-    data.MESSAGE = d.message;
-    data.IS_PINNED = d.isPinned;
-    data.UPDATE_TS = new Date().toISOString();;
-    data.UPDATE_USER_GUID = user.USER_GUID;
+    this.inputDataAnnouncement([data, d]);
+    setUpdateData([data, user.USER_GUID]);
 
     resource.resource.push(data);
     return this.updateByModel(resource, [], ['(ANNOUNCEMENT_GUID = ' + d.announcementId + ')'], ['ANNOUNCEMENT_GUID']);
@@ -93,9 +90,8 @@ export class AnnouncementService extends BaseDBService {
     const resource = new Resource(new Array);
     const data = new AnnouncementModel();
 
-    data.UPDATE_TS = new Date().toISOString();
-    data.UPDATE_USER_GUID = user.USER_GUID;
     data.DELETED_AT = new Date().toISOString();
+    setUpdateData([data, user.USER_GUID]);
 
     resource.resource.push(data);
     return this.updateByModel(resource, [], ['(ANNOUNCEMENT_GUID = ' + announcementId + ')'], ['ANNOUNCEMENT_GUID']);
@@ -116,15 +112,28 @@ export class AnnouncementService extends BaseDBService {
     const modelData = new AnnouncementModel();
 
     modelData.ANNOUNCEMENT_GUID = v1();
-    modelData.TITLE = data.title;
-    modelData.MESSAGE = data.message;
-    modelData.IS_PINNED = data.isPinned;
     modelData.CREATION_USER_GUID = user.USER_GUID;
-    modelData.CREATION_TS = new Date().toISOString();
+    this.inputDataAnnouncement([modelData, data]);
 
     resource.resource.push(modelData);
-
     return this.createByModel(resource, [], [], []);
+
+  }
+
+  /**
+   * Input data announcement
+   *
+   * @param {([AnnouncementModel, UpdateAnnouncementDto | CreateAnnouncementDto])} [model, data]
+   * @returns
+   * @memberof AnnouncementService
+   */
+  public inputDataAnnouncement([model, data]: [AnnouncementModel, UpdateAnnouncementDto | CreateAnnouncementDto]) {
+    model.TITLE = data.title;
+    model.MESSAGE = data.message;
+    model.IS_PINNED = data.isPinned;
+
+    return model;
+
   }
 
 }

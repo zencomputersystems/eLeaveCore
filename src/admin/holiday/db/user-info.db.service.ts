@@ -187,9 +187,9 @@ export class UserInfoDbService extends BaseDBService {
     public findFullname(userGuid: string): Observable<any> {
 
         const fields = ['USER_GUID', 'FULLNAME'];
-        const filters = ['(USER_GUID IN (' + userGuid + '))', '(RESIGNATION_DATE IS NULL)'];
+        const filters = ['(USER_GUID IN (' + userGuid + '))'];
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, 'CREATION_TS DESC', 1]);
         return this.httpService.get(url);
 
     }
@@ -205,10 +205,9 @@ export class UserInfoDbService extends BaseDBService {
     public getDateOfBirth(userId: string, tenantId: string): Observable<any> {
 
         const fields = ['DOB'];
-        const filters = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')', '(RESIGNATION_DATE IS NULL)'];
+        const filters = ['(USER_GUID=' + userId + ')', 'AND (TENANT_GUID=' + tenantId + ')'];
 
-        const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
+        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, 'CREATION_TS DESC', 1]);
         //call DF to validate the user
         return this.httpService.get(url);
 
@@ -223,7 +222,7 @@ export class UserInfoDbService extends BaseDBService {
      */
     public getCalendarProfile(userGuid: string) {
         let fields = ['CALENDAR_GUID'];
-        let filters = ['(USER_GUID=' + userGuid + ')', '(RESIGNATION_DATE IS NULL)'];
+        let filters = ['(USER_GUID=' + userGuid + ')'];
         return this.findByFilterV2(fields, filters);
     }
 

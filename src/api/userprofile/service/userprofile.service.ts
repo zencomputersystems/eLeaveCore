@@ -1,6 +1,5 @@
 import { Injectable, Res, Req } from '@nestjs/common';
 import { map } from 'rxjs/operators';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserPersonalDetailDTO } from '../dto/userprofile-detail/personal-detail/user-personal-detail.dto';
 import { UserProfileDTO } from '../dto/userprofile-detail/userprofile.dto';
@@ -20,6 +19,8 @@ import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 import { UserprofileAssignerService } from './userprofile-assigner.service';
 import { Observable } from 'rxjs';
+/** XMLparser from zen library  */
+var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for user profile
@@ -34,7 +35,6 @@ export class UserprofileService {
      *Creates an instance of UserprofileService.
      * @param {UserInfoService} userInfoService
      * @param {UserprofileDbService} userprofileDBService
-     * @param {XMLParserService} xmlParserService
      * @param {UserLeaveEntitlementService} entitlementDetailService
      * @param {ServiceYearCalc} serviceYearCalcService
      * @memberof UserprofileService
@@ -42,7 +42,6 @@ export class UserprofileService {
     constructor(
         private readonly userInfoService: UserInfoService,
         private readonly userprofileDBService: UserprofileDbService,
-        private readonly xmlParserService: XMLParserService,
         private readonly entitlementDetailService: UserLeaveEntitlementService,
         private readonly userprofileAssignerService: UserprofileAssignerService
         // private readonly serviceYearCalcService: ServiceYearCalc
@@ -130,7 +129,7 @@ export class UserprofileService {
         const modeldata = new UserInfoModel();
         modeldata.USER_INFO_GUID = data.id;
         modeldata.NICKNAME = data.nickname;
-        modeldata.PROPERTIES_XML = this.xmlParserService.convertJsonToXML(data);
+        modeldata.PROPERTIES_XML = convertJsonToXML(data);
         modeldata.UPDATE_TS = new Date().toISOString();
         modeldata.UPDATE_USER_GUID = userId;
 
@@ -457,7 +456,7 @@ export class UserprofileService {
     //  */
     // public personaldetailProcess(data: UserInfoModel, isShowPersonalData: boolean, isShowCertData: boolean, userProfileData) {
     //     //process the personal detail
-    //     const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+    //     const parseXMLtoJSON: PersonalDetailXML = convertXMLToJson(data.PROPERTIES_XML);
 
     //     if (isShowPersonalData) {
     //         this.personaldataProcess(parseXMLtoJSON, userProfileData);

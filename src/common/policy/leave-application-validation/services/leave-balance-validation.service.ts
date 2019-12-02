@@ -8,12 +8,13 @@ import { ProratedDateCurrentMonthService } from '../../entitlement-type/services
 import { ProratedDateEndYearService } from '../../entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { ServiceYearCalc } from '../../entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import moment = require('moment');
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { map } from 'rxjs/operators';
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
 import { LeaveBalanceValidationParentService } from './leave-balance-validation-parent.service';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for leave balance validation
@@ -31,7 +32,6 @@ export class LeaveBalanceValidationService {
      * @param {ProratedDateCurrentMonthService} proratedDateMonthService
      * @param {ProratedDateEndYearService} proratedDateEndYearService
      * @param {ServiceYearCalc} workingYearService
-     * @param {XMLParserService} xmlParserService
      * @param {LeaveTransactionDbService} leaveTransactionDbService
      * @memberof LeaveBalanceValidationService
      */
@@ -41,7 +41,6 @@ export class LeaveBalanceValidationService {
         // private readonly proratedDateMonthService: ProratedDateCurrentMonthService,
         // private readonly proratedDateEndYearService: ProratedDateEndYearService,
         // private readonly workingYearService: ServiceYearCalc,
-        private readonly xmlParserService: XMLParserService,
         private readonly leaveTransactionDbService: LeaveTransactionDbService,
         private readonly leaveBalanceValidationParentService: LeaveBalanceValidationParentService) { }
 
@@ -65,7 +64,7 @@ export class LeaveBalanceValidationService {
             throw 'Policy Not Found';
         }
 
-        const policy: LeaveTypePropertiesXmlDTO = this.xmlParserService.convertXMLToJson(parent.PROPERTIES_XML);
+        const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
 
         // console.log(policy);
         // get leave applied duration

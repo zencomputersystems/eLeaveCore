@@ -7,7 +7,6 @@ import { switchMap } from 'rxjs/operators';
 import { UpdatePersonalDetailDTO } from '../../dto/userprofile-detail/personal-detail/update-personal-detail.dto';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-details.service';
 
@@ -26,7 +25,6 @@ export class PersonalDetailController {
 	 *Creates an instance of PersonalDetailController.
 	 * @param {UserprofileService} userprofileService
 	 * @param {AccessLevelValidateService} accessLevelValidationService
-	 * @param {XMLParserService} xmlParserService
 	 * @memberof PersonalDetailController
 	 */
 	constructor(

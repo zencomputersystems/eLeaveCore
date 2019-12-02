@@ -4,10 +4,11 @@ import { PersonalDetailXML } from '../dto/userprofile-detail/personal-detail/xml
 import { UserPersonalDetailDTO } from '../dto/userprofile-detail/personal-detail/user-personal-detail.dto';
 import { EmploymentDetailDTO } from '../dto/userprofile-detail/employment-detail/employment-detail.dto';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { Injectable } from '@nestjs/common';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { map } from 'rxjs/operators';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 type ProfileDataDetails = [UserInfoModel, boolean, boolean, boolean, boolean];
 type PersonalDataDetails = [UserInfoModel, boolean, boolean, UserProfileDTO];
@@ -24,16 +25,13 @@ export class UserprofileAssignerService {
   /**
    *Creates an instance of UserprofileAssignerService.
    * @param {ServiceYearCalc} serviceYearCalcService Service calculate year of working
-   * @param {XMLParserService} xmlParserService Service convert xml to json
+   * @param {UserInfoService} userInfoService user info service
    * @memberof UserprofileAssignerService
    */
   constructor(
     private readonly serviceYearCalcService: ServiceYearCalc,
-    private readonly xmlParserService: XMLParserService,
     private readonly userInfoService: UserInfoService
   ) { }
-
-
 
   /**
    * Main function build userprofile data
@@ -111,7 +109,7 @@ export class UserprofileAssignerService {
     let userProfileData: UserProfileDTO = personalDataDetails[3];
 
     // process the personal detail
-    const parseXMLtoJSON: PersonalDetailXML = this.xmlParserService.convertXMLToJson(data.PROPERTIES_XML);
+    const parseXMLtoJSON: PersonalDetailXML = convertXMLToJson(data.PROPERTIES_XML);
 
     if (isShowPersonalData) {
       this.personaldataProcess(parseXMLtoJSON, userProfileData, isShowCertData);

@@ -135,8 +135,7 @@ export class LeavetypeService extends BaseDBService implements IDbService {
 		const data = new LeaveTypeModel()
 
 		data.DELETED_AT = new Date().toISOString();
-		data.UPDATE_TS = new Date().toISOString();
-		data.UPDATE_USER_GUID = user.USER_GUID;
+		setUpdateData([data, user.USER_GUID]);
 
 		resource.resource.push(data);
 

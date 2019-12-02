@@ -7,7 +7,6 @@ import { CertificationDetailController } from './controller/certification-detail
 import { UserprofileController } from './controller/userprofile/userprofile.controller';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { UserprofileDbService } from './db/userprofile.db.service';
@@ -43,7 +42,6 @@ import { PassportModule } from '@nestjs/passport';
     UserInfoService,
     UserprofileDbService,
     QueryParserService,
-    XMLParserService,
     AccessLevelValidateService,
     UserLeaveEntitlementSummaryDbService,
     UserLeaveEntitlementDbService,

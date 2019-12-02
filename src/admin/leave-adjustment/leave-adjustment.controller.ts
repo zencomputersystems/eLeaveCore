@@ -3,7 +3,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { LeaveAdjustmentService } from './leave-adjustment.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
-import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { LeaveAdjustmentDTO } from './dto/update-leave-adjustment.dto';
 
 /**
@@ -17,8 +16,7 @@ import { LeaveAdjustmentDTO } from './dto/update-leave-adjustment.dto';
 @ApiBearerAuth()
 export class LeaveAdjustmentController {
   constructor(private readonly leaveAdjustmentService: LeaveAdjustmentService,
-    private readonly commonFunctionService: CommonFunctionService,
-    private readonly xmlParserService: XMLParserService) { }
+    private readonly commonFunctionService: CommonFunctionService) { }
 
   /**
    * Update function general leave polisy

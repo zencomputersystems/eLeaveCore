@@ -2,7 +2,10 @@ import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException } from '
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { DashboardService } from '../service/dashboard.service';
-import moment = require('moment');
+import { CommonFunctionService } from '../../../common/helper/common-function.services';
+// import moment = require('moment');
+// /** XMLparser from zen library  */
+// var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * All dashboard api
@@ -10,7 +13,7 @@ import moment = require('moment');
  * @export
  * @class DashboardController
  */
-@Controller('/api')
+@Controller('/api/employee')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class DashboardController {
@@ -20,7 +23,7 @@ export class DashboardController {
 	 * @memberof DashboardController
 	 */
 	constructor(
-		private dashboardService: DashboardService
+		private readonly dashboardService: DashboardService
 	) { }
 
 	/**
@@ -30,19 +33,20 @@ export class DashboardController {
 	 * @param {*} res
 	 * @memberof DashboardController
 	 */
-	@Get('/employee/upcoming-holiday')
+	@Get('upcoming-holiday')
 	@ApiOperation({ title: 'Get all list of upcoming holiday' })
 	getUpcomingHoliday(@Req() req, @Res() res) {
 		this.dashboardService.upcomingHolidays(req.user.USER_GUID).subscribe(
 			data => {
 				let upcomingHolidayArr = [];
-				let holidayData = this.dashboardService.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+				// let holidayData = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
 
-				holidayData.holiday.forEach(element => {
-					if (moment(element.start, 'YYYY-MM-DD') > moment()) {
-						upcomingHolidayArr.push(element);
-					}
-				});
+				// holidayData.holiday.forEach(element => {
+				// 	if (moment(element.start, 'YYYY-MM-DD') > moment()) {
+				// 		upcomingHolidayArr.push(element);
+				// 	}
+				// });
+				upcomingHolidayArr = this.dashboardService.convertData([upcomingHolidayArr, data]);
 				res.send(upcomingHolidayArr);
 			}, err => {
 				res.send(err);
@@ -57,7 +61,7 @@ export class DashboardController {
 	 * @param {*} res
 	 * @memberof DashboardController
 	 */
-	@Get('/employee/date-of-birth')
+	@Get('date-of-birth')
 	@ApiOperation({ title: 'Get date of birth' })
 	getDateOfBirth(@Req() req, @Res() res) {
 		this.dashboardService.getBirthday(req.user.USER_GUID, req.user.TENANT_GUID).subscribe(
@@ -103,7 +107,7 @@ export class DashboardController {
 	 * @param {*} res
 	 * @memberof DashboardController
 	 */
-	@Get('/employee/long-leave/:role')
+	@Get('long-leave/:role')
 	@ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
 	@ApiImplicitParam({ name: 'role', description: 'Role user', required: false })
 	findLongLeave(@Param('role') role, @Req() req, @Res() res) {
@@ -137,7 +141,7 @@ export class DashboardController {
 	 * @param {*} res
 	 * @memberof DashboardController
 	 */
-	@Get('/employee/dashboard-my-task')
+	@Get('dashboard-my-task')
 	@ApiOperation({ title: 'Get my task' })
 	getMyTask(@Req() req, @Res() res) {
 		this.dashboardService.getMyTask(req.user.USER_GUID).subscribe(

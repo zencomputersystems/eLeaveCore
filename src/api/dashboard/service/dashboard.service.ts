@@ -1,15 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Observable, of, forkJoin } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 import { CalendarProfileDbService } from '../../../admin/holiday/db/calendar-profile-db.service';
 import moment = require('moment');
-import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
+import { UserInfoDbService } from '../../../admin/holiday/db/user-info.db.service';
 import { BirthdayDataDTO } from '../dto/birthday-data.dto';
 import { LeaveTransactionDbService } from '../../leave/db/leave-transaction.db.service';
 import { LongLeaveDTO } from '../dto/long-leave.dto';
-import { XMLParserService } from '../../../common/helper/xml-parser.service';
-import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { UserprofileDbService } from '../../../api/userprofile/db/userprofile.db.service';
 import { LongLeaveResultDTO } from '../dto/long-leave-result.dto';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for dashboard
@@ -25,7 +26,6 @@ export class DashboardService {
    * @param {CalendarProfileDbService} calendarProfileDbService calendar profile db service
    * @param {UserInfoDbService} userInfoDbService user info db service
    * @param {LeaveTransactionDbService} leaveTransactionDbService leave transaction db service
-   * @param {XMLParserService} xmlParserService xml parser service
    * @param {UserprofileDbService} userprofileDbService user profile db service
    * @memberof DashboardService
    */
@@ -33,7 +33,6 @@ export class DashboardService {
     private readonly calendarProfileDbService: CalendarProfileDbService,
     private readonly userInfoDbService: UserInfoDbService,
     private readonly leaveTransactionDbService: LeaveTransactionDbService,
-    public readonly xmlParserService: XMLParserService,
     public readonly userprofileDbService: UserprofileDbService
   ) { }
   /**
@@ -206,7 +205,7 @@ export class DashboardService {
    */
   public addTime(element) {
     // get working hours details for each user
-    let workingHours = this.xmlParserService.convertXMLToJson(element.PROPERTIES_XML);
+    let workingHours = convertXMLToJson(element.PROPERTIES_XML);
 
     // First tenary : for full day leave
     // Second tenary : for halfday leave (AM,PM)
@@ -250,4 +249,22 @@ export class DashboardService {
     );
   }
 
+  /**
+   * Convert xml data to json
+   *
+   * @param {[any,any]} [upcomingHolidayArr,data]
+   * @returns
+   * @memberof DashboardService
+   */
+  public convertData([upcomingHolidayArr, data]: [any, any]) {
+    let holidayData = convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+
+    holidayData.holiday.forEach(element => {
+      if (moment(element.start, 'YYYY-MM-DD') > moment()) {
+        upcomingHolidayArr.push(element);
+      }
+    });
+
+    return upcomingHolidayArr;
+  }
 }

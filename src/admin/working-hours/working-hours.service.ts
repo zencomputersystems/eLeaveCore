@@ -71,7 +71,7 @@ export class WorkingHoursService {
    */
   public getWorkingHoursDetail(workingHoursId: string) {
     return this.workingHoursDbService.findAll(workingHoursId).pipe(map(res => {
-      if (res.status == 200) { return convertXMLToJson(res.data.resource[0].PROPERTIES_XML); }
+      return convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
     }))
   }
 

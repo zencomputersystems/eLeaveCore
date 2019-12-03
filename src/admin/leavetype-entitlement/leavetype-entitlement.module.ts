@@ -8,6 +8,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 
 /**
  * Module for leavetype entitlement
@@ -27,7 +28,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     LeaveTypeEntitlementService,
     LeavetypeEntitlementDbService,
     QueryParserService,
-    CommonFunctionService
+    CommonFunctionService,
+    UserLeaveEntitlementDbService
   ]
 })
 export class LeavetypeEntitlementModule { }

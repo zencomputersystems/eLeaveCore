@@ -8,6 +8,9 @@ import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
 import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { map, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 /**
  * Controller for leavetype entitlement
@@ -28,8 +31,8 @@ export class LeavetypeEntitlementController {
 	 * @memberof LeavetypeEntitlementController
 	 */
 	constructor(
-		private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
 		private readonly leavetypeEntitlementService: LeaveTypeEntitlementService,
+		private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
 		private readonly commonFunctionService: CommonFunctionService
 	) { }
 
@@ -82,7 +85,7 @@ export class LeavetypeEntitlementController {
 	@Post()
 	@ApiOperation({ title: 'Create leavetype entitlement' })
 	create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDTO, @Req() req, @Res() res) {
-		this.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO).subscribe(
+		this.leavetypeEntitlementService.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO).subscribe(
 			data => { this.sendDataSuccess(data, res); },
 			err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
 		)
@@ -99,7 +102,7 @@ export class LeavetypeEntitlementController {
 	@Patch()
 	@ApiOperation({ title: 'Update Leavetype entitlement' })
 	update(@Body() updateLeaveTypeEntitlementDTO: UpdateLeaveTypeEntitlementDto, @Req() req, @Res() res) {
-		this.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO).subscribe(
+		this.leavetypeEntitlementService.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO).subscribe(
 			data => { this.sendDataSuccess(data, res); },
 			err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
 		)
@@ -117,7 +120,22 @@ export class LeavetypeEntitlementController {
 	@ApiOperation({ title: 'Delete leavetype entitlement' })
 	@ApiImplicitParam({ name: 'id', description: 'Delete by leavetype entitlement guid', required: true })
 	deleteLeavetypeEntitlement(@Param('id') id, @Req() req, @Res() res) {
-		this.commonFunctionService.runUpdateService(this.leavetypeEntitlementDbService.deleteLeavetypeEntitlement(req.user, id), res);
+		this.userLeaveEntitlementDbService.findByFilterV2(['USER_LEAVE_ENTITLEMENT_GUID', 'USER_GUID'], ['(ENTITLEMENT_GUID=' + id + ')']).pipe(mergeMap(res => {
+			// Check entitlement guid if attach to user
+			let resProcess;
+			// if hava user attach return user list
+			if (res.length > 0) {
+				resProcess = of(res);
+			} else { // delete leavetype entitlement 
+				resProcess = this.leavetypeEntitlementService.leavetypeEntitlementDbService.deleteLeavetypeEntitlement(req.user, id).pipe(
+					map(res => { return res.data.resource; })
+				);
+			}
+			return resProcess;
+		})).subscribe(
+			data => { res.send(data); },
+			err => { res.status(400).send('Fail to update resource'); }
+		);
 	}
 
 	/**

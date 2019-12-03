@@ -7,6 +7,7 @@ import { LeaveTypeController } from './leavetype.controller';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 
 /**
  * Module for leavetype
@@ -25,7 +26,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
   providers: [
     LeavetypeService,
     QueryParserService,
-    CommonFunctionService
+    CommonFunctionService,
+    UserLeaveEntitlementDbService
   ]
 })
 export class LeavetypeModule { }

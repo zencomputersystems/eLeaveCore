@@ -5,6 +5,9 @@ import { CreateLeaveTypeDTO } from './dto/create-leavetype.dto';
 import { UpdateLeaveTypeDTO } from './dto/update-leavetype.dto';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 /**
  * Leavetype controller
@@ -25,7 +28,8 @@ export class LeaveTypeController {
    */
   constructor(
     private readonly leavetypeService: LeavetypeService,
-    private readonly commonFunctionService: CommonFunctionService
+    private readonly commonFunctionService: CommonFunctionService,
+    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService
   ) { }
 
   /**
@@ -108,7 +112,24 @@ export class LeaveTypeController {
   @ApiOperation({ title: 'Delete leavetype' })
   @ApiImplicitParam({ name: 'id', description: 'Delete by leavetype guid', required: true })
   deleteLeavetype(@Param('id') id, @Req() req, @Res() res) {
-    this.commonFunctionService.runUpdateService(this.leavetypeService.delete(req.user, id), res);
+    this.userLeaveEntitlementDbService.findByFilterV2(['USER_LEAVE_ENTITLEMENT_GUID', 'USER_GUID'], ['(LEAVE_TYPE_GUID=' + id + ')']).pipe(mergeMap(res => {
+      // Check entitlement guid if attach to user
+      let resProcess;
+      // if hava user attach return user list
+      if (res.length > 0) {
+        resProcess = of(res);
+      } else { // delete leavetype entitlement 
+        resProcess = this.leavetypeService.delete(req.user, id).pipe(
+          map(res => { return res.data.resource; })
+        );
+      }
+      return resProcess;
+    })).subscribe(
+      data => { res.send(data); },
+      err => { res.status(400).send('Fail to update resource'); }
+    );
+
+    // this.commonFunctionService.runUpdateService(this.leavetypeService.delete(req.user, id), res);
   }
 
 }

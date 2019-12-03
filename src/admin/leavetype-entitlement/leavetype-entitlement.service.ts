@@ -16,11 +16,11 @@ var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 export class LeaveTypeEntitlementService {
     /**
      *Creates an instance of LeaveTypeEntitlementService.
-     * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService
+     * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService leavetype entitlement db service
      * @memberof LeaveTypeEntitlementService
      */
     constructor(
-        private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService) { }
+        public readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService) { }
 
     /**
      * return list of entitlement for this filter

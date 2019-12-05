@@ -52,13 +52,13 @@ export class UserprofileAssignerService {
 
     this.assignUserProfileData(userProfileData, data);
 
-    if (data.PROPERTIES_XML) {
-      this.personaldetailProcess([data, isShowPersonalData, isShowCertData, userProfileData]);
-    }
+    // if (data.PROPERTIES_XML) {
+    //   this.personaldetailProcess([data, isShowPersonalData, isShowCertData, userProfileData]);
+    // }
 
-    if (isShowEmploymentData) {
-      userProfileData.employmentDetail = this.assignEmploymentDetail(data); //employmentDetail;
-    }
+    // if (isShowEmploymentData) {
+    //   userProfileData.employmentDetail = this.assignEmploymentDetail(data); //employmentDetail;
+    // }
 
     if (isShowEntitlementData) {
       userProfileData.entitlementDetail = [];

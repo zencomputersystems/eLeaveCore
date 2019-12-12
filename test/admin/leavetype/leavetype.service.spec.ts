@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { LeavetypeService } from '../../../src/admin/leavetype/leavetype.service';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 describe('LeavetypeService', () => {
   let service: LeavetypeService;
   beforeEach(async () => {
@@ -12,6 +13,7 @@ describe('LeavetypeService', () => {
     const module = await Test.createTestingModule({
       providers: [
         LeavetypeService,
+        UserLeaveEntitlementDbService,
         { provide: HttpService, useValue: httpServiceStub },
         { provide: QueryParserService, useValue: queryParserServiceStub }
       ]

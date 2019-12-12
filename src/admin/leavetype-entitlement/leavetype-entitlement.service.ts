@@ -40,11 +40,13 @@ export class LeaveTypeEntitlementService {
                     data.forEach((element: ViewLeaveTypeSetupModel) => {
                         const entitlementItem = new LeaveTypeEntitlementListDTO();
 
-                        entitlementItem.leaveTypeId = element.LEAVE_TYPE_GUID;
-                        entitlementItem.leaveType = element.LEAVE_TYPE_CODE;
                         entitlementItem.leaveEntitlementId = element.ENTITLEMENT_GUID;
                         entitlementItem.leaveEntitlementDescription = element.DESCRIPTION;
                         entitlementItem.leaveEntitlementCode = element.LEAVE_ENTITLEMENT_CODE;
+                        entitlementItem.leaveTypeId = element.LEAVE_TYPE_GUID;
+                        entitlementItem.leaveType = element.LEAVE_TYPE_CODE;
+                        entitlementItem.leaveTypeAbbr = element.LEAVE_TYPE_ABBR;
+                        entitlementItem.totalEmployee = element.TOTAL_EMPLOYEE_ATTACH;
 
                         entitlementList.push(entitlementItem);
                     });

@@ -5,6 +5,9 @@ import { UpdateLeaveTypeEntitlementDto } from '../../../src/admin/leavetype-enti
 import { LeaveTypeEntitlementService } from '../../../src/admin/leavetype-entitlement/leavetype-entitlement.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { LeavetypeEntitlementController } from '../../../src/admin/leavetype-entitlement/leavetype-entitlement.controller';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { HttpModule } from '@nestjs/common';
+import { QueryParserService } from '../../../src/common/helper/query-parser.service';
 describe('LeavetypeEntitlementController', () => {
   let pipe: LeavetypeEntitlementController;
   beforeEach(async () => {
@@ -24,8 +27,12 @@ describe('LeavetypeEntitlementController', () => {
       sendResErrorV2: (res1, number2, string3) => ({})
     };
     const module = await Test.createTestingModule({
+
+      imports: [HttpModule],
       providers: [
         LeavetypeEntitlementController,
+        UserLeaveEntitlementDbService,
+        QueryParserService,
         {
           provide: LeavetypeEntitlementDbService,
           useValue: leavetypeEntitlementDbServiceStub

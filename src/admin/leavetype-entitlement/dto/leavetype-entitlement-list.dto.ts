@@ -7,23 +7,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
  * @class LeaveTypeEntitlementListDTO
  */
 export class LeaveTypeEntitlementListDTO {
-    /**
-     * Data leavetype entitlement list - leavetype id
-     *
-     * @type {string}
-     * @memberof LeaveTypeEntitlementListDTO
-     */
-    @ApiModelProperty()
-    leaveTypeId: string;
-
-    /**
-     * Data leavetype entitlement list - leavetype
-     *
-     * @type {string}
-     * @memberof LeaveTypeEntitlementListDTO
-     */
-    @ApiModelProperty()
-    leaveType: string;
 
     /**
      * Data leavetype entitlement list - leave entitlement id
@@ -51,4 +34,41 @@ export class LeaveTypeEntitlementListDTO {
      */
     @ApiModelProperty()
     leaveEntitlementDescription: string;
+
+    /**
+     * Data leavetype entitlement list - leavetype id
+     *
+     * @type {string}
+     * @memberof LeaveTypeEntitlementListDTO
+     */
+    @ApiModelProperty()
+    leaveTypeId: string;
+
+    /**
+     * Data leavetype entitlement list - leavetype
+     *
+     * @type {string}
+     * @memberof LeaveTypeEntitlementListDTO
+     */
+    @ApiModelProperty()
+    leaveType: string;
+
+    /**
+     * Data leavetype entitlement list - leaveTypeAbbr
+     *
+     * @type {string}
+     * @memberof LeaveTypeEntitlementListDTO
+     */
+    @ApiModelProperty()
+    leaveTypeAbbr: string;
+
+    /**
+     * Data leavetype entitlement list - totalEmployee
+     *
+     * @type {number}
+     * @memberof LeaveTypeEntitlementListDTO
+     */
+    @ApiModelProperty()
+    totalEmployee: number;
+
 }

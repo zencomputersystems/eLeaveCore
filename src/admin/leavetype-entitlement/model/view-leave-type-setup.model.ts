@@ -34,6 +34,13 @@ export class ViewLeaveTypeSetupModel {
      */
     LEAVE_TYPE_CODE: string;
     /**
+     * ViewLeavetypesetup - leave type abbreviation
+     *
+     * @type {string}
+     * @memberof ViewLeaveTypeSetupModel
+     */
+    LEAVE_TYPE_ABBR: string;
+    /**
      * ViewLeavetypesetup - leavetype description
      *
      * @type {string}
@@ -68,4 +75,11 @@ export class ViewLeaveTypeSetupModel {
      * @memberof ViewLeaveTypeSetupModel
      */
     PROPERTIES_XML: string;
+    /**
+     * Total employee attach
+     *
+     * @type {number}
+     * @memberof ViewLeaveTypeSetupModel
+     */
+    TOTAL_EMPLOYEE_ATTACH: number;
 }

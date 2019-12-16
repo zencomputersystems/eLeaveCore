@@ -58,10 +58,9 @@ export class LeavetypeEntitlementDbService extends BaseDBService implements IDbS
      */
     public findAll(tenantid: string): Observable<any> {
 
-        const filters = ['(TENANT_GUID=' + tenantid + ')'];
+        const filters = ['(TENANT_GUID=' + tenantid + ')', '(DELETED_AT IS NULL)'];
         // url
         const url = this.queryService.generateDbQueryV2(this._viewTableName, [], filters, []);
-
         // call DF to validate the user
         return this.httpService.get(url);
 

@@ -16,7 +16,7 @@ export class LeaveTypeLevelsXmlDTO {
      * @type {LeaveTypeServiceYearXmlDTO[]}
      * @memberof LeaveTypeLevelsXmlDTO
      */
-    @ApiModelProperty({ type: LeaveTypeServiceYearXmlDTO })
+    @ApiModelProperty({ type: [LeaveTypeServiceYearXmlDTO] })
     @IsNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => LeaveTypeServiceYearXmlDTO)

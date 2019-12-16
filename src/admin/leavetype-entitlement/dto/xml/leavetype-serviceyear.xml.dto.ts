@@ -12,12 +12,12 @@ export class LeaveTypeServiceYearXmlDTO {
     /**
      * Data leavetype service - id
      *
-     * @type {string}
+     * @type {number}
      * @memberof LeaveTypeServiceYearXmlDTO
      */
-    @ApiModelProperty({ description: 'Id for leavetype service year', example: 'fuibquf793ybf9y3bfbohbf34fe43f' })
+    @ApiModelProperty({ description: 'Id for leavetype service year', example: 1 })
     @IsNotEmpty()
-    id: string;
+    id: number;
 
     /**
      * Data leavetype service - service year from

@@ -179,8 +179,9 @@ export class LeaveTypePropertiesXmlDTO {
      */
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description: 'Allow to Apply Leave After Join',
-        example: true
+        description: 'Allow to Apply Leave After Join'
+        // ,
+        // example: true
     })
     @IsNotEmpty()
     @Type(() => GeneralPropertiesXmlDTO)
@@ -194,8 +195,9 @@ export class LeaveTypePropertiesXmlDTO {
      */
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description: 'Allow Applicant to cancel leave after start/expired date',
-        example: false
+        description: 'Allow Applicant to cancel leave after start/expired date'
+        // ,
+        // example: false
     })
     @ValidateNested({ each: true })
     @Type(() => GeneralPropertiesXmlDTO)
@@ -209,8 +211,9 @@ export class LeaveTypePropertiesXmlDTO {
      */
     @ApiModelProperty({
         type: GeneralPropertiesXmlDTO,
-        description: 'Allow employee apply leave using current year bring forward amount only',
-        example: false
+        description: 'Allow employee apply leave using current year bring forward amount only'
+        // ,
+        // example: false
     })
     @ValidateNested({ each: true })
     @Type(() => GeneralPropertiesXmlDTO)

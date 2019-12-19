@@ -41,11 +41,12 @@ export class LeaveApplicationValidationService {
      * @returns
      * @memberof LeaveApplicationValidationService
      */
-    public validateLeave(
-        policy: LeaveTypePropertiesXmlDTO,
-        applyLeaveDTO: ApplyLeaveDTO,
-        userInfo: UserInfoModel,
-        userEntitlement: UserLeaveEntitlementModel[]) {
+    // public validateLeave(
+    //     policy: LeaveTypePropertiesXmlDTO,
+    //     applyLeaveDTO: ApplyLeaveDTO,
+    //     userInfo: UserInfoModel,
+    //     userEntitlement: UserLeaveEntitlementModel[]) {
+    public validateLeave([policy, applyLeaveDTO, userInfo, userEntitlement]: [LeaveTypePropertiesXmlDTO, ApplyLeaveDTO, UserInfoModel, UserLeaveEntitlementModel[]]) {
 
         const validationStatus = new ValidationStatusDTO();
 
@@ -53,13 +54,8 @@ export class LeaveApplicationValidationService {
         const startDateTemp = applyLeaveDTO.data[0].startDate;
         const endDatetemp = applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate;
 
-        // console.log(startDateTemp + ' --- ' + endDatetemp);
-
         const startDate = this.convertDateToMoment(startDateTemp);
         const endDate = this.convertDateToMoment(endDatetemp);
-
-        // console.log(userInfo);
-        // console.log(applyLeaveDTO);
 
         return this.validateOverlapLeave(startDateTemp, endDatetemp, userInfo)
             .pipe(
@@ -219,7 +215,7 @@ export class LeaveApplicationValidationService {
 
         // find the date duration between start date and current date
         // check if rest day and holiday is included or not
-        const dayDifference = this.dateCalculationService.getDayDuration(currentDate, startDate, policy.applyBeforeProperties.excludeDayType.isExcludeHoliday, policy.applyBeforeProperties.excludeDayType.isExcludeRestDay);
+        const dayDifference = this.dateCalculationService.getDayDuration([currentDate, startDate, policy.applyBeforeProperties.excludeDayType.isExcludeHoliday, policy.applyBeforeProperties.excludeDayType.isExcludeRestDay]);
 
         if (dayDifference > policy.applyBeforeProperties.numberOfDays) {
             return true;
@@ -247,7 +243,7 @@ export class LeaveApplicationValidationService {
 
         const currentDate = moment(new Date(), 'YYYY-MM-DD').startOf('day');
 
-        const dayDifference = this.dateCalculationService.getDayDuration(endDate, currentDate, policy.applyWithinProperties.excludeDayType.isExcludeHoliday, policy.applyWithinProperties.excludeDayType.isExcludeRestDay);
+        const dayDifference = this.dateCalculationService.getDayDuration([endDate, currentDate, policy.applyWithinProperties.excludeDayType.isExcludeHoliday, policy.applyWithinProperties.excludeDayType.isExcludeRestDay]);
 
         if (dayDifference <= policy.applyWithinProperties.numberOfDays) {
             return true;
@@ -329,7 +325,7 @@ export class LeaveApplicationValidationService {
      * @memberof LeaveApplicationValidationService
      */
     public validateOverlapLeave(startDate: Date, endDate: Date, userInfo: UserInfoModel) {
-        // console.log(userInfo.USER_GUID);
+
         const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")"];
 
         return this.leaveTransactionDbService.findByFilterV2([], filter)

@@ -22,17 +22,19 @@ export class DateCalculationService {
     // constructor(public readonly httpService: HttpService,
     //     public readonly queryService: QueryParserService) { }
     // get duration between 2 date
-    /**
-     * Get day duration
-     *
-     * @param {moment.Moment} startDate
-     * @param {moment.Moment} endDate
-     * @param {boolean} isIncludeHoliday
-     * @param {boolean} isIncludeRestDay
-     * @returns
-     * @memberof DateCalculationService
-     */
-    getDayDuration(startDate: moment.Moment, endDate: moment.Moment, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
+    // /**
+    //  * Get day duration
+    //  *
+    //  * @param {moment.Moment} startDate
+    //  * @param {moment.Moment} endDate
+    //  * @param {boolean} isIncludeHoliday
+    //  * @param {boolean} isIncludeRestDay
+    //  * @returns
+    //  * @memberof DateCalculationService
+    //  */
+    // getDayDuration(startDate: moment.Moment, endDate: moment.Moment, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
+
+    getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]: [moment.Moment, moment.Moment, boolean, boolean]) {
         startDate.startOf('days');
         endDate.endOf('days');
 
@@ -102,28 +104,37 @@ export class DateCalculationService {
 
     }
 
+    // /**
+    //  * Get leave duration
+    //  *
+    //  * @param {Date} firstDate
+    //  * @param {Date} secondDate
+    //  * @param {number} dayType
+    //  * @param {boolean} isIncludeHoliday
+    //  * @param {boolean} isIncludeRestDay
+    //  * @returns
+    //  * @memberof DateCalculationService
+    //  */
+    // getLeaveDuration(data: LeaveDuration) {
+    //     let firstDate: Date = data[0];
+    //     let secondDate: Date = data[1];
+    //     let dayType: number = data[2];
+    //     let isIncludeHoliday: boolean = data[3];
+    //     let isIncludeRestDay: boolean = data[4];
+
     /**
      * Get leave duration
      *
-     * @param {Date} firstDate
-     * @param {Date} secondDate
-     * @param {number} dayType
-     * @param {boolean} isIncludeHoliday
-     * @param {boolean} isIncludeRestDay
+     * @param {LeaveDuration} [firstDate,secondDate,dayType,isIncludeHoliday,isIncludeRestDay]
      * @returns
      * @memberof DateCalculationService
      */
-    getLeaveDuration(data: LeaveDuration) {
-        let firstDate: Date = data[0];
-        let secondDate: Date = data[1];
-        let dayType: number = data[2];
-        let isIncludeHoliday: boolean = data[3];
-        let isIncludeRestDay: boolean = data[4];
+    getLeaveDuration([firstDate, secondDate, dayType, isIncludeHoliday, isIncludeRestDay]: LeaveDuration) {
 
         const startDate = moment(firstDate, 'YYYY-MM-DD');
         const endDate = moment(secondDate, 'YYYY-MM-DD');
 
-        const duration = this.getDayDuration(startDate, endDate, isIncludeHoliday, isIncludeRestDay);
+        const duration = this.getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]);
 
         if (duration <= 0) {
             return 0;

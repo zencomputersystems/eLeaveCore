@@ -254,6 +254,7 @@ export class HolidayService {
 		const modelData = new CreateHolidayModel();
 
 		modelData.CALENDAR_GUID = v1();
+		modelData.TENANT_GUID = user.TENANT_GUID;
 		modelData.CODE = data.code;
 		modelData.FILTER_CRITERIA = convertJsonToXML(data.filter);
 		// modelData.PROPERTIES_XML = convertJsonToXML(data);

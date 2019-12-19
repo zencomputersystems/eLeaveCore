@@ -19,19 +19,16 @@ export class AccessLevelValidateService {
      */
     constructor(private readonly userInfoService: UserInfoService) { }
 
-    // get the requestor permission level
-    // return filter with the id of that level
+    // public validateAccessLevel(accessLevel: string, filters: string[], tenantId: string) {
     /**
      * get the requestor permission level
      * return filter with the id of that level
      *
-     * @param {string} accessLevel
-     * @param {string[]} filters
-     * @param {string} tenantId
+     * @param {[string, string[], string]} [accessLevel, filters, tenantId]
      * @returns
      * @memberof AccessLevelValidateService
      */
-    public validateAccessLevel(accessLevel: string, filters: string[], tenantId: string) {
+    public validateAccessLevel([accessLevel, filters, tenantId]: [string, string[], string]) {
 
         const filter = ['(TENANT_GUID=' + tenantId + ')'];
 
@@ -65,20 +62,17 @@ export class AccessLevelValidateService {
 
     }
 
-    //validate user access level before return data
+    // public generateFilterWithChecking(tenantId: string, requestor_userId: string, accessLevel: string, filterList: string[]) {
     /**
      * validate user access level before return data
      *
-     * @param {string} tenantId
-     * @param {string} requestor_userId
-     * @param {string} accessLevel
-     * @param {string[]} filterList
+     * @param {[string, string, string, string[]]} [tenantId, requestor_userId, accessLevel, filterList]
      * @returns
      * @memberof AccessLevelValidateService
      */
-    public generateFilterWithChecking(tenantId: string, requestor_userId: string, accessLevel: string, filterList: string[]) {
+    public generateFilterWithChecking([tenantId, requestor_userId, accessLevel, filterList]: [string, string, string, string[]]) {
 
-        return this.validateAccessLevel(accessLevel, ['(USER_GUID=' + requestor_userId + ')'], tenantId)
+        return this.validateAccessLevel([accessLevel, ['(USER_GUID=' + requestor_userId + ')'], tenantId])
             .pipe(
                 map(filterResult => {
                     const filters = ['(TENANT_GUID=' + tenantId + ')'];

@@ -54,7 +54,9 @@ export class ProratedDateCurrentMonthService extends LeaveEntitlementBaseService
         // Convert xml to json
         //const policyJson = convertXMLToJson(leavePolicy);
 
-        const currentYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, yearOfService, (currentMonth - monthJoin), "END");
+        // const currentYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, yearOfService, (currentMonth - monthJoin), "END");
+
+        const currentYearActualEntitlement = this.calculateEntitlement([dateMoment, leavePolicy, yearOfService, (currentMonth - monthJoin), "END"]);
 
         //console.log(currentYearActualEntitlement);
         if (yearOfService <= 1) {
@@ -62,7 +64,9 @@ export class ProratedDateCurrentMonthService extends LeaveEntitlementBaseService
         }
 
 
-        const previousYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, (yearOfService - 1), (monthJoin - 1), "START");
+        // const previousYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, (yearOfService - 1), (monthJoin - 1), "START");
+
+        const previousYearActualEntitlement = this.calculateEntitlement([dateMoment, leavePolicy, (yearOfService - 1), (monthJoin - 1), "START"]);
 
         return currentYearActualEntitlement + previousYearActualEntitlement;
 

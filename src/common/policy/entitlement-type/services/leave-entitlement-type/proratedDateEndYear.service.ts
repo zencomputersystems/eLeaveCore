@@ -66,7 +66,9 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
         // Convert xml to json
         //const policyJson = convertXMLToJson(leavePolicy);
 
-        const currentYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, yearOfService, monthFullEntitlement, "END")
+        // const currentYearActualEntitlement = this.calculateEntitlement(dateMoment, leavePolicy, yearOfService, monthFullEntitlement, "END")
+
+        const currentYearActualEntitlement = this.calculateEntitlement([dateMoment, leavePolicy, yearOfService, monthFullEntitlement, "END"])
 
         if (yearOfService <= 1) {
 
@@ -74,7 +76,9 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
             return currentYearActualEntitlement;
         }
 
-        const previousYearActualEntitlemnt = this.calculateEntitlement(dateMoment, leavePolicy, (yearOfService - 1), (monthJoin - 1), "START");
+        // const previousYearActualEntitlemnt = this.calculateEntitlement(dateMoment, leavePolicy, (yearOfService - 1), (monthJoin - 1), "START");
+
+        const previousYearActualEntitlemnt = this.calculateEntitlement([dateMoment, leavePolicy, (yearOfService - 1), (monthJoin - 1), "START"]);
 
         return currentYearActualEntitlement + previousYearActualEntitlemnt;
     }

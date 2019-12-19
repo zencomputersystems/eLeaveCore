@@ -75,13 +75,14 @@ export class LeaveEntitlementBaseService {
      * @returns
      * @memberof LeaveEntitlementBaseService
      */
-    protected calculateEntitlement(
-        date: Moment,
-        policyJson: LeaveTypePropertiesXmlDTO,
-        yearOfService: number,
-        monthFullEntitlement: number,
-        option: string
-    ) {
+    // protected calculateEntitlement(
+    //     date: Moment,
+    //     policyJson: LeaveTypePropertiesXmlDTO,
+    //     yearOfService: number,
+    //     monthFullEntitlement: number,
+    //     option: string
+    // ) {
+    protected calculateEntitlement([date, policyJson, yearOfService, monthFullEntitlement, option]: [Moment, LeaveTypePropertiesXmlDTO, number, number, string]) {
 
         // current service year entitlement
         const yearTotalEntitlement = this.getEntitlementFromPolicy(policyJson, yearOfService);

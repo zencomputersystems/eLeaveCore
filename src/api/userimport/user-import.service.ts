@@ -84,7 +84,7 @@ export class UserImportService {
                     const existingUsers: UserModel[] = res;
                     return existingUsers;
                 }),
-                map(res => this.filterData(importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL')),
+                map(res => this.filterData([importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL'])),
                 map(res => this.filterDuplicateUser(res)),
                 mergeMap(successUser => this.saveImportList(successUser, user)),
                 mergeMap(successUser => this.saveInfoDataList(successUser, user))
@@ -129,7 +129,7 @@ export class UserImportService {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
                     // console.log(saveUser);
-                    return this.filterData(importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL')
+                    return this.filterData([importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL'])
                     // return importData;
                 }
             }))
@@ -146,12 +146,10 @@ export class UserImportService {
      * @memberof UserImportService
      */
     private saveInfoDataList(importData: Array<UserCsvDto>, user: any) {
-        // console.log(importData);
-        // console.log('in here');
+
         if (importData.length == 0) {
             return of(this.importResult);
         }
-
 
         const userInfoResourceArray = new Resource(new Array);
 
@@ -165,34 +163,33 @@ export class UserImportService {
                 userInfoModel.CREATION_USER_GUID = user.USER_GUID;
                 userInfoModel.CREATION_TS = new Date().toISOString();
 
-                userInfoModel.FULLNAME = element.FULLNAME;
-                userInfoModel.NICKNAME = element.NICKNAME;
+                userInfoModel.FULLNAME = element.hasOwnProperty('FULLNAME') ? element.FULLNAME : null;
+                userInfoModel.NICKNAME = element.hasOwnProperty('NICKNAME') ? element.NICKNAME : null;
 
-                userInfoModel.DEPARTMENT = element.DEPARTMENT || null;
-                userInfoModel.BRANCH = element.BRANCH || null;
-                userInfoModel.COSTCENTRE = element.COST_CENTRE;
-                userInfoModel.DESIGNATION = element.DESIGNATION;
-                userInfoModel.DIVISION = element.DIVISION;
-                userInfoModel.SECTION = element.SECTION;
-                userInfoModel.PERSONAL_ID = element.NRIC;
-                userInfoModel.DOB = element.DOB;
-                userInfoModel.GENDER = element.GENDER.toLowerCase() == 'male' ? 1 : 0;
-                userInfoModel.MARITAL_STATUS = element.MARITAL_STATUS.toLowerCase() == 'single' ? 0 : 1;
+                userInfoModel.DEPARTMENT = element.hasOwnProperty('DEPARTMENT') ? element.DEPARTMENT : null;
+                userInfoModel.BRANCH = element.hasOwnProperty('BRANCH') ? element.BRANCH : null;
+                userInfoModel.COSTCENTRE = element.hasOwnProperty('COST_CENTRE') ? element.COST_CENTRE : null;
+                userInfoModel.DESIGNATION = element.hasOwnProperty('DESIGNATION') ? element.DESIGNATION : null;
+                userInfoModel.DIVISION = element.hasOwnProperty('DIVISION') ? element.DIVISION : null;
+                userInfoModel.SECTION = element.hasOwnProperty('SECTION') ? element.SECTION : null;
+                userInfoModel.PERSONAL_ID = element.hasOwnProperty('NRIC') ? element.NRIC : null;
+                userInfoModel.DOB = element.hasOwnProperty('DOB') ? element.DOB : null;
+                userInfoModel.GENDER = element.hasOwnProperty('GENDER') ? (element.GENDER.toLowerCase() == 'male' ? 1 : 0) : null;
+                userInfoModel.MARITAL_STATUS = element.hasOwnProperty('MARITAL_STATUS') ? (element.MARITAL_STATUS.toLowerCase() == 'single' ? 0 : 1) : null;
 
-                userInfoModel.JOIN_DATE = new Date(element.JOIN_DATE);
-                userInfoModel.CONFIRMATION_DATE = new Date(element.CONFIRMATION_DATE) || null;
-                userInfoModel.RESIGNATION_DATE = new Date(element.RESIGNATION_DATE) || null;
+                userInfoModel.JOIN_DATE = element.hasOwnProperty('JOIN_DATE') ? new Date(element.JOIN_DATE) : null;
+                userInfoModel.CONFIRMATION_DATE = element.hasOwnProperty('CONFIRMATION_DATE') ? new Date(element.CONFIRMATION_DATE) : null;
+                userInfoModel.RESIGNATION_DATE = element.hasOwnProperty('RESIGNATION_DATE') ? new Date(element.RESIGNATION_DATE) : null;
 
                 userInfoResourceArray.resource.push(userInfoModel);
             }
 
         })
-        // console.log(userInfoResourceArray);
+
         return this.userInfoService.createByModel(userInfoResourceArray, [], [], ['USER_INFO_GUID', 'USER_GUID'])
             .pipe(map(res => {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
-                    // console.log(saveUser);
 
                     return this.filterSaveUserByID(saveUser, importData);
                 }
@@ -211,12 +208,13 @@ export class UserImportService {
      * @returns
      * @memberof UserImportService
      */
-    private filterData(
-        importData: Array<UserCsvDto>,
-        checkModelArray: any,
-        categoryName: string,
-        findElement: any,
-        findItem: any) {
+    // private filterData(
+    //     importData: Array<UserCsvDto>,
+    //     checkModelArray: any,
+    //     categoryName: string,
+    //     findElement: any,
+    //     findItem: any) {
+    private filterData([importData, checkModelArray, categoryName, findElement, findItem]: [Array<UserCsvDto>, any, string, any, any]) {
 
         // console.log(importData);
         // console.log(checkModelArray[0]);

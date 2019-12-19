@@ -144,7 +144,7 @@ export class ApprovalService {
                 mergeMap(result => {
 
                     if (result.currentPolicy.approvalType.toUpperCase() === "EVERYONE") {
-                        result.leave = this.verticalLevel(result.leave, approverUserId, isApprove, result.currentPolicy.approvalLevel);
+                        result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy.approvalLevel]);
                     } else {
                         result.leave = this.horizontalLevel(result.leave, approverUserId, isApprove);
                     }
@@ -169,18 +169,17 @@ export class ApprovalService {
 
     }
 
+    // private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {
+
     /**
      * Method vertical level
      *
      * @private
-     * @param {LeaveTransactionModel} leave
-     * @param {string} approverUserId
-     * @param {boolean} isApprove
-     * @param {number} currentPolicyLevel
+     * @param {[LeaveTransactionModel, string, boolean, number]} [leave, approverUserId, isApprove, currentPolicyLevel]
      * @returns
      * @memberof ApprovalService
      */
-    private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {
+    private verticalLevel([leave, approverUserId, isApprove, currentPolicyLevel]: [LeaveTransactionModel, string, boolean, number]) {
         leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL + 1);
 
         if (leave.STATES == null || leave.STATES == '') {

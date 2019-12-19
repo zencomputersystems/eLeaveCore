@@ -17,6 +17,14 @@ export class CreateHolidayModel extends CreateUpdateModel {
     CALENDAR_GUID: string;
 
     /**
+     * Tenant guid
+     *
+     * @type {string}
+     * @memberof CreateHolidayModel
+     */
+    TENANT_GUID: string;
+
+    /**
      * Code
      *
      * @type {string}

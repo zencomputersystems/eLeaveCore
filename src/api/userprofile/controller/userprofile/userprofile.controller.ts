@@ -50,7 +50,7 @@ export class UserprofileController {
 	@ApiImplicitParam({ name: 'role', description: 'Whether admin or employee', required: false })
 	@Roles('ViewProfile', 'ProfileAdmin', 'EditProfile')
 	findAll(@Param('role') role: string, @Req() req, @Res() res) {
-		this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, [])
+		this.accessLevelValidationService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, []])
 			.pipe(switchMap(filter => {
 				// temp
 				// const tempQuery = `(FULLNAME LIKE '%test%')`;
@@ -124,7 +124,7 @@ export class UserprofileController {
 	@Roles('ViewProfile', 'ProfileAdmin')
 	findOne(@Param('id') id, @Req() req, @Res() res) {
 		const user = req.user;
-		this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + id + ')'])
+		this.accessLevelValidationService.generateFilterWithChecking([user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + id + ')']])
 			.pipe(
 				switchMap(filter => {
 					let filters: string[] = [];

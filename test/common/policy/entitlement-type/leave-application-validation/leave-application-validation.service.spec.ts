@@ -36,9 +36,9 @@ describe('LeaveApplicationValidationService', () => {
     };
     const leaveBalanceValidationServiceStub = {
       validateLeaveBalance: (
-        userInfo1,
-        applyLeaveDTO2,
-        userEntitlement3
+        [userInfo1,
+          applyLeaveDTO2,
+          userEntitlement3]
       ) => ({})
     };
     const leaveTransactionDbServiceStub = {

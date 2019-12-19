@@ -34,7 +34,7 @@ export class ApprovedController {
     @ApiOperation({ title: 'Approved Leave' })
     policyChange(@Req() req, @Res() res) {
 
-        this.approvedService.onPolicyChanged("EVERYONE", 1, req.user.TENANT_GUID)
+        this.approvedService.onPolicyChanged(["EVERYONE", 1, req.user.TENANT_GUID])
             .subscribe(
                 data => {
                     res.send(data);

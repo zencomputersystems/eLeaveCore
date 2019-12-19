@@ -74,30 +74,30 @@ export class InvitationDbService extends BaseDBService {
 
     }
 
-    /**
-     * Create new invitation data
-     *
-     * @param {string} userId
-     * @param {string} email
-     * @param {*} user
-     * @returns
-     * @memberof InvitationDbService
-     */
-    create(userId: string, email: string, user: any) {
-        const resource = new Resource(new Array());
-        const invitationModel = new UserInviteModel();
-        invitationModel.INVITATION_GUID = v1();
-        invitationModel.USER_GUID = userId;
-        invitationModel.TENANT_GUID = user.TENANT_GUID;
-        invitationModel.EMAIL = email;
-        invitationModel.STATUS = 1;
-        invitationModel.CREATION_TS = new Date().toISOString();
-        invitationModel.CREATION_TS = user.USER_GUID;
+    // /**
+    //  * Create new invitation data
+    //  *
+    //  * @param {string} userId
+    //  * @param {string} email
+    //  * @param {*} user
+    //  * @returns
+    //  * @memberof InvitationDbService
+    //  */
+    // create(userId: string, email: string, user: any) {
+    //     const resource = new Resource(new Array());
+    //     const invitationModel = new UserInviteModel();
+    //     invitationModel.INVITATION_GUID = v1();
+    //     invitationModel.USER_GUID = userId;
+    //     invitationModel.TENANT_GUID = user.TENANT_GUID;
+    //     invitationModel.EMAIL = email;
+    //     invitationModel.STATUS = 1;
+    //     invitationModel.CREATION_TS = new Date().toISOString();
+    //     invitationModel.CREATION_TS = user.USER_GUID;
 
-        resource.resource.push(invitationModel);
+    //     resource.resource.push(invitationModel);
 
-        return this.createByModel(resource, [], [], ['INVITATION_GUID,EMAIL']);
-    }
+    //     return this.createByModel(resource, [], [], ['INVITATION_GUID,EMAIL']);
+    // }
 
     /**
      * Update existing invitation data status

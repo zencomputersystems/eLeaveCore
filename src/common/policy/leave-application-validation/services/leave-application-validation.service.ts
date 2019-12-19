@@ -57,7 +57,7 @@ export class LeaveApplicationValidationService {
         const startDate = this.convertDateToMoment(startDateTemp);
         const endDate = this.convertDateToMoment(endDatetemp);
 
-        return this.validateOverlapLeave(startDateTemp, endDatetemp, userInfo)
+        return this.validateOverlapLeave([startDateTemp, endDatetemp, userInfo])
             .pipe(
                 map((result: boolean) => {
                     if (!result) {
@@ -66,17 +66,17 @@ export class LeaveApplicationValidationService {
                 }),
                 mergeMap(res => {
 
-                    return this.validateBalance(userInfo, applyLeaveDTO, userEntitlement)
+                    return this.validateBalance([userInfo, applyLeaveDTO, userEntitlement])
                         .pipe(map((validateBalanceResult: boolean) => {
                             if (!validateBalanceResult) {
                                 validationStatus.message.push("Leave balance not enough");
                             }
 
-                            if (!this.allowAdvancedLeave(policy, startDate, endDate)) {
+                            if (!this.allowAdvancedLeave([policy, startDate, endDate])) {
                                 validationStatus.message.push("Cannot apply advanced leave");
                             }
 
-                            if (!this.allowNextYearApplciation(policy, startDate, endDate)) {
+                            if (!this.allowNextYearApplciation([policy, startDate, endDate])) {
                                 validationStatus.message.push("Cannot apply leave on the following year");
                             }
 
@@ -121,8 +121,10 @@ export class LeaveApplicationValidationService {
      * @returns
      * @memberof LeaveApplicationValidationService
      */
-    private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
-        const balance = this.balanceValidationService.validateLeaveBalance(userInfo, applyLeaveDTO, userEntitlement);
+    // private validateBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
+
+    private validateBalance([userInfo, applyLeaveDTO, userEntitlement]: [UserInfoModel, ApplyLeaveDTO, UserLeaveEntitlementModel[]]) {
+        const balance = this.balanceValidationService.validateLeaveBalance([userInfo, applyLeaveDTO, userEntitlement]);
 
         return balance;
     }
@@ -139,7 +141,9 @@ export class LeaveApplicationValidationService {
      * @returns {boolean}
      * @memberof LeaveApplicationValidationService
      */
-    private allowAdvancedLeave(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+    // private allowAdvancedLeave(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+
+    private allowAdvancedLeave([policy, startDate, endDate]: [LeaveTypePropertiesXmlDTO, moment.Moment, moment.Moment]): boolean {
 
         const currentDate = moment(new Date(), 'YYYY-MM-DD');
 
@@ -164,7 +168,9 @@ export class LeaveApplicationValidationService {
      * @returns {boolean}
      * @memberof LeaveApplicationValidationService
      */
-    private allowNextYearApplciation(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+    // private allowNextYearApplciation(policy: LeaveTypePropertiesXmlDTO, startDate: moment.Moment, endDate: moment.Moment): boolean {
+
+    private allowNextYearApplciation([policy, startDate, endDate]: [LeaveTypePropertiesXmlDTO, moment.Moment, moment.Moment]): boolean {
 
         if (!policy.applyInAdvance) {
             policy.applyNextYear = false;
@@ -324,7 +330,9 @@ export class LeaveApplicationValidationService {
      * @returns
      * @memberof LeaveApplicationValidationService
      */
-    public validateOverlapLeave(startDate: Date, endDate: Date, userInfo: UserInfoModel) {
+    // public validateOverlapLeave(startDate: Date, endDate: Date, userInfo: UserInfoModel) {
+
+    public validateOverlapLeave([startDate, endDate, userInfo]: [Date, Date, UserInfoModel]) {
 
         const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")"];
 

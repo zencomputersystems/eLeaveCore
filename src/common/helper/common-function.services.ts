@@ -18,7 +18,7 @@ export class CommonFunctionService {
      * @memberof CommonFunctionService
      */
     public runCreateService(method, res) {
-        this.getResults(method, res, 'Fail to create resource');
+        this.getResults([method, res, 'Fail to create resource']);
     }
 
     /**
@@ -29,7 +29,7 @@ export class CommonFunctionService {
      * @memberof CommonFunctionService
      */
     public runUpdateService(method, res) {
-        this.getResults(method, res, 'Fail to update resource');
+        this.getResults([method, res, 'Fail to update resource']);
     }
 
     /**
@@ -54,7 +54,7 @@ export class CommonFunctionService {
      * @param {*} message
      * @memberof CommonFunctionService
      */
-    public getResults(method, res, message) {
+    public getResults([method, res, message]) {
         method.subscribe(
             data => {
                 if (data.status === 200) {

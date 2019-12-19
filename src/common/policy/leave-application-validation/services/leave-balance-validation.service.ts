@@ -55,8 +55,9 @@ export class LeaveBalanceValidationService {
      * @returns
      * @memberof LeaveBalanceValidationService
      */
-    public validateLeaveBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
+    // public validateLeaveBalance(userInfo: UserInfoModel, applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[]) {
 
+    public validateLeaveBalance([userInfo, applyLeaveDTO, userEntitlement]: [UserInfoModel, ApplyLeaveDTO, UserLeaveEntitlementModel[]]) {
         // get policy
         const parent = userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
 
@@ -126,7 +127,7 @@ export class LeaveBalanceValidationService {
                 // for child leave, we need to check the expiry date
                 const parentBalance = this.leaveBalanceValidationParentService.getParentBalance(userInfo, policy);
 
-                const childBalance = this.getChildBalance(applyLeaveDTO, userEntitlement, policy);
+                const childBalance = this.getChildBalance([applyLeaveDTO, userEntitlement, policy]);
 
                 const balance = ((parentBalance + childBalance) - (leaveDuration + counterAppliedDay));
                 // console.log(parentBalance + "-" + childBalance + "-" + balance + "-" + counterAppliedDay + " bal");
@@ -217,7 +218,8 @@ export class LeaveBalanceValidationService {
      * @returns
      * @memberof LeaveBalanceValidationService
      */
-    public getChildBalance(applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[], policy: LeaveTypePropertiesXmlDTO) {
+    // public getChildBalance(applyLeaveDTO: ApplyLeaveDTO, userEntitlement: UserLeaveEntitlementModel[], policy: LeaveTypePropertiesXmlDTO) {
+    public getChildBalance([applyLeaveDTO, userEntitlement, policy]: [ApplyLeaveDTO, UserLeaveEntitlementModel[], LeaveTypePropertiesXmlDTO]) {
 
         const startDate = moment(applyLeaveDTO.data[0].startDate).startOf('days');
         const endDate = moment(applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate).endOf('days');

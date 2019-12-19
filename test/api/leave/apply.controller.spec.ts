@@ -12,7 +12,7 @@ describe('ApplyController', () => {
   beforeEach(async () => {
     const applyLeaveServiceStub = {
       processLeave: (applyLeaveDTO1, arg2) => ({ subscribe: () => ({}) }),
-      processLeaveOnBehalf: (applyLeaveDTO1, arg2, id3, filter4) => ({})
+      processLeaveOnBehalf: ([applyLeaveDTO1, arg2, id3, filter4]) => ({})
     };
     const applyLeaveDTOStub = {};
     const accessLevelValidateServiceStub = {

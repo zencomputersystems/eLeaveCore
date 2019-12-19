@@ -112,7 +112,7 @@ export class UserprofileAssignerService {
     const parseXMLtoJSON: PersonalDetailXML = convertXMLToJson(data.PROPERTIES_XML);
 
     if (isShowPersonalData) {
-      this.personaldataProcess(parseXMLtoJSON, userProfileData, isShowCertData);
+      this.personaldataProcess([parseXMLtoJSON, userProfileData, isShowCertData]);
     }
 
     // if (isShowCertData) {
@@ -130,7 +130,7 @@ export class UserprofileAssignerService {
    * @param {*} userProfileData
    * @memberof UserprofileAssignerService
    */
-  private personaldataProcess(parseXMLtoJSON, userProfileData, isShowCertData) {
+  private personaldataProcess([parseXMLtoJSON, userProfileData, isShowCertData]) {
     const userPersonalDetail = new UserPersonalDetailDTO();
     for (var j in parseXMLtoJSON) {
       var sub_key = j;

@@ -32,391 +32,245 @@ var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparse
 @Injectable()
 export class ApplyLeaveService {
 
-    /**
-     *Creates an instance of ApplyLeaveService.
-     * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
-     * @param {LeaveApplicationValidationService} leaveValidationService
-     * @param {UserInfoService} userInfoService
-     * @param {LeaveTransactionDbService} leaveTransactionDbService
-     * @param {DateCalculationService} dateCalculationService
-     * @memberof ApplyLeaveService
-     */
-    constructor(
-        private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
-        private readonly leaveValidationService: LeaveApplicationValidationService,
-        private readonly userInfoService: UserInfoService,
-        private readonly leaveTransactionDbService: LeaveTransactionDbService,
-        private readonly dateCalculationService: DateCalculationService
-    ) { }
+	/**
+	 *Creates an instance of ApplyLeaveService.
+	 * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService
+	 * @param {LeaveApplicationValidationService} leaveValidationService
+	 * @param {UserInfoService} userInfoService
+	 * @param {LeaveTransactionDbService} leaveTransactionDbService
+	 * @param {DateCalculationService} dateCalculationService
+	 * @memberof ApplyLeaveService
+	 */
+	constructor(
+		private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+		private readonly leaveValidationService: LeaveApplicationValidationService,
+		private readonly userInfoService: UserInfoService,
+		private readonly leaveTransactionDbService: LeaveTransactionDbService,
+		private readonly dateCalculationService: DateCalculationService
+	) { }
 
-    /**
-     * Process apply leave on behalf
-     *
-     * @param {ApplyLeaveDTO} applyLeaveDTO
-     * @param {*} user
-     * @param {*} userguidOnApply
-     * @param {*} filter
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    public async processLeaveOnBehalf(applyLeaveDTO: ApplyLeaveDTO, user, userguidOnApply, filter): Promise<any> {
-        // console.log(userguidOnApply + '-' + user + " - " + filter);
-        // console.log(applyLeaveDTO);
-        // console.log(userguidOnApply);
+	/**
+	 * Process apply leave on behalf
+	 *
+	 * @param {ApplyLeaveDTO} applyLeaveDTO
+	 * @param {*} user
+	 * @param {*} userguidOnApply
+	 * @param {*} filter
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	public async processLeaveOnBehalf([applyLeaveDTO, user, userguidOnApply, filter]: [ApplyLeaveDTO, any, any, any]): Promise<any> {
 
-        let resultArr = [];
+		// Declare result status for each user
+		let resultArr = [];
 
-        for (var i = 0; i < userguidOnApply.length; i++) {
-            let userguid = userguidOnApply[i];
-            // console.log(userguid);
-            let extension = ['(USER_GUID=' + userguid + ')'];
-            // console.log(extension);
-            let temp = await this.applyLeaveProcess(applyLeaveDTO, user, extension, true)
-                .subscribe(
-                    data => {
-                        // console.log(data);
-                        resultArr.push(data);
-                        // return await of(resultArr);
-                        // console.log(resultArr);
-                        // return resultArr;
-                        return data;
-                    }, err => {
-                        // console.log(err);
-                    }
-                );
+		// Loop one by one staff
+		for (var i = 0; i < userguidOnApply.length; i++) {
 
-            // console.log('in');
-            // console.log(temp);
-            // console.log(resultArr);
-        }
-        // let datares = setTimeout(function afterTwoSeconds() {
-        //     console.log(resultArr)
-        //     return resultArr;
-        // }, 10000)
-        // console.log('im here');
-        // console.log(datares);
-        // return datares;
-        // console.log('out' + resultArr);
+			// Query by user guid
+			let userguid = userguidOnApply[i];
+			let extension = ['(USER_GUID=' + userguid + ')'];
 
-        // let y = applyLeaveDTO;
-        // userguidOnApply.forEach(userguid => {
-        //     // console.log(userguid);
-        //     let extension = ['(USER_GUID=' + userguid + ')'];
-        //     // console.log(extension);
-        //     this.applyLeaveProcess(applyLeaveDTO, user, extension, true).subscribe(
-        //         data => {
-        //             console.log(data);
-        //             resultArr.push(data);
-        //             // return await of(resultArr);
-        //             // console.log(resultArr);
-        //             // return of(resultArr);
-        //         }, err => {
-        //             // console.log(err);
-        //         }
-        //     );
+			// Apply leave process
+			const applyOnBehalfProcess = () => {
+				return new Promise((resolve, reject) => {
+					this.applyLeaveProcess([applyLeaveDTO, user, extension, true]).subscribe(
+						data => { resolve(data); },
+						err => { return reject(err); }
+					);
+				});
+			}
 
-        //     // console.log(of(resultArrTemp));
-        //     // console.log(dataRes);
-        //     // resultArr.push(dataRes);
-        //     // return await dataRes;
-        //     // return resultArr;
+			// Group status user one by one
+			resultArr.push(await applyOnBehalfProcess());
+		}
 
-        // }).pipe(map(res => {
-        //     console.log('u can see me?');
-        //     console.log(res);
-        // })).subscribe(
-        //     data => {
-        //         console.log(data);
-        //         return of(data);
-        //     }, err => {
+		return await resultArr;
+	}
 
-        //     }
-        // );
-        // console.log(result);
-        // console.log(resultArr);
-        return 'Successfully apply';
-        // let extension = ['(USER_GUID=' + userguidOnApply + ')'];
-        // return this.applyLeaveProcess(applyLeaveDTO, user, extension, true);
+	/**
+	 * process leave application
+	 *
+	 * @param {ApplyLeaveDTO} applyLeaveDTO
+	 * @param {*} user
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	public processLeave(applyLeaveDTO: ApplyLeaveDTO, user: any) {
+		let extension = ['(USER_GUID=' + user.USER_GUID + ')', '(TENANT_GUID=' + user.TENANT_GUID + ')'];
+		return this.applyLeaveProcess([applyLeaveDTO, user, extension, null]);
+	}
 
-        // return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extension)
-        //     .pipe(
-        //         map(res => {
-        //             console.log('here--------------------------');
-        //             console.log(res[0]);
-        //             return res[0];
-        //         }),
-        //         mergeMap((userInfo: UserInfoModel) => {
-        //             console.log(userInfo);
-        //             return this.checkUserLeaveEntitlement(y.leaveTypeID, userInfo)
-        //                 .pipe(
-        //                     map((userEntitlement: UserLeaveEntitlementModel[]) => {
-        //                         return { userInfo, userEntitlement };
-        //                     })
-        //                 )
-        //         }),
-        //         mergeMap((result) => {
-        //             // find the parent leave
-        //             console.log(result.userEntitlement);
-        //             const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
+	/**
+	 * Process apply leave
+	 *
+	 * @private
+	 * @param {ApplyLeaveDTO} applyLeaveDTO
+	 * @param {*} user
+	 * @param {*} extensionQuery
+	 * @param {boolean} onbehalf
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	private applyLeaveProcess([applyLeaveDTO, user, extensionQuery, onbehalf]: [ApplyLeaveDTO, any, any, boolean]) {
+		let y = applyLeaveDTO;
 
-        //             if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
-        //                 const res = new ValidationStatusDTO();
-        //                 res.valid = false;
-        //                 res.message.push("Policy Not Found");
-        //                 throw res;
-        //             }
+		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extensionQuery)
+			.pipe(
+				map(res => {
+					return res[0];
+				}),
+				mergeMap((userInfo: UserInfoModel) => {
+					return this.checkUserLeaveEntitlement(y.leaveTypeID, userInfo)
+						.pipe(
+							map((userEntitlement: UserLeaveEntitlementModel[]) => {
+								return { userInfo, userEntitlement };
+							})
+						)
+				}),
+				mergeMap((result) => {
+					// find the parent leave
+					const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
 
-        //             const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
-        //             const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
+					if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
+						const res = new ValidationStatusDTO();
+						res.valid = false;
+						res.message.push("Policy Not Found");
+						throw res;
+					}
 
-        //             return validation.pipe(map((validationResult) => {
-        //                 return { result, validationResult, policy };
-        //             }));
-        //         }),
-        //         mergeMap(result => {
-        //             if (result.validationResult.valid) {
-        //                 return of(this.applyLeaveData(result, y, user,true));
-        //                 return of(result);
-        //             } else {
-        //                 return of(result.validationResult);
-        //             }
-        //         })
-        //     )
+					const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
+					const validation = this.leaveValidationService.validateLeave([policy, y, result.userInfo, result.userEntitlement]);
 
-        // return of(user);
-    }
+					return validation.pipe(map((validationResult) => {
+						validationResult.userId = result.userInfo.USER_GUID;
+						return { result, validationResult, policy };
+					}));
+				}),
+				mergeMap(result => {
+					if (result.validationResult.valid) {
+						return of(this.applyLeaveData([result, y, user, onbehalf]));
+					} else {
+						return of(result.validationResult);
+					}
+				})
+			)
+	}
 
-    // process leave application
-    /**
-     * process leave application
-     *
-     * @param {ApplyLeaveDTO} applyLeaveDTO
-     * @param {*} user
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    public processLeave(applyLeaveDTO: ApplyLeaveDTO, user: any) {
-        // let y = applyLeaveDTO;
-        let extension = ['(USER_GUID=' + user.USER_GUID + ')', '(TENANT_GUID=' + user.TENANT_GUID + ')'];
-        return this.applyLeaveProcess(applyLeaveDTO, user, extension, null);
-        // return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extension)
-        //     .pipe(
-        //         map(res => {
-        //             return res[0];
-        //         }),
-        //         mergeMap((userInfo: UserInfoModel) => {
-        //             return this.checkUserLeaveEntitlement(y.leaveTypeID, user)
-        //                 .pipe(
-        //                     map((userEntitlement: UserLeaveEntitlementModel[]) => {
-        //                         return { userInfo, userEntitlement };
-        //                     })
-        //                 )
-        //         }),
-        //         mergeMap((result) => {
-        //             // find the parent leave
-        //             const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
+	/**
+	 * Process apply leave data
+	 *
+	 * @private
+	 * @param {[any, ApplyLeaveDTO, any, boolean]} [result, y, user, onbehalf]
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	private applyLeaveData([result, y, user, onbehalf]: [any, ApplyLeaveDTO, any, boolean]) {
+		let resArr = [];
+		let sumDays = 0;
+		for (let i = 0; i < y.data.length; i++) {
+			let leaveDetail = y.data[i];
 
-        //             if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
-        //                 const res = new ValidationStatusDTO();
-        //                 res.valid = false;
-        //                 res.message.push("Policy Not Found");
-        //                 throw res;
-        //             }
+			let msjStatus = "";
+			let noOfDays = this.dateCalculationService.getLeaveDuration([y.data[i].startDate, y.data[i].endDate, y.data[i].dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
 
-        //             const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
-        //             const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
+			if (noOfDays == 0) {
+				msjStatus = leaveDetail.startDate + ' is a leave day';
+			}
+			else {
+				msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days' : 'day') + '  was send for approval between ' + leaveDetail.startDate + ' and ' + leaveDetail.endDate;
+				this.leaveTransactionDbService.create([y.data[i], result, user, y, onbehalf]).pipe(map((res) => {
+					if (res.status != 200) {
+						result.validationResult.valid = false;
+					}
 
-        //             return validation.pipe(map((validationResult) => {
-        //                 return { result, validationResult, policy };
-        //             }));
-        //         }),
-        //         mergeMap(result => {
-        //             if (result.validationResult.valid) {
-        //                 return of(this.applyLeaveData(result, y, user,false));
-        //             } else {
-        //                 return of(result.validationResult);
-        //             }
-        //         })
-        //     )
-    }
+					return result.validationResult;
+				})).subscribe(data => {
 
-    /**
-     * Process apply leave
-     *
-     * @private
-     * @param {ApplyLeaveDTO} applyLeaveDTO
-     * @param {*} user
-     * @param {*} extensionQuery
-     * @param {boolean} onbehalf
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    private applyLeaveProcess(applyLeaveDTO: ApplyLeaveDTO, user: any, extensionQuery: any, onbehalf: boolean) {
-        let y = applyLeaveDTO;
+				})
+			}
+			resArr.push(msjStatus);
+			sumDays = sumDays + noOfDays;
+		}
+		result.validationResult.message = sumDays + ' ' + (sumDays > 1 ? 'days' : 'day') + ' was send for approval';
+		result.validationResult.details = resArr;
+		return result.validationResult;
+	}
 
-        return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extensionQuery)
-            .pipe(
-                map(res => {
-                    return res[0];
-                }),
-                mergeMap((userInfo: UserInfoModel) => {
-                    // console.log(y.leaveTypeID+' - '+userInfo)
-                    return this.checkUserLeaveEntitlement(y.leaveTypeID, userInfo)
-                        .pipe(
-                            map((userEntitlement: UserLeaveEntitlementModel[]) => {
-                                // console.log(userEntitlement);
-                                return { userInfo, userEntitlement };
-                            })
-                        )
-                }),
-                mergeMap((result) => {
-                    // console.log(result);
-                    // find the parent leave
-                    const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
+	/**
+	 * Method check user leave entitlement 
+	 * check if leave entitlement policy is available
+	 *
+	 * @private
+	 * @param {string} leaveTypeId
+	 * @param {*} user
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	private checkUserLeaveEntitlement(leaveTypeId: string, user: any) {
 
-                    if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
-                        const res = new ValidationStatusDTO();
-                        res.valid = false;
-                        res.message.push("Policy Not Found");
-                        throw res;
-                    }
+		const filter = [
+			'(LEAVE_TYPE_GUID=' + leaveTypeId + ')',
+			'(USER_GUID=' + user.USER_GUID + ')',
+			'(TENANT_GUID=' + user.TENANT_GUID + ')',
+			'(ACTIVE_FLAG=1)',
+			'(YEAR=' + new Date().getFullYear() + ')'
+		];
 
-                    const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
-                    const validation = this.leaveValidationService.validateLeave(policy, y, result.userInfo, result.userEntitlement);
+		return this.userLeaveEntitlementDbService.findByFilterV2([], filter)
+			.pipe(
+				map(result => {
+					if (result.length == 0) {
+						const res = new ValidationStatusDTO();
+						res.valid = false;
+						res.message.push("Leave Entitlement Not Available");
+						throw res;
+					}
+					return result;
+				})
+			)
+	}
 
-                    return validation.pipe(map((validationResult) => {
-                        validationResult.userId = result.userInfo.USER_GUID;
-                        return { result, validationResult, policy };
-                    }));
-                }),
-                mergeMap(result => {
-                    if (result.validationResult.valid) {
-                        return of(this.applyLeaveData([result, y, user, onbehalf]));
-                    } else {
-                        return of(result.validationResult);
-                    }
-                })
-            )
-    }
+	/**
+	 * Method get month
+	 * 
+	 * get month between 2 date
+	 * return array of month
+	 *
+	 * @param {Moment} startDate
+	 * @param {Moment} endDate
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	getMonths(startDate: Moment, endDate: Moment) {
+		var timeValues = [];
 
-    /**
-     * Process apply leave data
-     *
-     * @private
-     * @param {*} result
-     * @param {ApplyLeaveDTO} y
-     * @param {*} user
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    private applyLeaveData([result, y, user, onbehalf]: [any, ApplyLeaveDTO, any, boolean]) {
-        let resArr = [];
-        let sumDays = 0;
-        for (let i = 0; i < y.data.length; i++) {
-            let leaveDetail = y.data[i];
+		while (endDate > startDate || startDate.format('M') === endDate.format('M')) {
+			timeValues.push(startDate.format('YYYY-MM'));
+			startDate.add(1, 'month');
+		}
 
-            let msjStatus = "";
-            let noOfDays = this.dateCalculationService.getLeaveDuration([y.data[i].startDate, y.data[i].endDate, y.data[i].dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
+		return timeValues;
+	}
 
-            if (noOfDays == 0) {
-                msjStatus = leaveDetail.startDate + ' is a leave day';
-            }
-            else {
-                msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days' : 'day') + '  was send for approval between ' + leaveDetail.startDate + ' and ' + leaveDetail.endDate;
-                this.leaveTransactionDbService.create([y.data[i], result, user, y, onbehalf]).pipe(map((res) => {
-                    // console.log('pass');
-                    if (res.status != 200) {
-                        result.validationResult.valid = false;
-                    }
+	/**
+	 * Method get days between two dates
+	 * 
+	 * get day list between 2 date
+	 *
+	 * @param {Moment} startDate
+	 * @param {Moment} endDate
+	 * @returns
+	 * @memberof ApplyLeaveService
+	 */
+	getDays(startDate: Moment, endDate: Moment) {
+		var timeValues = [];
 
-                    return result.validationResult;
-                })).subscribe(data => {
-                    // console.log(data);
-                })
-            }
-            resArr.push(msjStatus);
-            sumDays = sumDays + noOfDays;
-        }
-        result.validationResult.message = sumDays + ' ' + (sumDays > 1 ? 'days' : 'day') + ' was send for approval';
-        result.validationResult.details = resArr;
-        return result.validationResult;
-    }
+		while (endDate > startDate || startDate.format('D') === endDate.format('D')) {
+			timeValues.push(startDate.format('YYYY-MM-DD'));
+			startDate.add(1, 'day');
+		}
 
-    // check if leave entitlement policy is available
-    /**
-     * Method check user leave entitlement 
-     *
-     * @private
-     * @param {string} leaveTypeId
-     * @param {*} user
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    private checkUserLeaveEntitlement(leaveTypeId: string, user: any) {
-        // console.log(leaveTypeId+' - '+user.USER_GUID+' - '+user.TENANT_GUID);
-        const filter = [
-            '(LEAVE_TYPE_GUID=' + leaveTypeId + ')',
-            '(USER_GUID=' + user.USER_GUID + ')',
-            '(TENANT_GUID=' + user.TENANT_GUID + ')',
-            '(ACTIVE_FLAG=1)',
-            '(YEAR=' + new Date().getFullYear() + ')'
-        ];
-
-        return this.userLeaveEntitlementDbService.findByFilterV2([], filter)
-            .pipe(
-                map(result => {
-                    if (result.length == 0) {
-                        const res = new ValidationStatusDTO();
-                        res.valid = false;
-                        res.message.push("Leave Entitlement Not Available");
-                        throw res;
-                    }
-                    // console.log('huhuhuhuhuhuus');
-
-                    // console.log(result);
-                    return result;
-                })
-            )
-    }
-
-    // get month between 2 date
-    // return array of month
-    /**
-     * Method get month
-     *
-     * @param {Moment} startDate
-     * @param {Moment} endDate
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    getMonths(startDate: Moment, endDate: Moment) {
-        var timeValues = [];
-
-        while (endDate > startDate || startDate.format('M') === endDate.format('M')) {
-            timeValues.push(startDate.format('YYYY-MM'));
-            startDate.add(1, 'month');
-        }
-
-        return timeValues;
-    }
-
-    // get day list between 2 date
-    /**
-     * Method get days between two dates
-     *
-     * @param {Moment} startDate
-     * @param {Moment} endDate
-     * @returns
-     * @memberof ApplyLeaveService
-     */
-    getDays(startDate: Moment, endDate: Moment) {
-        var timeValues = [];
-
-        while (endDate > startDate || startDate.format('D') === endDate.format('D')) {
-            timeValues.push(startDate.format('YYYY-MM-DD'));
-            startDate.add(1, 'day');
-        }
-
-        return timeValues;
-    }
+		return timeValues;
+	}
 }

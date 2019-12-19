@@ -15,8 +15,7 @@ import { LeaveAdjustmentDTO } from './dto/update-leave-adjustment.dto';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class LeaveAdjustmentController {
-  constructor(private readonly leaveAdjustmentService: LeaveAdjustmentService,
-    private readonly commonFunctionService: CommonFunctionService) { }
+  constructor(private readonly leaveAdjustmentService: LeaveAdjustmentService) { }
 
   /**
    * Update function general leave polisy
@@ -30,9 +29,7 @@ export class LeaveAdjustmentController {
   @ApiOperation({ title: 'Update Leave Adjustment' })
   updateGeneralLeavePolicy(@Body() leaveAdjustmentDTO: LeaveAdjustmentDTO, @Req() req, @Res() res) {
     this.leaveAdjustmentService.adjustLeave(req.user, leaveAdjustmentDTO).subscribe(
-      data => { //console.log('when i show'); console.log(data); 
-        res.send(data);
-      },
+      data => { res.send(data); },
       err => { res.send(err); }
     )
   }

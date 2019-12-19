@@ -40,7 +40,7 @@ export class EmploymentDetailController {
 	@ApiImplicitParam({ name: 'id', description: 'filter user by USER_INFO_GUID', required: true })
 	findOne(@Param('id') id, @Req() req, @Res() res) {
 		const user = req.user;
-		this.accessLevelValidationService.generateFilterWithChecking(user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')'])
+		this.accessLevelValidationService.generateFilterWithChecking([user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_INFO_GUID=' + id + ')']])
 			.pipe(switchMap(filter => {
 				return this.userprofileService.getEmploymentDetail(filter);
 			}))

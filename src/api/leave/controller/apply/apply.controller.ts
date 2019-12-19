@@ -125,9 +125,9 @@ export class ApplyController {
     createForBundles(@Body() applyLeaveBundleDTO: ApplyLeaveBundleDTO, @Req() req, @Res() res) {
         let id = applyLeaveBundleDTO.userId;
         // console.log('Id here : ' + id);
-        this.accessLevelValidationService.generateFilterWithChecking(req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, [])
+        this.accessLevelValidationService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, []])
             .pipe(switchMap(filter => {
-                return this.applyLeaveService.processLeaveOnBehalf(applyLeaveBundleDTO.leaveDetails, req.user, id, filter);
+                return this.applyLeaveService.processLeaveOnBehalf([applyLeaveBundleDTO.leaveDetails, req.user, id, filter]);
             }))
             .subscribe(
                 data => {

@@ -115,7 +115,7 @@ export class GenerateNewCalendarService {
         if (data.length == 0) {
           console.log('data not exist');
           // get each calendar holiday one by one
-          this.createCalendarProcess(element, year, user, yearBase);
+          this.createCalendarProcess([element, year, user, yearBase]);
         }
       }, err => {
         console.log(err);
@@ -133,7 +133,7 @@ export class GenerateNewCalendarService {
    * @param {*} yearBase
    * @memberof GenerateNewCalendarService
    */
-  public createCalendarProcess(element, year, user, yearBase) {
+  public createCalendarProcess([element, year, user, yearBase]) {
     this.calendarProfileDbService.findAll(element.CALENDAR_GUID, yearBase).pipe(
       mergeMap(res => {
         // find filter criteria and get data from calendarific

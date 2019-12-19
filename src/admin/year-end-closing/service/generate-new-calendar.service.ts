@@ -51,10 +51,7 @@ export class GenerateNewCalendarService {
 
         // loop each calendar profile
         calendarProfileList.forEach(element => {
-          this.checkCalendarExist(element, year, user, yearBase);
-
-
-
+          this.checkCalendarExist([element, year, user, yearBase]);
         });
 
       })
@@ -106,7 +103,8 @@ export class GenerateNewCalendarService {
    * @param {*} yearBase
    * @memberof GenerateNewCalendarService
    */
-  public checkCalendarExist(element, year: number, user, yearBase) {
+  // public checkCalendarExist(element, year: number, user, yearBase) {
+  public checkCalendarExist([element, year, user, yearBase]: [any, number, any, any]) {
 
     // console.log(element.CALENDAR_GUID + ' - ' + year);
     this.calendarProfileDbService.findByFilterV2([], ['(CALENDAR_GUID=' + element.CALENDAR_GUID + ')', '(YEAR=' + year + ')']).subscribe(

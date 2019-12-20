@@ -17,73 +17,64 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @ApiBearerAuth()
 export class UserImportController {
 
-    /**
-     *Creates an instance of UserImportController.
-     * @param {UserImportService} userImportService
-     * @memberof UserImportController
-     */
-    constructor(private readonly userImportService: UserImportService) { }
+	/**
+	 *Creates an instance of UserImportController.
+	 * @param {UserImportService} userImportService
+	 * @memberof UserImportController
+	 */
+	constructor(private readonly userImportService: UserImportService) { }
 
-    /**
-     *create user import
-     *
-     * @param {[UserCsvDto]} userInviteDto
-     * @param {*} req
-     * @param {*} res
-     * @memberof UserImportController
-     */
-    @Post()
-    @ApiOperation({ title: 'Import user' })
-    create(@Body() userInviteDto: [UserCsvDto], @Req() req, @Res() res) {
+	/**
+	 *create user import
+	 *
+	 * @param {[UserCsvDto]} userInviteDto
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof UserImportController
+	 */
+	@Post()
+	@ApiOperation({ title: 'Import user' })
+	create(@Body() userInviteDto: [UserCsvDto], @Req() req, @Res() res) {
+		this.runService([req.user, userInviteDto, res]);
+	}
 
-        this.userImportService.processImportData(req.user, userInviteDto)
-            .subscribe(
-                data => {
-                    res.send(data);
-                },
-                err => {
-                    res.status(400);
-                    res.send("fail to process data");
-                }
-            )
-    }
+	/**
+	 * import csv user import
+	 *
+	 * @param {*} file
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof UserImportController
+	 */
+	@Post('csv')
+	@ApiImplicitFile({ name: 'file', required: true, description: 'The file to upload' })
+	@UseInterceptors(FileInterceptor('file'))
+	@ApiOperation({ title: 'Import user from CSV list' })
+	importCSV(@UploadedFile() file, @Req() req, @Res() res) {
+		if (!req.file) {
+			res.status(400).send("File is null");
+		}
 
-    /**
-     * import csv user import
-     *
-     * @param {*} file
-     * @param {*} req
-     * @param {*} res
-     * @memberof UserImportController
-     */
-    @Post('csv')
-    @ApiImplicitFile({ name: 'file', required: true, description: 'The file to upload' })
-    @UseInterceptors(FileInterceptor('file'))
-    @ApiOperation({ title: 'Import user from CSV list' })
-    importCSV(@UploadedFile() file, @Req() req, @Res() res) {
+		const records = parse(file.buffer, {
+			columns: true,
+			skip_empty_lines: true
+		})
 
-        if (!req.file) {
-            res.status(400);
-            res.send("File is null");
-        }
+		this.runService([req.user, records, res]);
+	}
 
-        const records = parse(file.buffer, {
-            columns: true,
-            skip_empty_lines: true
-        })
-
-        // console.log(records);
-        this.userImportService.processImportData(req.user, records)
-            .subscribe(
-                data => {
-                    res.send(data);
-                },
-                err => {
-                    res.status(400);
-                    res.send("fail to process data");
-                }
-            )
-
-    }
+	/**
+	 * run service userimport
+	 *
+	 * @private
+	 * @param {*} [user, data, res]
+	 * @memberof UserImportController
+	 */
+	private runService([user, data, res]) {
+		this.userImportService.processImportData(user, data).subscribe(
+			data => { res.send(data); },
+			err => { res.status(400).send("fail to process data"); }
+		)
+	}
 
 }

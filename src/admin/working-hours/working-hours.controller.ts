@@ -41,7 +41,7 @@ export class WorkingHoursController {
   @Get('/working-hours-profile')
   @ApiOperation({ title: 'Get working hours profile list' })
   findAllWorkingHours(@Req() req, @Res() res) {
-    this.commonFunctionService.runGetServiceV2(this.workingHoursService.findWorkingHoursProfile(), res);
+    this.commonFunctionService.runGetServiceV2(this.workingHoursService.findWorkingHoursProfile(req.user), res);
   }
 
   /**

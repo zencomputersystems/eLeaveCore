@@ -39,13 +39,15 @@ export class RoleService {
 	/**
 	 * Get role profile function
 	 *
+	 * @param {*} user
 	 * @returns
 	 * @memberof RoleService
 	 */
-	public findRoleProfile() {
-		return this.roleDbService.findAllRoleProfile().pipe(map(res => {
+	public getRoleProfileList(user: any) {
+		let url = this.roleDbService.queryService.generateDbQueryV2('l_view_role_profile', ['ROLE_GUID', 'CODE', 'DESCRIPTION', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
+		return this.roleDbService.httpService.get(url).pipe(map(res => {
 			if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO); }
-		}))
+		}));
 	}
 
 	/**
@@ -89,6 +91,7 @@ export class RoleService {
 
 		modelData.CODE = data.code;
 		modelData.ROLE_GUID = v1();
+		modelData.TENANT_GUID = user.TENANT_GUID;
 		modelData.CREATION_TS = new Date().toISOString();
 		modelData.CREATION_USER_GUID = user.USER_GUID;
 		modelData.PROPERTIES_XML = convertJsonToXML(data);

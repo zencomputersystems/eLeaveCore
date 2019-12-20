@@ -17,12 +17,28 @@ export class CreateRoleModel extends CreateUpdateModel {
     ROLE_GUID: string;
 
     /**
+     * Tenant guid
+     *
+     * @type {string}
+     * @memberof CreateRoleModel
+     */
+    TENANT_GUID: string;
+
+    /**
      * Code
      *
      * @type {string}
      * @memberof CreateRoleModel
      */
     CODE: string;
+
+    /**
+     * Description
+     *
+     * @type {string}
+     * @memberof CreateRoleModel
+     */
+    DESCRIPTION: string;
 
     /**
      * Properties XML details
@@ -32,11 +48,4 @@ export class CreateRoleModel extends CreateUpdateModel {
      */
     PROPERTIES_XML: string;
 
-    /**
-     * Description
-     *
-     * @type {string}
-     * @memberof CreateRoleModel
-     */
-    DESCRIPTION: string;
 }

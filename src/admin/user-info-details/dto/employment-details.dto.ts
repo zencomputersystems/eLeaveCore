@@ -30,16 +30,16 @@ export class EmploymentDetailsDTO {
   @IsString()
   companyId: string;
 
-  /**
-   * Work email address
-   *
-   * @type {string}
-   * @memberof EmploymentDetailsDTO
-   */
-  @ApiModelProperty({ description: 'Email for work', example: 'example@zen.com.my' })
-  @IsNotEmpty()
-  @IsString()
-  workEmailAddress: string;
+  // /**
+  //  * Work email address
+  //  *
+  //  * @type {string}
+  //  * @memberof EmploymentDetailsDTO
+  //  */
+  // @ApiModelProperty({ description: 'Email for work', example: 'example@zen.com.my' })
+  // @IsNotEmpty()
+  // @IsString()
+  // workEmailAddress: string;
 
   /**
    * Department
@@ -129,16 +129,16 @@ export class EmploymentDetailsDTO {
   @IsString()
   reportingTo: string;
 
-  /**
-   * User role
-   *
-   * @type {string}
-   * @memberof EmploymentDetailsDTO
-   */
-  @ApiModelProperty({ description: 'User role', example: 'Employee' })
-  @IsNotEmpty()
-  @IsString()
-  userRole: string;
+  // /**
+  //  * User role
+  //  *
+  //  * @type {string}
+  //  * @memberof EmploymentDetailsDTO
+  //  */
+  // @ApiModelProperty({ description: 'User role', example: 'Employee' })
+  // @IsNotEmpty()
+  // @IsString()
+  // userRole: string;
 
   /**
    * Date of join
@@ -170,7 +170,7 @@ export class EmploymentDetailsDTO {
    */
   @ApiModelProperty({ description: 'Date of resign', example: '2019-12-09' })
   @IsString()
-  dateOfResign: string;
+  dateOfResignation: string;
 
   /**
    * EPF number

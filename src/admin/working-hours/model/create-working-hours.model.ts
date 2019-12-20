@@ -18,6 +18,14 @@ export class CreateWorkingHoursModel extends CreateUpdateModel {
   WORKING_HOURS_GUID: string;
 
   /**
+   * Tenant guid
+   *
+   * @type {string}
+   * @memberof CreateRoleModel
+   */
+  TENANT_GUID: string;
+
+  /**
    * Working hours code name
    *
    * @type {string}

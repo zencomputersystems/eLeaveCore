@@ -43,10 +43,15 @@ export class WorkingHoursService {
    * @returns
    * @memberof WorkingHoursService
    */
-  public findWorkingHoursProfile() {
-    return this.workingHoursDbService.findAllWorkingHoursProfile().pipe(map(res => {
+  public findWorkingHoursProfile(user) {
+    let url = this.workingHoursDbService.queryService.generateDbQueryV2('l_view_working_hours_profile', ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
+    console.log(url);
+    return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
       if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); }
-    }))
+    }));
+    // return this.workingHoursDbService.findAllWorkingHoursProfile().pipe(map(res => {
+    // if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); }
+    // }))
   }
 
   /**
@@ -90,6 +95,7 @@ export class WorkingHoursService {
 
     modelData.CODE = data.code;
     modelData.WORKING_HOURS_GUID = v1();
+    modelData.TENANT_GUID = user.TENANT_GUID;
     modelData.CREATION_TS = new Date().toISOString();
     modelData.CREATION_USER_GUID = user.USER_GUID;
     modelData.PROPERTIES_XML = convertJsonToXML(data);

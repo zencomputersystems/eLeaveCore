@@ -37,8 +37,8 @@ export class RoleController {
 	 */
 	@Get('/role-profile')
 	@ApiOperation({ title: 'Get role profile list' })
-	findAllRole(@Res() res) {
-		this.commonFunctionService.runGetServiceV2(this.roleService.findRoleProfile(), res);
+	findAllRole(@Req() req, @Res() res) {
+		this.commonFunctionService.runGetServiceV2(this.roleService.getRoleProfileList(req.user), res);
 	}
 
 	/**

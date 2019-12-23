@@ -35,7 +35,7 @@ export class UserInfoDetailsService {
    */
   public getUserXMLInfo(userInfoGuid: string) {
     const filters = ['(USER_INFO_GUID=' + userInfoGuid + ')'];
-    return this.userinfoDbService.findByFilterV4([], filters, 'CREATION_TS DESC', 1);
+    return this.userinfoDbService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1]);
   }
 
   /**
@@ -47,7 +47,7 @@ export class UserInfoDetailsService {
    */
   public getUserXMLInfoUserGuid(userGuid: string) {
     const filters = ['(USER_GUID=' + userGuid + ')'];
-    return this.userinfoDbService.findByFilterV4([], filters, 'CREATION_TS DESC', 1);
+    return this.userinfoDbService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1]);
   }
 
   /**

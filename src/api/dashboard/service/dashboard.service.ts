@@ -124,7 +124,7 @@ export class DashboardService {
         userGuid = userGuid == '' ? '"' + element.USER_GUID + '"' : userGuid + ',"' + element.USER_GUID + '"';
       });
 
-      let userData = this.userprofileDbService.findByFilterV4(['USER_GUID', 'FULLNAME', 'DESIGNATION'], ['(USER_GUID IN (' + userGuid + '))'], null, null);
+      let userData = this.userprofileDbService.findByFilterV4([['USER_GUID', 'FULLNAME', 'DESIGNATION'], ['(USER_GUID IN (' + userGuid + '))'], null, null]);
 
       return forkJoin(of(res), userData);
     }));

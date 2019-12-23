@@ -156,8 +156,8 @@ export class HolidayController {
 	@ApiOperation({ title: 'Get employee list by calendar profile' })
 	@ApiImplicitParam({ name: 'id', description: 'Filter by CALENDAR_GUID', required: true })
 	@Roles('ViewProfile', 'ProfileAdmin')
-	findEmployeeAttach(@Res() res, @Param('id') id) {
-		this.commonFunctionService.runGetServiceV2(this.holidayService.getEmployeeAttach(id), res);
+	findEmployeeAttach(@Req() req, @Res() res, @Param('id') id) {
+		this.commonFunctionService.runGetServiceV2(this.holidayService.getEmployeeAttach(id, req.user.TENANT_GUID), res);
 	}
 
 	/**

@@ -196,6 +196,7 @@ export class UserprofileController {
 					// console.log(data[i].LEAVE_TYPE_GUID);
 					tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
 					tempObj.leaveTypeName = data[i].LEAVE_CODE;
+					tempObj.abbr = data[i].ABBR;
 					tempObj.entitledDays = data[i].ENTITLED_DAYS;
 					tempObj.pendingDays = data[i].TOTAL_PENDING;
 					tempObj.takenDays = data[i].TOTAL_APPROVED;

@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { HolidayDbService } from 'src/admin/holiday/db/holiday.db.service';
+import { map } from 'rxjs/operators';
+import { WorkingHoursDbService } from 'src/admin/working-hours/db/working-hours.db.service';
+import { RoleDbService } from 'src/admin/role/db/role.db.service';
 
 /**
  * function to remove hardcode duplicate 
@@ -61,5 +65,18 @@ export class AssignerDataService {
             }
         }
         return userList;
+    }
+
+    /**
+     * Process profile item
+     *
+     * @param {([string, HolidayDbService | WorkingHoursDbService | RoleDbService, any])} [url, dbService, dataModel]
+     * @returns
+     * @memberof AssignerDataService
+     */
+    public processProfile([url, dbService, dataModel]: [string, HolidayDbService | WorkingHoursDbService | RoleDbService, any]) {
+        return dbService.httpService.get(url).pipe(map(res => {
+            if (res.status == 200) { return this.assignArrayData(res.data.resource, dataModel); }
+        }));
     }
 }

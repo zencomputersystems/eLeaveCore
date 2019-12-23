@@ -38,16 +38,16 @@ export class WorkingHoursDbService extends BaseDBService {
    * @returns {Observable<any>}
    * @memberof WorkingHoursDbService
    */
-  public findAllWorkingHoursProfile(): Observable<any> {
+  // public findAllWorkingHoursProfile(): Observable<any> {
 
-    const fields = ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION'];
-    const filters = ['(DELETED_AT IS NULL)'];
+  //   const fields = ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION'];
+  //   const filters = ['(DELETED_AT IS NULL)'];
 
-    const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
+  //   const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
 
-    return this.httpService.get(url);
+  //   return this.httpService.get(url);
 
-  }
+  // }
 
   /**
    * Get working hours details

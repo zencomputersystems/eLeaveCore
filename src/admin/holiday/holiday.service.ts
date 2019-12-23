@@ -84,11 +84,23 @@ export class HolidayService {
 	 * @returns
 	 * @memberof HolidayService
 	 */
-	public getCalendarProfileList() {
-		return this.holidayDbService.findAllProfile()
-			.pipe(map(res => { if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, CalendarDTO); } })
-			)
+	public getCalendarProfileList(user) {
+		let url = this.holidayDbService.queryService.generateDbQueryV2('l_view_calendar_profile', ['CALENDAR_GUID', 'CODE', 'FILTER_CRITERIA', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
+		return this.assignerDataService.processProfile([url, this.holidayDbService, CalendarDTO]);
+		// return this.holidayDbService.httpService.get(url).pipe(map(res => {
+		// 	if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, CalendarDTO); }
+		// }));
+
+		// return this.holidayDbService.findAllProfile()
+		// 	.pipe(map(res => { if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, CalendarDTO); } })
+		// 	)
 	}
+
+	// public processProfile([url, dbService, dataModel]: [string, HolidayDbService, any]) {
+	// 	return dbService.httpService.get(url).pipe(map(res => {
+	// 		if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, dataModel); }
+	// 	}));
+	// }
 
 	/**
 	 * Assign calendar to employee user info table

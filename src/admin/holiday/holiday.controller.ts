@@ -80,8 +80,8 @@ export class HolidayController {
 	 */
 	@Get('/calendar-profile')
 	@ApiOperation({ title: 'Get calendar profile list' })
-	findAllCalendar(@Res() res) {
-		this.commonFunctionService.runGetServiceV2(this.holidayService.getCalendarProfileList(), res);
+	findAllCalendar(@Req() req, @Res() res) {
+		this.commonFunctionService.runGetServiceV2(this.holidayService.getCalendarProfileList(req.user), res);
 	}
 
 	/**

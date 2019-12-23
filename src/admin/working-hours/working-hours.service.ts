@@ -70,12 +70,13 @@ export class WorkingHoursService {
     // const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
 
     const url = this.workingHoursDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
-    return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
-      if (res.status == 200) {
-        return res.data.resource;
-      }
-    }));
+    // return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
+    //   if (res.status == 200) {
+    //     return res.data.resource;
+    //   }
+    // }));
 
+    return this.assignerDataService.processProfile([url, this.workingHoursDbService, WorkingHoursListDTO]);
   }
 
   /**

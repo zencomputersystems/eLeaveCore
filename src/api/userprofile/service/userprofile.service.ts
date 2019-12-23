@@ -84,7 +84,7 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public getDetail(filters: string[]) {
-        return this.userInfoService.findByFilterV4([], filters, 'CREATION_TS DESC', 1)
+        return this.userInfoService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1])
             .pipe(
                 map(res => {
                     // console.log(res);
@@ -106,7 +106,7 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public getPersonalDetail(filters: string[]) {
-        return this.userInfoService.findByFilterV4([], filters, 'CREATION_TS DESC', 1)
+        return this.userInfoService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1])
             .pipe(
                 map(res => {
                     const data: UserInfoModel = res[0];

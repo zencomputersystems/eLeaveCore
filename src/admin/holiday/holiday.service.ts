@@ -65,9 +65,9 @@ export class HolidayService {
 	 * @returns
 	 * @memberof HolidayService
 	 */
-	public getEmployeeAttach(calendarId: string) {
-		const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
-		return this.userinfoDbService.findEmployeeAttach(filters);
+	public getEmployeeAttach(calendarId: string, tenant_guid: string) {
+		// const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
+		// return this.userinfoDbService.findEmployeeAttach(filters);
 		// return this.userinfoDbService.findEmployeeAssign(filters)
 		//     .pipe(map(res => {
 		//         if (res.status == 200) {
@@ -76,6 +76,18 @@ export class HolidayService {
 		//             return res.data.resource;
 		//         }
 		//     }))
+
+		const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
+		const filters = ['(CALENDAR_GUID=' + calendarId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')', 'AND (DELETED_AT IS NULL)'];
+
+		const url = this.holidayDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
+		return this.holidayDbService.httpService.get(url).pipe(map(res => {
+			if (res.status == 200) {
+				return res.data.resource;
+			}
+		}));
+
+
 	}
 
 	/**

@@ -63,8 +63,19 @@ export class WorkingHoursService {
    * @memberof WorkingHoursService
    */
   public getEmployeeWorkingHoursAttach(workingHoursId: string, tenant_guid: string): Observable<any> {
-    const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')'];
-    return this.userinfoDbService.findEmployeeAttach(filters);
+    const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')', 'AND (DELETED_AT IS NULL)'];
+    // return this.userinfoDbService.findEmployeeAttach(filters);
+
+    const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
+    // const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
+
+    const url = this.workingHoursDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
+    return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
+      if (res.status == 200) {
+        return res.data.resource;
+      }
+    }));
+
   }
 
   /**

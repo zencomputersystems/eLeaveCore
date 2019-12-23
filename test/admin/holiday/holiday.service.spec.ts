@@ -63,7 +63,7 @@ describe('HolidayService', () => {
       const assignerDataServiceStub: AssignerDataService = assignerDataService;
       spyOn(holidayDbServiceStub, 'findAllProfile').and.callThrough();
       spyOn(assignerDataServiceStub, 'assignArrayData').and.callThrough();
-      service.getCalendarProfileList();
+      service.getCalendarProfileList(null);
       expect(holidayDbServiceStub.findAllProfile).toHaveBeenCalled();
       // expect(assignerDataServiceStub.assignArrayData).toHaveBeenCalled();
     });

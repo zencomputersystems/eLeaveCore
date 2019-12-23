@@ -45,9 +45,10 @@ export class RoleService {
 	 */
 	public getRoleProfileList(user: any) {
 		let url = this.roleDbService.queryService.generateDbQueryV2('l_view_role_profile', ['ROLE_GUID', 'CODE', 'DESCRIPTION', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
-		return this.roleDbService.httpService.get(url).pipe(map(res => {
-			if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO); }
-		}));
+		return this.assignerDataService.processProfile([url, this.roleDbService, RoleListDTO]);
+		// return this.roleDbService.httpService.get(url).pipe(map(res => {
+		// 	if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO); }
+		// }));
 	}
 
 	/**

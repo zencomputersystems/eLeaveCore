@@ -26,6 +26,16 @@ export class EntitlementDetailDTO {
     leaveTypeName: string;
 
     /**
+     * Abbr
+     *
+     * @type {string}
+     * @memberof EntitlementDetailDTO
+     */
+    @ApiModelProperty()
+    abbr: string;
+
+
+    /**
      * Data entitlement detail - entitled days
      *
      * @type {number}

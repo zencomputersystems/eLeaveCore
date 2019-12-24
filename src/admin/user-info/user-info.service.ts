@@ -84,45 +84,45 @@ export class UserInfoService extends BaseDBService implements IDbService {
 
     }
 
-    /**
-     * find one data
-     *
-     * @param {string} userId
-     * @param {string} tenantId
-     * @returns
-     * @memberof UserInfoService
-     */
-    public findOneData(userId: string, tenantId: string) {
-        const filters = ['(USER_GUID=' + userId + ') LIMIT 1'];
+    // /**
+    //  * find one data
+    //  *
+    //  * @param {string} userId
+    //  * @param {string} tenantId
+    //  * @returns
+    //  * @memberof UserInfoService
+    //  */
+    // public findOneData(userId: string, tenantId: string) {
+    //     const filters = ['(USER_GUID=' + userId + ') LIMIT 1'];
 
-        const url = this.queryService.generateDbQuery(this._tableName, this.fields, filters);
+    //     const url = this.queryService.generateDbQuery(this._tableName, this.fields, filters);
 
-        return of(this.httpService.get(url));
+    //     return of(this.httpService.get(url));
 
-    }
+    // }
 
-    /**
-     * Find all user-info
-     *
-     * @param {string} TENANT_GUID
-     * @returns {Observable<any>}
-     * @memberof UserInfoService
-     */
-    findAll(TENANT_GUID: string): Observable<any> {
-        throw new Error('Method not implemented.');
-    }
+    // /**
+    //  * Find all user-info
+    //  *
+    //  * @param {string} TENANT_GUID
+    //  * @returns {Observable<any>}
+    //  * @memberof UserInfoService
+    //  */
+    // findAll(TENANT_GUID: string): Observable<any> {
+    //     throw new Error('Method not implemented.');
+    // }
 
-    /**
-     * Find user info by id
-     *
-     * @param {*} USERINFO_GUID
-     * @param {string} id
-     * @returns {Observable<any>}
-     * @memberof UserInfoService
-     */
-    findById(USERINFO_GUID: any, id: string): Observable<any> {
-        throw new Error('Method not implemented.');
-    }
+    // /**
+    //  * Find user info by id
+    //  *
+    //  * @param {*} USERINFO_GUID
+    //  * @param {string} id
+    //  * @returns {Observable<any>}
+    //  * @memberof UserInfoService
+    //  */
+    // findById(USERINFO_GUID: any, id: string): Observable<any> {
+    //     throw new Error('Method not implemented.');
+    // }
 
     /**
      * Create new user info

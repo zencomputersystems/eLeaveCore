@@ -5,6 +5,8 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserInfoActivateService } from './user-info-activate.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 
 @Module({
   imports: [getModuleHttp()],
@@ -12,7 +14,9 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     QueryParserService,
     CommonFunctionService,
     UserInfoDetailsService,
-    UserInfoDbService
+    UserInfoDbService,
+    UserInfoActivateService,
+    UserprofileDbService
   ],
   controllers: [UserInfoDetailsController]
 })

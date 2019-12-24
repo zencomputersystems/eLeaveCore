@@ -1,10 +1,11 @@
-import { Controller, Patch, Req, Res, Body, Param, UseGuards, Get, BadRequestException, NotFoundException, HttpStatus } from '@nestjs/common';
+import { Controller, Patch, Req, Res, Body, Param, UseGuards, Get, BadRequestException, NotFoundException, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiBearerAuth, ApiImplicitParam } from '@nestjs/swagger';
 import { UpdateUserInfoItemDTO } from './dto/update-user-info-details.dto';
 import { UserInfoDetailsService } from './user-info-details.service';
 import { AuthGuard } from '@nestjs/passport';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
+import { UserInfoActivateService } from './user-info-activate.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -25,8 +26,36 @@ export class UserInfoDetailsController {
    * @memberof UserInfoDetailsController
    */
   constructor(
-    private readonly userInfoDetailsService: UserInfoDetailsService
+    private readonly userInfoDetailsService: UserInfoDetailsService,
+    private readonly userInfoActivateService: UserInfoActivateService
   ) { }
+
+  @Get('/inactive/:id')
+  @ApiOperation({ title: 'Get inactive user info' })
+  @ApiImplicitParam({ name: 'id', description: 'User guid' })
+  getInactiveUserInfo(@Param() params, @Req() req, @Res() res) {
+    this.userInfoActivateService.getInfoUser(params.id, req.user.TENANT_GUID).subscribe(
+      data => {
+        res.send({ ...data[1][0], ...data[0][0] });
+      }, err => {
+        res.send(err);
+      }
+    );
+  }
+
+  @Post('/activate/:id')
+  @ApiOperation({ title: 'Reactivate user and reate new user info' })
+  @ApiImplicitParam({ name: 'id', description: 'User guid' })
+  createNewUserInfo(@Param() params, @Req() req, @Res() res) {
+    this.userInfoActivateService.createNewUserInfo(params.id, req.user.TENANT_GUID).subscribe(
+      data => {
+        // res.send({ ...data[1][0], ...data[0][0] });
+        res.send(data.data.resource);
+      }, err => {
+        res.send(err);
+      }
+    );
+  }
 
   /**
    * Get personal info

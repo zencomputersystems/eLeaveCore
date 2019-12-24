@@ -67,12 +67,13 @@ export class RoleService {
 		// const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
 
 		const url = this.roleDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
-		return this.roleDbService.httpService.get(url).pipe(map(res => {
-			if (res.status == 200) {
-				return res.data.resource;
-			}
-		}));
+		// return this.roleDbService.httpService.get(url).pipe(map(res => {
+		// 	if (res.status == 200) {
+		// 		return res.data.resource;
+		// 	}
+		// }));
 
+		return this.assignerDataService.processProfile([url, this.roleDbService, RoleListDTO]);
 	}
 
 	/**

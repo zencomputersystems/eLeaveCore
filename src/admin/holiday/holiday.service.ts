@@ -81,11 +81,14 @@ export class HolidayService {
 		const filters = ['(CALENDAR_GUID=' + calendarId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')', 'AND (DELETED_AT IS NULL)'];
 
 		const url = this.holidayDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
-		return this.holidayDbService.httpService.get(url).pipe(map(res => {
-			if (res.status == 200) {
-				return res.data.resource;
-			}
-		}));
+		// return this.holidayDbService.httpService.get(url).pipe(map(res => {
+		// 	if (res.status == 200) {
+		// 		return res.data.resource;
+		// 	}
+		// }));
+
+		return this.assignerDataService.processProfile([url, this.holidayDbService, CalendarDTO]);
+
 
 
 	}

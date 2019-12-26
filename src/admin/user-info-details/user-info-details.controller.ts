@@ -44,13 +44,13 @@ export class UserInfoDetailsController {
   }
 
   @Post('/activate/:id')
-  @ApiOperation({ title: 'Reactivate user and reate new user info' })
+  @ApiOperation({ title: 'Reactivate user and create new user info' })
   @ApiImplicitParam({ name: 'id', description: 'User guid' })
   createNewUserInfo(@Param() params, @Req() req, @Res() res) {
-    this.userInfoActivateService.createNewUserInfo(params.id, req.user.TENANT_GUID).subscribe(
+    this.userInfoActivateService.createNewUserInfo(params.id, req.user).subscribe(
       data => {
-        // res.send({ ...data[1][0], ...data[0][0] });
-        res.send(data.data.resource);
+        let dataFinal = { ...data[1].data.resource[0], ...data[0].data.resource[0] };
+        res.send(dataFinal);
       }, err => {
         res.send(err);
       }

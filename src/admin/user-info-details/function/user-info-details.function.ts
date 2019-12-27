@@ -15,9 +15,11 @@ export function personalDetailAssign([resultItem, results, dataXML]) {
   resultItem['tenantId'] = results.TENANT_GUID;
   resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
-    resultItem['personalDetail'] = dataXML.root.personalDetails;
-    resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
-    resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
+    if (dataXML.root.personalDetails) {
+      resultItem['personalDetail'] = dataXML.root.personalDetails;
+      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
+      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
+    }
   }
 }
 
@@ -29,10 +31,12 @@ export function personalDetailAssign([resultItem, results, dataXML]) {
  */
 export function employmentDetailAssign([resultItem, results, dataXML]) {
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
-    resultItem['employmentDetail'] = dataXML.root.employmentDetail;
-    const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
-    const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';
-    resultItem['employmentDetail']['yearOfService'] = serviceDuration;
+    if (dataXML.root.employmentDetail) {
+      resultItem['employmentDetail'] = dataXML.root.employmentDetail;
+      const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
+      const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';
+      resultItem['employmentDetail']['yearOfService'] = serviceDuration;
+    }
   }
 }
 
@@ -44,6 +48,7 @@ export function employmentDetailAssign([resultItem, results, dataXML]) {
  */
 export function notificationRuleAssign([resultItem, dataXML]) {
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('notificationRule')) {
-    resultItem['notificationRule'] = dataXML.root.notificationRule;
+    if (dataXML.root.notificationRule)
+      resultItem['notificationRule'] = dataXML.root.notificationRule;
   }
 }

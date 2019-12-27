@@ -85,6 +85,7 @@ export class UserLeaveEntitlementService {
             return this.userEntitlementAssignEntitlement.assignReplacementLeave(user, data);
         } else {
             return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
+            // return this.userEntitlementAssignEntitlement.assignLeaveEntitlement(user, data);
         }
     }
 

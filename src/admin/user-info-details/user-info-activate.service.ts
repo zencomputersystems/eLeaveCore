@@ -29,7 +29,6 @@ export class UserInfoActivateService {
 
   /**
    * Get user info inactive history
-   * NEED TO FILTER BY INACTIVE USER
    *
    * @param {string} userGuid
    * @param {string} tenantGuid
@@ -47,7 +46,6 @@ export class UserInfoActivateService {
 
   /**
    * Create new user info
-   * NEED TO UPDATE USER_MAIN ACTIVATION_FLAG
    *
    * @param {string} userGuid
    * @param {string} tenantGuid

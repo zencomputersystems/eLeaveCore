@@ -6,6 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { UserInfoActivateService } from './user-info-activate.service';
+import { ReactivateUserDTO } from './dto/reactivate-user.dto';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -30,24 +31,24 @@ export class UserInfoDetailsController {
     private readonly userInfoActivateService: UserInfoActivateService
   ) { }
 
-  @Get('/inactive/:id')
-  @ApiOperation({ title: 'Get inactive user info' })
-  @ApiImplicitParam({ name: 'id', description: 'User guid' })
-  getInactiveUserInfo(@Param() params, @Req() req, @Res() res) {
-    this.userInfoActivateService.getInfoUser(params.id, req.user.TENANT_GUID).subscribe(
-      data => {
-        res.send({ ...data[1][0], ...data[0][0] });
-      }, err => {
-        res.send(err);
-      }
-    );
-  }
+  // @Get('/inactive/:id')
+  // @ApiOperation({ title: 'Get inactive user info' })
+  // @ApiImplicitParam({ name: 'id', description: 'User guid' })
+  // getInactiveUserInfo(@Param() params, @Req() req, @Res() res) {
+  //   this.userInfoActivateService.getInfoUser(params.id, req.user.TENANT_GUID).subscribe(
+  //     data => {
+  //       res.send({ ...data[1][0], ...data[0][0] });
+  //     }, err => {
+  //       res.send(err);
+  //     }
+  //   );
+  // }
 
   @Post('/activate/:id')
   @ApiOperation({ title: 'Reactivate user and create new user info' })
   @ApiImplicitParam({ name: 'id', description: 'User guid' })
-  createNewUserInfo(@Param() params, @Req() req, @Res() res) {
-    this.userInfoActivateService.createNewUserInfo(params.id, req.user).subscribe(
+  createNewUserInfo(@Body() reactivateUserDTO: ReactivateUserDTO, @Param() params, @Req() req, @Res() res) {
+    this.userInfoActivateService.createNewUserInfo([params.id, req.user, reactivateUserDTO]).subscribe(
       data => {
         let dataFinal = { ...data[1].data.resource[0], ...data[0].data.resource[0] };
         res.send(dataFinal);

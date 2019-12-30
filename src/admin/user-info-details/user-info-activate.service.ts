@@ -7,6 +7,7 @@ import { v1 } from 'uuid';
 import { Resource } from '../../common/model/resource.model';
 import { UserModel } from '../user/model/user.model';
 import { setUpdateData } from '../../common/helper/basic-functions';
+import { ReactivateUserDTO } from './dto/reactivate-user.dto';
 
 /**
  * Reactivate user
@@ -52,7 +53,7 @@ export class UserInfoActivateService {
    * @returns
    * @memberof UserInfoActivateService
    */
-  public createNewUserInfo(userGuid: string, user: any) {
+  public createNewUserInfo([userGuid, user, data]: [string, any, ReactivateUserDTO]) {
     return this.getInfoUser(userGuid, user.TENANT_GUID).pipe(
       map(res => {
         // Create new user info data by previous info
@@ -62,6 +63,9 @@ export class UserInfoActivateService {
         prevData.USER_INFO_GUID = v1();
         prevData.RESIGNATION_DATE = null;
         prevData.CREATION_USER_GUID = user.USER_GUID;
+        prevData.ROLE_GUID = data.roleProfileId;
+        prevData.CALENDAR_GUID = data.calendarId;
+        prevData.WORKING_HOURS_GUID = data.workingHoursId;
 
         // Prepare data to create
         const resource = new Resource(new Array);

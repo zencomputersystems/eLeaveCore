@@ -12,6 +12,10 @@ import { UserService } from '../user/user.service';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { UserInfoService } from '../user-info/user-info.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { CompanyDbService } from '../company/company.service';
+import { LeavetypeService } from '../leavetype/leavetype.service';
+import { PendingLeaveService } from './pending-leave.service';
 
 @Module({
 	imports: [
@@ -29,6 +33,10 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
 		UserService,
 		EmailNodemailerService,
 		UserInfoService,
+		UserprofileDbService,
+		CompanyDbService,
+		LeavetypeService,
+		PendingLeaveService,
 		ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4
 	],
 	controllers: [ApprovalOverrideController]

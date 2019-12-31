@@ -6,10 +6,14 @@ import { CommonFunctionService } from '../../common/helper/common-function.servi
 import { UpdateApprovalDTO } from './dto/update-approval.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { UserService } from '../user/user.service';
-import { map } from 'rxjs/operators';
+import { map, mergeMap, find } from 'rxjs/operators';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { UserInfoService } from '../user-info/user-info.service';
 import { threadId } from 'worker_threads';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { CompanyDbService } from '../company/company.service';
+import { LeavetypeService } from '../leavetype/leavetype.service';
+import { PendingLeaveService } from './pending-leave.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -101,7 +105,11 @@ export class ApprovalOverrideService {
    */
   constructor(
     private readonly approvalOverrideServiceRef1: ApprovalOverrideServiceRef1,
-    private readonly approvalOverrideServiceRef2: ApprovalOverrideServiceRef2) {
+    private readonly approvalOverrideServiceRef2: ApprovalOverrideServiceRef2,
+    // private readonly userprofileDbService: UserprofileDbService,
+    // private readonly companyDbService: CompanyDbService,
+    // private readonly leavetypeService: LeavetypeService,
+    private readonly pendingLeaveService: PendingLeaveService) {
   }
 
   /**
@@ -112,8 +120,57 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   public findAllPendingLeave(TENANT_GUID: string): Observable<any> {
-    let result = this.approvalOverrideServiceRef2.leaveTransactionDbService.findAll(TENANT_GUID);
-    return this.approvalOverrideServiceRef2.commonFunctionService.getListData(result);
+    return this.approvalOverrideServiceRef2.leaveTransactionDbService.findAll(TENANT_GUID).pipe(
+      mergeMap(async res => {
+        if (res.status == 200 && res.data.resource.length > 0) {
+          return await this.getPendingLeaveData([res, TENANT_GUID]);
+        }
+      }), map(res => {
+        let finalData = [];
+
+        res.forEach(element => {
+          let dataRes = {};
+          let personal = element.userData;
+          dataRes['leaveTransactionId'] = element.LEAVE_TRANSACTION_GUID;
+          dataRes['employeeName'] = personal.FULLNAME;
+          dataRes['staffNumber'] = personal.STAFF_ID;
+          dataRes['status'] = element.STATUS;
+          dataRes['startDate'] = element.START_DATE;
+          dataRes['endDate'] = element.END_DATE;
+          dataRes['noOfDays'] = element.NO_OF_DAYS;
+          dataRes['timeSlot'] = element.TIME_SLOT;
+          dataRes['dateApplied'] = element.CREATION_TS;
+          dataRes['leaveTypeAbbr'] = element.leavetypeAbbr;
+          dataRes['departmentName'] = personal.DEPARTMENT;
+          dataRes['companyName'] = element.companyName;
+
+          finalData.push(dataRes);
+        });
+
+        return finalData;
+      }));
+  }
+
+  public async getPendingLeaveData([res, TENANT_GUID]) {
+    let userGuid = [];
+    res.data.resource.forEach(element => {
+      userGuid.push(element.USER_GUID);
+    });
+
+    let companyList = await this.pendingLeaveService.getCompanyList(TENANT_GUID) as any[];
+    let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(TENANT_GUID) as any[];
+    let resultAll = await this.pendingLeaveService.getUserInfo(userGuid) as any[];
+
+    for (let i = 0; i < res.data.resource.length; i++) {
+      let findData = resultAll.find(x => x.USER_GUID === res.data.resource[i].USER_GUID);
+      let findCompanyData = companyList.find(x => x.TENANT_COMPANY_GUID === findData.TENANT_COMPANY_GUID);
+      let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === res.data.resource[i].LEAVE_TYPE_GUID);
+
+      res.data.resource[i].userData = findData;
+      res.data.resource[i].companyName = findCompanyData.NAME;
+      res.data.resource[i].leavetypeAbbr = findLeaveData.ABBR;
+    }
+    return await res.data.resource;
   }
 
   /**

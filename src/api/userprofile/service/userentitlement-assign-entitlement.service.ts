@@ -5,7 +5,7 @@ import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/d
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.service';
 import { AssignLeavePolicyDTO } from '../dto/leave-entitlement/assign-leave-policy.dto';
-import { map, filter, switchMap, mergeMap, throwIfEmpty, defaultIfEmpty } from 'rxjs/operators';
+import { map, filter, switchMap, mergeMap, throwIfEmpty, defaultIfEmpty, merge } from 'rxjs/operators';
 import { LeaveTypeEntitlementModel } from 'src/admin/leavetype-entitlement/model/leavetype_entitlement.model';
 import { IDbService } from 'src/interface/IDbService';
 import { of } from 'rxjs';
@@ -108,109 +108,101 @@ export class UserEntitlementAssignEntitlement {
   }
 
   public assignLeaveEntitlement(user: any, data: AssignLeavePolicyDTO) {
-
     //check if the user belong to this tenant
     const userFilter = ['(USER_GUID IN (' + data.userId + '))', '(TENANT_GUID=' + user.TENANT_GUID + ')']
     let failedList = [];
     let successList = [];
     let userStatus = {};
+    let successData = [];
     return this.dbSearch(this.userDbService, userFilter)
       .pipe(
         map(res => {
-
+          // Check if in this tenant
           data.userId.forEach(element => {
 
             let checkUser = res.find(x => x.USER_GUID === element);
             if (checkUser) {
-              successList.push(element)
+              successList.push(element);
+              successData.push(checkUser);
             } else {
               userStatus['userGuid'] = element;
               userStatus['status'] = 'Not in this tenant';
               failedList.push(userStatus);
             }
           });
-          console.log(failedList);
 
-          return { failedList, successList };
+          return successList;
         }),
         mergeMap(res => {
-          const { failedList, successList } = res;
+          // check if user already entitled
+          if (res.length > 0) {
+            const userEntitlementFilter = [
+              '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
+              '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID IN (' + res + '))', '(ACTIVE_FLAG=1)'
+            ]
+            const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
+            return dataTemp;
+          }
+        }), mergeMap(res => {
+          // assign status user already entitled
+          if (res != 'success') {
+            userStatus = {};
+            let tempSuccess = [];
+            const sizeData = successList.length;
+            for (let i = 0; i < sizeData; i++) {
+              let element = successList[i];
+              let checkUser = res.filter(x => x.USER_GUID === element);
 
-          const userEntitlementFilter = [
-            '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
-            '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID IN (' + successList + '))', '(ACTIVE_FLAG=1)'
-          ]
+              if (checkUser.length > 0) {
+                userStatus['userGuid'] = element;
+                userStatus['status'] = 'User already entitled';
 
-          const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
-          return dataTemp;
-        }), map(res => {
-          console.log(res);
-          console.log(failedList);
-          userStatus = {};
-          successList.forEach(element => {
-            let checkUser = res.find(x => x.USER_GUID === element);
-            if (checkUser) {
-              userStatus['userGuid'] = element;
-              userStatus['status'] = 'User already entitled';
-              successList.splice(successList.indexOf(element), 1);
-              failedList.push(userStatus);
-            } else {
-
+                failedList.push(userStatus);
+              } else {
+                tempSuccess.push(element);
+              }
             }
-          })
-
-          console.log('result');
-          console.log(failedList);
-          console.log(successList);
-          return res;
+            successList = tempSuccess;
+            return successList.length > 0 ? successList : 'no data';
+          }
+          return successList;
+        }), switchMap(res => {
+          if (res != null) {
+            // check if combination of main leave and entitlement def exist
+            const entitlementFilter = [
+              '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
+              '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(ACTIVE_FLAG=true)'
+            ];
+            const temp = this.dbSearch(this.leaveEntitlementDbService, entitlementFilter);
+            return temp;
+          }
+        }), mergeMap(res => {
+          // assign status leavetype entitlement not found
+          if (res.length > 0) {
+            return res;
+          } else {
+            failedList.push('Leavetype entitlement not found');
+          }
+        }), mergeMap(res => {
+          if (successList.length > 0) {
+            data['userId'] = successList;
+            successData['userInfoResult'] = successData;
+            successData['res'] = [];
+            successData['res'].push(res);
+            return this.userEntitlementAssignPolicy.assignPolicyProcess([successData, user, data]);
+          } else {
+            return of(null);
+          }
+        }), map(res => {
+          let finalResult = {};
+          finalResult['successList'] = successList;
+          finalResult['failedList'] = failedList;
+          finalResult['detailsSuccess'] = res;
+          return finalResult;
         })
-        //   // filter(x => x != null),
-        //   switchMap(() => {
-        //     //check if current leavetype has active policy
-        //     const userEntitlementFilter = [
-        //       '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
-        //       '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID IN (' + data.userId + '))', '(ACTIVE_FLAG=1)'
-        //     ]
-
-        //     const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
-        //     console.log(dataTemp);
-        //     return dataTemp;
-
-        //   }),
-        //   // filter(x => x == null),
-        //   switchMap(() => {
-
-        //     // check if combination of main leave and entitlement def exist
-        //     const entitlementFilter = [
-        //       '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
-        //       '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(ACTIVE_FLAG=true)'
-        //     ];
-
-        //     const temp = this.dbSearch(this.leaveEntitlementDbService, entitlementFilter);
-        //     console.log(temp);
-        //     return temp;
-        //   }),
-        //   // filter(x => x != null),
-        //   mergeMap((res: LeaveTypeEntitlementModel) => {
-        //     console.log(res);
-        //     const userInfoFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID IN (' + data.userId + '))']
-        //     // console.log(userInfoFilter);
-        //     const dataTemp = this.dbSearch(this.userInfoDbService, userInfoFilter)
-        //       .pipe(map((userInfoResult) => {
-        //         // console.log(res);
-        //         return { res, userInfoResult }
-        //       }))
-
-        //     return dataTemp;
-        //   }),
-        //   mergeMap((res) => {
-        //     console.log(res);
-        //     const results = this.userEntitlementAssignPolicy.assignPolicyProcess([res, user, data]);
-        //     return results;
-        //   })
       )
-
   }
+
 
   /**
    * Assign replacement leave

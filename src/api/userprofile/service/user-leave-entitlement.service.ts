@@ -84,8 +84,8 @@ export class UserLeaveEntitlementService {
         if (process == 'replacement') {
             return this.userEntitlementAssignEntitlement.assignReplacementLeave(user, data);
         } else {
-            return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
-            // return this.userEntitlementAssignEntitlement.assignLeaveEntitlement(user, data);
+            // return this.userEntitlementAssignEntitlement.assignEntitlement(user, data);
+            return this.userEntitlementAssignEntitlement.assignLeaveEntitlement(user, data);
         }
     }
 

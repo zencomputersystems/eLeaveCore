@@ -48,7 +48,8 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 	 */
 	public findAll(tenantId: string) {
 		const fields = [];
-		const filters = ['(TENANT_GUID=' + tenantId + ')', '(STATUS=PENDING)'];
+		let lastWeek = moment().subtract(1, 'weeks').format('YYYY-MM-DD');
+		const filters = ['(TENANT_GUID=' + tenantId + ')', '((START_DATE > ' + lastWeek + ') OR (STATUS=PENDING))'];
 		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
 		return this.httpService.get(url);
 	}

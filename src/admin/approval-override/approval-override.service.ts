@@ -14,6 +14,8 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
 import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { PendingLeaveService } from './pending-leave.service';
+import { CompanyModel } from '../company/model/company.model';
+import { LeaveTypeModel } from '../leavetype/model/leavetype.model';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -151,14 +153,21 @@ export class ApprovalOverrideService {
       }));
   }
 
+  /**
+   * Get pending leave data
+   *
+   * @param {*} [res, TENANT_GUID]
+   * @returns
+   * @memberof ApprovalOverrideService
+   */
   public async getPendingLeaveData([res, TENANT_GUID]) {
     let userGuid = [];
     res.data.resource.forEach(element => {
       userGuid.push(element.USER_GUID);
     });
 
-    let companyList = await this.pendingLeaveService.getCompanyList(TENANT_GUID) as any[];
-    let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(TENANT_GUID) as any[];
+    let companyList = await this.pendingLeaveService.getCompanyList(TENANT_GUID) as CompanyModel[];
+    let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(TENANT_GUID) as LeaveTypeModel[];
     let resultAll = await this.pendingLeaveService.getUserInfo(userGuid) as any[];
 
     for (let i = 0; i < res.data.resource.length; i++) {

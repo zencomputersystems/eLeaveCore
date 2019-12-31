@@ -42,7 +42,7 @@ export class UserEntitlementAssignPolicy {
    */
   public assignPolicyProcess([res, user, data]) {
 
-    // console.log('here' + res);
+    // console.log(res);
     // console.log(user);
     // console.log(data);
 
@@ -52,9 +52,9 @@ export class UserEntitlementAssignPolicy {
     // console.log(length);
     for (let i = 0; i < length; i++) {
       // console.log(data.userId[i]);
-      const user = res.userInfoResult.find(x => x.USER_GUID.toString() === data.userId[i].toString());
-      // console.log(user);
-      const dateOfJoin = new Date(user.JOIN_DATE);
+      const userData = res.userInfoResult.find(x => x.USER_GUID.toString() === data.userId[i].toString());
+      // console.log(userData);
+      const dateOfJoin = new Date(userData.JOIN_DATE);
       // get the service year
       const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
       // console.log('svc-year' + serviceYear);
@@ -136,7 +136,7 @@ export class UserEntitlementAssignPolicy {
 
     // resource.resource.push(entitlementModel);
 
-    return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
+    return this.userLeaveEntitlementDbService.createByModel(resource, ['USER_LEAVE_ENTITLEMENT_GUID', 'USER_GUID'], [], [])
       .pipe(map(res => {
         if (res.status == 200) {
           return res.data.resource;

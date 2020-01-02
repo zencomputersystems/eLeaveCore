@@ -47,6 +47,12 @@ export class DashboardController {
 				// 	}
 				// });
 				upcomingHolidayArr = this.dashboardService.convertData([upcomingHolidayArr, data]);
+				upcomingHolidayArr.sort(function (a, b) {
+					var c = new Date(a.start) as any;
+					var d = new Date(b.start) as any;
+					return c - d;
+				});
+				// console.log(upcomingHolidayArr);
 				res.send(upcomingHolidayArr);
 			}, err => {
 				res.send(err);

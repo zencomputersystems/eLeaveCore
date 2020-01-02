@@ -87,7 +87,7 @@ export class GenerateNewCalendarService {
         data => {
           return 'success assign';
         }, err => {
-          return 'failed assign'
+          return 'failed assign';
         });
 
     return resource;

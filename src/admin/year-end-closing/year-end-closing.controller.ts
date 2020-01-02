@@ -37,7 +37,7 @@ export class YearEndClosingController {
   @ApiImplicitParam({ name: 'year', description: 'Closing year', required: true })
   @ApiOperation({ title: 'Assign leave entitlement for next year' })
   create(@Param('year') year, @Req() req, @Res() res) {
-
+    year = year == new Date().getFullYear() ? year - 1 : year;
     this.yearEndClosingService.yearEndProcess(req.user, new Date(year).getFullYear() + 1).subscribe(data => {
       let dataRes = {};
       dataRes['resignUser'] = this.trimData(data[0]);
@@ -48,9 +48,7 @@ export class YearEndClosingController {
     }, err => {
       res.send(err);
     })
-
   }
-
 
   /**
    * Get only wanted data, trim some keys

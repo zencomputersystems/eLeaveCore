@@ -68,7 +68,7 @@ export class UserEntitlementAssignEntitlement {
           ]
 
           const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
-          console.log(dataTemp);
+
           return dataTemp;
 
         }),
@@ -82,24 +82,22 @@ export class UserEntitlementAssignEntitlement {
           ];
 
           const temp = this.dbSearch(this.leaveEntitlementDbService, entitlementFilter);
-          console.log(temp);
+
           return temp;
         }),
         filter(x => x != null),
         mergeMap((res: LeaveTypeEntitlementModel) => {
-          console.log(res);
+
           const userInfoFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(USER_GUID IN (' + data.userId + '))']
-          // console.log(userInfoFilter);
+
           const dataTemp = this.dbSearch(this.userInfoDbService, userInfoFilter)
             .pipe(map((userInfoResult) => {
-              // console.log(res);
               return { res, userInfoResult }
             }))
 
           return dataTemp;
         }),
         mergeMap((res) => {
-          console.log(res);
           const results = this.userEntitlementAssignPolicy.assignPolicyProcess([res, user, data]);
           return results;
         })

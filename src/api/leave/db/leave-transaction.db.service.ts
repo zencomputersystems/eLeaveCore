@@ -149,6 +149,12 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 
 		// leaveData.USER_GUID = user.USER_GUID;
 		// leaveData.TENANT_GUID = user.TENANT_GUID;
+		let xmlData = {};
+		xmlData['root'] = {};
+		xmlData['root']['generalLeavePolicy'] = result.result.generalLeavePolicy[0].PROPERTIES_XML;
+		xmlData['root']['entitlementPolicy'] = result.policy;
+
+		// console.log(result.result.generalLeavePolicy[0]);
 
 		leaveData.USER_GUID = result.result.userInfo.USER_GUID;
 		leaveData.TENANT_GUID = result.result.userInfo.TENANT_GUID;
@@ -158,7 +164,8 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 		leaveData.END_DATE = applyLeaveDataDTO.endDate;
 		leaveData.REASON = y.reason;
 		leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration([applyLeaveDataDTO.startDate, applyLeaveDataDTO.endDate, applyLeaveDataDTO.dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
-		leaveData.ENTITLEMENT_XML_SNAPSHOT = convertJsonToXML(result.policy);
+		// leaveData.ENTITLEMENT_XML_SNAPSHOT = convertJsonToXML(result.policy);
+		leaveData.ENTITLEMENT_XML_SNAPSHOT = convertJsonToXML(xmlData);
 		leaveData.ACTIVE_FLAG = true;
 		leaveData.STATES = null;
 		leaveData.STATUS = "PENDING";

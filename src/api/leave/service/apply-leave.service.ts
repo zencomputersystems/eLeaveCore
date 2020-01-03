@@ -20,6 +20,7 @@ import { ValidationStatusDTO } from 'src/common/policy/leave-application-validat
 import { json } from 'body-parser';
 import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 import { setTimeout } from 'timers';
+import { GeneralLeavePolicyService } from '../../../admin/general-leave-policy/general-leave-policy.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -46,7 +47,8 @@ export class ApplyLeaveService {
 		private readonly leaveValidationService: LeaveApplicationValidationService,
 		private readonly userInfoService: UserInfoService,
 		private readonly leaveTransactionDbService: LeaveTransactionDbService,
-		private readonly dateCalculationService: DateCalculationService
+		private readonly dateCalculationService: DateCalculationService,
+		private readonly generalLeavePolicyService: GeneralLeavePolicyService
 	) { }
 
 	/**
@@ -115,7 +117,7 @@ export class ApplyLeaveService {
 	private applyLeaveProcess([applyLeaveDTO, user, extensionQuery, onbehalf]: [ApplyLeaveDTO, any, any, boolean]) {
 		let y = applyLeaveDTO;
 
-		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID'], extensionQuery)
+		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID'], extensionQuery)
 			.pipe(
 				map(res => {
 					return res[0];
@@ -146,6 +148,13 @@ export class ApplyLeaveService {
 						validationResult.userId = result.userInfo.USER_GUID;
 						return { result, validationResult, policy };
 					}));
+				}), mergeMap(res => {
+					let { result, validationResult, policy } = res;
+					return this.generalLeavePolicyService.findByFilterV2([], ['(TENANT_COMPANY_GUID=' + result.userInfo.TENANT_COMPANY_GUID + ')']).pipe(map((generalPolicyData) => {
+						result['generalLeavePolicy'] = generalPolicyData;
+						return { result, validationResult, policy };
+					}));
+					// return { result, validationResult, policy };
 				}),
 				mergeMap(result => {
 					if (result.validationResult.valid) {

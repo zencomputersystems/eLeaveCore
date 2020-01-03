@@ -5,6 +5,7 @@ import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
 import { STATESDTO } from '../dto/states.dto';
 import { Resource } from 'src/common/model/resource.model';
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for approval
@@ -20,7 +21,29 @@ export class ApprovalService {
      * @param {LeaveTransactionDbService} leaveTransactionService
      * @memberof ApprovalService
      */
-    constructor(private leaveTransactionService: LeaveTransactionDbService) { }
+    constructor(
+        private leaveTransactionService: LeaveTransactionDbService
+    ) { }
+
+    getApprovalPolicyTemp(leaveTransactionId: string) {
+        return this.leaveTransactionService.findByFilterV2([], ['(LEAVE_TRANSACTION_GUID=' + leaveTransactionId + ')']).pipe(
+            map(res => {
+                let jsonXMLSnapshot = convertXMLToJson(res[0].ENTITLEMENT_XML_SNAPSHOT);
+
+                let jsonGeneralPolicy = jsonXMLSnapshot.root.generalLeavePolicy;
+                let dataLevel = {};
+
+                dataLevel['approvalType'] = jsonGeneralPolicy.approvalConfirmation.requirement;
+                dataLevel['approvalLevel'] = jsonGeneralPolicy.approvalConfirmation.approvalLevel;
+                return dataLevel;
+            })
+        );
+
+        // return of({
+        //     "approvalType": "EVERYONE",
+        //     "approvalLevel": 1
+        // })
+    }
 
     /**
      * get tenant company approval policy
@@ -86,8 +109,6 @@ export class ApprovalService {
                 }),
                 filter(x => x.length > 0),
                 mergeMap((leaveTransaction: LeaveTransactionModel[]) => {
-
-                    console.log(leaveTransaction);
                     const resource = new Resource(new Array());
                     leaveTransaction.forEach(element => {
                         element.STATUS = "APPROVED";
@@ -136,7 +157,8 @@ export class ApprovalService {
                         throw "Invalid Leave";
                     }
 
-                    return this.getApprovalPolicy()
+                    // return this.getApprovalPolicy()
+                    return this.getApprovalPolicyTemp(leaveTransactionId)
                         .pipe(
                             map(currentPolicy => {
                                 return { currentPolicy, leave }
@@ -144,9 +166,8 @@ export class ApprovalService {
                         )
                 }),
                 mergeMap(result => {
-
-                    if (result.currentPolicy.approvalType.toUpperCase() === "EVERYONE") {
-                        result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy.approvalLevel]);
+                    if (result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
+                        result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel']]);
                     } else {
                         result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove]);
                     }

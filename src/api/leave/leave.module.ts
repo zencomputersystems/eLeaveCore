@@ -20,6 +20,7 @@ import { AccessLevelValidateService } from 'src/common/helper/access-level-valid
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation-parent.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { GeneralLeavePolicyService } from '../../admin/general-leave-policy/general-leave-policy.service';
 
 /**
  * Module for leave
@@ -50,7 +51,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     ApprovalService,
     AccessLevelValidateService,
     CommonFunctionService,
-    LeaveBalanceValidationParentService
+    LeaveBalanceValidationParentService,
+    GeneralLeavePolicyService
   ],
 })
 export class LeaveModule { }

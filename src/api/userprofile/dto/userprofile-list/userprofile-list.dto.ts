@@ -21,6 +21,7 @@ export class UserprofileListDTO {
         this.employeeName = element.FULLNAME;
         this.designation = element.DESIGNATION;
         this.department = element.DEPARTMENT;
+        this.costcentre = element.COSTCENTRE;
         this.branch = element.BRANCH;
         this.companyId = element.TENANT_COMPANY_GUID;
         this.email = element.EMAIL;
@@ -71,6 +72,13 @@ export class UserprofileListDTO {
      * @memberof UserprofileListDTO
      */
     public department: string;
+    /**
+     * Data userprofilelist - costcentre
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
+    public costcentre: string;
     /**
      * Data userprofilelist - branch
      *

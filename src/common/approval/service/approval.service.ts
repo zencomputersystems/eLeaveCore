@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { of } from 'rxjs';
-import { map, mergeMap, filter } from 'rxjs/operators';
+import { map, mergeMap, filter, flatMap } from 'rxjs/operators';
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
 import { STATESDTO } from '../dto/states.dto';
 import { Resource } from 'src/common/model/resource.model';
+import { UserprofileDbService } from '../../../api/userprofile/db/userprofile.db.service';
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
@@ -16,244 +17,296 @@ var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 @Injectable()
 export class ApprovalService {
 
-    /**
-     *Creates an instance of ApprovalService.
-     * @param {LeaveTransactionDbService} leaveTransactionService
-     * @memberof ApprovalService
-     */
-    constructor(
-        private leaveTransactionService: LeaveTransactionDbService
-    ) { }
+	/**
+	 *Creates an instance of ApprovalService.
+	 * @param {LeaveTransactionDbService} leaveTransactionService
+	 * @memberof ApprovalService
+	 */
+	constructor(
+		private leaveTransactionService: LeaveTransactionDbService,
+		private userprofileDbService: UserprofileDbService
+	) { }
 
-    getApprovalPolicyTemp(leaveTransactionId: string) {
-        return this.leaveTransactionService.findByFilterV2([], ['(LEAVE_TRANSACTION_GUID=' + leaveTransactionId + ')']).pipe(
-            map(res => {
-                let jsonXMLSnapshot = convertXMLToJson(res[0].ENTITLEMENT_XML_SNAPSHOT);
+	getManagerList([userId]: [string]) {
+		let managerList = this.getManagerId([userId]).then(
+			async data => {
+				let temp: string[] = data as string[];
+				let dataManager = [];
+				do {
+					dataManager.push(temp[0]['MANAGER_USER_GUID']);
+					temp = await this.getManagerId([temp[0]['MANAGER_USER_GUID']]) as string[];
+				} while (dataManager.indexOf(temp[0]['MANAGER_USER_GUID']) == -1)
+				return dataManager;
+			}
+		);
+		return managerList;
+	}
 
-                let jsonGeneralPolicy = jsonXMLSnapshot.root.generalLeavePolicy;
-                let dataLevel = {};
+	async getManagerId([userId]: [string]) {
+		const getManagerProcess = () => {
+			return new Promise((resolve, reject) => {
+				this.userprofileDbService.findByFilterV2(['MANAGER_USER_GUID'], ['(USER_GUID=' + userId + ')']).subscribe(
+					data => {
+						resolve(data);
+					}, err => {
+						return reject(err);
+					}
+				);
+			});
+		}
+		return await getManagerProcess();
+	}
 
-                dataLevel['approvalType'] = jsonGeneralPolicy.approvalConfirmation.requirement;
-                dataLevel['approvalLevel'] = jsonGeneralPolicy.approvalConfirmation.approvalLevel;
-                return dataLevel;
-            })
-        );
+	getApprovalPolicyTemp(leaveTransactionId: string) {
+		return this.leaveTransactionService.findByFilterV2([], ['(LEAVE_TRANSACTION_GUID=' + leaveTransactionId + ')']).pipe(
+			map(res => {
+				let jsonXMLSnapshot = convertXMLToJson(res[0].ENTITLEMENT_XML_SNAPSHOT);
 
-        // return of({
-        //     "approvalType": "EVERYONE",
-        //     "approvalLevel": 1
-        // })
-    }
+				let jsonGeneralPolicy = jsonXMLSnapshot.root.generalLeavePolicy;
+				let dataLevel = {};
 
-    /**
-     * get tenant company approval policy
-     * 3 type
-     * 1 = Anyone in hierarchy (ANYONE)
-     * 2 = Everyone in herarchy (EVERYONE)
-     * 3 = Superior
-     *
-     * @returns
-     * @memberof ApprovalService
-     */
-    getApprovalPolicy() {
+				dataLevel['approvalType'] = jsonGeneralPolicy.approvalConfirmation.requirement;
+				dataLevel['approvalLevel'] = jsonGeneralPolicy.approvalConfirmation.approvalLevel;
+				return dataLevel;
+			})
+		);
 
-        return of({
-            "approvalType": "EVERYONE",
-            "approvalLevel": 1
-        })
+		// return of({
+		//     "approvalType": "EVERYONE",
+		//     "approvalLevel": 1
+		// })
+	}
 
-    }
+	/**
+	 * get tenant company approval policy
+	 * 3 type
+	 * 1 = Anyone in hierarchy (ANYONE)
+	 * 2 = Everyone in herarchy (EVERYONE)
+	 * 3 = Superior
+	 *
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	getApprovalPolicy() {
 
-    /**
-     * get leave applied states
-     *
-     * @param {string} leaveTransactionId
-     * @param {string} tenantId
-     * @returns
-     * @memberof ApprovalService
-     */
-    getAppliedLeaveDetail(leaveTransactionId: string, tenantId: string) {
+		return of({
+			"approvalType": "EVERYONE",
+			"approvalLevel": 1
+		})
 
-        const filter = ["(LEAVE_TRANSACTION_GUID=" + leaveTransactionId + ")", "(TENANT_GUID=" + tenantId + ")"]
+	}
 
-        return this.leaveTransactionService.findByFilterV2([], filter);
-    }
+	/**
+	 * get leave applied states
+	 *
+	 * @param {string} leaveTransactionId
+	 * @param {string} tenantId
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	getAppliedLeaveDetail(leaveTransactionId: string, tenantId: string) {
 
+		const filter = ["(LEAVE_TRANSACTION_GUID=" + leaveTransactionId + ")", "(TENANT_GUID=" + tenantId + ")"]
 
-    /**
-     * trigger when approval policy change
-     * only for EVERYONE and level deducted
-     *
-     * @param {string} policyType
-     * @param {number} policyLevel
-     * @param {string} tenantId
-     * @returns
-     * @memberof ApprovalService
-     */
-    // onPolicyChanged(policyType: string, policyLevel: number, tenantId: string) {
-
-    onPolicyChanged([policyType, policyLevel, tenantId]: [string, number, string]) {
-
-        //get current policy
-        return this.getApprovalPolicy()
-            .pipe(
-                mergeMap(currentPolicy => {
-
-                    // check if current policy is bigger than policy level
-                    if (policyType === "EVERYONE" && currentPolicy.approvalLevel > policyLevel) {
-                        // find all leave with policy == policyLevel and is pending
-                        const filter = ["(TENANT_GUID=" + tenantId + ")", "(CURRENT_APPROVAL_LEVEL=" + policyLevel + ")", "(STATUS=PENDING)"]
-
-                        return this.leaveTransactionService.findByFilterV2([], filter);
-                    }
-                }),
-                filter(x => x.length > 0),
-                mergeMap((leaveTransaction: LeaveTransactionModel[]) => {
-                    const resource = new Resource(new Array());
-                    leaveTransaction.forEach(element => {
-                        element.STATUS = "APPROVED";
-
-                        resource.resource.push(element);
-                    });
-
-                    if (resource.resource.length > 0) {
-                        return this.leaveTransactionService.updateByModel(resource, [], [], [])
-                            .pipe(
-                                map(data => {
-                                    if (data.status != 200) {
-                                        throw "Update error";
-                                    }
-                                    return data.data.resource;
-                                })
-                            )
-                    }
-                })
-            )
-    }
+		return this.leaveTransactionService.findByFilterV2([], filter);
+	}
 
 
-    /**
-     * Method on approve reject
-     *
-     * @param {string} leaveTransactionId
-     * @param {string} tenantId
-     * @param {string} approverUserId
-     * @param {boolean} isApprove
-     * @returns
-     * @memberof ApprovalService
-     */
-    onApproveReject([leaveTransactionId, tenantId, approverUserId, isApprove]: [string, string, string, boolean]) {
+	/**
+	 * trigger when approval policy change
+	 * only for EVERYONE and level deducted
+	 *
+	 * @param {string} policyType
+	 * @param {number} policyLevel
+	 * @param {string} tenantId
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	// onPolicyChanged(policyType: string, policyLevel: number, tenantId: string) {
 
-        return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
-            .pipe(
-                mergeMap((leaveDetail: LeaveTransactionModel[]) => {
-                    if (leaveDetail.length == 0) {
-                        throw "Leave detail not found";
-                    }
+	onPolicyChanged([policyType, policyLevel, tenantId]: [string, number, string]) {
 
-                    const leave = leaveDetail[0];
+		//get current policy
+		return this.getApprovalPolicy()
+			.pipe(
+				mergeMap(currentPolicy => {
 
-                    if (leave.STATUS !== "PENDING") {
-                        throw "Invalid Leave";
-                    }
+					// check if current policy is bigger than policy level
+					if (policyType === "EVERYONE" && currentPolicy.approvalLevel > policyLevel) {
+						// find all leave with policy == policyLevel and is pending
+						const filter = ["(TENANT_GUID=" + tenantId + ")", "(CURRENT_APPROVAL_LEVEL=" + policyLevel + ")", "(STATUS=PENDING)"]
 
-                    // return this.getApprovalPolicy()
-                    return this.getApprovalPolicyTemp(leaveTransactionId)
-                        .pipe(
-                            map(currentPolicy => {
-                                return { currentPolicy, leave }
-                            })
-                        )
-                }),
-                mergeMap(result => {
-                    if (result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
-                        result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel']]);
-                    } else {
-                        result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove]);
-                    }
+						return this.leaveTransactionService.findByFilterV2([], filter);
+					}
+				}),
+				filter(x => x.length > 0),
+				mergeMap((leaveTransaction: LeaveTransactionModel[]) => {
+					const resource = new Resource(new Array());
+					leaveTransaction.forEach(element => {
+						element.STATUS = "APPROVED";
 
-                    result.leave.UPDATE_USER_GUID = approverUserId;
+						resource.resource.push(element);
+					});
 
-                    const resource = new Resource(new Array());
+					if (resource.resource.length > 0) {
+						return this.leaveTransactionService.updateByModel(resource, [], [], [])
+							.pipe(
+								map(data => {
+									if (data.status != 200) {
+										throw "Update error";
+									}
+									return data.data.resource;
+								})
+							)
+					}
+				})
+			)
+	}
 
-                    resource.resource.push(result.leave);
 
-                    return this.leaveTransactionService.updateByModel(resource, [], [], [])
-                        .pipe(map(res => {
-                            if (res.status != 200) {
-                                throw "Fail to Update Leave Transaction";
-                            }
+	/**
+	 * Method on approve reject
+	 *
+	 * @param {string} leaveTransactionId
+	 * @param {string} tenantId
+	 * @param {string} approverUserId
+	 * @param {boolean} isApprove
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	onApproveReject([leaveTransactionId, tenantId, approverUserId, isApprove]: [string, string, string, boolean]) {
 
-                            return res.data.resource;
-                        }))
+		return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
+			.pipe(
+				mergeMap((leaveDetail: LeaveTransactionModel[]) => {
+					if (leaveDetail.length == 0) {
+						throw "Leave detail not found";
+					}
 
-                })
-            )
+					const leave = leaveDetail[0];
 
-    }
+					if (leave.STATUS !== "PENDING") {
+						throw "Invalid Leave";
+					}
 
-    // private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {
 
-    /**
-     * Method vertical level
-     *
-     * @private
-     * @param {[LeaveTransactionModel, string, boolean, number]} [leave, approverUserId, isApprove, currentPolicyLevel]
-     * @returns
-     * @memberof ApprovalService
-     */
-    private verticalLevel([leave, approverUserId, isApprove, currentPolicyLevel]: [LeaveTransactionModel, string, boolean, number]) {
-        leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL + 1);
 
-        if (leave.STATES == null || leave.STATES == '') {
-            leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId)));
-        } else {
-            const currentStates = JSON.parse(leave.STATES);
-            currentStates.push(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId));
 
-            leave.STATES = JSON.stringify(currentStates);
-        }
+					// return this.getApprovalPolicy()
+					return this.getApprovalPolicyTemp(leaveTransactionId)
+						.pipe(
+							map(currentPolicy => {
+								return { currentPolicy, leave }
+							})
+						)
+				}),
+				mergeMap(async result => {
+					// validate manager approval
+					let resDatatemp = await this.getManagerList([result.leave.USER_GUID]).then(res => { return res; });
 
-        if (isApprove) {
-            if (leave.CURRENT_APPROVAL_LEVEL == currentPolicyLevel) {
-                leave.STATUS = "APPROVED";
-            } else {
-                leave.STATUS = "PENDING";
-            }
-        } else {
-            leave.STATUS = "REJECTED";
-        }
+					if (!resDatatemp.includes(approverUserId)) {
+						throw "Approval process not valid"; // User is not his/her manager
+					} else {
+						// Check current approval level
+						if (result.leave.STATES != null && result.leave.STATES != '') {
+							const currentStates = JSON.parse(result.leave.STATES);
+							const approveMngId = currentStates.filter(x => x.userId === approverUserId);
+							// check if manager already approve
+							if (approveMngId.length > 0)
+								throw "You already approve this employee";
+						}
+					}
 
-        return leave;
+					if (result.currentPolicy['approvalType'].toUpperCase() === "ANYONE" || result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
+						result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel']]);
+					} else {
+						result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove]);
+					}
 
-    }
+					result.leave.UPDATE_USER_GUID = approverUserId;
 
-    /**
-     * Method horizontal level
-     *
-     * @private
-     * @param {LeaveTransactionModel} leave
-     * @param {string} approverUserId
-     * @param {boolean} isApprove
-     * @returns
-     * @memberof ApprovalService
-     */
-    // private horizontalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean) {
+					const resource = new Resource(new Array());
 
-    private horizontalLevel([leave, approverUserId, isApprove]: [LeaveTransactionModel, string, boolean]) {
-        // only 1 level vertically
-        leave.CURRENT_APPROVAL_LEVEL = 1;
+					resource.resource.push(result.leave);
 
-        leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId)));
+					return this.leaveTransactionService.updateByModel(resource, [], [], [])
+						.pipe(map(res => {
+							if (res.status != 200) {
+								throw "Fail to Update Leave Transaction";
+							}
 
-        if (isApprove) {
-            leave.STATUS = "APPROVED";
-        } else {
-            leave.STATUS = "REJECTED";
-        }
+							return res.data.resource;
+						}))
 
-        return leave;
-    }
+				}), mergeMap(res => {
+					return res;
+				})
+			)
+
+	}
+
+	// private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {
+
+	/**
+	 * Method vertical level
+	 *
+	 * @private
+	 * @param {[LeaveTransactionModel, string, boolean, number]} [leave, approverUserId, isApprove, currentPolicyLevel]
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	private verticalLevel([leave, approverUserId, isApprove, currentPolicyLevel]: [LeaveTransactionModel, string, boolean, number]) {
+		leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL + 1);
+
+		if (leave.STATES == null || leave.STATES == '') {
+			leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId)));
+		} else {
+			const currentStates = JSON.parse(leave.STATES);
+			currentStates.push(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId));
+
+			leave.STATES = JSON.stringify(currentStates);
+		}
+
+		if (isApprove) {
+			if (leave.CURRENT_APPROVAL_LEVEL == currentPolicyLevel) {
+				leave.STATUS = "APPROVED";
+			} else {
+				leave.STATUS = "PENDING";
+			}
+		} else {
+			leave.STATUS = "REJECTED";
+		}
+
+		return leave;
+
+	}
+
+	/**
+	 * Method horizontal level
+	 *
+	 * @private
+	 * @param {LeaveTransactionModel} leave
+	 * @param {string} approverUserId
+	 * @param {boolean} isApprove
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	// private horizontalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean) {
+
+	private horizontalLevel([leave, approverUserId, isApprove]: [LeaveTransactionModel, string, boolean]) {
+		// only 1 level vertically
+		leave.CURRENT_APPROVAL_LEVEL = 1;
+
+		leave.STATES = JSON.stringify(new Array<STATESDTO>(new STATESDTO(leave.CURRENT_APPROVAL_LEVEL, approverUserId)));
+
+		if (isApprove) {
+			leave.STATUS = "APPROVED";
+		} else {
+			leave.STATUS = "REJECTED";
+		}
+
+		return leave;
+	}
 
 
 }

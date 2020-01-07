@@ -21,6 +21,7 @@ import { CommonFunctionService } from '../../common/helper/common-function.servi
 import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation-parent.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { GeneralLeavePolicyService } from '../../admin/general-leave-policy/general-leave-policy.service';
+import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 
 /**
  * Module for leave
@@ -52,7 +53,8 @@ import { GeneralLeavePolicyService } from '../../admin/general-leave-policy/gene
     AccessLevelValidateService,
     CommonFunctionService,
     LeaveBalanceValidationParentService,
-    GeneralLeavePolicyService
+    GeneralLeavePolicyService,
+    UserprofileDbService
   ],
 })
 export class LeaveModule { }

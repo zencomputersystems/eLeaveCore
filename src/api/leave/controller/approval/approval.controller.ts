@@ -1,6 +1,6 @@
-import { Controller, UseGuards, Post, Body, Req, Res } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Req, Res, Get, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger'
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 import { ApprovedLeaveDTO } from '../../dto/approved-leave.dto';
@@ -66,11 +66,18 @@ export class ApprovedController {
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
                     res.send(err);
                 }
             )
 
+    }
+
+    @Get('leave/manager-list/:id')
+    @ApiOperation({ title: 'Get manager list' })
+    @ApiImplicitParam({ name: 'id', description: 'User guid', required: true })
+    async getManagerList(@Param('id') id, @Res() res) {
+        let results = await this.approvedService.getManagerList([id]);
+        res.send(results);
     }
 
     /**

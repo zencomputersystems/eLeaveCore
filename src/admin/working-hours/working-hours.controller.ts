@@ -8,6 +8,9 @@ import { UpdateWorkingHoursDTO } from './dto/update-working-hours.dto';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { Roles } from 'src/decorator/resource.decorator';
+import { map } from 'rxjs/operators';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Controller for working hours
@@ -41,7 +44,17 @@ export class WorkingHoursController {
   @Get('/working-hours-profile')
   @ApiOperation({ title: 'Get working hours profile list' })
   findAllWorkingHours(@Req() req, @Res() res) {
-    this.commonFunctionService.runGetServiceV2(this.workingHoursService.findWorkingHoursProfile(req.user), res);
+    let method = this.workingHoursService.findWorkingHoursProfile(req.user).pipe(
+      map(res => {
+        res.forEach(element => {
+          let workingHoursJson = convertXMLToJson(element['properties_xml']);
+          element['time'] = workingHoursJson.property.fullday;
+          delete element['properties_xml'];
+        });
+
+        return res;
+      }));
+    this.commonFunctionService.runGetServiceV2(method, res);
   }
 
   /**

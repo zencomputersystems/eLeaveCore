@@ -44,7 +44,7 @@ export class WorkingHoursService {
    * @memberof WorkingHoursService
    */
   public findWorkingHoursProfile(user) {
-    let url = this.workingHoursDbService.queryService.generateDbQueryV2('l_view_working_hours_profile', ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
+    let url = this.workingHoursDbService.queryService.generateDbQueryV2('l_view_working_hours_profile', ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION', 'PROPERTIES_XML', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
     return this.assignerDataService.processProfile([url, this.workingHoursDbService, WorkingHoursListDTO]);
     // return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
     //   if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); }

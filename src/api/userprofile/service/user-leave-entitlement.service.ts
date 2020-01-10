@@ -11,7 +11,7 @@ import { LeaveTypeEntitlementModel } from 'src/admin/leavetype-entitlement/model
 import { Resource } from 'src/common/model/resource.model';
 import { IDbService } from 'src/interface/IDbService';
 import * as moment from 'moment';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
@@ -56,19 +56,65 @@ export class UserLeaveEntitlementService {
         // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService
     ) { }
 
+    // /**
+    //  * Method get entitlement list
+    //  *
+    //  * @param {string} tenantId
+    //  * @param {string} userId
+    //  * @returns
+    //  * @memberof UserLeaveEntitlementService
+    //  */
+    // public getEntitlementListTemp(tenantId: string, userId: string) {
+    //     const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')'];
+    //     const fields = ['LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
+
+    //     return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter);
+    // }
     /**
-     * Method get entitlement list
-     *
-     * @param {string} tenantId
-     * @param {string} userId
-     * @returns
-     * @memberof UserLeaveEntitlementService
-     */
+         * Method get entitlement list
+         *
+         * @param {string} tenantId
+         * @param {string} userId
+         * @returns
+         * @memberof UserLeaveEntitlementService
+         */
     public getEntitlementList(tenantId: string, userId: string) {
-        const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')'];
+        const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')', '(YEAR=' + moment().format('YYYY') + ')'];
         const fields = ['LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
 
-        return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter);
+        return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter).pipe(
+            mergeMap(res => {
+                let arrTemp = [];
+                res.forEach(element => {
+                    arrTemp.push(element.ENTITLEMENT_GUID);
+                });
+                let entitlementPolicy = this.userEntitlementAssignEntitlement.leaveEntitlementDbService.findByFilterV2([], ['(ENTITLEMENT_GUID IN (' + arrTemp + '))']);
+                // return { res, entitlementPolicy };
+                return forkJoin(of(res), entitlementPolicy);
+            }), map(res => {
+                let entitlementData = res[0];
+                let leavetypePolicy = res[1];
+                entitlementData.forEach(element => {
+                    let findData = leavetypePolicy.find(x => x.ENTITLEMENT_GUID === element.ENTITLEMENT_GUID);
+                    let leavePolicy = convertXMLToJson(findData.PROPERTIES_XML);
+
+                    if (leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-confirm to current month').toUpperCase() || leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-join to current month').toUpperCase()) {
+                        let currentmonth = moment().format('M') as any;
+                        let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
+                        earnedLeave = (Math.floor(earnedLeave * 4) / 4);
+                        element.ENTITLED_DAYS = earnedLeave;
+                        element.BALANCE_DAYS = (element.ENTITLED_DAYS - element.TOTAL_APPROVED - element.TOTAL_PENDING);
+                    }
+                    element.TOTAL_APPROVED = element.TOTAL_APPROVED.toFixed(2);
+                    element.TOTAL_PENDING = element.TOTAL_PENDING.toFixed(2);
+
+                    element.ENTITLED_DAYS = element.ENTITLED_DAYS.toFixed(2);
+                    element.BALANCE_DAYS = element.BALANCE_DAYS.toFixed(2);
+
+                });
+                return entitlementData;
+            })
+        );
     }
 
     /**

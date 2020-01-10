@@ -29,6 +29,8 @@ import { UserProfileStatusService } from './service/userprofile-status.service';
 import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-details.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { PassportModule } from '@nestjs/passport';
+import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation-parent.service';
+import { EntitledFullService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/entitledFull.service';
 
 /**
  * Module for user profile
@@ -58,7 +60,9 @@ import { PassportModule } from '@nestjs/passport';
     UserInfoDbService,
     UserService,
     UserProfileStatusService,
-    UserInfoDetailsService
+    UserInfoDetailsService,
+    LeaveBalanceValidationParentService,
+    EntitledFullService
   ],
   imports: [
     PassportModule.register({ session: false }),

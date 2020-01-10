@@ -57,6 +57,9 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
         // convert date of join to moment type
         const dateMoment = moment(date, 'YYYY-MM-DD');
 
+        const dateJoinYear = moment(date, 'YYYY-MM-DD').format("YYYY");
+        const currentYear = moment().format("YYYY");
+
         // join month entitlement will be calculated based on days
         const monthJoin = dateMoment.month() + 1;
 
@@ -70,7 +73,8 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
 
         const currentYearActualEntitlement = this.calculateEntitlement([dateMoment, leavePolicy, yearOfService, monthFullEntitlement, "END"])
 
-        if (yearOfService <= 1) {
+        if (yearOfService <= 1 && dateJoinYear == currentYear) {
+            // if (yearOfService <= 1) {
 
             // for december in 1st working year of service, we ignore other month
             return currentYearActualEntitlement;

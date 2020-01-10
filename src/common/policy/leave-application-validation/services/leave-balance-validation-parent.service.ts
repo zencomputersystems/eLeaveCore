@@ -45,19 +45,19 @@ export class LeaveBalanceValidationParentService {
     const serviceYear = this.workingYearService.calculateEmployeeServiceYear(new Date(userInfo.JOIN_DATE));
 
     switch (policy.leaveEntitlementType.toUpperCase()) {
-      case ('Entitled in full').toUpperCase():
+      case ('Entitled in full').toUpperCase(): // Join month 6 get all entitled days in year
         parentBalance = this.entitledInFullService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
         break;
-      case ('Prorated from date-of-confirm to current month').toUpperCase():
+      case ('Prorated from date-of-confirm to current month').toUpperCase(): // Confirm month 6 pro rated to current month
         parentBalance = this.proratedDateMonthService.calculateEntitledLeave(new Date(userInfo.CONFIRMATION_DATE), serviceYear, policy);
         break;
-      case ('Prorated from date-of-join to current month').toUpperCase():
+      case ('Prorated from date-of-join to current month').toUpperCase(): // Join month 6 pro rated to current month
         parentBalance = this.proratedDateMonthService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
         break;
-      case ('Prorated from date-of-confirm to end of year').toUpperCase():
+      case ('Prorated from date-of-confirm to end of year').toUpperCase(): // Confirm month 6 pro rated entitled in year
         parentBalance = this.proratedDateEndYearService.calculateEntitledLeave(new Date(userInfo.JOIN_DATE), serviceYear, policy);
         break;
-      case ('Prorated from date-of-join to end of year').toUpperCase():
+      case ('Prorated from date-of-join to end of year').toUpperCase(): // Join month 6 pro rated entitled in year
         parentBalance = this.proratedDateEndYearService.calculateEntitledLeave(new Date(userInfo.CONFIRMATION_DATE), serviceYear, policy);
         break;
       default:

@@ -144,10 +144,11 @@ export class UserEntitlementAssignEntitlement {
         }), mergeMap(res => {
           // assign status user already entitled
           if (res != 'success') {
-            userStatus = {};
+
             let tempSuccess = [];
             const sizeData = successList.length;
             for (let i = 0; i < sizeData; i++) {
+              userStatus = {};
               let element = successList[i];
               let checkUser = res.filter(x => x.USER_GUID === element);
 

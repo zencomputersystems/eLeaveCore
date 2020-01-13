@@ -84,6 +84,9 @@ export class UserLeaveEntitlementService {
 
         return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter).pipe(
             mergeMap(res => {
+                if (res.length == 0)
+                    return of([]);
+
                 let arrTemp = [];
                 res.forEach(element => {
                     arrTemp.push(element.ENTITLEMENT_GUID);
@@ -92,6 +95,9 @@ export class UserLeaveEntitlementService {
                 // return { res, entitlementPolicy };
                 return forkJoin(of(res), entitlementPolicy);
             }), map(res => {
+                if (res.length == 0)
+                    return [];
+
                 let entitlementData = res[0];
                 let leavetypePolicy = res[1];
                 entitlementData.forEach(element => {

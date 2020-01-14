@@ -108,12 +108,17 @@ export class UserLeaveEntitlementService {
                         let currentmonth = moment().format('M') as any;
                         let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
                         earnedLeave = (Math.floor(earnedLeave * 4) / 4);
-                        element.ENTITLED_DAYS = earnedLeave;
-                        element.BALANCE_DAYS = (element.ENTITLED_DAYS - element.TOTAL_APPROVED - element.TOTAL_PENDING);
+                        element.EARNED_LEAVE = earnedLeave;
+                    } else {
+                        element.EARNED_LEAVE = element.ENTITLED_DAYS;
                     }
+
+                    element.BALANCE_DAYS = (element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING);
+
                     element.TOTAL_APPROVED = element.TOTAL_APPROVED.toFixed(2);
                     element.TOTAL_PENDING = element.TOTAL_PENDING.toFixed(2);
 
+                    element.EARNED_LEAVE = element.EARNED_LEAVE.toFixed(2);
                     element.ENTITLED_DAYS = element.ENTITLED_DAYS.toFixed(2);
                     element.BALANCE_DAYS = element.BALANCE_DAYS.toFixed(2);
 

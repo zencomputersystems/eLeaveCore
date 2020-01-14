@@ -177,6 +177,7 @@ export class DashboardController {
 
 				dataToShow['leave_transaction_guid'] = element.LEAVE_TRANSACTION_GUID
 				dataToShow['message'] = userData.FULLNAME + ' requested leave on ' + element.START_DATE;
+				dataToShow['reason'] = element.REASON;
 				dataToShow['status'] = element.STATUS;
 				dataToShow['start_date'] = element.START_DATE;
 				dataToShow['end_date'] = element.END_DATE;

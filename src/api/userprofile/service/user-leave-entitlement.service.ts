@@ -21,6 +21,7 @@ import { UserEntitlementAssignPolicy } from './userentitlement-assign-policy.ser
 import { UserEntitlementAssignEntitlement } from './userentitlement-assign-entitlement.service';
 // import { UpdateUserLeaveEntitlementDTO } from '../dto/leave-entitlement/update-user-leave-entitlement.dto';
 import { CreateReplacementLeaveDTO } from '../dto/leave-entitlement/create-replacement-leave.dto';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -50,10 +51,11 @@ export class UserLeaveEntitlementService {
         // private readonly userDbService: UserprofileDbService,
         // private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
         // private readonly userInfoDbService: UserInfoService,
-        private readonly userEntitlementAssignEntitlement: UserEntitlementAssignEntitlement
+        private readonly userEntitlementAssignEntitlement: UserEntitlementAssignEntitlement,
         // private readonly serviceYearCalcService: ServiceYearCalc,
         // private readonly proratedMonthEndYearService: ProratedDateEndYearService,
-        // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService
+        // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService,
+        private readonly entitlementRoundingService: EntitlementRoundingService
     ) { }
 
     // /**
@@ -107,7 +109,9 @@ export class UserLeaveEntitlementService {
                     if (leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-confirm to current month').toUpperCase() || leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-join to current month').toUpperCase()) {
                         let currentmonth = moment().format('M') as any;
                         let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
-                        earnedLeave = (Math.floor(earnedLeave * 4) / 4);
+
+                        earnedLeave = this.entitlementRoundingService.leaveEntitlementRounding(earnedLeave, leavePolicy.leaveEntitlementRounding);
+                        // earnedLeave = (Math.floor(earnedLeave * 4) / 4);
                         element.EARNED_LEAVE = earnedLeave;
                     } else {
                         element.EARNED_LEAVE = element.ENTITLED_DAYS;

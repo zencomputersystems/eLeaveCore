@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
@@ -17,4 +17,16 @@ export class ApprovedLeaveDTO {
     @ApiModelProperty({ description: 'Leave transaction guid', example: '0624d2b0-bda9-11e9-8428-0521341e5440' })
     @IsNotEmpty()
     id: string;
+
+
+    /**
+     * Data approved leave - reason
+     *
+     * @type {string}
+     * @memberof ApprovedLeaveDTO
+     */
+    @ApiModelProperty({ description: 'Reason', example: 'Happy holiday' })
+    @IsString()
+    reason: string;
+
 }

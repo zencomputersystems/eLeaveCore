@@ -6,6 +6,7 @@ import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.mod
 import { STATESDTO } from '../dto/states.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { UserprofileDbService } from '../../../api/userprofile/db/userprofile.db.service';
+import { ApprovedLeaveDTO } from 'src/api/leave/dto/approved-leave.dto';
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
@@ -174,8 +175,9 @@ export class ApprovalService {
 	 * @returns
 	 * @memberof ApprovalService
 	 */
-	onApproveReject([leaveTransactionId, tenantId, approverUserId, isApprove]: [string, string, string, boolean]) {
-
+	onApproveReject([leaveTransaction, tenantId, approverUserId, isApprove]: [ApprovedLeaveDTO, string, string, boolean]) {
+		const leaveTransactionId = leaveTransaction.id;
+		const leaveTransactionReason = leaveTransaction.reason;
 		return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
 			.pipe(
 				mergeMap((leaveDetail: LeaveTransactionModel[]) => {
@@ -224,6 +226,7 @@ export class ApprovalService {
 					}
 
 					result.leave.UPDATE_USER_GUID = approverUserId;
+					result.leave.REMARKS = leaveTransactionReason;
 
 					const resource = new Resource(new Array());
 

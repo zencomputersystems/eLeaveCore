@@ -48,29 +48,29 @@ export class ApprovedController {
             )
     }
 
-    /**
-     * Approved leave
-     *
-     * @param {ApprovedLeaveDTO} approvedLeaveDTO
-     * @param {*} req
-     * @param {*} res
-     * @memberof ApprovedController
-     */
-    @Post('leave/approved')
-    @ApiOperation({ title: 'Approved Leave' })
-    approved(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
+    // /**
+    //  * Approved leave
+    //  *
+    //  * @param {ApprovedLeaveDTO} approvedLeaveDTO
+    //  * @param {*} req
+    //  * @param {*} res
+    //  * @memberof ApprovedController
+    //  */
+    // @Post('leave/approved')
+    // @ApiOperation({ title: 'Approved Leave' })
+    // approved(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
 
-        this.approvedService.onApproveReject([approvedLeaveDTO.id, req.user.TENANT_GUID, req.user.USER_GUID, true])
-            .subscribe(
-                data => {
-                    res.send(data);
-                },
-                err => {
-                    res.send(err);
-                }
-            )
+    //     this.approvedService.onApproveReject([approvedLeaveDTO, req.user.TENANT_GUID, req.user.USER_GUID, true])
+    //         .subscribe(
+    //             data => {
+    //                 res.send(data);
+    //             },
+    //             err => {
+    //                 res.send(err);
+    //             }
+    //         )
 
-    }
+    // }
 
     @Get('leave/manager-list/:id')
     @ApiOperation({ title: 'Get manager list' })
@@ -80,30 +80,57 @@ export class ApprovedController {
         res.send(results);
     }
 
+    // /**
+    //  * Rejected leave
+    //  *
+    //  * @param {ApprovedLeaveDTO} approvedLeaveDTO
+    //  * @param {*} req
+    //  * @param {*} res
+    //  * @memberof ApprovedController
+    //  */
+    // @Post('leave/rejected')
+    // @ApiOperation({ title: 'Approved Leave' })
+    // rejected(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
+
+    //     this.approvedService.onApproveReject([approvedLeaveDTO, req.user.TENANT_GUID, req.user.USER_GUID, false])
+    //         .subscribe(
+    //             data => {
+    //                 res.send(data);
+    //             },
+    //             err => {
+    //                 console.log(err);
+    //                 res.send(err);
+    //             }
+    //         )
+
+    // }
+
     /**
-     * Rejected leave
+     * Combine approve and reject leave
      *
+     * @param {*} statusApprove
      * @param {ApprovedLeaveDTO} approvedLeaveDTO
      * @param {*} req
      * @param {*} res
      * @memberof ApprovedController
      */
-    @Post('leave/rejected')
+    @Post('leave/:status')
     @ApiOperation({ title: 'Approved Leave' })
-    rejected(@Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
-
-        this.approvedService.onApproveReject([approvedLeaveDTO.id, req.user.TENANT_GUID, req.user.USER_GUID, false])
+    @ApiImplicitParam({ name: 'status', description: 'Process status', enum: ['approved', 'rejected'] })
+    approveOrReject(@Param('status') statusApprove, @Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
+        const statusInput = statusApprove == 'approved' ? true : false; // set whether status approve or reject 
+        this.approvedService.onApproveReject([approvedLeaveDTO, req.user.TENANT_GUID, req.user.USER_GUID, statusInput])
             .subscribe(
                 data => {
+                    // console.log(data);
                     res.send(data);
                 },
                 err => {
-                    console.log(err);
+                    // console.log(err);
                     res.send(err);
                 }
             )
 
     }
-
 
 }

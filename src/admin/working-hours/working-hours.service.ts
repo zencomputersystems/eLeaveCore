@@ -13,6 +13,7 @@ import { UpdateWorkingHoursModel } from './model/update-working-hours.model';
 import { UpdateUserWorkingHoursDTO } from './dto/update-userworkinghours.dto';
 import { UpdateUserWorkingHoursModel } from './model/update-userworkinghours.model';
 import { Observable } from 'rxjs';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -34,7 +35,8 @@ export class WorkingHoursService {
   constructor(
     private readonly workingHoursDbService: WorkingHoursDbService,
     private readonly assignerDataService: AssignerDataService,
-    private readonly userinfoDbService: UserInfoDbService
+    private readonly userinfoDbService: UserInfoDbService,
+    private readonly userprofileDbService: UserprofileDbService
   ) { }
 
   /**
@@ -175,8 +177,8 @@ export class WorkingHoursService {
    * @memberof WorkingHoursService
    */
   deleteWorkingHours(user: any, working_hours_guid: string) {
-    const filters = ['(WORKING_HOURS_GUID=' + working_hours_guid + ')'];
-    return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteProcessWorkingHours(user, working_hours_guid));
+    const filters = ['(WORKING_HOURS_GUID=' + working_hours_guid + ')', 'AND (TENANT_GUID=' + user.TENANT_GUID + ')', 'AND (DELETED_AT IS NULL)'];
+    return this.userprofileDbService.findEmployeeAndDelete([filters, this.deleteProcessWorkingHours(user, working_hours_guid)]);
   }
 
   /**

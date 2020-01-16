@@ -7,6 +7,7 @@ import { RoleDbService } from './db/role.db.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 
 /**
  * Module for role
@@ -25,7 +26,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
         RoleDbService,
         AssignerDataService,
         UserInfoDbService,
-        CommonFunctionService
+        CommonFunctionService,
+        UserprofileDbService
     ],
     controllers: [RoleController]
 })

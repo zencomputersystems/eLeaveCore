@@ -106,62 +106,62 @@ export class UserInfoDbService extends BaseDBService {
         return this.updateByModel(resource, [], ['(USER_INFO_GUID=' + user_info_guid + ')'], ['PROPERTIES_XML']);
     }
 
-    /**
-     * Find employee attach
-     *
-     * @param {string[]} filters
-     * @returns {Observable<any>}
-     * @memberof UserInfoDbService
-     */
-    public findEmployeeAttach(filters: string[]): Observable<any> {
-        return this.findEmployeeAssign(filters)
-            .pipe(map(res => {
-                if (res.status == 200) {
-                    return res.data.resource;
-                }
-            }))
-    }
+    // /**
+    //  * Find employee attach
+    //  *
+    //  * @param {string[]} filters
+    //  * @returns {Observable<any>}
+    //  * @memberof UserInfoDbService
+    //  */
+    // public findEmployeeAttach(filters: string[]): Observable<any> {
+    //     return this.findEmployeeAssign(filters)
+    //         .pipe(map(res => {
+    //             if (res.status == 200) {
+    //                 return res.data.resource;
+    //             }
+    //         }))
+    // }
 
-    /**
-     * Find employee and delete
-     *
-     * @param {string[]} filters
-     * @param {*} method
-     * @returns {Observable<any>}
-     * @memberof UserInfoDbService
-     */
-    public findEmployeeAndDelete(filters: string[], method): Observable<any> {
-        return this.findEmployeeAssign(filters).pipe(
-            mergeMap(res => {
-                if (res.data.resource.length > 0) {
-                    // will return user attach to this profile
-                    return of(res);
-                } else {
-                    // will show deleted profile
-                    let deletedData = method;
-                    return deletedData;
-                }
-            }),
-        );
-    }
+    // /**
+    //  * Find employee and delete
+    //  *
+    //  * @param {string[]} filters
+    //  * @param {*} method
+    //  * @returns {Observable<any>}
+    //  * @memberof UserInfoDbService
+    //  */
+    // public findEmployeeAndDelete(filters: string[], method): Observable<any> {
+    //     return this.findEmployeeAssign(filters).pipe(
+    //         mergeMap(res => {
+    //             if (res.data.resource.length > 0) {
+    //                 // will return user attach to this profile
+    //                 return of(res);
+    //             } else {
+    //                 // will show deleted profile
+    //                 let deletedData = method;
+    //                 return deletedData;
+    //             }
+    //         }),
+    //     );
+    // }
 
-    /**
-     * Find list employee assign to calendar
-     *
-     * @param {string} calendarProfileId
-     * @returns {Observable<any>}
-     * @memberof UserInfoDbService
-     */
-    public findEmployeeAssign(filters: string[]): Observable<any> {
+    // /**
+    //  * Find list employee assign to calendar
+    //  *
+    //  * @param {string} calendarProfileId
+    //  * @returns {Observable<any>}
+    //  * @memberof UserInfoDbService
+    //  */
+    // public findEmployeeAssign(filters: string[]): Observable<any> {
 
-        const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
-        // const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
+    //     const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
+    //     // const filters = ['(CALENDAR_GUID=' + calendarProfileId + ')'];
 
-        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
-        //call DF to validate the user
-        return this.httpService.get(url);
+    //     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, null, null]);
+    //     //call DF to validate the user
+    //     return this.httpService.get(url);
 
-    }
+    // }
 
     /**
      * Find user info

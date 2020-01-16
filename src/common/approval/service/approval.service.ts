@@ -175,7 +175,7 @@ export class ApprovalService {
 	 * @returns
 	 * @memberof ApprovalService
 	 */
-	onApproveReject([leaveTransaction, tenantId, approverUserId, isApprove]: [ApprovedLeaveDTO, string, string, boolean]) {
+	onApproveReject([leaveTransaction, tenantId, approverUserId, isApprove, statusApprove]: [ApprovedLeaveDTO, string, string, boolean, string]) {
 		const leaveTransactionId = leaveTransaction.id;
 		const leaveTransactionReason = leaveTransaction.reason;
 		return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
@@ -203,26 +203,28 @@ export class ApprovalService {
 						)
 				}),
 				mergeMap(async result => {
-					// validate manager approval
-					let resDatatemp = await this.getManagerList([result.leave.USER_GUID]).then(res => { return res; });
+					if (statusApprove == 'approved' || statusApprove == 'rejected') {
+						// validate manager approval
+						let resDatatemp = await this.getManagerList([result.leave.USER_GUID]).then(res => { return res; });
 
-					if (!resDatatemp.includes(approverUserId)) {
-						throw "Approval process not valid"; // User is not his/her manager
-					} else {
-						// Check current approval level
-						if (result.leave.STATES != null && result.leave.STATES != '') {
-							const currentStates = JSON.parse(result.leave.STATES);
-							const approveMngId = currentStates.filter(x => x.userId === approverUserId);
-							// check if manager already approve
-							if (approveMngId.length > 0)
-								throw "You already approve this employee";
+						if (!resDatatemp.includes(approverUserId)) {
+							throw "Approval process not valid"; // User is not his/her manager
+						} else {
+							// Check current approval level
+							if (result.leave.STATES != null && result.leave.STATES != '') {
+								const currentStates = JSON.parse(result.leave.STATES);
+								const approveMngId = currentStates.filter(x => x.userId === approverUserId);
+								// check if manager already approve
+								if (approveMngId.length > 0)
+									throw "You already approve this employee";
+							}
 						}
 					}
 
 					if (result.currentPolicy['approvalType'].toUpperCase() === "ANYONE" || result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
-						result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel']]);
+						result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel'], statusApprove]);
 					} else {
-						result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove]);
+						result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove, statusApprove]);
 					}
 
 					result.leave.UPDATE_USER_GUID = approverUserId;
@@ -258,7 +260,7 @@ export class ApprovalService {
 	 * @returns
 	 * @memberof ApprovalService
 	 */
-	private verticalLevel([leave, approverUserId, isApprove, currentPolicyLevel]: [LeaveTransactionModel, string, boolean, number]) {
+	private verticalLevel([leave, approverUserId, isApprove, currentPolicyLevel, statusApprove]: [LeaveTransactionModel, string, boolean, number, string]) {
 		leave.CURRENT_APPROVAL_LEVEL = (leave.CURRENT_APPROVAL_LEVEL + 1);
 
 		if (leave.STATES == null || leave.STATES == '') {
@@ -278,6 +280,12 @@ export class ApprovalService {
 			}
 		} else {
 			leave.STATUS = "REJECTED";
+			if (statusApprove == 'cancel') {
+				leave.STATUS = "CANCEL";
+				leave.CURRENT_APPROVAL_LEVEL = null;
+				leave.STATES = null;
+			}
+
 		}
 
 		return leave;
@@ -296,7 +304,7 @@ export class ApprovalService {
 	 */
 	// private horizontalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean) {
 
-	private horizontalLevel([leave, approverUserId, isApprove]: [LeaveTransactionModel, string, boolean]) {
+	private horizontalLevel([leave, approverUserId, isApprove, statusApprove]: [LeaveTransactionModel, string, boolean, string]) {
 		// only 1 level vertically
 		leave.CURRENT_APPROVAL_LEVEL = 1;
 
@@ -306,6 +314,12 @@ export class ApprovalService {
 			leave.STATUS = "APPROVED";
 		} else {
 			leave.STATUS = "REJECTED";
+			if (statusApprove == 'cancel') {
+				leave.STATUS = "CANCEL";
+				leave.CURRENT_APPROVAL_LEVEL = 0;
+				leave.STATES = null;
+			}
+
 		}
 
 		return leave;

@@ -1,9 +1,10 @@
-import { Controller, UseGuards, Post, Body, Req, Res, Get, Param } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Req, Res, Get, Param, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger'
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 import { ApprovedLeaveDTO } from '../../dto/approved-leave.dto';
+import { of } from 'rxjs';
 
 /**
  * Controller for approve leave
@@ -116,21 +117,45 @@ export class ApprovedController {
      */
     @Post('leave/:status')
     @ApiOperation({ title: 'Approved Leave' })
-    @ApiImplicitParam({ name: 'status', description: 'Process status', enum: ['approved', 'rejected'] })
+    @ApiImplicitParam({ name: 'status', description: 'Process status', enum: ['approved', 'rejected', 'cancel'] })
     approveOrReject(@Param('status') statusApprove, @Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
-        const statusInput = statusApprove == 'approved' ? true : false; // set whether status approve or reject 
-        this.approvedService.onApproveReject([approvedLeaveDTO, req.user.TENANT_GUID, req.user.USER_GUID, statusInput])
-            .subscribe(
-                data => {
-                    // console.log(data);
-                    res.send(data);
-                },
-                err => {
-                    // console.log(err);
-                    res.send(err);
-                }
-            )
 
+        const statusInput = statusApprove == 'approved' ? true : false; // set whether status approve or reject 
+        this.approvedService.onApproveReject([approvedLeaveDTO, req.user.TENANT_GUID, req.user.USER_GUID, statusInput, statusApprove]).subscribe(
+            data => {
+                // console.log(data);
+                res.send(data);
+            },
+            err => {
+                // console.log(err);
+                res.send(err);
+            }
+        )
+
+    }
+
+    /**
+     * Test error code
+     *
+     * @param {*} res
+     * @memberof ApprovedController
+     */
+    @Post('error-code')
+    errorCodeTest(@Res() res) {
+        // res.send(new BadRequestException({ error: 'No process found', message: { details: 'No request', contact: 'Ang Ruo Li' } }));
+
+        of(new BadRequestException({ status: 'Hi, i am error!' })).subscribe(
+            data => {
+                console.log('u here?');
+                // console.log(data);
+                res.send(data);
+                // throw 'Data not found';
+            }, err => {
+                console.log('are u here?');
+                console.log(err);
+                res.send(err);
+            }
+        );
     }
 
 }

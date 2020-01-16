@@ -11,6 +11,7 @@ import { UserInfoDbService } from './db/user-info.db.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { CalendarProfileDbService } from './db/calendar-profile-db.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 
 /**
  * Module for holiday
@@ -32,7 +33,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     HolidayService,
     AssignerDataService,
     CommonFunctionService,
-    CalendarProfileDbService
+    CalendarProfileDbService,
+    UserprofileDbService
   ],
   controllers: [HolidayController]
 })

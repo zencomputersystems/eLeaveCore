@@ -12,6 +12,7 @@ import { UpdateRoleModel } from './model/update-role.model';
 import { UpdateUserRoleDTO } from './dto/update-userrole.dto';
 import { UpdateUserRoleModel } from './model/update-userrole.model';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -33,7 +34,8 @@ export class RoleService {
 	constructor(
 		private readonly roleDbService: RoleDbService,
 		private readonly assignerDataService: AssignerDataService,
-		private readonly userinfoDbService: UserInfoDbService
+		private readonly userinfoDbService: UserInfoDbService,
+		private readonly userprofileDbService: UserprofileDbService
 	) { }
 
 	/**
@@ -172,8 +174,8 @@ export class RoleService {
 	 * @memberof RoleService
 	 */
 	deleteRole(user: any, role_guid: string) {
-		const filters = ['(ROLE_GUID=' + role_guid + ')'];
-		return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteProcessRole(user, role_guid));
+		const filters = ['(ROLE_GUID=' + role_guid + ')', 'AND (TENANT_GUID=' + user.TENANT_GUID + ')', 'AND (DELETED_AT IS NULL)'];
+		return this.userprofileDbService.findEmployeeAndDelete([filters, this.deleteProcessRole(user, role_guid)]);
 	}
 
 	/**

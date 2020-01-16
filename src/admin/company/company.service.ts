@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { CompanyDTO } from './dto/company.dto';
 import { UpdateCompanyDTO } from './dto/update-company.dto';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+import { UserprofileDbService } from '../../api/userprofile/db/userprofile.db.service';
 
 /**
  * DB service for company
@@ -57,7 +58,8 @@ export class CompanyService {
 	constructor(
 		public companyDbService: CompanyDbService,
 		public commonFunctionService: CommonFunctionService,
-		public userinfoDbService: UserInfoDbService
+		public userinfoDbService: UserInfoDbService,
+		public userprofileDbService: UserprofileDbService
 	) {
 	}
 
@@ -181,8 +183,8 @@ export class CompanyService {
 	 * @memberof CompanyService
 	 */
 	deleteCompany(user: any, company_guid: string) {
-		const filters = ['(TENANT_COMPANY_GUID=' + company_guid + ')'];
-		return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteCompanyProcess(user, company_guid));
+		const filters = ['(TENANT_COMPANY_GUID=' + company_guid + ')', 'AND (TENANT_GUID=' + user.TENANT_GUID + ')', 'AND (DELETED_AT IS NULL)'];
+		return this.userprofileDbService.findEmployeeAndDelete([filters, this.deleteCompanyProcess(user, company_guid)]);
 	}
 
 	/**

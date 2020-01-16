@@ -10,6 +10,7 @@ import { CompanySiteService, CompanySiteDbService } from './company-site.service
 import { CompanySiteController } from './company-site.controller';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 
 /**
  * Module for company
@@ -31,7 +32,8 @@ import { UserInfoDbService } from '../holiday/db/user-info.db.service';
     // CompanySiteService,
     // CompanySiteDbService,
     CompanyDbService,
-    UserInfoDbService
+    UserInfoDbService,
+    UserprofileDbService
   ],
   controllers: [
     CompanyController,

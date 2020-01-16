@@ -14,6 +14,7 @@ import { UserInfoDbService } from './db/user-info.db.service';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 import { CalendarProfileDbService } from './db/calendar-profile-db.service';
 import { CreateHolidayDetailsModel } from './model/create-holiday-details.model';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -36,7 +37,8 @@ export class HolidayService {
 		private readonly holidayDbService: HolidayDbService,
 		private readonly userinfoDbService: UserInfoDbService,
 		private readonly assignerDataService: AssignerDataService,
-		private readonly calendarProfileDbService: CalendarProfileDbService) { }
+		private readonly calendarProfileDbService: CalendarProfileDbService,
+		private readonly userprofileDbService: UserprofileDbService) { }
 
 	/**
 	 * List holiday for selected calendar by calendar guid
@@ -214,8 +216,8 @@ export class HolidayService {
 	 * @memberof HolidayService
 	 */
 	deleteCalendar(user: any, calendar_guid: string) {
-		const filters = ['(CALENDAR_GUID=' + calendar_guid + ')'];
-		return this.userinfoDbService.findEmployeeAndDelete(filters, this.deleteProcess(user, calendar_guid));
+		const filters = ['(CALENDAR_GUID=' + calendar_guid + ')', 'AND (TENANT_GUID=' + user.TENANT_GUID + ')', 'AND (DELETED_AT IS NULL)'];
+		return this.userprofileDbService.findEmployeeAndDelete([filters, this.deleteProcess(user, calendar_guid)]);
 		// return this.userinfoDbService.findEmployeeAssign(filters).pipe(
 		//     mergeMap(res => {
 		//         if (res.data.resource.length > 0) {

@@ -50,9 +50,10 @@ export class CompanyDbService extends BaseDBService implements IDbService {
 export class CompanyService {
 	/**
 	 *Creates an instance of CompanyService.
-	 * @param {CompanyDbService} companyDbService DB service for ompany 
+	 * @param {CompanyDbService} companyDbService DB service for company 
 	 * @param {CommonFunctionService} commonFunctionService Common function service
 	 * @param {UserInfoDbService} userinfoDbService user info db service
+	 * @param {UserprofileDbService} userprofileDbService user profile db service
 	 * @memberof CompanyService
 	 */
 	constructor(

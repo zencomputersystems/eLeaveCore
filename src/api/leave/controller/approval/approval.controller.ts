@@ -4,7 +4,8 @@ import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger'
 import { ApplyLeaveDTO } from '../../dto/apply-leave.dto';
 import { ApprovalService } from 'src/common/approval/service/approval.service';
 import { ApprovedLeaveDTO } from '../../dto/approved-leave.dto';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
+import { mergeMap, map } from 'rxjs/operators';
 
 /**
  * Controller for approve leave
@@ -73,6 +74,13 @@ export class ApprovedController {
 
     // }
 
+    /**
+     * Get manager list
+     *
+     * @param {*} id
+     * @param {*} res
+     * @memberof ApprovedController
+     */
     @Get('leave/manager-list/:id')
     @ApiOperation({ title: 'Get manager list' })
     @ApiImplicitParam({ name: 'id', description: 'User guid', required: true })
@@ -144,7 +152,13 @@ export class ApprovedController {
     errorCodeTest(@Res() res) {
         // res.send(new BadRequestException({ error: 'No process found', message: { details: 'No request', contact: 'Ang Ruo Li' } }));
 
-        of(new BadRequestException({ status: 'Hi, i am error!' })).subscribe(
+        // of(new BadRequestException({ status: 'Hi, i am error!' }))
+
+        this.handleErrror().pipe(map(res => {
+            console.log(res);
+            return res;
+            // throw new Error("let see where are u belong");
+        })).subscribe(
             data => {
                 console.log('u here?');
                 // console.log(data);
@@ -156,6 +170,20 @@ export class ApprovedController {
                 res.send(err);
             }
         );
+    }
+
+    /**
+     * Handle error
+     *
+     * @private
+     * @returns
+     * @memberof ApprovedController
+     */
+    private handleErrror() {
+        // throw "Bad filter";
+        // let temp = new BadRequestException("Hi, i am error!");
+        let temp = new Error("Hi, i am error!");
+        return of(temp);
     }
 
 }

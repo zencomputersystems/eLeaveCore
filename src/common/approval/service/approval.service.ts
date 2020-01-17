@@ -7,6 +7,7 @@ import { STATESDTO } from '../dto/states.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { UserprofileDbService } from '../../../api/userprofile/db/userprofile.db.service';
 import { ApprovedLeaveDTO } from 'src/api/leave/dto/approved-leave.dto';
+/** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
@@ -21,6 +22,7 @@ export class ApprovalService {
 	/**
 	 *Creates an instance of ApprovalService.
 	 * @param {LeaveTransactionDbService} leaveTransactionService
+	 * @param {UserprofileDbService} userprofileDbService
 	 * @memberof ApprovalService
 	 */
 	constructor(
@@ -28,6 +30,13 @@ export class ApprovalService {
 		private userprofileDbService: UserprofileDbService
 	) { }
 
+	/**
+	 *Get manager list
+	 *
+	 * @param {[string]} [userId]
+	 * @returns
+	 * @memberof ApprovalService
+	 */
 	getManagerList([userId]: [string]) {
 		let managerList = this.getManagerId([userId]).then(
 			async data => {
@@ -43,6 +52,13 @@ export class ApprovalService {
 		return managerList;
 	}
 
+	/**
+	 * Get manager id
+	 *
+	 * @param {[string]} [userId]
+	 * @returns
+	 * @memberof ApprovalService
+	 */
 	async getManagerId([userId]: [string]) {
 		const getManagerProcess = () => {
 			return new Promise((resolve, reject) => {
@@ -58,6 +74,13 @@ export class ApprovalService {
 		return await getManagerProcess();
 	}
 
+	/**
+	 * Get approval policy
+	 *
+	 * @param {string} leaveTransactionId
+	 * @returns
+	 * @memberof ApprovalService
+	 */
 	getApprovalPolicyTemp(leaveTransactionId: string) {
 		return this.leaveTransactionService.findByFilterV2([], ['(LEAVE_TRANSACTION_GUID=' + leaveTransactionId + ')']).pipe(
 			map(res => {

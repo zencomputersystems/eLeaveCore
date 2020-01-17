@@ -44,6 +44,15 @@ export class UserInfoDetailsController {
   //   );
   // }
 
+  /**
+   * Activate user
+   *
+   * @param {ReactivateUserDTO} reactivateUserDTO
+   * @param {*} params
+   * @param {*} req
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
   @Post('/activate/:id')
   @ApiOperation({ title: 'Reactivate user and create new user info' })
   @ApiImplicitParam({ name: 'id', description: 'User guid' })

@@ -34,6 +34,13 @@ export class DateCalculationService {
     //  */
     // getDayDuration(startDate: moment.Moment, endDate: moment.Moment, isIncludeHoliday: boolean, isIncludeRestDay: boolean) {
 
+    /**
+     * Get day duration
+     *
+     * @param {[moment.Moment, moment.Moment, boolean, boolean]} [startDate, endDate, isIncludeHoliday, isIncludeRestDay]
+     * @returns
+     * @memberof DateCalculationService
+     */
     getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]: [moment.Moment, moment.Moment, boolean, boolean]) {
         startDate.startOf('days');
         endDate.endOf('days');

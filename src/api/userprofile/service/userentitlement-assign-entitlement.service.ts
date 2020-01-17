@@ -105,6 +105,14 @@ export class UserEntitlementAssignEntitlement {
 
   }
 
+  /**
+   * Assign leave entitlement
+   *
+   * @param {*} user
+   * @param {AssignLeavePolicyDTO} data
+   * @returns
+   * @memberof UserEntitlementAssignEntitlement
+   */
   public assignLeaveEntitlement(user: any, data: AssignLeavePolicyDTO) {
     //check if the user belong to this tenant
     const userFilter = ['(USER_GUID IN (' + data.userId + '))', '(TENANT_GUID=' + user.TENANT_GUID + ')']

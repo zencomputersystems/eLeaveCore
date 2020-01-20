@@ -8,6 +8,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     DashboardAdminService,
     QueryParserService,
     CommonFunctionService,
-    UserInfoDbService
+    UserInfoDbService,
+    UserprofileDbService
   ],
   controllers: [DashboardAdminController]
 })

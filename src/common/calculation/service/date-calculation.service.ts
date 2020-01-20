@@ -41,7 +41,8 @@ export class DateCalculationService {
      * @returns
      * @memberof DateCalculationService
      */
-    getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]: [moment.Moment, moment.Moment, boolean, boolean]) {
+    getDayDuration([startDate, endDate, isExcludeHoliday, isExcludeRestDay]: [moment.Moment, moment.Moment, boolean, boolean]) {
+        // getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]: [moment.Moment, moment.Moment, boolean, boolean]) {
         startDate.startOf('days');
         endDate.endOf('days');
 
@@ -50,9 +51,10 @@ export class DateCalculationService {
         // console.log(dataHoliday);
         // mock holiday
 
-        console.log(HolidayModel);
+        // console.log(HolidayModel);
 
         const mockHoliday = holidayMock;
+        // console.log(mockHoliday);
         const filterRestDay = new Array<any>();
         const filterHoliday = new Array<any>(); // hold the filtered holiday date
 
@@ -65,14 +67,16 @@ export class DateCalculationService {
         while (copyStartDate <= endDate) {
             startEndDuration++;
 
-            if (!isIncludeRestDay) {
+            // if (!isIncludeRestDay) {
+            if (isExcludeRestDay) {
                 if (mockHoliday.rest.find(x => x.fullname == copyStartDate.format("dddd").toUpperCase())) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterRestDay.push(copyStartDate);
                 }
             }
 
-            if (!isIncludeHoliday) {
+            // if (!isIncludeHoliday) {
+            if (isExcludeHoliday) {
                 if (mockHoliday.holiday.find(x => x.date == copyStartDate.format("YYYY-MM-DD"))) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterHoliday.push(copyStartDate);
@@ -83,10 +87,10 @@ export class DateCalculationService {
         }
 
 
-
         // console.log('includeholiday' + isIncludeHoliday);
         // find holiday between start date and end date
-        if (isIncludeHoliday) {
+        // if (isIncludeHoliday) {
+        if (isExcludeHoliday) {
             mockHoliday.holiday.forEach(element => {
 
                 // console.log('includeholiday' + element.date);
@@ -136,12 +140,14 @@ export class DateCalculationService {
      * @returns
      * @memberof DateCalculationService
      */
-    getLeaveDuration([firstDate, secondDate, dayType, isIncludeHoliday, isIncludeRestDay]: LeaveDuration) {
+    getLeaveDuration([firstDate, secondDate, dayType, isExcludeHoliday, isExcludeRestDay]: LeaveDuration) {
+        // getLeaveDuration([firstDate, secondDate, dayType, isIncludeHoliday, isIncludeRestDay]: LeaveDuration) {
 
         const startDate = moment(firstDate, 'YYYY-MM-DD');
         const endDate = moment(secondDate, 'YYYY-MM-DD');
 
-        const duration = this.getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]);
+        const duration = this.getDayDuration([startDate, endDate, isExcludeHoliday, isExcludeRestDay]);
+        // const duration = this.getDayDuration([startDate, endDate, isIncludeHoliday, isIncludeRestDay]);
 
         if (duration <= 0) {
             return 0;
@@ -154,8 +160,6 @@ export class DateCalculationService {
         if (dayType == 2) {
             return (duration - 0.75);
         }
-
-
 
         return duration;
     }

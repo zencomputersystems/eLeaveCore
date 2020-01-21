@@ -82,7 +82,7 @@ export class UserLeaveEntitlementService {
          */
     public getEntitlementList(tenantId: string, userId: string) {
         const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')', '(YEAR=' + moment().format('YYYY') + ')'];
-        const fields = ['LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
+        const fields = ['USER_LEAVE_ENTITLEMENT_GUID', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
 
         return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter).pipe(
             mergeMap(res => {

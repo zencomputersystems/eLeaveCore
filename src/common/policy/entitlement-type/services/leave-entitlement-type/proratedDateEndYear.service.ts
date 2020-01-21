@@ -73,8 +73,8 @@ export class ProratedDateEndYearService extends LeaveEntitlementBaseService impl
 
         const currentYearActualEntitlement = this.calculateEntitlement([dateMoment, leavePolicy, yearOfService, monthFullEntitlement, "END"])
 
-        if (yearOfService <= 1 && dateJoinYear == currentYear) {
-            // if (yearOfService <= 1) {
+        // if (yearOfService <= 1 && dateJoinYear == currentYear) {
+        if (yearOfService <= 1) {
 
             // for december in 1st working year of service, we ignore other month
             return currentYearActualEntitlement;

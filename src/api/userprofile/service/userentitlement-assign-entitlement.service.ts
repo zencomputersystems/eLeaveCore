@@ -202,9 +202,10 @@ export class UserEntitlementAssignEntitlement {
           }
         }), map(res => {
           let finalResult = {};
-          finalResult['successList'] = successList;
+          // finalResult['successList'] = successList;
+          finalResult['successList'] = res == null ? [] : res;
           finalResult['failedList'] = failedList;
-          finalResult['detailsSuccess'] = res;
+          // finalResult['detailsSuccess'] = res;
           return finalResult;
         })
       )

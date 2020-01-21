@@ -188,6 +188,7 @@ export class UserLeaveEntitlementService {
         data.DELETED_AT = new Date().toISOString();
         data.UPDATE_TS = new Date().toISOString();
         data.UPDATE_USER_GUID = user.USER_GUID;
+        data.ACTIVE_FLAG = 0;
 
         resource.resource.push(data);
 

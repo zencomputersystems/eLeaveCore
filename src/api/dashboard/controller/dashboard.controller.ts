@@ -39,20 +39,14 @@ export class DashboardController {
 		this.dashboardService.upcomingHolidays(req.user.USER_GUID).subscribe(
 			data => {
 				let upcomingHolidayArr = [];
-				// let holidayData = this.xmlParserService.convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
 
-				// holidayData.holiday.forEach(element => {
-				// 	if (moment(element.start, 'YYYY-MM-DD') > moment()) {
-				// 		upcomingHolidayArr.push(element);
-				// 	}
-				// });
 				upcomingHolidayArr = this.dashboardService.convertData([upcomingHolidayArr, data]);
 				upcomingHolidayArr.sort(function (a, b) {
 					var c = new Date(a.start) as any;
 					var d = new Date(b.start) as any;
 					return c - d;
 				});
-				// console.log(upcomingHolidayArr);
+
 				res.send(upcomingHolidayArr);
 			}, err => {
 				res.send(err);
@@ -78,32 +72,6 @@ export class DashboardController {
 			}
 		);
 	}
-
-	// /**
-	//  * Get long leave
-	//  *
-	//  * @param {*} req
-	//  * @param {*} res
-	//  * @memberof DashboardController
-	//  */
-	// @Get('/employee/long-leave')
-	// @ApiOperation({ title: 'Get upcoming long leave (>= 5 days)' })
-	// getLongLeave(@Req() req, @Res() res) {
-	// 	this.dashboardService.getLongLeave([req.user.USER_GUID, req.user.TENANT_GUID, null]).subscribe(
-	// 		data => {
-	// 			let result;
-	// 			if (data.data.resource.length > 0) {
-	// 				result = this.dashboardService.processLongLeave(data.data.resource);
-	// 			} else {
-	// 				result = { "status": "Not available" };
-	// 			}
-
-	// 			res.send(result);
-	// 		}, err => {
-	// 			res.send(err);
-	// 		}
-	// 	);
-	// }
 
 	/**
 	 * Find long leave

@@ -94,6 +94,8 @@ export class UserInfoDbService extends BaseDBService {
         data.NICKNAME = personalData.nickname;
         data.PERSONAL_ID = personalData.nric;
         data.DOB = personalData.dob;
+        data.GENDER = personalData.gender.toUpperCase() == 'MALE' ? 1 : 0;
+        data.MARITAL_STATUS = personalData.maritalStatus.toUpperCase() == 'SINGLE' ? 0 : 1;
 
 
 

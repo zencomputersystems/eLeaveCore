@@ -204,18 +204,16 @@ export class ApprovalService {
 		return this.getAppliedLeaveDetail(leaveTransactionId, tenantId)
 			.pipe(
 				mergeMap((leaveDetail: LeaveTransactionModel[]) => {
-					if (leaveDetail.length == 0) {
-						throw "Leave detail not found";
-					}
+					let leave = this.findLeaveData([leaveDetail]);
+					// if (leaveDetail.length == 0) {
+					// 	throw "Leave detail not found";
+					// }
 
-					const leave = leaveDetail[0];
+					// const leave = leaveDetail[0];
 
-					if (leave.STATUS !== "PENDING") {
-						throw "Invalid Leave";
-					}
-
-
-
+					// if (leave.STATUS !== "PENDING") {
+					// 	throw "Invalid Leave";
+					// }
 
 					// return this.getApprovalPolicy()
 					return this.getApprovalPolicyTemp(leaveTransactionId)
@@ -230,47 +228,123 @@ export class ApprovalService {
 						// validate manager approval
 						let resDatatemp = await this.getManagerList([result.leave.USER_GUID]).then(res => { return res; });
 
-						if (!resDatatemp.includes(approverUserId)) {
-							throw "Approval process not valid"; // User is not his/her manager
-						} else {
-							// Check current approval level
-							if (result.leave.STATES != null && result.leave.STATES != '') {
-								const currentStates = JSON.parse(result.leave.STATES);
-								const approveMngId = currentStates.filter(x => x.userId === approverUserId);
-								// check if manager already approve
-								if (approveMngId.length > 0)
-									throw "You already approve this employee";
-							}
-						}
+						this.validateLeaveStatus([resDatatemp, approverUserId, result]);
+						// if (!resDatatemp.includes(approverUserId)) {
+						// 	throw "Approval process not valid"; // User is not his/her manager
+						// } else {
+						// 	// Check current approval level
+						// 	if (result.leave.STATES != null && result.leave.STATES != '') {
+						// 		const currentStates = JSON.parse(result.leave.STATES);
+						// 		const approveMngId = currentStates.filter(x => x.userId === approverUserId);
+						// 		// check if manager already approve
+						// 		if (approveMngId.length > 0)
+						// 			throw "You already approve this employee";
+						// 	}
+						// }
 					}
 
-					if (result.currentPolicy['approvalType'].toUpperCase() === "ANYONE" || result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
-						result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel'], statusApprove]);
-					} else {
-						result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove, statusApprove]);
-					}
+					// if (result.currentPolicy['approvalType'].toUpperCase() === "ANYONE" || result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
+					// 	result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel'], statusApprove]);
+					// } else {
+					// 	result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove, statusApprove]);
+					// }
 
-					result.leave.UPDATE_USER_GUID = approverUserId;
-					result.leave.REMARKS = leaveTransactionReason;
+					// result.leave.UPDATE_USER_GUID = approverUserId;
+					// result.leave.REMARKS = leaveTransactionReason;
 
-					const resource = new Resource(new Array());
+					// const resource = new Resource(new Array());
 
-					resource.resource.push(result.leave);
+					// resource.resource.push(result.leave);
 
-					return this.leaveTransactionService.updateByModel(resource, [], [], [])
-						.pipe(map(res => {
-							if (res.status != 200) {
-								throw "Fail to Update Leave Transaction";
-							}
+					// return this.leaveTransactionService.updateByModel(resource, [], [], [])
+					// 	.pipe(map(res => {
+					// 		if (res.status != 200) {
+					// 			throw "Fail to Update Leave Transaction";
+					// 		}
 
-							return res.data.resource;
-						}))
-
+					// 		return res.data.resource;
+					// 	}))
+					return this.setupDataApproval([result, approverUserId, isApprove, statusApprove, leaveTransactionReason]);
 				}), mergeMap(res => {
 					return res;
 				})
 			)
 
+	}
+
+	/**
+	 * Setup data approval
+	 *
+	 * @private
+	 * @param {[any, string, boolean, string, string]} [result, approverUserId, isApprove, statusApprove, leaveTransactionReason]
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	private setupDataApproval([result, approverUserId, isApprove, statusApprove, leaveTransactionReason]: [any, string, boolean, string, string]) {
+		if (result.currentPolicy['approvalType'].toUpperCase() === "ANYONE" || result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
+			result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel'], statusApprove]);
+		} else {
+			result.leave = this.horizontalLevel([result.leave, approverUserId, isApprove, statusApprove]);
+		}
+
+		result.leave.UPDATE_USER_GUID = approverUserId;
+		result.leave.REMARKS = leaveTransactionReason;
+
+		const resource = new Resource(new Array());
+
+		resource.resource.push(result.leave);
+
+		return this.leaveTransactionService.updateByModel(resource, [], [], [])
+			.pipe(map(res => {
+				if (res.status != 200) {
+					throw "Fail to Update Leave Transaction";
+				}
+
+				return res.data.resource;
+			}))
+	}
+
+	/**
+	 * Check leave data
+	 *
+	 * @private
+	 * @param {[LeaveTransactionModel[]]} [leaveDetail]
+	 * @returns
+	 * @memberof ApprovalService
+	 */
+	private findLeaveData([leaveDetail]: [LeaveTransactionModel[]]) {
+		if (leaveDetail.length == 0) {
+			throw "Leave detail not found";
+		}
+
+		const leave = leaveDetail[0];
+
+		if (leave.STATUS !== "PENDING") {
+			throw "Invalid Leave";
+		}
+		return leave;
+	}
+
+	/**
+	 * Validate leave status
+	 *
+	 * @private
+	 * @param {[any, string, any]} [resDatatemp, approverUserId, result]
+	 * @memberof ApprovalService
+	 */
+	private validateLeaveStatus([resDatatemp, approverUserId, result]: [any, string, any]) {
+		if (!resDatatemp.includes(approverUserId)) {
+			throw "Approval process not valid"; // User is not his/her manager
+		} else {
+			// Check current approval level
+			if (result.leave.STATES != null && result.leave.STATES != '') {
+				const currentStates = JSON.parse(result.leave.STATES);
+				const approveMngId = currentStates.filter(x => x.userId === approverUserId);
+				// check if manager already approve
+				if (approveMngId.length > 0)
+					throw "You already approve this employee";
+			}
+		}
 	}
 
 	// private verticalLevel(leave: LeaveTransactionModel, approverUserId: string, isApprove: boolean, currentPolicyLevel: number) {

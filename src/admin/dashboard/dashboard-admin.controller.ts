@@ -1,10 +1,9 @@
 import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
-import { DashboardAdminService } from './dashboard-admin.service';
+import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import { DashboardService } from '../../api/dashboard/service/dashboard.service';
 import moment = require('moment');
+import { DashboardAdminService } from './dashboard-admin.service';
 /**
  * Controller for dashboard admin
  *

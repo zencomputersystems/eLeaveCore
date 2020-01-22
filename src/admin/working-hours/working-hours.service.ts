@@ -30,6 +30,7 @@ export class WorkingHoursService {
    * @param {WorkingHoursDbService} workingHoursDbService working hours service
    * @param {AssignerDataService} assignerDataService assigner data service
    * @param {UserInfoDbService} userinfoDbService user info db service
+   * @param {UserprofileDbService} userprofileDbService user profile db service
    * @memberof WorkingHoursService
    */
   constructor(
@@ -48,12 +49,6 @@ export class WorkingHoursService {
   public findWorkingHoursProfile(user) {
     let url = this.workingHoursDbService.queryService.generateDbQueryV2('l_view_working_hours_profile', ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION', 'PROPERTIES_XML', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
     return this.assignerDataService.processProfile([url, this.workingHoursDbService, WorkingHoursListDTO]);
-    // return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
-    //   if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); }
-    // }));
-    // return this.workingHoursDbService.findAllWorkingHoursProfile().pipe(map(res => {
-    // if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, WorkingHoursListDTO); }
-    // }))
   }
 
   /**
@@ -66,18 +61,8 @@ export class WorkingHoursService {
    */
   public getEmployeeWorkingHoursAttach(workingHoursId: string, tenant_guid: string): Observable<any> {
     const filters = ['(WORKING_HOURS_GUID=' + workingHoursId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')', 'AND (DELETED_AT IS NULL)'];
-    // return this.userinfoDbService.findEmployeeAttach(filters);
-
     const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
-    // const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
-
     const url = this.workingHoursDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
-    // return this.workingHoursDbService.httpService.get(url).pipe(map(res => {
-    //   if (res.status == 200) {
-    //     return res.data.resource;
-    //   }
-    // }));
-
     return this.assignerDataService.processProfile([url, this.workingHoursDbService, WorkingHoursListDTO]);
   }
 

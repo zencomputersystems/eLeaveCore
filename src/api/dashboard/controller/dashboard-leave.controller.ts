@@ -116,7 +116,7 @@ export class DashboardLeaveController {
   /**
    * Verify my leave item
    *
-   * @param {*} [req, get_item, param]
+   * @param {string} param
    * @returns
    * @memberof DashboardLeaveController
    */
@@ -124,27 +124,13 @@ export class DashboardLeaveController {
     // list item to find
     let item;
 
-    // item to get
-    // let dataId: string = null;
-
-    // if have item from implicit query set to dataid param 
-    // let dataIdParam: string = null;
-
     if (param == 'leave') {
       item = ['AL', 'BL', 'CL', 'HL', 'ML', 'PL', 'RL', 'MTL', 'MRL'];
-      // dataIdParam = req.query.leavecode;
     } else if (param == 'type') {
       item = ['simple', 'detailed'];
-      // dataIdParam = req.query.data;
     }
 
     return item;
-    // if no data, get from link
-    // dataId = dataIdParam == null ? get_item : dataIdParam;
-    // lowercase all item
-    // dataId = dataId.toLowerCase();
-
-    // return { dataId, item };
   }
 
   /**
@@ -157,7 +143,6 @@ export class DashboardLeaveController {
   public getData(method, res) {
     method.subscribe(
       data => {
-        // res.send(data[0]);
         if (data.length > 0)
           res.send(data[0]);
         else

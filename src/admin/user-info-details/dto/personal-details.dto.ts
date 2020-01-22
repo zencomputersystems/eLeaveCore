@@ -291,24 +291,24 @@ export class PersonalDetailsDTO {
   /**
    * Gender (0-FEMALE, 1-MALE)
    *
-   * @type {number}
+   * @type {string}
    * @memberof PersonalDetailsDTO
    */
-  @ApiModelProperty({ description: 'Gender (0-FEMALE, 1-MALE)', example: 1 })
+  @ApiModelProperty({ description: 'Gender (Female/ Male)', example: 'Male' })
   @IsNotEmpty()
-  @IsNumber()
-  gender: number;
+  @IsString()
+  gender: string;
 
   /**
    * Marital status (0-SINGLE,1-MARRIED)
    *
-   * @type {number}
+   * @type {string}
    * @memberof PersonalDetailsDTO
    */
-  @ApiModelProperty({ description: 'Marital status (0-SINGLE,1-MARRIED)', example: 1 })
+  @ApiModelProperty({ description: 'Marital status (0-SINGLE,1-MARRIED)', example: 'Single' })
   @IsNotEmpty()
-  @IsNumber()
-  maritalStatus: number;
+  @IsString()
+  maritalStatus: string;
 
   /**
    * Race

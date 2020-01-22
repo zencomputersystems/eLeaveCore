@@ -17,8 +17,9 @@ export function personalDetailAssign([resultItem, results, dataXML]) {
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
     if (dataXML.root.personalDetails) {
       resultItem['personalDetail'] = dataXML.root.personalDetails;
-      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 ? 'Male' : 'Female';
-      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 ? 'Married' : 'Single';
+      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 || dataXML.root.personalDetails.gender == 'Male' ? 'Male' : 'Female';
+      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 || dataXML.root.personalDetails.maritalStatus == 'Married' ? 'Married' : 'Single';
+
     }
   }
 }

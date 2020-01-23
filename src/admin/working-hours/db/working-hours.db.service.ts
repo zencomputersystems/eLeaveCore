@@ -32,22 +32,6 @@ export class WorkingHoursDbService extends BaseDBService {
     public readonly queryService: QueryParserService) {
     super(httpService, queryService, "l_working_hours_profile");
   }
-  /**
-   * Find all working hours profile
-   *
-   * @returns {Observable<any>}
-   * @memberof WorkingHoursDbService
-   */
-  // public findAllWorkingHoursProfile(): Observable<any> {
-
-  //   const fields = ['WORKING_HOURS_GUID', 'CODE', 'DESCRIPTION'];
-  //   const filters = ['(DELETED_AT IS NULL)'];
-
-  //   const url = this.queryService.generateDbQueryV2(this._tableName, fields, filters, []);
-
-  //   return this.httpService.get(url);
-
-  // }
 
   /**
    * Get working hours details

@@ -111,7 +111,7 @@ export class CommonFunctionService {
         //     res.status(500);
         //     res.send(err);
         // }
-        console.log('are u here siri?');
+
         res.send(new BadRequestException('Input missing'));
     }
 

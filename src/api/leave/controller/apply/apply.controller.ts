@@ -124,7 +124,7 @@ export class ApplyController {
     @Resources({ resourceRef: 'allowLeaveManagement', resourceName: 'allowApplyOnBehalf' })
     createForBundles(@Body() applyLeaveBundleDTO: ApplyLeaveBundleDTO, @Req() req, @Res() res) {
         let id = applyLeaveBundleDTO.userId;
-        // console.log('Id here : ' + id);
+
         this.accessLevelValidationService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel, []])
             .pipe(switchMap(filter => {
                 return this.applyLeaveService.processLeaveOnBehalf([applyLeaveBundleDTO.leaveDetails, req.user, id, filter]);
@@ -133,7 +133,7 @@ export class ApplyController {
                 data => {
                     // console.log(data);
                     // setTimeout(function afterTwoSeconds() {
-                    // console.log('2')
+
                     res.send(data);
                     // }, 10000)
 

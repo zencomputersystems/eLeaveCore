@@ -187,7 +187,7 @@ export class UserprofileService {
      * @memberof UserprofileService
      */
     public updateEmploymentDetail(data: UpdateEmploymentDetailDTO, userId: string) {
-        // console.log('this is employment update');
+
         const modelData = new UserInfoModel();
 
         this.assignUpdateEmploymentDetail(modelData, data);

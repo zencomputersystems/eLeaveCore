@@ -155,7 +155,6 @@ export class GenerateNewCalendarService {
 
         let dataCurrent: CreateCalendarDTO = convertXMLToJson(data[0].data.resource[0].PROPERTIES_XML);
 
-        console.log('_______________________________________________________________________________________________');
         console.log(element.CALENDAR_GUID);
         let dataNewYear = new CreateCalendarDTO;
         let newYearHoliday = [];

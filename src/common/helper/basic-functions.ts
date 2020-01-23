@@ -1,6 +1,10 @@
-import { NotFoundException, HttpModule } from '@nestjs/common';
+import { NotFoundException, HttpModule, HttpService } from '@nestjs/common';
 import { DreamFactory } from '../../config/dreamfactory';
+import { QueryParserService } from './query-parser.service';
 import moment = require('moment');
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Response } from 'express';
 
 //  ---------------------------------------------------------------------------------------------------------------------------
 /**
@@ -75,4 +79,40 @@ export function setUpdateData([data, userGuid]: [any, string]) {
   data.UPDATE_TS = (new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, -1);
   data.UPDATE_USER_GUID = userGuid;
   return data;
+}
+
+//  ---------------------------------------------------------------------------------------------------------------------------
+/**
+ * Find all list
+ *
+ * @export
+ * @param {[string[], string, QueryParserService, HttpService, string]} [fields, tenantId, queryService, httpService, tableName]
+ * @returns {Observable<any>}
+ */
+export function findAllList([fields, tenantId, queryService, httpService, tableName]: [string[], string, QueryParserService, HttpService, string]): Observable<any> {
+
+  let filters = ['(TENANT_GUID=' + tenantId + ')'];
+
+  if (tableName === 'tenant_company') { filters = ['(DELETED_AT IS NULL)'] }
+
+  //url
+  const url = queryService.generateDbQueryV2(tableName, fields, filters, []);
+
+  //call DF to validate the user
+  return httpService.get(url);
+
+}
+
+//  ---------------------------------------------------------------------------------------------------------------------------
+
+export function getListData(method) {
+  return method.pipe(map(res => {
+    return getResData(res);
+  }))
+}
+
+function getResData(res) {
+  if (res.status == 200) {
+    return res.data.resource;
+  }
 }

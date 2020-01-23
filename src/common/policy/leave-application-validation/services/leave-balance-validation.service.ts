@@ -98,11 +98,7 @@ export class LeaveBalanceValidationService {
                 //      Actual Entitlement = (( Available Hospitalization - Used Hospitalization) - Used Medical)
                 let counterAppliedDay = 0;
                 counterAppliedDay = this.getCounterAppliedDays([leaveTransactions, parent, counterAppliedDay, policy]);
-                // console.log('MMMMMMMM'+leaveTransactions);
                 // leaveTransactions.forEach(element => {
-                //     // console.log('a - '+element.LEAVE_TYPE_GUID);
-                //     // console.log('b - '+policy.includeOtherLeaveType);
-                //     // console.log('c - '+parent.LEAVE_TYPE_GUID);
                 //     if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == parent.LEAVE_TYPE_GUID) {
                 //         counterAppliedDay += element.NO_OF_DAYS;
                 //         // console.log(counterAppliedDay);
@@ -150,9 +146,7 @@ export class LeaveBalanceValidationService {
      */
     public getCounterAppliedDays([leaveTransactions, parent, counterAppliedDay, policy]) {
         leaveTransactions.forEach(element => {
-            // console.log('a - '+element.LEAVE_TYPE_GUID);
-            // console.log('b - '+policy.includeOtherLeaveType);
-            // console.log('c - '+parent.LEAVE_TYPE_GUID);
+
             if (element.ACTIVE_FLAG && element.LEAVE_TYPE_GUID == parent.LEAVE_TYPE_GUID) {
                 counterAppliedDay += element.NO_OF_DAYS;
                 // console.log(counterAppliedDay);

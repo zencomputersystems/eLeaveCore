@@ -4,11 +4,11 @@ import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { HttpService, Injectable } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { Observable } from 'rxjs';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
 import { map } from 'rxjs/operators';
+import { findAllList, getListData } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -32,13 +32,11 @@ export class GeneralLeavePolicyService extends BaseDBService {
 
 	/**
 	 *Creates an instance of GeneralLeavePolicyService.
-	 * @param {CommonFunctionService} commonFunctionService Commonfunction service
 	 * @param {HttpService} httpService http service
 	 * @param {QueryParserService} queryService query service
 	 * @memberof GeneralLeavePolicyService
 	 */
 	constructor(
-		private readonly commonFunctionService: CommonFunctionService,
 		public readonly httpService: HttpService,
 		public readonly queryService: QueryParserService) {
 		super(httpService, queryService, "l_main_general_policy");
@@ -54,9 +52,9 @@ export class GeneralLeavePolicyService extends BaseDBService {
 	public findAll(TENANT_GUID: string): Observable<any> {
 
 		const fields = [];
-		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
+		let result = findAllList([fields, TENANT_GUID, this.queryService, this.httpService, this._tableName]);
 
-		return this.commonFunctionService.getListData(result);
+		return getListData(result);
 	}
 
 	/**
@@ -68,7 +66,6 @@ export class GeneralLeavePolicyService extends BaseDBService {
 	 * @memberof GeneralLeavePolicyService
 	 */
 	public findOne(tenantId: string, companyGuid: string): Observable<any> {
-		// const fields = ['BRANCH'];
 		const fields = [];
 		const filters = ['(TENANT_GUID=' + tenantId + ')', '(TENANT_COMPANY_GUID=' + companyGuid + ')'];
 
@@ -109,7 +106,6 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		modelData.DELETED_AT = null;
 
 		resource.resource.push(modelData);
-		// console.log(resource);
 
 		return this.createByModel(resource, [], [], []);
 
@@ -124,10 +120,8 @@ export class GeneralLeavePolicyService extends BaseDBService {
 	 * @memberof GeneralLeavePolicyService
 	 */
 	update(user: any, d: UpdateGeneralLeavePolicyDTO) {
-		// console.log(d);
 		const resource = new Resource(new Array);
 		const data = new GeneralLeavePolicyModel();
-
 
 		data.MAIN_GENERAL_POLICY_GUID = d.generalPolicyId;
 		data.PROPERTIES_XML = convertJsonToXML(d.data);
@@ -135,7 +129,6 @@ export class GeneralLeavePolicyService extends BaseDBService {
 		data.UPDATE_USER_GUID = user.USER_GUID;
 
 		resource.resource.push(data);
-		// console.log(resource);
 
 		return this.updateByModel(resource, [], [], []);
 	}

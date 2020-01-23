@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { MasterSetupDbService } from './db/master-setup.db.service';
 import { MasterSetupDTO } from './dto/master-setup.dto';
 import { of, Observable } from 'rxjs';
+import { getListData } from 'src/common/helper/basic-functions';
 
 /**
  * Service for master setup
@@ -15,12 +15,10 @@ export class MasterSetupService {
 
   /**
    *Creates an instance of MasterSetupService.
-   * @param {CommonFunctionService} commonFunctionService
    * @param {MasterSetupDbService} masterSetupDbService
    * @memberof MasterSetupService
    */
   constructor(
-    private readonly commonFunctionService: CommonFunctionService,
     private readonly masterSetupDbService: MasterSetupDbService
   ) { }
 
@@ -38,31 +36,31 @@ export class MasterSetupService {
     let result = null;
 
     if (item == 'department') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['DEPARTMENT'], 'view_departments']);
+      result = this.getAllLists([tenantId, ['DEPARTMENT'], 'view_departments']);
     }
     if (item == 'designation') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['DESIGNATION'], 'view_designations']);
+      result = this.getAllLists([tenantId, ['DESIGNATION'], 'view_designations']);
     }
     if (item == 'section') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['SECTION'], 'view_section']);
+      result = this.getAllLists([tenantId, ['SECTION'], 'view_section']);
     }
     if (item == 'branch') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['BRANCH'], 'view_branches']);
+      result = this.getAllLists([tenantId, ['BRANCH'], 'view_branches']);
     }
     if (item == 'bank') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['BANK'], 'view_banks']);
+      result = this.getAllLists([tenantId, ['BANK'], 'view_banks']);
     }
     if (item == 'costcentre') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['COSTCENTRE'], 'view_costcentre']);
+      result = this.getAllLists([tenantId, ['COSTCENTRE'], 'view_costcentre']);
     }
     if (item == 'country') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['COUNTRY'], 'view_country']);
+      result = this.getAllLists([tenantId, ['COUNTRY'], 'view_country']);
     }
     if (item == 'employee_type') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['EMPLOYEE_TYPE'], 'view_employee_types']);
+      result = this.getAllLists([tenantId, ['EMPLOYEE_TYPE'], 'view_employee_types']);
     }
     if (item == 'employee_status') {
-      result = this.getAllLists([this.masterSetupDbService, tenantId, ['EMPLOYEE_STATUS'], 'view_employee_status']);
+      result = this.getAllLists([tenantId, ['EMPLOYEE_STATUS'], 'view_employee_status']);
     }
 
     return result;
@@ -72,12 +70,12 @@ export class MasterSetupService {
    * Get list by option selection
    *
    * @private
-   * @param {*} [methodService, tenantId, field, table]
+   * @param {[string, string[], string]} [tenantId, field, table]
    * @returns
    * @memberof MasterSetupService
    */
-  private getAllLists([methodService, tenantId, field, table]) {
-    return this.commonFunctionService.getListData(methodService.findAllList([field, tenantId, table]));
+  private getAllLists([tenantId, field, table]: [string, string[], string]) {
+    return getListData(this.masterSetupDbService.findAllList([field, tenantId, table]));
   }
 
   /**

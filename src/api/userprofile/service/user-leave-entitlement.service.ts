@@ -266,8 +266,6 @@ export class UserLeaveEntitlementService {
     //  * @memberof UserLeaveEntitlementService
     //  */
     // public assignPolicyProcess(res, user, data) {
-
-    //     // console.log('here' + res);
     //     // console.log(user);
     //     // console.log(data);
 
@@ -282,17 +280,14 @@ export class UserLeaveEntitlementService {
     //         const dateOfJoin = new Date(user.JOIN_DATE);
     //         // get the service year
     //         const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
-    //         // console.log('svc-year' + serviceYear);
 
     //         // console.log(res.res[0].PROPERTIES_XML);
 
     //         const policy = convertXMLToJson(res.res[0].PROPERTIES_XML);
-    //         // console.log('pol' + policy);
 
 
     //         //get the entitlement days
     //         const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
-    //         // console.log('ed' + entitlementDay);
 
     //         if (entitlementDay == 0 || entitlementDay == undefined) {
     //             return of(null);

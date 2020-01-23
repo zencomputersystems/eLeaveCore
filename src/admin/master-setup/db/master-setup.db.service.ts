@@ -1,12 +1,12 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { MasterSetupDTO } from '../dto/master-setup.dto';
 import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
 import { UserInfoModel } from '../../user-info/model/user-info.model';
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
+import { findAllList } from 'src/common/helper/basic-functions';
 
 /**
  * Service for master setup database
@@ -21,14 +21,12 @@ export class MasterSetupDbService {
    *Creates an instance of MasterSetupDbService.
    * @param {HttpService} httpService http service
    * @param {QueryParserService} queryService query service
-   * @param {CommonFunctionService} commonFunctionService common function service
    * @param {UserInfoDbService} userinfoDbService user info db service
    * @memberof MasterSetupDbService
    */
   constructor(
     public httpService: HttpService,
     public queryService: QueryParserService,
-    public commonFunctionService: CommonFunctionService,
     public userinfoDbService: UserInfoDbService
   ) { }
 
@@ -39,8 +37,8 @@ export class MasterSetupDbService {
    * @returns
    * @memberof MasterSetupDbService
    */
-  public findAllList([fields, TENANT_GUID, tableName]) {
-    return this.commonFunctionService.findAllList([fields, TENANT_GUID, this.queryService, this.httpService, tableName]);
+  public findAllList([fields, TENANT_GUID, tableName]: [string[], string, string]) {
+    return findAllList([fields, TENANT_GUID, this.queryService, this.httpService, tableName]);
   }
 
   /**
@@ -56,17 +54,14 @@ export class MasterSetupDbService {
     // build url for dreamfactory
     const url = this.queryService.generateDbQueryV3(['user_info', ['USER_INFO_GUID', 'FULLNAME'], ['(' + fields + '=' + data.oldName + ') AND (TENANT_GUID=' + tenantId + ')'], null, null]);
 
-    // console.log(url);
-
     // run url by dreamfactory
-    let result = this.httpService.get(url)
-      .pipe(
-        map(res => {
-          if (res.status == 200) {
-            return res.data.resource;
-          }
-        })
-      )
+    let result = this.httpService.get(url).pipe(
+      map(res => {
+        if (res.status == 200) {
+          return res.data.resource;
+        }
+      })
+    )
 
     // process data
     let resUpdate = result.pipe(
@@ -79,7 +74,7 @@ export class MasterSetupDbService {
         });
 
         if (userinfoGuidAll != '')
-          resultProcess = this.update(user, userinfoGuidAll, fields, data.newName).subscribe(
+          resultProcess = this.update([user, userinfoGuidAll, fields, data.newName]).subscribe(
             data => {
               return data;
             }, err => {
@@ -98,18 +93,14 @@ export class MasterSetupDbService {
 
   }
 
-
   /**
    * update method
    *
-   * @param {*} user
-   * @param {string} userGuidAll
-   * @param {string} fields
-   * @param {string} newName
+   * @param {[any, string, string, string]} [user, userGuidAll, fields, newName]
    * @returns
    * @memberof MasterSetupDbService
    */
-  update(user: any, userGuidAll: string, fields: string, newName: string) {
+  update([user, userGuidAll, fields, newName]: [any, string, string, string]) {
 
     const resource = new Resource(new Array);
     const data = new UserInfoModel;
@@ -120,14 +111,8 @@ export class MasterSetupDbService {
 
     resource.resource.push(data);
 
-    // console.log(userGuidAll);
-
-    // console.log(resource);
-
     const filters = ['(USER_INFO_GUID IN (' + userGuidAll + '))'];
-    // console.log(filters);
-    // return resource;
-    // return this.updateByModel(resource, [], [], []);
+
     return this.userinfoDbService.updateByModel(resource, [], filters, []);
   }
 

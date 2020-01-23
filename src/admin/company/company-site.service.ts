@@ -5,11 +5,10 @@ import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
-import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { CompanySiteModel } from './model/company-site.model';
 import { CreateCompanySiteDTO } from './dto/create-company-site.dto';
 import { UpdateCompanySiteDTO } from './dto/update-company-site.dto';
-import { setUpdateData } from '../../common/helper/basic-functions';
+import { setUpdateData, findAllList, getListData } from '../../common/helper/basic-functions';
 
 
 /**
@@ -51,12 +50,10 @@ export class CompanySiteService {
     /**
      *Creates an instance of CompanySiteService.
      * @param {CompanySiteDbService} companySiteDbService DB service for company site
-     * @param {CommonFunctionService} commonFunctionService Common function service
      * @memberof CompanySiteService
      */
     constructor(
-        public readonly companySiteDbService: CompanySiteDbService,
-        public readonly commonFunctionService: CommonFunctionService) {
+        public readonly companySiteDbService: CompanySiteDbService) {
     }
 
     /**
@@ -68,8 +65,8 @@ export class CompanySiteService {
      */
     public findAll(TENANT_GUID: string): Observable<any> {
         const fields = [];
-        let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.companySiteDbService.queryService, this.companySiteDbService.httpService, this.companySiteDbService.tableDB]);
-        return this.commonFunctionService.getListData(result);
+        let result = findAllList([fields, TENANT_GUID, this.companySiteDbService.queryService, this.companySiteDbService.httpService, this.companySiteDbService.tableDB]);
+        return getListData(result);
     }
 
     /**

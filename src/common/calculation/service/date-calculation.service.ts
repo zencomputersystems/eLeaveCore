@@ -86,20 +86,16 @@ export class DateCalculationService {
             copyStartDate.add('1', 'days');
         }
 
-
-        // console.log('includeholiday' + isIncludeHoliday);
         // find holiday between start date and end date
         // if (isIncludeHoliday) {
         if (isExcludeHoliday) {
             mockHoliday.holiday.forEach(element => {
 
-                // console.log('includeholiday' + element.date);
                 const holidayDate = moment(element.date, 'YYYY-MM-DD');
                 holidayDate.startOf('days');
 
                 // check if holiday overlap with rest day
                 if (holidayDate.isBetween(startDate, endDate) && filterRestDay.find(x => x == holidayDate.date()) == undefined) {
-                    // console.log('overlap rest day');
                     filterHoliday.push(holidayDate);
                 }
             });

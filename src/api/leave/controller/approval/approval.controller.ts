@@ -150,23 +150,12 @@ export class ApprovedController {
      */
     @Post('error-code')
     errorCodeTest(@Res() res) {
-        // res.send(new BadRequestException({ error: 'No process found', message: { details: 'No request', contact: 'Ang Ruo Li' } }));
-
-        // of(new BadRequestException({ status: 'Hi, i am error!' }))
-
         this.handleErrror().pipe(map(res => {
-            console.log(res);
             return res;
-            // throw new Error("let see where are u belong");
         })).subscribe(
             data => {
-                console.log('u here?');
-                // console.log(data);
                 res.send(data);
-                // throw 'Data not found';
             }, err => {
-                console.log('are u here?');
-                console.log(err);
                 res.send(err);
             }
         );
@@ -180,8 +169,6 @@ export class ApprovedController {
      * @memberof ApprovedController
      */
     private handleErrror() {
-        // throw "Bad filter";
-        // let temp = new BadRequestException("Hi, i am error!");
         let temp = new Error("Hi, i am error!");
         return of(temp);
     }

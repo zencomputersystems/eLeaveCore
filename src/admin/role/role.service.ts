@@ -48,9 +48,6 @@ export class RoleService {
 	public getRoleProfileList(user: any) {
 		let url = this.roleDbService.queryService.generateDbQueryV2('l_view_role_profile', ['ROLE_GUID', 'CODE', 'DESCRIPTION', 'TOTAL_EMPLOYEE_ATTACH'], ['(TENANT_GUID=' + user.TENANT_GUID + ')'], []);
 		return this.assignerDataService.processProfile([url, this.roleDbService, RoleListDTO]);
-		// return this.roleDbService.httpService.get(url).pipe(map(res => {
-		// 	if (res.status == 200) { return this.assignerDataService.assignArrayData(res.data.resource, RoleListDTO); }
-		// }));
 	}
 
 	/**
@@ -63,17 +60,10 @@ export class RoleService {
 	 */
 	public getEmployeeRoleAttach(roleId: string, tenant_guid: string) {
 		const filters = ['(ROLE_GUID=' + roleId + ')', 'AND (TENANT_GUID=' + tenant_guid + ')', 'AND (DELETED_AT IS NULL)'];
-		// return this.userinfoDbService.findEmployeeAttach(filters);
 
 		const fields = ['USER_GUID', 'FULLNAME', 'PERSONAL_ID_TYPE'];
-		// const filters = ['(CALENDAR_GUID=' + calendarId + ')'];
 
 		const url = this.roleDbService.queryService.generateDbQueryV3(['l_view_user_profile_list', fields, filters, null, null]);
-		// return this.roleDbService.httpService.get(url).pipe(map(res => {
-		// 	if (res.status == 200) {
-		// 		return res.data.resource;
-		// 	}
-		// }));
 
 		return this.assignerDataService.processProfile([url, this.roleDbService, RoleListDTO]);
 	}

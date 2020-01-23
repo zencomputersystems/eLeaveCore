@@ -4,7 +4,6 @@ import { MasterSetupController } from './master-setup.controller';
 // import { PassportModule } from '@nestjs/passport';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
-import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { MasterSetupService } from './master-setup.service';
 import { MasterSetupDbService } from './db/master-setup.db.service';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
@@ -22,7 +21,6 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
   providers: [
     MasterSetupService,
     QueryParserService,
-    CommonFunctionService,
     MasterSetupDbService,
     UserInfoDbService
   ]

@@ -247,14 +247,11 @@ export class UserImportService {
                         // return successList;
                     }
                 }
-                // console.log('in 1');
             } else {
                 successList.push(element);
-                // console.log('in 2');
             }
 
         });
-        // console.log('existing');
         // console.log(data);
         if (data.category == 'Existing User')
             this.importResult.push(data);
@@ -282,15 +279,12 @@ export class UserImportService {
 
             if (successList.find(x => x.STAFF_EMAIL.toUpperCase() === element.STAFF_EMAIL.toUpperCase())) {
                 duplicateUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
-                // console.log('dup in 1');
             } else {
                 successList.push(element);
-                // console.log('dup in 2');
             }
 
         });
 
-        // console.log('duplicatee');
         // console.log(duplicateUser);
         this.importResult.push(duplicateUser);
 
@@ -330,7 +324,6 @@ export class UserImportService {
 
         });
 
-        // console.log('doubles');
         // console.log(successUser);
         // console.log(failUser);
         this.importResult.push(successUser);

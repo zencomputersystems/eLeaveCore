@@ -39,7 +39,6 @@ export class UserProfileStatusService {
       let dateTemp = new Date();
       let resChangeStatus;
       if (dateResign <= dateTemp) {
-        // console.log('assign inactive');
         resChangeStatus = this.userService.updateUserInactive(user, d.user_guid).subscribe(
           data => {
             return data.data.resource;

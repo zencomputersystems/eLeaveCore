@@ -57,17 +57,14 @@ export class UserEntitlementAssignPolicy {
       const dateOfJoin = new Date(userData.JOIN_DATE);
       // get the service year
       const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
-      // console.log('svc-year' + serviceYear);
 
       // console.log(res.res[0].PROPERTIES_XML);
 
       const policy = convertXMLToJson(res.res[0].PROPERTIES_XML);
-      // console.log('pol' + policy);
 
 
       //get the entitlement days
       const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
-      // console.log('ed' + entitlementDay);
 
       if (entitlementDay == 0 || entitlementDay == undefined) {
         return of(null);

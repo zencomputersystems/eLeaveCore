@@ -6,12 +6,12 @@ import { v1 } from 'uuid';
 import { CompanyModel } from './model/company.model';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { IDbService } from 'src/interface/IDbService';
-import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { map } from 'rxjs/operators';
 import { CompanyDTO } from './dto/company.dto';
 import { UpdateCompanyDTO } from './dto/update-company.dto';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { UserprofileDbService } from '../../api/userprofile/db/userprofile.db.service';
+import { findAllList, getListData } from 'src/common/helper/basic-functions';
 
 /**
  * DB service for company
@@ -51,14 +51,12 @@ export class CompanyService {
 	/**
 	 *Creates an instance of CompanyService.
 	 * @param {CompanyDbService} companyDbService DB service for company 
-	 * @param {CommonFunctionService} commonFunctionService Common function service
 	 * @param {UserInfoDbService} userinfoDbService user info db service
 	 * @param {UserprofileDbService} userprofileDbService user profile db service
 	 * @memberof CompanyService
 	 */
 	constructor(
 		public companyDbService: CompanyDbService,
-		public commonFunctionService: CommonFunctionService,
 		public userinfoDbService: UserInfoDbService,
 		public userprofileDbService: UserprofileDbService
 	) {
@@ -74,9 +72,9 @@ export class CompanyService {
 	public findAll(TENANT_GUID: string): Observable<any> {
 
 		const fields = ['TENANT_COMPANY_GUID', 'NAME'];
-		let result = this.commonFunctionService.findAllList([fields, TENANT_GUID, this.companyDbService.queryService, this.companyDbService.httpService, this.companyDbService.tableDB]);
+		let result = findAllList([fields, TENANT_GUID, this.companyDbService.queryService, this.companyDbService.httpService, this.companyDbService.tableDB]);
 
-		return this.commonFunctionService.getListData(result);
+		return getListData(result);
 
 	}
 
@@ -102,7 +100,7 @@ export class CompanyService {
 
 		let list: CompanyDTO = new CompanyDTO;
 
-		let dataCompany = this.commonFunctionService.getListData(result);
+		let dataCompany = getListData(result);
 
 		let dataDepartment = this.findByCompany(TENANT_GUID, id);
 
@@ -225,7 +223,7 @@ export class CompanyService {
 
 		const url = this.companyDbService.queryService.generateDbQueryV2('view_departments', fields, filters, []);
 		let result = this.companyDbService.httpService.get(url);
-		return this.commonFunctionService.getListData(result);
+		return getListData(result);
 	}
 
 }

@@ -26,7 +26,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       usernameField: 'email',
       passReqToCallback: false
     });
-    // console.log('sss');
   }
 
   /**

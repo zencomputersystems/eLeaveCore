@@ -34,7 +34,8 @@ export class CompanyController {
 	@Get()
 	@ApiOperation({ title: 'Get company list' })
 	findAll(@Req() req, @Res() res) {
-		this.commonFunctionService.runGetServiceV2(this.companyService.findAll(req.user.TENANT_GUID), res);
+		let method = this.companyService.findAll(req.user.TENANT_GUID);
+		this.commonFunctionService.runGetServiceV2(method, res);
 	}
 
 	/**

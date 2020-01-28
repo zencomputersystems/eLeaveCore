@@ -31,9 +31,9 @@ export class DashboardAdminService {
    * @memberof DashboardAdminService
    */
   public getUpcomingJoiner(tenantGuid: string) {
-    let filter = ['(JOIN_DATE > "' + moment().format('YYYY-MM-DD') + '") AND (TENANT_GUID=' + tenantGuid + ')'];
-    let fields = ['FULLNAME', 'DESIGNATION', 'JOIN_DATE'];
-    return this.userInfoDbService.findByFilterV3(fields, filter);
+    let filterJoiner = ['(JOIN_DATE > "' + moment().format('YYYY-MM-DD') + '") AND (TENANT_GUID=' + tenantGuid + ')'];
+    let fieldsJoiner = ['FULLNAME', 'DESIGNATION', 'JOIN_DATE'];
+    return this.userInfoDbService.findByFilterV3(fieldsJoiner, filterJoiner);
   }
 
   /**

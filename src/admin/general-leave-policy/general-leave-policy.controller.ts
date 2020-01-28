@@ -84,10 +84,11 @@ export class GeneralLeavePolicyController {
 	@Post()
 	@ApiOperation({ title: 'Create general leave policy' })
 	createGeneralLeavePolicy(@Body() data: CreateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
-		this.generalLeavePolicyService.create(req.user, data).subscribe(
-			data => { res.send(data.data); },
-			err => { res.send(err); }
-		);
+		// this.generalLeavePolicyService.create(req.user, data).subscribe(
+		// 	data => { res.send(data.data); },
+		// 	err => { res.send(err); }
+		// );
+		this.runServicePolicy([this.generalLeavePolicyService.create(req.user, data), res]);
 	}
 
 	/**
@@ -101,7 +102,22 @@ export class GeneralLeavePolicyController {
 	@Patch()
 	@ApiOperation({ title: 'Update general leave policy' })
 	updateGeneralLeavePolicy(@Body() updateGeneralLeavePolicyDTO: UpdateGeneralLeavePolicyDTO, @Req() req, @Res() res) {
-		this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO).subscribe(
+		// this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO).subscribe(
+		// 	data => { res.send(data.data); },
+		// 	err => { res.send(err); }
+		// )
+		this.runServicePolicy([this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO), res]);
+	}
+
+	/**
+	 * Run service for create and update general leave policy
+	 *
+	 * @private
+	 * @param {*} [method, res]
+	 * @memberof GeneralLeavePolicyController
+	 */
+	private runServicePolicy([method, res]) {
+		method.subscribe(
 			data => { res.send(data.data); },
 			err => { res.send(err); }
 		)

@@ -176,12 +176,10 @@ export class UserEntitlementAssignEntitlement {
         }), switchMap(res => {
           if (res != null) {
             // check if combination of main leave and entitlement def exist
-            const entitlementFilter = [
-              '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
-              '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(ACTIVE_FLAG=true)'
-            ];
-            const temp = this.dbSearch(this.leaveEntitlementDbService, entitlementFilter);
-            return temp;
+            const entitlementFilter = ['(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')', '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(ACTIVE_FLAG=true)'];
+
+            return this.dbSearch(this.leaveEntitlementDbService, entitlementFilter);
+
           }
         }), mergeMap(res => {
           // assign status leavetype entitlement not found

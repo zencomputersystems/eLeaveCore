@@ -85,10 +85,12 @@ export class LeavetypeEntitlementController {
 	@Post()
 	@ApiOperation({ title: 'Create leavetype entitlement' })
 	create(@Body() createLeaveEntitlementDTO: CreateLeaveEntitlementTypeDTO, @Req() req, @Res() res) {
-		this.leavetypeEntitlementService.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO).subscribe(
-			data => { this.sendDataSuccess(data, res); },
-			err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
-		)
+		// this.leavetypeEntitlementService.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO).subscribe(
+		// 	data => { this.sendDataSuccess(data, res); },
+		// 	err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
+		// )
+		const url = this.leavetypeEntitlementService.leavetypeEntitlementDbService.create(req.user, createLeaveEntitlementDTO);
+		this.runServiceLeavetypeEntitlement([url, 'Fail to create resource', res]);
 	}
 
 	/**
@@ -102,9 +104,25 @@ export class LeavetypeEntitlementController {
 	@Patch()
 	@ApiOperation({ title: 'Update Leavetype entitlement' })
 	update(@Body() updateLeaveTypeEntitlementDTO: UpdateLeaveTypeEntitlementDto, @Req() req, @Res() res) {
-		this.leavetypeEntitlementService.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO).subscribe(
+		// this.leavetypeEntitlementService.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO).subscribe(
+		// 	data => { this.sendDataSuccess(data, res); },
+		// 	err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
+		// )
+		const url = this.leavetypeEntitlementService.leavetypeEntitlementDbService.update(req.user, updateLeaveTypeEntitlementDTO);
+		this.runServiceLeavetypeEntitlement([url, 'Fail to update resource', res]);
+	}
+
+	/**
+	 * Run service for create and update leavetype-entitlement
+	 *
+	 * @private
+	 * @param {*} [method, message, res]
+	 * @memberof LeavetypeEntitlementController
+	 */
+	private runServiceLeavetypeEntitlement([method, message, res]) {
+		method.subscribe(
 			data => { this.sendDataSuccess(data, res); },
-			err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to update resource'); }
+			err => { this.commonFunctionService.sendResErrorV2(res, 400, message); }
 		)
 	}
 

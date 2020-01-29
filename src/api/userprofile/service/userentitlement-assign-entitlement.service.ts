@@ -266,9 +266,10 @@ export class UserEntitlementAssignEntitlement {
 
     return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
       .pipe(map(res => {
-        if (res.status == 200) {
-          return res.data.resource;
-        }
+        const rsUserLeaveEntitlement = res.status == 200 ? res.data.resource : new BadRequestException();
+        return rsUserLeaveEntitlement;
+
+        // if (res.status == 200) { return res.data.resource; } 
       }))
 
   }

@@ -208,8 +208,7 @@ export class UserprofileController {
 			},
 			err => {
 				res.status(500);
-				if (err.response) { res.send(err.response.data.error) }
-				else { res.send(err); }
+				err.response ? res.send(err.response.data.error) : res.send(err);
 			}
 		)
 	}

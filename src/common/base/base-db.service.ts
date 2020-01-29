@@ -78,35 +78,30 @@ export class BaseDBService {
      * @memberof BaseDBService
      */
     public findByFilterV2(fields: string[], filters: string[]): Observable<Array<any>> {
-
-        //url
         const url = this.queryService.generateDbQueryV2(this.tableName, fields, filters, []);
-
-        return this.httpService.get(url)
-            .pipe(
-                map(res => {
-                    if (res.status == 200) {
-                        return res.data.resource;
-                    }
-                })
-            )
+        return this.runServiceHttp(url);
     }
 
     /**
      * With order and limit
      *
-     * @param {string[]} fields
-     * @param {string[]} filters
-     * @param {string} order
-     * @param {number} limit
+     * @param {[string[], string[], string, number]} [fields, filters, order, limit]
      * @returns {Observable<Array<any>>}
      * @memberof BaseDBService
      */
-    // public findByFilterV4(fields: string[], filters: string[], order: string, limit: number): Observable<Array<any>> {
-    //url
-
     public findByFilterV4([fields, filters, order, limit]: [string[], string[], string, number]): Observable<Array<any>> {
         const url = this.queryService.generateDbQueryV3([this.tableName, fields, filters, order, limit]);
+        return this.runServiceHttp(url);
+    }
+
+    /**
+     * Run service http refactor
+     *
+     * @param {string} url
+     * @returns
+     * @memberof BaseDBService
+     */
+    public runServiceHttp(url: string) {
         return this.httpService.get(url)
             .pipe(
                 map(res => {

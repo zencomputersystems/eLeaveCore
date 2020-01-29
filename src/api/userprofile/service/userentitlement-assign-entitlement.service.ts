@@ -265,11 +265,7 @@ export class UserEntitlementAssignEntitlement {
     }
 
     return this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
-      .pipe(map(res => {
-        if (res.status == 200) {
-          return res.data.resource;
-        }
-      }))
+      .pipe(map(res => { if (res.status == 200) { return res.data.resource; } }))
 
   }
 

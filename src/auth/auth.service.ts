@@ -45,9 +45,7 @@ export class AuthService {
   public async logIn(email, password) {
     return await this.userService.findOne(email, password)
       .then(async user => {
-        return (user.data.resource.length > 0)
-          ? Promise.resolve(user.data.resource[0])
-          : Promise.reject(new UnauthorizedException('Invalid Credential'))
+        return (user.data.resource.length > 0) ? Promise.resolve(user.data.resource[0]) : Promise.reject(new UnauthorizedException('Invalid Credential'))
       })
   }
 

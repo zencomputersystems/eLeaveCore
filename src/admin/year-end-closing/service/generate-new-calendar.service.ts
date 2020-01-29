@@ -80,15 +80,14 @@ export class GenerateNewCalendarService {
 
     this.calendarProfileDbService.createByModel(resource, [], [], []).pipe(
       map(res => {
-        if (res.status == 200) {
-          return res.data.resource;
-        }
-      })).subscribe(
-        data => {
-          return 'success assign';
-        }, err => {
-          return 'failed assign';
-        });
+        if (res.status == 200) { return res.data.resource; }
+      })
+    ).subscribe(
+      data => {
+        return data;
+      }, err => {
+        return err;
+      });
 
     return resource;
 

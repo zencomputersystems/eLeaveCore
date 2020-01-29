@@ -53,8 +53,7 @@ export class ApplyBeforePropertiesXmlDTO {
      * @memberof ApplyBeforePropertiesXmlDTO
      */
     @ApiModelProperty({ type: GeneralPropertiesXmlDTO, description: 'Allow applicant to apply leave less than number of day (s) stated above' })
-    @IsNotEmpty()
-    @ValidateNested({ each: true })
+    @IsNotEmpty() @ValidateNested({ each: true })
     @Type(() => GeneralPropertiesXmlDTO)
     isAllowShortNotice: GeneralPropertiesXmlDTO;
 

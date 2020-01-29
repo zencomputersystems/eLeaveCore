@@ -1,4 +1,4 @@
-import { Injectable, HttpService } from '@nestjs/common';
+import { Injectable, HttpService, BadRequestException } from '@nestjs/common';
 import { HolidayDbService } from '../../holiday/db/holiday.db.service';
 import { CalendarProfileDbService } from '../../holiday/db/calendar-profile-db.service';
 import { map, mergeMap } from 'rxjs/operators';
@@ -80,7 +80,8 @@ export class GenerateNewCalendarService {
 
     this.calendarProfileDbService.createByModel(resource, [], [], []).pipe(
       map(res => {
-        if (res.status == 200) { return res.data.resource; }
+        const results = res.status == 200 ? res.data.resource : new BadRequestException();
+        return results;
       })
     ).subscribe(
       data => {

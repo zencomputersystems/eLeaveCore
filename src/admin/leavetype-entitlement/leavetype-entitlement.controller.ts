@@ -138,7 +138,7 @@ export class LeavetypeEntitlementController {
 	@ApiOperation({ title: 'Delete leavetype entitlement' })
 	@ApiImplicitParam({ name: 'id', description: 'Delete by leavetype entitlement guid', required: true })
 	deleteLeavetypeEntitlement(@Param('id') id, @Req() req, @Res() res) {
-		this.userLeaveEntitlementDbService.findByFilterV2(['USER_LEAVE_ENTITLEMENT_GUID', 'USER_GUID'], ['(ENTITLEMENT_GUID=' + id + ')']).pipe(mergeMap(res => {
+		this.userLeaveEntitlementDbService.findByFilterV2(['USER_LEAVE_ENTITLEMENT_GUID', 'USER_GUID'], ['(ENTITLEMENT_GUID=' + id + ')', '(DELETED_AT IS NULL)']).pipe(mergeMap(res => {
 			// Check entitlement guid if attach to user
 			let resProcess;
 			// if hava user attach return user list

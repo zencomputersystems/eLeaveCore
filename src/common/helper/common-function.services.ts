@@ -64,7 +64,10 @@ export class CommonFunctionService {
                     res.send();
                 }
             },
-            err => { this.sendResError(message, res); }
+            err => {
+                const response: { status: string } = { status: message };
+                this.sendResError(response, res);
+            }
         );
     }
 

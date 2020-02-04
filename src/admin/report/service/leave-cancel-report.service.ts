@@ -6,9 +6,12 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class LeaveCancelReportService {
   constructor(private readonly reportDBService: ReportDBService) { }
-  getLeaveCancelData([tenantId]: [string]) {
+  getLeaveCancelData([tenantId, userId]: [string, string]) {
+    let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=CANCELLED)`];
+    const extra = ['(USER_GUID=' + userId + ')'];
+    filter = userId != null ? filter.concat(extra) : filter;
 
-    return this.reportDBService.leaveTransactionDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`, `(STATUS=CANCELLED)`]).pipe(
+    return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
       map(res => {
         let userIdList = [];
         res.forEach(element => {

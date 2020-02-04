@@ -26,6 +26,7 @@ import { ForgotPasswordModule } from './api/forgot-password/forgot-password.modu
 import { UploadFileModule } from './api/upload-file/upload-file.module';
 import { UserInfoDetailsModule } from './admin/user-info-details/user-info-details.module';
 import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
+import { ReportModule } from './admin/report/report.module';
 
 
 @Module({
@@ -73,7 +74,8 @@ import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
     UserprofileModule,
     UserInfoDetailsModule,
     DashboardModule,
-    DashboardAdminModule
+    DashboardAdminModule,
+    ReportModule
   ],
   controllers: [AppController],
   providers: [

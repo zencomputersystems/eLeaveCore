@@ -12,7 +12,7 @@ var enums = [
   'leave-adjustment',
   'leave-cancellation',
   'leave-rejected',
-  'forfeited-leave',
+  'leave-forfeited',
   'employee-master-list',
 ]
 
@@ -30,14 +30,7 @@ export class ReportController {
   findReportById(@Param() param, @Req() req, @Res() res) {
     let { id, reporttype } = param;
     if (id == null || id == '' || id == '{id}') { throw new NotFoundException('Id not found'); }
-
-    this.reportService.getReport([reporttype, req.user.TENANT_GUID]).subscribe(
-      data => { res.send(data); },
-      err => {
-        res.status(500);
-        res.send(err);
-      }
-    );
+    this.runService([reporttype, req, res, id]);
   }
 
   @Get('/:reporttype')
@@ -45,7 +38,11 @@ export class ReportController {
   @ApiImplicitParam({ name: 'reporttype', description: 'Type of report', required: true, enum: enums })
   findReportAll(@Param() param, @Req() req, @Res() res) {
     let { reporttype } = param;
-    this.reportService.getReport([reporttype, req.user.TENANT_GUID]).subscribe(
+    this.runService([reporttype, req, res, null]);
+  }
+
+  runService([reporttype, req, res, userId]: [string, any, any, string]) {
+    this.reportService.getReport([reporttype, req.user.TENANT_GUID, userId]).subscribe(
       data => { res.send(data); },
       err => {
         res.status(500);
@@ -53,6 +50,5 @@ export class ReportController {
       }
     );
   }
-
 
 }

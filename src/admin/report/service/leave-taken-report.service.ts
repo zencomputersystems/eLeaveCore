@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ReportDBService } from './report-db.service';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { LeaveTakenReportDto, LeaveTakenDetailsDto } from '../dto/leave-taken-report.dto';
 
 @Injectable()
 export class LeaveTakenReportService {
   constructor(private readonly reportDBService: ReportDBService) { }
-  getLeaveTakenData([tenantId]: [string]) {
-    return this.reportDBService.leaveTransactionDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`, `(STATUS=APPROVED)`]).pipe(
+  getLeaveTakenData([tenantId, userId]: [string, string]) {
+    let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=APPROVED)`];
+    const extra = ['(USER_GUID=' + userId + ')'];
+    filter = userId != null ? filter.concat(extra) : filter;
+
+    return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
       map(res => {
         let userIdList = [];
         res.forEach(element => {
           const userId = userIdList.find(x => (x.userGuid == element.USER_GUID));
           if (!userId) {
             // combine all id for filter
-            // userIdList.push(element.USER_GUID);
             let leaveTakenReportDTO = new LeaveTakenReportDto;
 
             leaveTakenReportDTO.userGuid = element.USER_GUID;
@@ -46,7 +49,7 @@ export class LeaveTakenReportService {
 
             userId.leaveDetail.push(leaveData);
           }
-          // console.log(userIdList);
+
         });
         return userIdList;
       })

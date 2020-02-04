@@ -7,21 +7,15 @@ import { map, filter } from 'rxjs/operators';
 @Injectable()
 export class LeaveEntitlementReportService {
   constructor(private readonly reportDBService: ReportDBService) { }
-  getData([tenantId]: [string]): Observable<any> {
+  getLeaveEntitlementData([tenantId]: [string]): Observable<any> {
     const filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`];
     return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
       map(res => {
-        // console.log(res);
-        // let leaveEntitlementReportDTO = new LeaveEntitlementReportDto;
-        // leaveEntitlementReportDTO.employeeName = 'wan faturrahman';
-        // return leaveEntitlementReportDTO;
         let userIdList = [];
 
         res.forEach(element => {
           const userId = userIdList.find(x => (x.userGuid == element.USER_GUID));
           if (!userId) {
-            // combine all id for filter
-            // userIdList.push(element.USER_GUID);
             let leaveEntitlementReportDTO = new LeaveEntitlementReportDto;
             leaveEntitlementReportDTO.userGuid = element.USER_GUID;
             leaveEntitlementReportDTO.employeeNo = element.USER_GUID;
@@ -53,17 +47,14 @@ export class LeaveEntitlementReportService {
             leaveData.pending = element.TOTAL_PENDING;
             leaveData.balance = element.BALANCE_DAYS;
 
-            console.log(userId);
             userId.leaveDetail.push(leaveData);
           }
-          // console.log(userIdList);
+
         });
 
-        // console.log(userIdList);
         return userIdList;
-        // return res;
+
       }), map(res => {
-        console.log(res);
         return res;
       })
     );

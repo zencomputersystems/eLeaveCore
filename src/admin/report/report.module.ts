@@ -15,6 +15,9 @@ import { LeaveRejectReportService } from './service/leave-reject-report.service'
 import { LeaveCancelReportService } from './service/leave-cancel-report.service';
 import { MasterListReportService } from './service/master-list-report.service';
 import { UserprofileDbService } from '../../api/userprofile/db/userprofile.db.service';
+import { EntitlementClaimReportService } from './service/entitlement-claim-report.service';
+import { LeaveAdjustmentReportService } from './service/leave-adjustment-report.service';
+import { LeaveForfeitedReportService } from './service/leave-forfeited-report.service';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { UserprofileDbService } from '../../api/userprofile/db/userprofile.db.se
     LeaveRejectReportService,
     LeaveCancelReportService,
     MasterListReportService,
+    EntitlementClaimReportService,
+    LeaveAdjustmentReportService,
+    LeaveForfeitedReportService,
 
     ReportDBService,
     UserLeaveEntitlementSummaryDbService,

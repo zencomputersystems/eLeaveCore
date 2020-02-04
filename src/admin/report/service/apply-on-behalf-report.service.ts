@@ -6,7 +6,7 @@ import { ApplyOnBehalfReportDto } from '../dto/apply-on-behalf-report.dto';
 @Injectable()
 export class ApplyOnBehalfReportService {
   constructor(private readonly reportDBService: ReportDBService) { }
-  getDataApplyOnBehalf([tenantId]: [string]) {
+  getApplyOnBehalfData([tenantId]: [string]) {
     return this.reportDBService.leaveTransactionDbService.findByFilterV2([], [`(APPLIED_ON_BEHALF=1)`, `(TENANT_GUID=${tenantId})`]).pipe(
       map(res => {
         let userIdList = [];

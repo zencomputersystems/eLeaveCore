@@ -22,14 +22,7 @@ export class LeaveEntitlementReportService {
             leaveEntitlementReportDTO.employeeName = element.TENANT_GUID;
             leaveEntitlementReportDTO.yearService = 1;
 
-            const leaveData = new LeaveDetailsDto;
-            leaveData.leaveType = element.LEAVE_TYPE_GUID;
-            leaveData.entitledDays = element.ENTITLED_DAYS;
-            leaveData.carriedForward = 2;
-            leaveData.forfeited = '12';
-            leaveData.taken = element.TOTAL_APPROVED;
-            leaveData.pending = element.TOTAL_PENDING;
-            leaveData.balance = element.BALANCE_DAYS;
+            const leaveData = this.assignData(element);
 
             leaveEntitlementReportDTO.leaveDetail = [];
             leaveEntitlementReportDTO.leaveDetail.push(leaveData);
@@ -37,15 +30,7 @@ export class LeaveEntitlementReportService {
             userIdList.push(leaveEntitlementReportDTO);
 
           } else {
-            // merge leave for user 
-            const leaveData = new LeaveDetailsDto;
-            leaveData.leaveType = element.LEAVE_TYPE_GUID;
-            leaveData.entitledDays = element.ENTITLED_DAYS;
-            leaveData.carriedForward = 2;
-            leaveData.forfeited = '12';
-            leaveData.taken = element.TOTAL_APPROVED;
-            leaveData.pending = element.TOTAL_PENDING;
-            leaveData.balance = element.BALANCE_DAYS;
+            const leaveData = this.assignData(element);
 
             userId.leaveDetail.push(leaveData);
           }
@@ -61,4 +46,18 @@ export class LeaveEntitlementReportService {
 
 
   }
+
+  assignData(element) {
+    // merge leave for user 
+    const leaveData = new LeaveDetailsDto;
+    leaveData.leaveType = element.LEAVE_TYPE_GUID;
+    leaveData.entitledDays = element.ENTITLED_DAYS;
+    leaveData.carriedForward = 2;
+    leaveData.forfeited = '12';
+    leaveData.taken = element.TOTAL_APPROVED;
+    leaveData.pending = element.TOTAL_PENDING;
+    leaveData.balance = element.BALANCE_DAYS;
+    return leaveData;
+  }
+
 }

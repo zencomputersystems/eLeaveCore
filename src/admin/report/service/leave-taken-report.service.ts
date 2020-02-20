@@ -24,13 +24,7 @@ export class LeaveTakenReportService {
             leaveTakenReportDTO.employeeNo = element.USER_GUID;
             leaveTakenReportDTO.employeeName = element.TENANT_GUID;
 
-            const leaveData = new LeaveTakenDetailsDto;
-            leaveData.leaveType = element.LEAVE_TYPE_GUID;
-            leaveData.startDate = element.START_DATE;
-            leaveData.endDate = element.END_DATE;
-            leaveData.noOfDays = element.NO_OF_DAYS;
-            leaveData.approveBy = element.STATES != undefined ? element.STATES : [];
-            leaveData.remarks = element.REMARKS;
+            const leaveData = this.runService(element)
 
             leaveTakenReportDTO.leaveDetail = [];
             leaveTakenReportDTO.leaveDetail.push(leaveData);
@@ -38,14 +32,7 @@ export class LeaveTakenReportService {
             userIdList.push(leaveTakenReportDTO);
 
           } else {
-            // merge leave for user 
-            const leaveData = new LeaveTakenDetailsDto;
-            leaveData.leaveType = element.LEAVE_TYPE_GUID;
-            leaveData.startDate = element.START_DATE;
-            leaveData.endDate = element.END_DATE;
-            leaveData.noOfDays = element.NO_OF_DAYS;
-            leaveData.approveBy = element.STATES != undefined ? element.STATES : [];
-            leaveData.remarks = element.REMARKS
+            const leaveData = this.runService(element);
 
             userId.leaveDetail.push(leaveData);
           }
@@ -54,5 +41,17 @@ export class LeaveTakenReportService {
         return userIdList;
       })
     );
+  }
+
+  runService(element) {
+    // merge leave for user 
+    const leaveData = new LeaveTakenDetailsDto;
+    leaveData.leaveType = element.LEAVE_TYPE_GUID;
+    leaveData.startDate = element.START_DATE;
+    leaveData.endDate = element.END_DATE;
+    leaveData.noOfDays = element.NO_OF_DAYS;
+    leaveData.approveBy = element.STATES != undefined ? element.STATES : [];
+    leaveData.remarks = element.REMARKS
+    return leaveData;
   }
 }

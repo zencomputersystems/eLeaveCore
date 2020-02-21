@@ -4,6 +4,7 @@ export class MasterListReportDto {
   employeeName: string;
   companyName: string;
   department: string;
+  designation: string;
   email: string;
   approver: string;
   joinDate: string;

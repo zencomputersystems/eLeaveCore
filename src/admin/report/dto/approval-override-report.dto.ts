@@ -2,6 +2,10 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
 export class ApprovalOverrideReportDto {
+  @ApiModelProperty({ description: 'User guid', example: 'HJGHVKHGKHJBKHGJKNJKBHKDASKN' })
+  @IsString()
+  userGuid: string;
+
   @ApiModelProperty({ description: 'Employee No', example: '3037' })
   @IsString()
   employeeNo: string;

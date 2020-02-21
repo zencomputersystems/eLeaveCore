@@ -11,8 +11,10 @@ export class LeaveEntitlementReportService {
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService
   ) { }
-  getLeaveEntitlementData([tenantId]: [string]): Observable<any> {
-    const filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`];
+  getLeaveEntitlementData([tenantId, userId]: [string, string]): Observable<any> {
+    let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`];
+    const extra = ['(USER_GUID=' + userId + ')'];
+    filter = userId != null ? filter.concat(extra) : filter;
     return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
         let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);

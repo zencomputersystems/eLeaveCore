@@ -8,8 +8,12 @@ import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.s
 export class MasterListReportService {
   constructor(private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService) { }
-  getMasterListData([tenantId]: [string]) {
-    return this.reportDBService.userprofileDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]).pipe(
+  getMasterListData([tenantId, userId]: [string, string]) {
+    let filter = [`(TENANT_GUID=${tenantId})`];
+    const extra = ['(USER_GUID=' + userId + ')'];
+    filter = userId != null ? filter.concat(extra) : filter;
+
+    return this.reportDBService.userprofileDbService.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
         let companyList = await this.pendingLeaveService.getCompanyList(res[0].TENANT_GUID) as any[];
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];

@@ -71,13 +71,13 @@ export class ReportService {
     const param: [string, string] = [tenantId, userId];
 
     const functionList = [
-      { type: 'leave-entitlement', method: this.leaveEntitlementReportService.getLeaveEntitlementData([tenantId]) },
-      { type: 'approval-override', method: this.approvalOverrideReportService.getApprovalOverrideData([tenantId]) },
-      { type: 'apply-on-behalf', method: this.applyOnBehalfReportService.getApplyOnBehalfData([tenantId]) },
+      { type: 'leave-entitlement', method: this.leaveEntitlementReportService.getLeaveEntitlementData(param) },
+      { type: 'approval-override', method: this.approvalOverrideReportService.getApprovalOverrideData(param) },
+      { type: 'apply-on-behalf', method: this.applyOnBehalfReportService.getApplyOnBehalfData(param) },
       { type: 'leave-taken', method: this.leaveTakenReportService.getLeaveTakenData(param) },
       { type: 'leave-rejected', method: this.leaveRejectReportService.getLeaveRejectData(param) },
       { type: 'leave-cancellation', method: this.leaveCancelReportService.getLeaveCancelData(param) },
-      { type: 'employee-master-list', method: this.masterListReportService.getMasterListData([tenantId]) },
+      { type: 'employee-master-list', method: this.masterListReportService.getMasterListData(param) },
       { type: 'entitlement-claim', method: this.entitlementClaimReportService.getEntitlementClaimData(param) },
       { type: 'leave-adjustment', method: this.leaveAdjustmentReportService.getLeaveAdjustmentData(param) },
       { type: 'leave-forfeited', method: this.leaveForfeitedReportService.getLeaveForfeitedData(param) },

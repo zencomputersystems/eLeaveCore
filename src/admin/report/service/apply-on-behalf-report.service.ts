@@ -8,8 +8,12 @@ import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.s
 export class ApplyOnBehalfReportService {
   constructor(private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService) { }
-  getApplyOnBehalfData([tenantId]: [string]) {
-    return this.reportDBService.leaveTransactionDbService.findByFilterV2([], [`(APPLIED_ON_BEHALF=1)`, `(TENANT_GUID=${tenantId})`]).pipe(
+  getApplyOnBehalfData([tenantId, userId]: [string, string]) {
+    let filter = [`(APPLIED_ON_BEHALF=1)`, `(TENANT_GUID=${tenantId})`];
+    const extra = ['(USER_GUID=' + userId + ')'];
+    filter = userId != null ? filter.concat(extra) : filter;
+
+    return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
         return { res, resultAll };

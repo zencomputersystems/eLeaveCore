@@ -18,6 +18,9 @@ import { UserprofileDbService } from '../../api/userprofile/db/userprofile.db.se
 import { EntitlementClaimReportService } from './service/entitlement-claim-report.service';
 import { LeaveAdjustmentReportService } from './service/leave-adjustment-report.service';
 import { LeaveForfeitedReportService } from './service/leave-forfeited-report.service';
+import { PendingLeaveService } from '../approval-override/pending-leave.service';
+import { CompanyDbService } from '../company/company.service';
+import { LeavetypeService } from '../leavetype/leavetype.service';
 
 @Module({
   imports: [
@@ -35,6 +38,10 @@ import { LeaveForfeitedReportService } from './service/leave-forfeited-report.se
     EntitlementClaimReportService,
     LeaveAdjustmentReportService,
     LeaveForfeitedReportService,
+    PendingLeaveService,
+
+    CompanyDbService,
+    LeavetypeService,
 
     ReportDBService,
     UserLeaveEntitlementSummaryDbService,

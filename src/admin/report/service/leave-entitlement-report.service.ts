@@ -1,37 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { LeaveEntitlementReportDto, LeaveDetailsDto } from '../dto/leave-entitlement-report.dto';
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ReportDBService } from './report-db.service';
-import { map, filter } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
+import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
 @Injectable()
 export class LeaveEntitlementReportService {
-  constructor(private readonly reportDBService: ReportDBService) { }
+  constructor(
+    private readonly reportDBService: ReportDBService,
+    private readonly pendingLeaveService: PendingLeaveService
+  ) { }
   getLeaveEntitlementData([tenantId]: [string]): Observable<any> {
     const filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`];
     return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
-      map(res => {
+      mergeMap(async res => {
+        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
+        let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+
+        return { res, leaveTypeList, resultAll };
+      }),
+      map(result => {
+        let { res, leaveTypeList, resultAll } = result;
         let userIdList = [];
 
-        res.forEach(element => {
+        res.forEach(async element => {
           const userId = userIdList.find(x => (x.userGuid == element.USER_GUID));
+          let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
+
           if (!userId) {
             let leaveEntitlementReportDTO = new LeaveEntitlementReportDto;
             leaveEntitlementReportDTO.userGuid = element.USER_GUID;
-            leaveEntitlementReportDTO.employeeNo = element.USER_GUID;
-            leaveEntitlementReportDTO.employeeName = element.TENANT_GUID;
+            leaveEntitlementReportDTO.employeeNo = resultUser.STAFF_ID;
+            leaveEntitlementReportDTO.employeeName = resultUser.FULLNAME;
             leaveEntitlementReportDTO.yearService = 1;
 
-            const leaveData = this.assignData(element);
+            const leaveData = this.assignData([element, leaveTypeList]);
 
             leaveEntitlementReportDTO.leaveDetail = [];
             leaveEntitlementReportDTO.leaveDetail.push(leaveData);
-
             userIdList.push(leaveEntitlementReportDTO);
 
           } else {
-            const leaveData = this.assignData(element);
-
+            const leaveData = this.assignData([element, leaveTypeList]);
             userId.leaveDetail.push(leaveData);
           }
 
@@ -47,10 +58,12 @@ export class LeaveEntitlementReportService {
 
   }
 
-  assignData(element) {
+  assignData([element, leaveTypeList]) {
     // merge leave for user 
     const leaveData = new LeaveDetailsDto;
-    leaveData.leaveType = element.LEAVE_TYPE_GUID;
+    let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+
+    leaveData.leaveType = findLeaveData.CODE;
     leaveData.entitledDays = element.ENTITLED_DAYS;
     leaveData.carriedForward = 2;
     leaveData.forfeited = '12';

@@ -58,6 +58,17 @@ export class PendingLeaveService {
   }
 
   /**
+   * Get personal info using callback function
+   *
+   * @param {string[]} tenantGuid
+   * @returns
+   * @memberof PendingLeaveService
+   */
+  public async getAllUserInfo(tenantGuid: string[]) {
+    return await this.runService(this.userprofileDbService.findByFilterV2([], ['(TENANT_GUID IN (' + tenantGuid + ')']));
+  }
+
+  /**
    * Run callback function
    *
    * @param {*} method

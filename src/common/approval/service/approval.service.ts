@@ -7,6 +7,7 @@ import { STATESDTO } from '../dto/states.dto';
 import { Resource } from 'src/common/model/resource.model';
 import { UserprofileDbService } from '../../../api/userprofile/db/userprofile.db.service';
 import { ApprovedLeaveDTO } from 'src/api/leave/dto/approved-leave.dto';
+import { LeaveTransactionLogDbService } from '../../../api/leave/db/leave-transaction-log.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -27,7 +28,8 @@ export class ApprovalService {
 	 */
 	constructor(
 		private leaveTransactionService: LeaveTransactionDbService,
-		private userprofileDbService: UserprofileDbService
+		private userprofileDbService: UserprofileDbService,
+		private leaveTransactionLogDbService: LeaveTransactionLogDbService
 	) { }
 
 	/**
@@ -288,16 +290,27 @@ export class ApprovalService {
 		}
 
 		result.leave.UPDATE_USER_GUID = approverUserId;
-		result.leave.REMARKS = leaveTransactionReason;
+		// result.leave.REMARKS = leaveTransactionReason;
 
 		const resource = new Resource(new Array());
 
 		resource.resource.push(result.leave);
+		// console.log(resource);
 
 		return this.leaveTransactionService.updateByModel(resource, [], [], [])
 			.pipe(map(res => {
 				if (res.status != 200) {
 					throw "Fail to Update Leave Transaction";
+				}
+				else {
+					console.log(resource.resource[0].LEAVE_TRANSACTION_GUID);
+					const data = resource.resource[0];
+					const leaveTransactionId = data.LEAVE_TRANSACTION_GUID as string;
+					const statusProcess = data.STATUS as string;
+
+					this.leaveTransactionLogDbService.create([leaveTransactionId, statusProcess, 'APPROVAL', leaveTransactionReason, approverUserId]).subscribe(
+						data => { console.log(data); }, err => { console.log(err); }
+					);
 				}
 
 				return res.data.resource;

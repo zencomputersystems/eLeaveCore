@@ -16,6 +16,7 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
 import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { PendingLeaveService } from './pending-leave.service';
+import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
 
 @Module({
 	imports: [
@@ -37,7 +38,8 @@ import { PendingLeaveService } from './pending-leave.service';
 		CompanyDbService,
 		LeavetypeService,
 		PendingLeaveService,
-		ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4
+		ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4,
+		LeaveTransactionLogDbService
 	],
 	controllers: [ApprovalOverrideController]
 })

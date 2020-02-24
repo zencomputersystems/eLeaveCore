@@ -22,6 +22,7 @@ import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-app
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { GeneralLeavePolicyService } from '../../admin/general-leave-policy/general-leave-policy.service';
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
+import { LeaveTransactionLogDbService } from './db/leave-transaction-log.db.service';
 
 /**
  * Module for leave
@@ -54,7 +55,8 @@ import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
     CommonFunctionService,
     LeaveBalanceValidationParentService,
     GeneralLeavePolicyService,
-    UserprofileDbService
+    UserprofileDbService,
+    LeaveTransactionLogDbService
   ],
 })
 export class LeaveModule { }

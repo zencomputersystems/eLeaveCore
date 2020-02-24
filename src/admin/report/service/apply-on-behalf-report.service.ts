@@ -3,6 +3,7 @@ import { ReportDBService } from './report-db.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { ApplyOnBehalfReportDto } from '../dto/apply-on-behalf-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
+import { getEmployeeServiceYear } from 'src/common/helper/basic-functions';
 
 @Injectable()
 export class ApplyOnBehalfReportService {
@@ -15,22 +16,25 @@ export class ApplyOnBehalfReportService {
 
     return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
+        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID) as any[];
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
-        return { res, resultAll };
+        return { res, resultAll, leaveTypeList };
       }),
       map(result => {
-        let { res, resultAll } = result;
+        let { res, resultAll, leaveTypeList } = result;
         let userIdList = [];
         res.forEach(element => {
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
+          let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
 
           let applyOnBehalfReportDto = new ApplyOnBehalfReportDto;
 
           applyOnBehalfReportDto.userGuid = element.USER_GUID;
           applyOnBehalfReportDto.employeeNo = resultUser.STAFF_ID;
           applyOnBehalfReportDto.employeeName = resultUser.FULLNAME;
-          applyOnBehalfReportDto.yearService = 2;
-          applyOnBehalfReportDto.leaveType = element.LEAVE_TYPE_GUID;
+          applyOnBehalfReportDto.yearService = getEmployeeServiceYear(resultUser.JOIN_DATE);
+          applyOnBehalfReportDto.leaveTypeId = element.LEAVE_TYPE_GUID;
+          applyOnBehalfReportDto.leaveTypeName = findLeaveData.CODE;
           applyOnBehalfReportDto.applicationDate = element.CREATION_TS;
           applyOnBehalfReportDto.confirmedDate = element.UPDATE_TS;
           applyOnBehalfReportDto.appliedBy = element.UPDATE_USER_GUID;

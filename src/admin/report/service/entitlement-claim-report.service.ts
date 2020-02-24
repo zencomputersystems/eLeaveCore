@@ -11,7 +11,8 @@ export class EntitlementClaimReportService {
     entitlementClaimReportDto.userGuid = '';
     entitlementClaimReportDto.employeeNo = '';
     entitlementClaimReportDto.employeeName = '';
-    entitlementClaimReportDto.leaveType = '';
+    entitlementClaimReportDto.leaveTypeId = '';
+    entitlementClaimReportDto.leaveTypeName = '';
     entitlementClaimReportDto.applyDate = '';
     entitlementClaimReportDto.startDate = '';
     entitlementClaimReportDto.endDate = '';

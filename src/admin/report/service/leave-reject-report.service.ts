@@ -21,7 +21,8 @@ export class LeaveRejectReportService {
           leaveRejectReportDTO.userGuid = element.USER_GUID;
           leaveRejectReportDTO.employeeNo = element.USER_GUID;
           leaveRejectReportDTO.employeeName = element.TENANT_GUID;
-          leaveRejectReportDTO.leaveType = element.LEAVE_TYPE_GUID;
+          leaveRejectReportDTO.leaveTypeId = element.LEAVE_TYPE_GUID;
+          leaveRejectReportDTO.leaveTypeName = '';
           leaveRejectReportDTO.startDate = element.START_DATE;
           leaveRejectReportDTO.endDate = element.END_DATE;
           leaveRejectReportDTO.noOfDays = element.NO_OF_DAYS;

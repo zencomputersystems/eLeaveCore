@@ -14,9 +14,13 @@ export class LeaveAdjustmentReportDto {
   @IsString()
   employeeName: string;
 
-  @ApiModelProperty({ description: 'Leave type', example: 'Annual Leave' })
+  @ApiModelProperty({ description: 'Leave type id', example: 'HKBHBHBKJBJBJ' })
   @IsString()
-  leaveType: string;
+  leaveTypeId: string;
+
+  @ApiModelProperty({ description: 'Leave type name', example: 'Annual Leave' })
+  @IsString()
+  leaveTypeName: string;
 
   @ApiModelProperty({ description: 'Adjustment', example: '+2' })
   @IsString()

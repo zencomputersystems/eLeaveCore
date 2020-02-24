@@ -12,7 +12,8 @@ export class LeaveAdjustmentReportService {
     leaveAdjustmentReportDto.userGuid = '';
     leaveAdjustmentReportDto.employeeNo = '';
     leaveAdjustmentReportDto.employeeName = '';
-    leaveAdjustmentReportDto.leaveType = '';
+    leaveAdjustmentReportDto.leaveTypeId = '';
+    leaveAdjustmentReportDto.leaveTypeName = '';
     leaveAdjustmentReportDto.adjustment = '';
     leaveAdjustmentReportDto.adjustBy = '';
     leaveAdjustmentReportDto.adjustDate = '';

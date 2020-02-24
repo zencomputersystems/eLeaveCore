@@ -4,9 +4,13 @@ import { Type } from 'class-transformer';
 
 
 export class LeaveDetailsDto {
-  @ApiModelProperty({ description: 'Leave type', example: 'Annual Leave' })
+  @ApiModelProperty({ description: 'Leave type id', example: 'HKBHBHBKJBJBJ' })
   @IsString()
-  leaveType: string;
+  leaveTypeId: string;
+
+  @ApiModelProperty({ description: 'Leave type name', example: 'Annual Leave' })
+  @IsString()
+  leaveTypeName: string;
 
   @ApiModelProperty({ description: 'Entitled days', example: '14.04' })
   @IsString()

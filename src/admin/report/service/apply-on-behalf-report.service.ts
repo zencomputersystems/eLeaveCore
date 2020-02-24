@@ -42,6 +42,7 @@ export class ApplyOnBehalfReportService {
           applyOnBehalfReportDto.endDate = element.END_DATE;
           applyOnBehalfReportDto.noOfDays = element.NO_OF_DAYS;
           applyOnBehalfReportDto.status = element.STATUS;
+          applyOnBehalfReportDto.dayType = element.TIME_SLOT || 'fullday';
           applyOnBehalfReportDto.remarks = element.REMARKS;
 
           userIdList.push(applyOnBehalfReportDto);

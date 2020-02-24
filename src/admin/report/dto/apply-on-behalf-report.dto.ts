@@ -54,6 +54,10 @@ export class ApplyOnBehalfReportDto {
   @IsString()
   status: string;
 
+  @ApiModelProperty({ description: 'Day type', example: 'q1' })
+  @IsString()
+  dayType: string;
+
   @ApiModelProperty({ description: 'Remarks', example: 'No access internet' })
   @IsString()
   remarks: string;

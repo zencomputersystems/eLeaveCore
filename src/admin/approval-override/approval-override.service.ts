@@ -16,6 +16,7 @@ import { LeavetypeService } from '../leavetype/leavetype.service';
 import { PendingLeaveService } from './pending-leave.service';
 import { CompanyModel } from '../company/model/company.model';
 import { LeaveTypeModel } from '../leavetype/model/leavetype.model';
+import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -111,7 +112,8 @@ export class ApprovalOverrideService {
     // private readonly userprofileDbService: UserprofileDbService,
     // private readonly companyDbService: CompanyDbService,
     // private readonly leavetypeService: LeavetypeService,
-    private readonly pendingLeaveService: PendingLeaveService) {
+    private readonly pendingLeaveService: PendingLeaveService,
+    private readonly leaveTransactionLogDbService: LeaveTransactionLogDbService) {
   }
 
   /**
@@ -192,7 +194,19 @@ export class ApprovalOverrideService {
    */
   public updateToEmployee(user: any, data: UpdateApprovalDTO) {
     let result = this.approvalOverrideServiceRef2.leaveTransactionDbService.updateToEmployee(user, data);
-    result.subscribe(data => {
+    result.pipe(
+      map(res => {
+        if (res.status == 200) {
+          data.leaveTransactionId.forEach(element => {
+            this.leaveTransactionLogDbService.create([element, data.status, 'APPROVAL_OVERRIDE', data.remark, user.USER_GUID]).subscribe(
+              data => { /*console.log(data);*/ }, err => { /*console.log(err);*/ }
+            );
+          });
+        }
+
+        return res;
+      })
+    ).subscribe(data => {
       data.data.resource.forEach(element => {
         this.checkMailAvailable(user, element);
       });

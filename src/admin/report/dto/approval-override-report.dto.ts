@@ -14,9 +14,13 @@ export class ApprovalOverrideReportDto {
   @IsString()
   employeeName: string;
 
-  @ApiModelProperty({ description: 'Leave type', example: 'Annual Leave' })
+  @ApiModelProperty({ description: 'Leave type id', example: 'HKBHBHBKJBJBJ' })
   @IsString()
-  leaveType: string;
+  leaveTypeId: string;
+
+  @ApiModelProperty({ description: 'Leave type name', example: 'Annual Leave' })
+  @IsString()
+  leaveTypeName: string;
 
   @ApiModelProperty({ description: 'Apply date', example: '2020-01-31' })
   @IsString()

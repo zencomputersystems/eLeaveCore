@@ -65,7 +65,8 @@ export class LeaveEntitlementReportService {
     const leaveData = new LeaveDetailsDto;
     let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
 
-    leaveData.leaveType = findLeaveData.CODE;
+    leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
+    leaveData.leaveTypeName = findLeaveData.CODE;
     leaveData.entitledDays = element.ENTITLED_DAYS;
     leaveData.carriedForward = 2;
     leaveData.forfeited = '12';

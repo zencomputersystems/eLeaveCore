@@ -11,7 +11,8 @@ export class LeaveForfeitedReportService {
     leaveForfeitedReportDto.userGuid = "0089edb0-2bac-11ea-ae46-2fb9e0426975";
     leaveForfeitedReportDto.employeeNo = "1212";
     leaveForfeitedReportDto.employeeName = "KLKL";
-    leaveForfeitedReportDto.leaveType = "Annual Leave";
+    leaveForfeitedReportDto.leaveTypeId = "JBKHBKHUB";
+    leaveForfeitedReportDto.leaveTypeName = "Annual Leave";
     leaveForfeitedReportDto.noOfDays = '1';
 
     userForfeitedData.push(leaveForfeitedReportDto);

@@ -116,3 +116,15 @@ function getResData(res) {
     return res.data.resource;
   }
 }
+
+//  ---------------------------------------------------------------------------------------------------------------------------
+
+export function getEmployeeServiceYear(dateOfJoin: Date): number {
+
+  let now = moment();
+
+  let serviceYear = moment.duration(now.diff(dateOfJoin)).asYears();
+
+  return Math.ceil(serviceYear);
+
+}

@@ -13,7 +13,8 @@ export class ApprovalOverrideReportService {
     approvalOverrideReportDto.userGuid = '';
     approvalOverrideReportDto.employeeNo = '';
     approvalOverrideReportDto.employeeName = '';
-    approvalOverrideReportDto.leaveType = '';
+    approvalOverrideReportDto.leaveTypeId = '';
+    approvalOverrideReportDto.leaveTypeName = '';
     approvalOverrideReportDto.applicationDate = '';
     approvalOverrideReportDto.overrideBy = '';
     approvalOverrideReportDto.overrideDate = '';

@@ -27,7 +27,7 @@ export class LeaveAdjustmentController {
    */
   @Patch()
   @ApiOperation({ title: 'Update Leave Adjustment' })
-  updateGeneralLeavePolicy(@Body() leaveAdjustmentDTO: LeaveAdjustmentDTO, @Req() req, @Res() res) {
+  leaveAdjustment(@Body() leaveAdjustmentDTO: LeaveAdjustmentDTO, @Req() req, @Res() res) {
     this.leaveAdjustmentService.adjustLeave(req.user, leaveAdjustmentDTO).subscribe(
       data => { res.send(data); },
       err => { res.send(err); }

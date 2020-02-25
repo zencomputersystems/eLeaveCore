@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { LeaveEntitlementReportDto, LeaveDetailsDto } from '../dto/leave-entitlement-report.dto';
 import { Observable } from 'rxjs';
 import { ReportDBService } from './report-db.service';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, flatMap } from 'rxjs/operators';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
 @Injectable()
@@ -19,25 +19,34 @@ export class LeaveEntitlementReportService {
       mergeMap(async res => {
         let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+        let companyList = await this.pendingLeaveService.getCompanyList(res[0].TENANT_GUID) as any[];
 
-        return { res, leaveTypeList, resultAll };
+        return { res, leaveTypeList, resultAll, companyList };
       }),
       map(result => {
-        let { res, leaveTypeList, resultAll } = result;
+        let { res, leaveTypeList, resultAll, companyList } = result;
         let userIdList = [];
 
         res.forEach(async element => {
           const userId = userIdList.find(x => (x.userGuid == element.USER_GUID));
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
+          let companyData = companyList.find(x => x.TENANT_COMPANY_GUID === resultUser.TENANT_COMPANY_GUID);
 
           if (!userId) {
             let leaveEntitlementReportDTO = new LeaveEntitlementReportDto;
             leaveEntitlementReportDTO.userGuid = element.USER_GUID;
             leaveEntitlementReportDTO.employeeNo = resultUser.STAFF_ID;
             leaveEntitlementReportDTO.employeeName = resultUser.FULLNAME;
+            leaveEntitlementReportDTO.designation = resultUser.DESIGNATION;
+            leaveEntitlementReportDTO.department = resultUser.DEPARTMENT;
+            leaveEntitlementReportDTO.companyName = companyData ? companyData.NAME : null;
+
             leaveEntitlementReportDTO.yearService = 1;
 
             const leaveData = this.assignData([element, leaveTypeList]);
+
+            leaveEntitlementReportDTO.abbr = [];
+            leaveEntitlementReportDTO.abbr.push(leaveData.leaveTypeAbbr);
 
             leaveEntitlementReportDTO.leaveDetail = [];
             leaveEntitlementReportDTO.leaveDetail.push(leaveData);
@@ -45,6 +54,7 @@ export class LeaveEntitlementReportService {
 
           } else {
             const leaveData = this.assignData([element, leaveTypeList]);
+            userId.abbr.push(leaveData.leaveTypeAbbr);
             userId.leaveDetail.push(leaveData);
           }
 
@@ -67,6 +77,7 @@ export class LeaveEntitlementReportService {
 
     leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
     leaveData.leaveTypeName = findLeaveData.CODE;
+    leaveData.leaveTypeAbbr = findLeaveData.ABBR;
     leaveData.entitledDays = element.ENTITLED_DAYS;
     leaveData.carriedForward = 2;
     leaveData.forfeited = '12';

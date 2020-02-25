@@ -12,6 +12,10 @@ export class LeaveDetailsDto {
   @IsString()
   leaveTypeName: string;
 
+  @ApiModelProperty({ description: 'Leave type abbr', example: 'AL' })
+  @IsString()
+  leaveTypeAbbr: string;
+
   @ApiModelProperty({ description: 'Entitled days', example: '14.04' })
   @IsString()
   entitledDays: string;
@@ -50,9 +54,25 @@ export class LeaveEntitlementReportDto {
   @IsString()
   employeeName: string;
 
+  @ApiModelProperty({ description: 'Designation', example: 'Solution developer' })
+  @IsString()
+  designation: string;
+
+  @ApiModelProperty({ description: 'Department', example: 'RND' })
+  @IsString()
+  department: string;
+
+  @ApiModelProperty({ description: 'Company Name', example: 'Zen Computer System Sdn. Bhd.' })
+  @IsString()
+  companyName: string;
+
   @ApiModelProperty({ description: 'Year of service', example: 1 })
   @IsString()
   yearService: number;
+
+  @ApiModelProperty({ description: 'Leave abbr', example: 'AL,ML,RL' })
+  @IsString()
+  abbr: string[];
 
   @ApiModelProperty({ description: 'Leave detail', type: LeaveDetailsDto })
   @IsNotEmpty()

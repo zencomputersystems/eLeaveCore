@@ -6,6 +6,7 @@ import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave
 import { UserLeaveEntitlementModel } from 'src/api/userprofile/model/user-leave-entitlement.model';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
+import { LeaveAdjustmentDbLogService } from './leave-adjustment-log.service';
 import moment = require('moment');
 
 /**
@@ -22,7 +23,10 @@ export class LeaveAdjustmentService {
    * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService Db service for user leave entitlement
    * @memberof LeaveAdjustmentService
    */
-  constructor(private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService) { }
+  constructor(
+    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+    private readonly leaveAdjustmentDbLogService: LeaveAdjustmentDbLogService
+  ) { }
   /**
    * Create new entry on l_main_user_leave_entitlement parent flag 0 and days added with range
    *
@@ -65,13 +69,13 @@ export class LeaveAdjustmentService {
    * @returns
    * @memberof LeaveAdjustmentService
    */
-  public setupData(data) {
-    let leaveAdjustmentDTO = data[0];
-    let res = data[1];
-    let successList = data[2];
-    let failedList = data[3];
-    let resource = data[4];
-    let user = data[5];
+  public setupData([leaveAdjustmentDTO, res, successList, failedList, resource, user]) {
+    // let  = data[0];
+    // let  = data[1];
+    // let  = data[2];
+    // let  = data[3];
+    // let  = data[4];
+    // let  = data[5];
     leaveAdjustmentDTO.userId.forEach(element => {
       let leave: UserLeaveEntitlementModel = res.find(x => x.USER_GUID.toString() === element.toString());
       if (leave) {
@@ -96,6 +100,14 @@ export class LeaveAdjustmentService {
     this.userLeaveEntitlementDbService.createByModel(resource, [], [], [])
       .pipe(map(res => {
         if (res.status == 200) {
+          let resourceLog = new Resource(new Array);
+
+          resource.resource.forEach(element => {
+            resourceLog = this.leaveAdjustmentDbLogService.setupData([resourceLog, element.USER_GUID, element.LEAVE_TYPE_GUID, element.DAYS_ADDED, element.REMARKS, element.CREATION_USER_GUID]);
+          });
+
+          this.leaveAdjustmentDbLogService.create([resourceLog]).subscribe();
+
           return res.data.resource;
         } else {
           throw new InternalServerErrorException('Failed to create leave adjustment');

@@ -8,6 +8,7 @@ import { LeaveAdjustmentController } from './leave-adjustment.controller';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { LeaveAdjustmentDbLogService } from './leave-adjustment-log.service';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     LeaveAdjustmentService,
     QueryParserService,
     CommonFunctionService,
-    UserLeaveEntitlementDbService
+    UserLeaveEntitlementDbService,
+    LeaveAdjustmentDbLogService
   ],
   controllers: [LeaveAdjustmentController]
 })

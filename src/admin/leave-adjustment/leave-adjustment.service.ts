@@ -103,7 +103,7 @@ export class LeaveAdjustmentService {
           let resourceLog = new Resource(new Array);
 
           resource.resource.forEach(element => {
-            resourceLog = this.leaveAdjustmentDbLogService.setupData([resourceLog, element.USER_GUID, element.LEAVE_TYPE_GUID, element.DAYS_ADDED, element.REMARKS, element.CREATION_USER_GUID]);
+            resourceLog = this.leaveAdjustmentDbLogService.setupData([resourceLog, element.USER_GUID, element.LEAVE_TYPE_GUID, element.DAYS_ADDED, element.REMARKS, element.CREATION_USER_GUID, element.TENANT_GUID]);
           });
 
           this.leaveAdjustmentDbLogService.create([resourceLog]).subscribe();

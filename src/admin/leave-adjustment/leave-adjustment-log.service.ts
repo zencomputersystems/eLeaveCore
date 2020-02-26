@@ -15,11 +15,12 @@ export class LeaveAdjustmentDbLogService extends BaseDBService implements IDbSer
     super(httpService, queryService, "l_leave_adjustment_log");
   }
 
-  setupData([resource, userId, leavetypeId, adjustment, remarks, creatorUserId]: [Resource, string, string, string, string, string]) {
+  setupData([resource, userId, leavetypeId, adjustment, remarks, creatorUserId, tenantId]: [Resource, string, string, string, string, string, string]) {
 
     let leaveLogData = new LeaveAdjustmentLogModel();
 
     leaveLogData.LEAVE_ADJUSTMENT_LOG_GUID = v1();
+    leaveLogData.TENANT_GUID = tenantId;
     leaveLogData.USER_GUID = userId;
     leaveLogData.LEAVE_TYPE_GUID = leavetypeId;
     leaveLogData.ADJUSTMENT = adjustment;

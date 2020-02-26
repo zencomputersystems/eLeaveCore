@@ -21,6 +21,7 @@ import { LeaveForfeitedReportService } from './service/leave-forfeited-report.se
 import { PendingLeaveService } from '../approval-override/pending-leave.service';
 import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
+import { LeaveAdjustmentDbLogService } from '../leave-adjustment/leave-adjustment-log.service';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { LeavetypeService } from '../leavetype/leavetype.service';
     UserLeaveEntitlementSummaryDbService,
     LeaveTransactionDbService,
     UserprofileDbService,
+    LeaveAdjustmentDbLogService,
 
     QueryParserService,
     DateCalculationService

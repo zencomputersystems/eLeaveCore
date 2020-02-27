@@ -72,8 +72,12 @@ export class UploadFileController {
     Logger.log(`Storage URL: ${storageUrl}`, 'AppController');
     let data = {}
     data['link'] = 'https://zencloudservicesstore.blob.core.windows.net/cloudservices/' + file.originalname;
-    // data['link'] = storageUrl;
-    data['filename'] = file.originalname;
+
+    const fileData: String[] = file.originalname.split("/");
+
+    data['folder'] = fileData[0];
+    // data['filename'] = file.originalname;
+    data['filename'] = fileData[1];
     return data;
     // return storageUrl;
   }

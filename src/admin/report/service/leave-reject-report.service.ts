@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ReportDBService } from './report-db.service';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { LeaveRejectReportDto } from '../dto/leave-reject-report.dto';
+import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
 @Injectable()
 export class LeaveRejectReportService {
-  constructor(private readonly reportDBService: ReportDBService) { }
+  constructor(
+    private readonly reportDBService: ReportDBService,
+    private readonly pendingLeaveService: PendingLeaveService
+  ) { }
 
   getLeaveRejectData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=REJECTED)`];
@@ -13,20 +17,34 @@ export class LeaveRejectReportService {
     filter = userId != null ? filter.concat(extra) : filter;
 
     return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
-      map(res => {
+      mergeMap(async res => {
+        // console.log(res);
+        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID) as any[];
+        let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+
+        return { res, leaveTypeList, resultAll };
+      }),
+      map(result => {
+        let { res, leaveTypeList, resultAll } = result;
         let userIdList = [];
         res.forEach(element => {
+          let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
+
+          let resultCreator = resultAll.find(x => x.USER_GUID === element.UPDATE_USER_GUID);
+
+          let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+
           let leaveRejectReportDTO = new LeaveRejectReportDto;
 
           leaveRejectReportDTO.userGuid = element.USER_GUID;
-          leaveRejectReportDTO.employeeNo = element.USER_GUID;
-          leaveRejectReportDTO.employeeName = element.TENANT_GUID;
+          leaveRejectReportDTO.employeeNo = resultUser.STAFF_ID;
+          leaveRejectReportDTO.employeeName = resultUser.FULLNAME;
           leaveRejectReportDTO.leaveTypeId = element.LEAVE_TYPE_GUID;
-          leaveRejectReportDTO.leaveTypeName = '';
+          leaveRejectReportDTO.leaveTypeName = findLeaveData.CODE;
           leaveRejectReportDTO.startDate = element.START_DATE;
           leaveRejectReportDTO.endDate = element.END_DATE;
           leaveRejectReportDTO.noOfDays = element.NO_OF_DAYS;
-          leaveRejectReportDTO.rejectBy = element.UPDATE_USER_GUID;
+          leaveRejectReportDTO.rejectBy = resultCreator.FULLNAME;
           leaveRejectReportDTO.remarks = element.REMARKS;
 
           userIdList.push(leaveRejectReportDTO);

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { UpdateUserInfoItemDTO } from './dto/update-user-info-details.dto';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { map, mergeMap } from 'rxjs/operators';
@@ -35,7 +35,16 @@ export class UserInfoDetailsService {
    */
   public getUserXMLInfo(userInfoGuid: string) {
     const filters = ['(USER_INFO_GUID=' + userInfoGuid + ')'];
-    return this.userinfoDbService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1]);
+    return this.userinfoDbService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1]).pipe(
+      mergeMap(res => {
+        let managerData = this.userinfoDbService.findByFilterV2(['FULLNAME'], [`(USER_GUID=${res[0].MANAGER_USER_GUID})`])
+        return forkJoin(of(res), managerData);
+      }),
+      map(res => {
+        res[0][0].MANAGER_USER_GUID = res[1][0].FULLNAME;
+        return res[0];
+      })
+    );
   }
 
   /**

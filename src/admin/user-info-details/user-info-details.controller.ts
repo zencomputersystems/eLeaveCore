@@ -105,6 +105,8 @@ export class UserInfoDetailsController {
     if (param.id != '{id}' && param.id != '' && param.item != '{item}' && param.item != '') {
       this.userInfoDetailsService.getUserXMLInfo(param.id).subscribe(
         data => {
+          // console.log('i am here');
+          // console.log(data)
           if (data.length > 0)
             this.userInfoDetailsService.filterResults([data, res, param.item]);
           else

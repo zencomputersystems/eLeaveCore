@@ -16,6 +16,7 @@ export function personalDetailAssign([resultItem, results, dataXML]) {
   resultItem['link'] = "https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/";
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('personalDetails')) {
     if (dataXML.root.personalDetails) {
+      console.log(dataXML.root.personalDetails);
       resultItem['personalDetail'] = dataXML.root.personalDetails;
       resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 || dataXML.root.personalDetails.gender == 'Male' ? 'Male' : 'Female';
       resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 || dataXML.root.personalDetails.maritalStatus == 'Married' ? 'Married' : 'Single';
@@ -33,6 +34,7 @@ export function personalDetailAssign([resultItem, results, dataXML]) {
 export function employmentDetailAssign([resultItem, results, dataXML]) {
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
     if (dataXML.root.employmentDetail) {
+      dataXML.root.employmentDetail.reportingTo = results.MANAGER_USER_GUID;
       resultItem['employmentDetail'] = dataXML.root.employmentDetail;
       const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
       const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';

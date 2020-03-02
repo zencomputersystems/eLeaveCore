@@ -48,6 +48,8 @@ export class ApplyOnBehalfReportService {
           userIdList.push(applyOnBehalfReportDto);
         });
 
+        userIdList.sort((a, b) => (a.applicationDate > b.applicationDate) ? 1 : ((b.applicationDate > a.applicationDate) ? -1 : 0));
+
         return userIdList;
       })
     )

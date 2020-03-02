@@ -308,7 +308,7 @@ export class ApprovalService {
 					const leaveTransactionId = data.LEAVE_TRANSACTION_GUID as string;
 					const statusProcess = data.STATUS as string;
 
-					this.leaveTransactionLogDbService.create([leaveTransactionId, statusProcess, 'APPROVAL', leaveTransactionReason, approverUserId]).subscribe(
+					this.leaveTransactionLogDbService.create([leaveTransactionId, statusProcess, 'APPROVAL', leaveTransactionReason, approverUserId, data.TENANT_GUID]).subscribe(
 						data => { console.log(data); }, err => { console.log(err); }
 					);
 				}

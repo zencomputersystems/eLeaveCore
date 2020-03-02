@@ -198,7 +198,7 @@ export class ApprovalOverrideService {
       map(res => {
         if (res.status == 200) {
           data.leaveTransactionId.forEach(element => {
-            this.leaveTransactionLogDbService.create([element, data.status, 'APPROVAL_OVERRIDE', data.remark, user.USER_GUID]).subscribe(
+            this.leaveTransactionLogDbService.create([element, data.status, 'APPROVAL_OVERRIDE', data.remark, user.USER_GUID, user.TENANT_GUID]).subscribe(
               data => { /*console.log(data);*/ }, err => { /*console.log(err);*/ }
             );
           });

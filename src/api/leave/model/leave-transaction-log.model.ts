@@ -14,6 +14,13 @@ export class LeaveTransactionLogModel extends CreateUpdateModel {
    */
   LOG_GUID: string;
   /**
+   * Tenant guid
+   *
+   * @type {string}
+   * @memberof LeaveTransactionLogModel
+   */
+  TENANT_GUID: string;
+  /**
    * Leave transaction guid
    *
    * @type {string}

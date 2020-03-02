@@ -22,6 +22,7 @@ import { PendingLeaveService } from '../approval-override/pending-leave.service'
 import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeaveAdjustmentDbLogService } from '../leave-adjustment/leave-adjustment-log.service';
+import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { LeaveAdjustmentDbLogService } from '../leave-adjustment/leave-adjustmen
     LeaveTransactionDbService,
     UserprofileDbService,
     LeaveAdjustmentDbLogService,
+    LeaveTransactionLogDbService,
 
     QueryParserService,
     DateCalculationService

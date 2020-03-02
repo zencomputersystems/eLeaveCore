@@ -67,6 +67,8 @@ export class ApprovalOverrideReportService {
 
         });
 
+        approvalOverrideData.sort((a, b) => (a.applicationDate > b.applicationDate) ? 1 : ((b.applicationDate > a.applicationDate) ? -1 : 0));
+
         return approvalOverrideData;
       })
     );

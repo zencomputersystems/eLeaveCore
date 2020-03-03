@@ -22,7 +22,7 @@ export class LeaveTypeEntitlementService {
      */
     constructor(
         public readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-        private readonly pendingLeaveService: PendingLeaveService
+        public readonly pendingLeaveService: PendingLeaveService
     ) { }
 
     /**
@@ -35,13 +35,13 @@ export class LeaveTypeEntitlementService {
     public getList(tenantId: string) {
         return this.leavetypeEntitlementDbService.findAll(tenantId)
             .pipe(
-                // mergeMap(async res => {
-                //     let userData = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
-                //     console.log(userData);
-                //     return res;
-                // }
-                // ), 
-                map(res => {
+                mergeMap(async res => {
+                    let userData = await this.pendingLeaveService.getAllUserInfo(tenantId) as any[];
+                    return { res, userData };
+                }
+                ),
+                map(result => {
+                    let { res, userData } = result;
                     if (res.status == 200) {
                         const data = res.data.resource;
 
@@ -57,7 +57,22 @@ export class LeaveTypeEntitlementService {
                             entitlementItem.leaveType = element.LEAVE_TYPE_CODE;
                             entitlementItem.leaveTypeAbbr = element.LEAVE_TYPE_ABBR;
                             entitlementItem.totalEmployee = element.TOTAL_EMPLOYEE_ATTACH;
-                            entitlementItem.userAttach = element.USER_ATTACH.split(",");
+
+                            let userAttachArr = [];
+                            let userId = element.USER_ATTACH.split(",");
+
+                            if (userId.length > 0) {
+                                userId.forEach(userAttach => {
+                                    const userFullname = userData.find(x => x.USER_GUID === userAttach);
+                                    if (userFullname) {
+                                        let userInfo = {};
+                                        userInfo['guid'] = userAttach;
+                                        userInfo['employeeName'] = userFullname.FULLNAME;
+                                        userAttachArr.push(userInfo);
+                                    }
+                                });
+                            }
+                            entitlementItem.userAttach = userAttachArr;
 
                             entitlementList.push(entitlementItem);
                         });

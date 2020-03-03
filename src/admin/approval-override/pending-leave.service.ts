@@ -64,7 +64,7 @@ export class PendingLeaveService {
    * @returns
    * @memberof PendingLeaveService
    */
-  public async getAllUserInfo(tenantGuid: string[]) {
+  public async getAllUserInfo(tenantGuid: string) {
     return await this.runService(this.userprofileDbService.findByFilterV2([], ['(TENANT_GUID IN (' + tenantGuid + ')']));
   }
 

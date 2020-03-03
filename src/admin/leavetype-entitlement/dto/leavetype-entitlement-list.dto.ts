@@ -71,4 +71,13 @@ export class LeaveTypeEntitlementListDTO {
     @ApiModelProperty()
     totalEmployee: number;
 
+    /**
+     * Data leavetype entitlement list - userAttach
+     *
+     * @type {string[]}
+     * @memberof LeaveTypeEntitlementListDTO
+     */
+    @ApiModelProperty()
+    userAttach: string[];
+
 }

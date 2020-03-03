@@ -38,8 +38,13 @@ export class LeaveRejectReportDto {
   @IsString()
   rejectBy: string;
 
-  @ApiModelProperty({ description: 'Remarks', example: 'Happy holiday to u' })
+  @ApiModelProperty({ description: 'Leave Remarks', example: 'Happy holiday to u' })
   @IsString()
-  remarks: string;
+  leaveRemarks: string;
+
+  @ApiModelProperty({ description: 'Reject Remarks', example: 'Happy holiday to u' })
+  @IsString()
+  rejectRemarks: string;
+
 }
 

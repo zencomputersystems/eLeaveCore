@@ -25,6 +25,7 @@ export class ApplyOnBehalfReportService {
         let userIdList = [];
         res.forEach(element => {
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
+          let resultCreator = resultAll.find(x => x.USER_GUID === element.UPDATE_USER_GUID);
           let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
 
           let applyOnBehalfReportDto = new ApplyOnBehalfReportDto;
@@ -37,7 +38,7 @@ export class ApplyOnBehalfReportService {
           applyOnBehalfReportDto.leaveTypeName = findLeaveData.CODE;
           applyOnBehalfReportDto.applicationDate = element.CREATION_TS;
           applyOnBehalfReportDto.confirmedDate = element.UPDATE_TS;
-          applyOnBehalfReportDto.appliedBy = element.UPDATE_USER_GUID;
+          applyOnBehalfReportDto.appliedBy = resultCreator.FULLNAME;
           applyOnBehalfReportDto.startDate = element.START_DATE;
           applyOnBehalfReportDto.endDate = element.END_DATE;
           applyOnBehalfReportDto.noOfDays = element.NO_OF_DAYS;

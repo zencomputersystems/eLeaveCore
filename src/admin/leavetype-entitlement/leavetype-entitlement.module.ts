@@ -9,6 +9,10 @@ import { LeaveTypeEntitlementService } from './leavetype-entitlement.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { PendingLeaveService } from '../approval-override/pending-leave.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { CompanyDbService } from '../company/company.service';
+import { LeavetypeService } from '../leavetype/leavetype.service';
 
 /**
  * Module for leavetype entitlement
@@ -29,7 +33,11 @@ import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave
     LeavetypeEntitlementDbService,
     QueryParserService,
     CommonFunctionService,
-    UserLeaveEntitlementDbService
+    UserLeaveEntitlementDbService,
+    PendingLeaveService,
+    UserprofileDbService,
+    CompanyDbService,
+    LeavetypeService
   ]
 })
 export class LeavetypeEntitlementModule { }

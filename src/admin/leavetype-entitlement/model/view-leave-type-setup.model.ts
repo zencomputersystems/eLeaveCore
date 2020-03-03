@@ -82,4 +82,11 @@ export class ViewLeaveTypeSetupModel {
      * @memberof ViewLeaveTypeSetupModel
      */
     TOTAL_EMPLOYEE_ATTACH: number;
+    /**
+     * User attach
+     *
+     * @type {string}
+     * @memberof ViewLeaveTypeSetupModel
+     */
+    USER_ATTACH: string;
 }

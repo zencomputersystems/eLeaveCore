@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ReportDBService } from './report-db.service';
-import { map, filter, mergeMap } from 'rxjs/operators';
+import { map, filter, mergeMap, find } from 'rxjs/operators';
 import { LeaveTakenReportDto, LeaveTakenDetailsDto } from '../dto/leave-taken-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
@@ -41,7 +41,7 @@ export class LeaveTakenReportService {
             leaveTakenReportDTO.employeeNo = resultUser.STAFF_ID;
             leaveTakenReportDTO.employeeName = resultUser.FULLNAME;
             // const leaveData = new LeaveTakenDetailsDto;
-            const leaveData = this.runService([element, leaveTypeList]);
+            const leaveData = this.runService([element, leaveTypeList, resultAll]);
             //   // console.log('a');
             leaveTakenReportDTO.leaveDetail = [];
             leaveTakenReportDTO.leaveDetail.push(leaveData);
@@ -50,7 +50,7 @@ export class LeaveTakenReportService {
 
           } else {
             // console.log(element.USER_GUID + '-' + element.LEAVE_TYPE_GUID);
-            const leaveData = this.runService([element, leaveTypeList]);
+            const leaveData = this.runService([element, leaveTypeList, resultAll]);
 
             // console.log(leaveData);
             userId.leaveDetail.push(leaveData);
@@ -69,12 +69,18 @@ export class LeaveTakenReportService {
     );
   }
 
-  runService([element, leaveTypeList]) {
-    // console.log(element.LEAVE_TYPE_GUID);
+  runService([element, leaveTypeList, resultAll]) {
+    let approverData = '';
     let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-    // console.log(element.STATES);
-    // const approverList = element.STATES != null ? JSON.parse(element.STATES) : [];
-    // console.log(approverList);
+
+    if (element.STATES != null) {
+      const approverArr = JSON.parse(element.STATES);
+      approverArr.forEach(element => {
+        let approverUser = resultAll.find(x => x.USER_GUID === element.userId);
+        approverData = approverData == '' ? `Level ${element.level} - ${approverUser.FULLNAME}` : approverData + `, Level ${element.level} - ${approverUser.FULLNAME}`;
+      });
+    }
+
     // merge leave for user 
     const leaveData = new LeaveTakenDetailsDto;
     leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
@@ -82,7 +88,7 @@ export class LeaveTakenReportService {
     leaveData.startDate = element.START_DATE;
     leaveData.endDate = element.END_DATE;
     leaveData.noOfDays = element.NO_OF_DAYS;
-    leaveData.approveBy = element.STATES != null ? JSON.parse(element.STATES) : [];
+    leaveData.approveBy = approverData;
     leaveData.remarks = element.REMARKS
     return leaveData;
   }

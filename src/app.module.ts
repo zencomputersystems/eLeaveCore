@@ -27,6 +27,7 @@ import { UploadFileModule } from './api/upload-file/upload-file.module';
 import { UserInfoDetailsModule } from './admin/user-info-details/user-info-details.module';
 import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
 import { ReportModule } from './admin/report/report.module';
+import { EntitlementClaimModule } from './api/entitlement-claim/entitlement-claim.module';
 
 
 @Module({
@@ -75,7 +76,8 @@ import { ReportModule } from './admin/report/report.module';
     UserInfoDetailsModule,
     DashboardModule,
     DashboardAdminModule,
-    ReportModule
+    ReportModule,
+    EntitlementClaimModule
   ],
   controllers: [AppController],
   providers: [

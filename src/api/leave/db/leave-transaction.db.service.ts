@@ -55,6 +55,19 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 	}
 
 	/**
+	 * Find own leave transaction for this year
+	 *
+	 * @param {string} userId
+	 * @returns
+	 * @memberof LeaveTransactionDbService
+	 */
+	public findOwn(userId: string) {
+		const filters = ['(USER_GUID=' + userId + ')', '(CREATION_TS> ' + new Date().getFullYear() + '-01-01)'];
+		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', [], filters, []);
+		return this.httpService.get(url);
+	}
+
+	/**
 	 * Find all pending leave
 	 *
 	 * @param {string} userGuid

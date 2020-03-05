@@ -1,6 +1,6 @@
-import { Controller, UseGuards, Get, Req, Res, Patch, Body, Post } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Patch, Body, Post, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { ApprovalOverrideService } from './approval-override.service';
 import { CommonFunctionService } from '../../common/helper/common-function.services';
 import { UpdateApprovalDTO } from './dto/update-approval.dto';
@@ -35,6 +35,18 @@ export class ApprovalOverrideController {
   @ApiOperation({ title: 'Get pending leave' })
   findAll(@Req() req, @Res() res) {
     this.approvalOverrideService.findAllPendingLeave(req.user.TENANT_GUID).subscribe(
+      data => {
+        res.send(data);
+      },
+      err => { this.commonFunctionService.sendResErrorV3(err, res); }
+    )
+  }
+
+  @Get(':id')
+  @ApiOperation({ title: 'Get own leave history' })
+  @ApiImplicitParam({ name: 'id', description: 'User guid', required: true })
+  findOwn(@Param() param, @Req() req, @Res() res) {
+    this.approvalOverrideService.findAllOwnLeave([param.id, req.user.TENANT_GUID]).subscribe(
       data => {
         res.send(data);
       },

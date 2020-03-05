@@ -124,10 +124,35 @@ export class ApprovalOverrideService {
    * @memberof ApprovalOverrideService
    */
   public findAllPendingLeave(TENANT_GUID: string): Observable<any> {
-    return this.approvalOverrideServiceRef2.leaveTransactionDbService.findAll(TENANT_GUID).pipe(
+    let method = this.approvalOverrideServiceRef2.leaveTransactionDbService.findAll(TENANT_GUID);
+    return this.getLeaveData([method, TENANT_GUID]);
+  }
+
+  /**
+   * Get all own leave
+   *
+   * @param {[string, string]} [USER_GUID, TENANT_GUID]
+   * @returns {Observable<any>}
+   * @memberof ApprovalOverrideService
+   */
+  public findAllOwnLeave([USER_GUID, TENANT_GUID]: [string, string]): Observable<any> {
+    let method = this.approvalOverrideServiceRef2.leaveTransactionDbService.findOwn(USER_GUID);
+    return this.getLeaveData([method, TENANT_GUID]);
+  }
+
+  /**
+   * Run query get leave
+   *
+   * @private
+   * @param {[Observable<any>, string]} [method, tenantId]
+   * @returns
+   * @memberof ApprovalOverrideService
+   */
+  private getLeaveData([method, tenantId]: [Observable<any>, string]) {
+    return method.pipe(
       mergeMap(async res => {
         if (res.status == 200 && res.data.resource.length > 0) {
-          return await this.getPendingLeaveData([res, TENANT_GUID]);
+          return await this.getPendingLeaveData([res, tenantId]);
         }
       }), map(res => {
         let finalData = [];

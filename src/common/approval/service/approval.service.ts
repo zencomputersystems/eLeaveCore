@@ -303,13 +303,17 @@ export class ApprovalService {
 					throw "Fail to Update Leave Transaction";
 				}
 				else {
-					console.log(resource.resource[0].LEAVE_TRANSACTION_GUID);
+					// console.log(resource.resource[0].LEAVE_TRANSACTION_GUID);
 					const data = resource.resource[0];
 					const leaveTransactionId = data.LEAVE_TRANSACTION_GUID as string;
 					const statusProcess = data.STATUS as string;
 
 					this.leaveTransactionLogDbService.create([leaveTransactionId, statusProcess, 'APPROVAL', leaveTransactionReason, approverUserId, data.TENANT_GUID]).subscribe(
-						data => { console.log(data); }, err => { console.log(err); }
+						data => {
+							// console.log(data); 
+						}, err => {
+							// console.log(err); 
+						}
 					);
 				}
 
@@ -390,8 +394,8 @@ export class ApprovalService {
 			}
 		} else {
 			leave.STATUS = "REJECTED";
-			if (statusApprove == 'cancel') {
-				leave.STATUS = "CANCEL";
+			if (statusApprove == 'cancelled') {
+				leave.STATUS = "CANCELLED";
 				leave.CURRENT_APPROVAL_LEVEL = null;
 				leave.STATES = null;
 			}
@@ -424,8 +428,8 @@ export class ApprovalService {
 			leave.STATUS = "APPROVED";
 		} else {
 			leave.STATUS = "REJECTED";
-			if (statusApprove == 'cancel') {
-				leave.STATUS = "CANCEL";
+			if (statusApprove == 'cancelled') {
+				leave.STATUS = "CANCELLED";
 				leave.CURRENT_APPROVAL_LEVEL = 0;
 				leave.STATES = null;
 			}

@@ -125,7 +125,7 @@ export class ApprovedController {
      */
     @Post('leave/:status')
     @ApiOperation({ title: 'Approved Leave' })
-    @ApiImplicitParam({ name: 'status', description: 'Process status', enum: ['approved', 'rejected', 'cancel'] })
+    @ApiImplicitParam({ name: 'status', description: 'Process status', enum: ['approved', 'rejected', 'cancelled'] })
     approveOrReject(@Param('status') statusApprove, @Body() approvedLeaveDTO: ApprovedLeaveDTO, @Req() req, @Res() res) {
 
         const statusInput = statusApprove == 'approved' ? true : false; // set whether status approve or reject 

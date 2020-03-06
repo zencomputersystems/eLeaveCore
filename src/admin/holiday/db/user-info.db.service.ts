@@ -191,7 +191,7 @@ export class UserInfoDbService extends BaseDBService {
         const fields = ['USER_GUID', 'FULLNAME'];
         const filters = ['(USER_GUID IN (' + userGuid + '))'];
 
-        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, 'CREATION_TS DESC', 1]);
+        const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, 'CREATION_TS DESC', null]);
         return this.httpService.get(url);
 
     }

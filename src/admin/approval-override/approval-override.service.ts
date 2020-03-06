@@ -169,6 +169,8 @@ export class ApprovalOverrideService {
           dataRes['noOfDays'] = element.NO_OF_DAYS;
           dataRes['timeSlot'] = element.TIME_SLOT;
           dataRes['dateApplied'] = element.CREATION_TS;
+          dataRes['reason'] = element.REASON;
+          dataRes['leaveTypeName'] = element.leavetypeName;
           dataRes['leaveTypeAbbr'] = element.leavetypeAbbr;
           dataRes['departmentName'] = personal.DEPARTMENT;
           dataRes['companyName'] = element.companyName;
@@ -204,6 +206,7 @@ export class ApprovalOverrideService {
 
       res.data.resource[i].userData = findData;
       res.data.resource[i].companyName = findCompanyData.NAME;
+      res.data.resource[i].leavetypeName = findLeaveData.CODE;
       res.data.resource[i].leavetypeAbbr = findLeaveData.ABBR;
     }
     return await res.data.resource;

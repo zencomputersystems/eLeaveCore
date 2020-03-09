@@ -18,6 +18,9 @@ import { DashboardCommonService } from './service/dashboard-common.service';
 import { DashboardProcController } from './controller/dashboard-proc.controller';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
+import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
+import { CompanyDbService } from 'src/admin/company/company.service';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
 
 /**
  * Module for dashboard
@@ -44,7 +47,10 @@ import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
         UserLeaveEntitlementSummaryDbService,
         UserLeaveEntitlementDbService,
         DashboardCommonService,
-        UserprofileDbService
+        UserprofileDbService,
+        PendingLeaveService,
+        CompanyDbService,
+        LeavetypeService
     ],
     controllers: [DashboardController, DashboardLeaveController, DashboardProcController]
 })

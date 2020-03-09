@@ -252,6 +252,7 @@ export class UserInfoDbService extends BaseDBService {
         let fields = ['USER_GUID'];
         let filters = ['(MANAGER_USER_GUID=' + userGuid + ')', '(RESIGNATION_DATE IS NULL)'];
         return this.findByFilterV2(fields, filters);
+
     }
 
 }

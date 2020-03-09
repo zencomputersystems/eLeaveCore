@@ -3,6 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { DashboardService } from '../service/dashboard.service';
 import { CommonFunctionService } from '../../../common/helper/common-function.services';
+import { PendingLeaveService } from '../../../admin/approval-override/pending-leave.service';
+import { mergeMap, find } from 'rxjs/operators';
 // import moment = require('moment');
 // /** XMLparser from zen library  */
 // var { convertXMLToJson } = require('@zencloudservices/xmlparser');
@@ -23,7 +25,8 @@ export class DashboardController {
 	 * @memberof DashboardController
 	 */
 	constructor(
-		private readonly dashboardService: DashboardService
+		private readonly dashboardService: DashboardService,
+		private readonly pendingLeaveService: PendingLeaveService
 	) { }
 
 	/**
@@ -118,10 +121,18 @@ export class DashboardController {
 	@Get('dashboard-my-task')
 	@ApiOperation({ title: 'Get my task' })
 	getMyTask(@Req() req, @Res() res) {
-		this.dashboardService.getMyTask(req.user.USER_GUID).subscribe(
+		this.dashboardService.getMyTask(req.user.USER_GUID).pipe(
+			mergeMap(async res => {
+				let leavetypeList = await this.pendingLeaveService.getLeavetypeList(req.user.TENANT_GUID);
+				return { res, leavetypeList };
+			})
+		).subscribe(
 			data => {
+				let dataDashboard = data.res;
+				let dataLeavetype = data.leavetypeList;
+
 				// Forkjoin data[0] is pending leave, data[1] fullname
-				this.processMyTaskResult(data, res);
+				this.processMyTaskResult([dataDashboard, dataLeavetype, res]);
 			}, err => {
 				res.send(err);
 			}
@@ -135,13 +146,15 @@ export class DashboardController {
 	 * @param {*} res
 	 * @memberof DashboardController
 	 */
-	public processMyTaskResult(data, res) {
+	public processMyTaskResult([dataDashboard, dataLeavetype, res]) {
 
-		if (data[0].data.resource.length > 0) {
+		if (dataDashboard[0].data.resource.length > 0) {
 			let combineData = [];
-			data[0].data.resource.forEach(element => {
-				let userData = data[1].data.resource.find(x => x.USER_GUID === element.USER_GUID);
+			dataDashboard[0].data.resource.forEach(element => {
+				let userData = dataDashboard[1].data.resource.find(x => x.USER_GUID === element.USER_GUID);
 				let dataToShow = {};
+
+				let findLeavetype = dataLeavetype.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
 
 				dataToShow['leave_transaction_guid'] = element.LEAVE_TRANSACTION_GUID
 				dataToShow['message'] = userData.FULLNAME + ' requested leave on ' + element.START_DATE;
@@ -150,12 +163,14 @@ export class DashboardController {
 				dataToShow['start_date'] = element.START_DATE;
 				dataToShow['end_date'] = element.END_DATE;
 				dataToShow['no_of_days'] = element.NO_OF_DAYS;
+				dataToShow['dateApplied'] = element.CREATION_TS;
+				dataToShow['leaveTypeName'] = findLeavetype.CODE;
 
 				combineData.push(dataToShow);
 			});
 			res.send(combineData);
 		} else {
-			res.send({ "status": "Not available" });
+			res.send({ "status": "No pending leave" });
 		}
 	}
 

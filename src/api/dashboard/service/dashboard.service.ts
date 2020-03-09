@@ -232,8 +232,12 @@ export class DashboardService {
    * @memberof DashboardService
    */
   public getMyTask(userGuid: string) {
+    // console.log(userGuid);
     return this.userInfoDbService.findMyDownline(userGuid).pipe(
       map(res => {
+        // console.log(res.length);
+        if (res.length == 0)
+          throw '{ "status" : "Not available" }';
         let mergeId: string;
         res.forEach(element => {
           mergeId = mergeId == undefined ? '"' + element.USER_GUID + '"' : mergeId + ',"' + element.USER_GUID + '"';

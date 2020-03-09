@@ -50,7 +50,10 @@ export class ApprovalOverrideController {
       data => {
         res.send(data);
       },
-      err => { this.commonFunctionService.sendResErrorV3(err, res); }
+      err => {
+        // this.commonFunctionService.sendResErrorV3(err, res);
+        res.send(err);
+      }
     )
   }
 

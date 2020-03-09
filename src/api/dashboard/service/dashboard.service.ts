@@ -237,7 +237,7 @@ export class DashboardService {
       map(res => {
         // console.log(res.length);
         if (res.length == 0)
-          throw '{ "status" : "Not available" }';
+          throw { "status": "Not available" };
         let mergeId: string;
         res.forEach(element => {
           mergeId = mergeId == undefined ? '"' + element.USER_GUID + '"' : mergeId + ',"' + element.USER_GUID + '"';

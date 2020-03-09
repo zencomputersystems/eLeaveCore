@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseDBService } from 'src/common/base/base-db.service';
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { Observable, pipe, of, forkJoin } from 'rxjs';
@@ -151,8 +151,11 @@ export class ApprovalOverrideService {
   private getLeaveData([method, tenantId]: [Observable<any>, string]) {
     return method.pipe(
       mergeMap(async res => {
+
         if (res.status == 200 && res.data.resource.length > 0) {
           return await this.getPendingLeaveData([res, tenantId]);
+        } else {
+          throw { "status": "No leave applied" };
         }
       }), map(res => {
         let finalData = [];

@@ -144,9 +144,15 @@ export class DashboardService {
       .pipe(map(res => {
         let downline = res.data.resource;
         let userList: string = '';
-        downline.forEach(element => {
-          userList = userList == '' ? '"' + user_guid + '","' + element.USER_GUID + '"' : userList + ',"' + element.USER_GUID + '"';
-        });
+
+        if (downline.length > 0) {
+          downline.forEach(element => {
+            userList = userList == '' ? '"' + user_guid + '","' + element.USER_GUID + '"' : userList + ',"' + element.USER_GUID + '"';
+          });
+        } else {
+          userList = user_guid;
+        }
+
         return { downline, userList };
       }), mergeMap(res => {
         let { downline, userList } = res;

@@ -47,6 +47,13 @@ export class EntitlementClaimController {
     );
   }
 
+  /**
+   * Find entitlement claim
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof EntitlementClaimController
+   */
   @Get()
   @ApiOperation({ title: 'Get entitlement claim' })
   findEntitlementClaim(@Req() req, @Res() res) {
@@ -59,6 +66,14 @@ export class EntitlementClaimController {
     )
   }
 
+  /**
+   * Approve entitlement claim
+   *
+   * @param {EntitlementClaimApproveDto} entitlementClaimApproveDTO
+   * @param {*} req
+   * @param {*} res
+   * @memberof EntitlementClaimController
+   */
   @Post('approve')
   @ApiOperation({ title: 'Approve entitlement claim' })
   approveEntitlementClaim(@Body() entitlementClaimApproveDTO: EntitlementClaimApproveDto, @Req() req, @Res() res) {

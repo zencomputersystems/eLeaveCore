@@ -1,23 +1,59 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
+/**
+ * Leave forfeited report dto
+ *
+ * @export
+ * @class LeaveForfeitedReportDto
+ */
 export class LeaveForfeitedReportDto {
+  /**
+   * User guid
+   *
+   * @type {string}
+   * @memberof LeaveForfeitedReportDto
+   */
   @ApiModelProperty({ description: 'User guid', example: 'djasfbhirfvhbewirbgvhjwerh' })
   @IsString()
   userGuid: string;
 
+  /**
+   * Employee no
+   *
+   * @type {string}
+   * @memberof LeaveForfeitedReportDto
+   */
   @ApiModelProperty({ description: 'Employee No', example: '3037' })
   @IsString()
   employeeNo: string;
 
+  /**
+   * Employee name
+   *
+   * @type {string}
+   * @memberof LeaveForfeitedReportDto
+   */
   @ApiModelProperty({ description: 'Employee Name', example: 'Wan' })
   @IsString()
   employeeName: string;
 
+  /**
+   * Leave type guid
+   *
+   * @type {string}
+   * @memberof LeaveForfeitedReportDto
+   */
   @ApiModelProperty({ description: 'Leave type id', example: 'HKBHBHBKJBJBJ' })
   @IsString()
   leaveTypeId: string;
 
+  /**
+   * Leave type name
+   *
+   * @type {string}
+   * @memberof LeaveForfeitedReportDto
+   */
   @ApiModelProperty({ description: 'Leave type name', example: 'Annual Leave' })
   @IsString()
   leaveTypeName: string;
@@ -30,6 +66,12 @@ export class LeaveForfeitedReportDto {
   // @IsNumber()
   // endDate: string;
 
+  /**
+   * No of days
+   *
+   * @type {string}
+   * @memberof LeaveForfeitedReportDto
+   */
   @ApiModelProperty({ description: 'No. of Days', example: '2.5' })
   @IsString()
   noOfDays: string;

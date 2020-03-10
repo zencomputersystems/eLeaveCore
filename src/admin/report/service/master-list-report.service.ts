@@ -4,10 +4,29 @@ import { map, mergeMap } from 'rxjs/operators';
 import { MasterListReportDto } from '../dto/master-list-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
+/**
+ * Master list report service
+ *
+ * @export
+ * @class MasterListReportService
+ */
 @Injectable()
 export class MasterListReportService {
+  /**
+   *Creates an instance of MasterListReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof MasterListReportService
+   */
   constructor(private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService) { }
+  /**
+   * Get master list data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof MasterListReportService
+   */
   getMasterListData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`];
     const extra = ['(USER_GUID=' + userId + ')'];

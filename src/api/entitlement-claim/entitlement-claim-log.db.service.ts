@@ -30,10 +30,17 @@ export class EntitlementClaimLogDbService extends BaseDBService {
     super(httpService, queryService, "l_entitlement_claim")
   }
 
+  /**
+   * Create entitlement claim request
+   *
+   * @param {[EntitlementClaimRequestDto, any]} [entitlementClaimRequestDTO, user]
+   * @returns
+   * @memberof EntitlementClaimLogDbService
+   */
   create([entitlementClaimRequestDTO, user]: [EntitlementClaimRequestDto, any]) {
     const resource = new Resource(new Array());
     const data = new EntitlementClaimModel();
-    console.log(user);
+
     data.ENTITLEMENT_CLAIM_GUID = v1();
     data.TENANT_GUID = user.TENANT_GUID;
     data.USER_GUID = entitlementClaimRequestDTO.userGuid;
@@ -47,22 +54,29 @@ export class EntitlementClaimLogDbService extends BaseDBService {
     data.ATTACHMENT = entitlementClaimRequestDTO.attachment;
 
     resource.resource.push(data);
-    console.log(resource);
+
     return this.createByModel(resource, [], [], []);
   }
 
+  /**
+   * Update entitlement claim approve
+   *
+   * @param {[EntitlementClaimApproveDto, any]} [entitlementClaimApproveDTO, user]
+   * @returns
+   * @memberof EntitlementClaimLogDbService
+   */
   update([entitlementClaimApproveDTO, user]: [EntitlementClaimApproveDto, any]) {
     const resource = new Resource(new Array());
     const data = new EntitlementClaimModel();
-    console.log(user);
+
     data.ENTITLEMENT_CLAIM_GUID = entitlementClaimApproveDTO.entitlementClaimId;
     data.STATUS = entitlementClaimApproveDTO.status;
     data.FINAL_APPROVAL_REMARKS = entitlementClaimApproveDTO.finalApprovalRemarks;
     setUpdateData([data, user.USER_GUID]);
 
     resource.resource.push(data);
-    console.log(resource);
-    return this.updateByModel(resource, [], [], []);
+
+    return this.updateByModel(resource, ['*'], [], []);
   }
 
 }

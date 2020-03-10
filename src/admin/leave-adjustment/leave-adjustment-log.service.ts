@@ -6,8 +6,22 @@ import { Resource } from 'src/common/model/resource.model';
 import { LeaveAdjustmentLogModel } from './model/leave-adjustment-log.model';
 import { v1 } from 'uuid';
 
+/**
+ * Leave adjustment db log service
+ *
+ * @export
+ * @class LeaveAdjustmentDbLogService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class LeaveAdjustmentDbLogService extends BaseDBService implements IDbService {
+  /**
+   *Creates an instance of LeaveAdjustmentDbLogService.
+   * @param {HttpService} httpService http service
+   * @param {QueryParserService} queryService query service
+   * @memberof LeaveAdjustmentDbLogService
+   */
   constructor(
     public readonly httpService: HttpService,
     public readonly queryService: QueryParserService) {
@@ -15,6 +29,13 @@ export class LeaveAdjustmentDbLogService extends BaseDBService implements IDbSer
     super(httpService, queryService, "l_leave_adjustment_log");
   }
 
+  /**
+   * Setup data for leave adjustment log
+   *
+   * @param {[Resource, string, string, string, string, string, string]} [resource, userId, leavetypeId, adjustment, remarks, creatorUserId, tenantId]
+   * @returns
+   * @memberof LeaveAdjustmentDbLogService
+   */
   setupData([resource, userId, leavetypeId, adjustment, remarks, creatorUserId, tenantId]: [Resource, string, string, string, string, string, string]) {
 
     let leaveLogData = new LeaveAdjustmentLogModel();
@@ -32,6 +53,13 @@ export class LeaveAdjustmentDbLogService extends BaseDBService implements IDbSer
 
   }
 
+  /**
+   * Create data log for leave adjustment
+   *
+   * @param {[Resource]} [resource]
+   * @returns
+   * @memberof LeaveAdjustmentDbLogService
+   */
   create([resource]: [Resource]) {
     return this.createByModel(resource, [], [], []);
   }

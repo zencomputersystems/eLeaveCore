@@ -5,12 +5,31 @@ import { ApprovalOverrideReportDto } from '../dto/approval-override-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 import { mergeMap, map, flatMap } from 'rxjs/operators';
 
+/**
+ * Approval override report service
+ *
+ * @export
+ * @class ApprovalOverrideReportService
+ */
 @Injectable()
 export class ApprovalOverrideReportService {
+  /**
+   *Creates an instance of ApprovalOverrideReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof ApprovalOverrideReportService
+   */
   constructor(
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService
   ) { }
+  /**
+   * Get approval override data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof ApprovalOverrideReportService
+   */
   getApprovalOverrideData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`, `(PROCESS=APPROVAL_OVERRIDE)`];
     const extra = ['(USER_GUID=' + userId + ')'];

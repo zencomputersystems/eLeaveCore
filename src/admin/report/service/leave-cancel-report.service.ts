@@ -4,12 +4,31 @@ import { LeaveCancelReportDto } from '../dto/leave-cancel-report.dto';
 import { map, mergeMap } from 'rxjs/operators';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
+/**
+ * Leave cancel report service
+ *
+ * @export
+ * @class LeaveCancelReportService
+ */
 @Injectable()
 export class LeaveCancelReportService {
+  /**
+   *Creates an instance of LeaveCancelReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof LeaveCancelReportService
+   */
   constructor(
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService
   ) { }
+  /**
+   * Get leave cancellation data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof LeaveCancelReportService
+   */
   getLeaveCancelData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=CANCELLED)`];
     const extra = ['(USER_GUID=' + userId + ')'];

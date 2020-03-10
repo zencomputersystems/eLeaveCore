@@ -1,6 +1,17 @@
 import { CreateUpdateModel } from 'src/common/model/create-update.model';
 
+/**
+ * Model for leave transaction log
+ *
+ * @export
+ * @class LeaveTransactionLogModel
+ * @extends {CreateUpdateModel}
+ */
 export class LeaveTransactionLogModel extends CreateUpdateModel {
+  /**
+   *Creates an instance of LeaveTransactionLogModel.
+   * @memberof LeaveTransactionLogModel
+   */
   constructor() {
     super();
     this.CREATION_TS = new Date().toISOString();

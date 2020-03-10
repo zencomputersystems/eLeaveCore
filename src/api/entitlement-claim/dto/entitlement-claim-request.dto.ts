@@ -34,7 +34,7 @@ export class EntitlementClaimRequestDto {
    * @type {string}
    * @memberof EntitlementClaimRequestDto
    */
-  @ApiModelProperty({ description: 'Start date', example: '2020-04-01' })
+  @ApiModelProperty({ description: 'Start date', example: '2019-08-28 05:45:24' })
   @IsString()
   startDate: string;
 
@@ -44,7 +44,7 @@ export class EntitlementClaimRequestDto {
    * @type {string}
    * @memberof EntitlementClaimRequestDto
    */
-  @ApiModelProperty({ description: 'End date', example: '2020-05-01' })
+  @ApiModelProperty({ description: 'End date', example: '2019-08-28 09:50:24' })
   @IsString()
   endDate: string;
 
@@ -67,4 +67,14 @@ export class EntitlementClaimRequestDto {
   @ApiModelProperty({ description: 'Request remarks', example: 'Work ot last night' })
   @IsString()
   requestRemarks: string;
+
+  /**
+   * Attachment prove
+   *
+   * @type {string}
+   * @memberof EntitlementClaimRequestDto
+   */
+  @ApiModelProperty({ description: 'Attachment', example: 'prove.jpg' })
+  @IsString()
+  attachment: string;
 }

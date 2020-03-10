@@ -78,6 +78,13 @@ export class EntitlementClaimModel extends CreateUpdateModel {
    */
   FINAL_REQUEST_REMARKS: string;
   /**
+   * Attachment
+   *
+   * @type {string}
+   * @memberof EntitlementClaimModel
+   */
+  ATTACHMENT: string;
+  /**
    * Deleted at
    *
    * @type {string}

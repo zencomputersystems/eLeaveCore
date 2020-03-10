@@ -14,4 +14,12 @@ export class EntitlementClaimService {
     // return of(entitlementClaimDTO);
   }
 
+  public getEntitlementClaim([tenantId]: [string]) {
+    return of(tenantId);
+  }
+
+  public approveEntitlementClaim([entitlementClaimId]: [string]) {
+    return of(entitlementClaimId);
+  }
+
 }

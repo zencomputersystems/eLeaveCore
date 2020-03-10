@@ -156,13 +156,15 @@ export class DashboardController {
 
 				let findLeavetype = dataLeavetype.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
 
-				dataToShow['leave_transaction_guid'] = element.LEAVE_TRANSACTION_GUID
+				dataToShow['leaveTransactionId'] = element.LEAVE_TRANSACTION_GUID
+				dataToShow['employeeName'] = userData.FULLNAME;
 				dataToShow['message'] = userData.FULLNAME + ' requested leave on ' + element.START_DATE;
 				dataToShow['reason'] = element.REASON;
 				dataToShow['status'] = element.STATUS;
-				dataToShow['start_date'] = element.START_DATE;
-				dataToShow['end_date'] = element.END_DATE;
-				dataToShow['no_of_days'] = element.NO_OF_DAYS;
+				dataToShow['startDate'] = element.START_DATE;
+				dataToShow['endDate'] = element.END_DATE;
+				dataToShow['timeSlot'] = element.TIME_SLOT || 'fullday';
+				dataToShow['noOfDays'] = element.NO_OF_DAYS;
 				dataToShow['dateApplied'] = element.CREATION_TS;
 				dataToShow['leaveTypeName'] = findLeavetype.CODE;
 

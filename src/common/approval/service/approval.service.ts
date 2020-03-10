@@ -336,9 +336,9 @@ export class ApprovalService {
 
 		const leave = leaveDetail[0];
 
-		if (leave.STATUS !== "PENDING") {
-			throw "Invalid Leave";
-		}
+		// if (leave.STATUS !== "PENDING") {
+		// 	throw "Invalid Leave";
+		// }
 		return leave;
 	}
 

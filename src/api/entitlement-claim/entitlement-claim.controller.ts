@@ -1,4 +1,4 @@
-import { Controller, Post, Req, Res, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, Res, Body, UseGuards, Get } from '@nestjs/common';
 import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { EntitlementClaimService } from './entitlement-claim.service';
 import { EntitlementClaimRequestDto } from './dto/entitlement-claim-request.dto';
@@ -44,6 +44,30 @@ export class EntitlementClaimController {
         res.send(err);
       }
     );
+  }
+
+  @Get()
+  @ApiOperation({ title: 'Get entitlement claim' })
+  findEntitlementClaim(@Req() req, @Res() res) {
+    this.entitlementClaimService.getEntitlementClaim([req.user.TENANT_GUID]).subscribe(
+      data => {
+        res.send(data);
+      }, err => {
+        res.send(err);
+      }
+    )
+  }
+
+  @Post('approve')
+  @ApiOperation({ title: 'Approve entitlement claim' })
+  approveEntitlementClaim(@Req() req, @Res() res) {
+    this.entitlementClaimService.approveEntitlementClaim(['']).subscribe(
+      data => {
+        res.send(data);
+      }, err => {
+        res.send(err);
+      }
+    )
   }
 
 }

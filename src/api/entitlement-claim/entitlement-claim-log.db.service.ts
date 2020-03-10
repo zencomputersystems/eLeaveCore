@@ -25,7 +25,7 @@ export class EntitlementClaimLogDbService extends BaseDBService {
     public readonly httpService: HttpService,
     public readonly queryService: QueryParserService
   ) {
-    super(httpService, queryService, "l_entitlement_claim_log")
+    super(httpService, queryService, "l_entitlement_claim")
   }
 
   create([entitlementClaimRequestDTO, user]: [EntitlementClaimRequestDto, any]) {
@@ -42,6 +42,7 @@ export class EntitlementClaimLogDbService extends BaseDBService {
     data.STATUS = 'PENDING';
     data.REQUEST_REMARKS = entitlementClaimRequestDTO.requestRemarks;
     data.CREATION_USER_GUID = user.USER_GUID;
+    data.ATTACHMENT = entitlementClaimRequestDTO.attachment;
 
     resource.resource.push(data);
     console.log(resource);

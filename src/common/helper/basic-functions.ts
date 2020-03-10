@@ -105,12 +105,25 @@ export function findAllList([fields, tenantId, queryService, httpService, tableN
 
 //  ---------------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Get list data
+ *
+ * @export
+ * @param {*} method
+ * @returns
+ */
 export function getListData(method) {
   return method.pipe(map(res => {
     return getResData(res);
   }))
 }
 
+/**
+ * Get res data
+ *
+ * @param {*} res
+ * @returns
+ */
 function getResData(res) {
   if (res.status == 200) {
     return res.data.resource;
@@ -119,6 +132,13 @@ function getResData(res) {
 
 //  ---------------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Get employee service year
+ *
+ * @export
+ * @param {Date} dateOfJoin
+ * @returns {number}
+ */
 export function getEmployeeServiceYear(dateOfJoin: Date): number {
 
   let now = moment();

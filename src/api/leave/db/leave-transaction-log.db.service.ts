@@ -6,8 +6,22 @@ import { LeaveTransactionLogModel } from '../model/leave-transaction-log.model';
 import { Resource } from 'src/common/model/resource.model';
 import { v1 } from 'uuid';
 
+/**
+ * Leave transaction log db service
+ *
+ * @export
+ * @class LeaveTransactionLogDbService
+ * @extends {BaseDBService}
+ * @implements {IDbService}
+ */
 @Injectable()
 export class LeaveTransactionLogDbService extends BaseDBService implements IDbService {
+  /**
+   *Creates an instance of LeaveTransactionLogDbService.
+   * @param {HttpService} httpService http service
+   * @param {QueryParserService} queryService query service
+   * @memberof LeaveTransactionLogDbService
+   */
   constructor(
     public readonly httpService: HttpService,
     public readonly queryService: QueryParserService) {
@@ -15,6 +29,13 @@ export class LeaveTransactionLogDbService extends BaseDBService implements IDbSe
     super(httpService, queryService, "l_main_leave_transaction_log");
   }
 
+  /**
+   * Create leave transaction log data
+   *
+   * @param {[string, string, string, string, string, string]} [leaveTransactionId, status, processLeave, remarks, creatorUserId, tenantId]
+   * @returns
+   * @memberof LeaveTransactionLogDbService
+   */
   create([leaveTransactionId, status, processLeave, remarks, creatorUserId, tenantId]: [string, string, string, string, string, string]) {
     const resource = new Resource(new Array);
     let leaveLogData = new LeaveTransactionLogModel();

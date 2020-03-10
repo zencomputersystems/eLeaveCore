@@ -18,6 +18,7 @@ export class LeaveTypeEntitlementService {
     /**
      *Creates an instance of LeaveTypeEntitlementService.
      * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService leavetype entitlement db service
+     * @param {PendingLeaveService} pendingLeaveService pending leave service
      * @memberof LeaveTypeEntitlementService
      */
     constructor(

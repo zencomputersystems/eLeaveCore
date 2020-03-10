@@ -2,8 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { of } from 'rxjs';
 import { LeaveForfeitedReportDto } from '../dto/leave-forfeited-report.dto';
 
+/**
+ * Leave forfeited report service
+ *
+ * @export
+ * @class LeaveForfeitedReportService
+ */
 @Injectable()
 export class LeaveForfeitedReportService {
+  /**
+   * Get leave forfeited data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof LeaveForfeitedReportService
+   */
   getLeaveForfeitedData([tenantId, userId]: [string, string]) {
     let leaveForfeitedReportDto = new LeaveForfeitedReportDto;
     let userForfeitedData = [];

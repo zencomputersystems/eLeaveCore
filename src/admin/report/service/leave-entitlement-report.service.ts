@@ -5,12 +5,31 @@ import { ReportDBService } from './report-db.service';
 import { map, mergeMap, flatMap } from 'rxjs/operators';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
+/**
+ * Leave entitlement report service
+ *
+ * @export
+ * @class LeaveEntitlementReportService
+ */
 @Injectable()
 export class LeaveEntitlementReportService {
+  /**
+   *Creates an instance of LeaveEntitlementReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof LeaveEntitlementReportService
+   */
   constructor(
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService
   ) { }
+  /**
+   * Get leave entitlement data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns {Observable<any>}
+   * @memberof LeaveEntitlementReportService
+   */
   getLeaveEntitlementData([tenantId, userId]: [string, string]): Observable<any> {
     let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`];
     const extra = ['(USER_GUID=' + userId + ')'];
@@ -70,6 +89,13 @@ export class LeaveEntitlementReportService {
 
   }
 
+  /**
+   * Assign data
+   *
+   * @param {*} [element, leaveTypeList]
+   * @returns
+   * @memberof LeaveEntitlementReportService
+   */
   assignData([element, leaveTypeList]) {
     // merge leave for user 
     const leaveData = new LeaveDetailsDto;

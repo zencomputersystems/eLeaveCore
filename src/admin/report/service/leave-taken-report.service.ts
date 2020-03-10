@@ -4,10 +4,29 @@ import { map, filter, mergeMap, find } from 'rxjs/operators';
 import { LeaveTakenReportDto, LeaveTakenDetailsDto } from '../dto/leave-taken-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
+/**
+ * Leave taken report service
+ *
+ * @export
+ * @class LeaveTakenReportService
+ */
 @Injectable()
 export class LeaveTakenReportService {
+  /**
+   *Creates an instance of LeaveTakenReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof LeaveTakenReportService
+   */
   constructor(private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService) { }
+  /**
+   * Get leave taken data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof LeaveTakenReportService
+   */
   getLeaveTakenData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=APPROVED)`];
     const extra = ['(USER_GUID=' + userId + ')'];
@@ -69,6 +88,13 @@ export class LeaveTakenReportService {
     );
   }
 
+  /**
+   * Run service
+   *
+   * @param {*} [element, leaveTypeList, resultAll]
+   * @returns
+   * @memberof LeaveTakenReportService
+   */
   runService([element, leaveTypeList, resultAll]) {
     let approverData = '';
     let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);

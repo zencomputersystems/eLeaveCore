@@ -4,13 +4,32 @@ import { map, mergeMap } from 'rxjs/operators';
 import { LeaveRejectReportDto } from '../dto/leave-reject-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 
+/**
+ * Leave reject report service
+ *
+ * @export
+ * @class LeaveRejectReportService
+ */
 @Injectable()
 export class LeaveRejectReportService {
+  /**
+   *Creates an instance of LeaveRejectReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof LeaveRejectReportService
+   */
   constructor(
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService
   ) { }
 
+  /**
+   * Get leave reject data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof LeaveRejectReportService
+   */
   getLeaveRejectData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=REJECTED)`];
     const extra = ['(USER_GUID=' + userId + ')'];

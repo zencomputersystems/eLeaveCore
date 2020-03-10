@@ -42,6 +42,14 @@ export class ApprovalOverrideController {
     )
   }
 
+  /**
+   * Find own leave history
+   *
+   * @param {*} param
+   * @param {*} req
+   * @param {*} res
+   * @memberof ApprovalOverrideController
+   */
   @Get(':id')
   @ApiOperation({ title: 'Get own leave history' })
   @ApiImplicitParam({ name: 'id', description: 'User guid', required: true })

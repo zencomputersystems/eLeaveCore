@@ -5,10 +5,29 @@ import { ApplyOnBehalfReportDto } from '../dto/apply-on-behalf-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 import { getEmployeeServiceYear } from 'src/common/helper/basic-functions';
 
+/**
+ * Apply on behalf report service
+ *
+ * @export
+ * @class ApplyOnBehalfReportService
+ */
 @Injectable()
 export class ApplyOnBehalfReportService {
+  /**
+   *Creates an instance of ApplyOnBehalfReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof ApplyOnBehalfReportService
+   */
   constructor(private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService) { }
+  /**
+   * Get apply on behalf data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof ApplyOnBehalfReportService
+   */
   getApplyOnBehalfData([tenantId, userId]: [string, string]) {
     let filter = [`(APPLIED_ON_BEHALF=1)`, `(TENANT_GUID=${tenantId})`];
     const extra = ['(USER_GUID=' + userId + ')'];

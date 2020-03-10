@@ -5,12 +5,31 @@ import { ReportDBService } from './report-db.service';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 import { mergeMap, map } from 'rxjs/operators';
 
+/**
+ * Leave adjustment report service
+ *
+ * @export
+ * @class LeaveAdjustmentReportService
+ */
 @Injectable()
 export class LeaveAdjustmentReportService {
+  /**
+   *Creates an instance of LeaveAdjustmentReportService.
+   * @param {ReportDBService} reportDBService
+   * @param {PendingLeaveService} pendingLeaveService
+   * @memberof LeaveAdjustmentReportService
+   */
   constructor(
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService
   ) { }
+  /**
+   * Get leave adjustment data
+   *
+   * @param {[string, string]} [tenantId, userId]
+   * @returns
+   * @memberof LeaveAdjustmentReportService
+   */
   getLeaveAdjustmentData([tenantId, userId]: [string, string]) {
     let filter = [`(TENANT_GUID=${tenantId})`];
     const extra = ['(USER_GUID=' + userId + ')'];

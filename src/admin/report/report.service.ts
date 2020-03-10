@@ -38,8 +38,28 @@ import { LeaveForfeitedReportService } from './service/leave-forfeited-report.se
 //   public leaveForfeitedReportService: LeaveForfeitedReportService;
 // }
 
+/**
+ * Report service
+ *
+ * @export
+ * @class ReportService
+ */
 @Injectable()
 export class ReportService {
+  /**
+   *Creates an instance of ReportService.
+   * @param {LeaveEntitlementReportService} leaveEntitlementReportService leave entitlement report service
+   * @param {ApprovalOverrideReportService} approvalOverrideReportService approval override report service
+   * @param {ApplyOnBehalfReportService} applyOnBehalfReportService apply on behalf report service
+   * @param {LeaveTakenReportService} leaveTakenReportService leave taken report service
+   * @param {LeaveRejectReportService} leaveRejectReportService leave reject report service
+   * @param {LeaveCancelReportService} leaveCancelReportService leave cancellation report service
+   * @param {MasterListReportService} masterListReportService master list report service
+   * @param {EntitlementClaimReportService} entitlementClaimReportService entitlement claim report service
+   * @param {LeaveAdjustmentReportService} leaveAdjustmentReportService leave adjustment report service
+   * @param {LeaveForfeitedReportService} leaveForfeitedReportService leave forfeited report service
+   * @memberof ReportService
+   */
   constructor(
     public leaveEntitlementReportService: LeaveEntitlementReportService,
     public approvalOverrideReportService: ApprovalOverrideReportService,
@@ -67,6 +87,13 @@ export class ReportService {
     'employee-master-list'- done
   */
 
+  /**
+   * Get report
+   *
+   * @param {[string, string, string]} [typeReport, tenantId, userId]
+   * @returns {Observable<any>}
+   * @memberof ReportService
+   */
   getReport([typeReport, tenantId, userId]: [string, string, string]): Observable<any> {
     const param: [string, string] = [tenantId, userId];
 

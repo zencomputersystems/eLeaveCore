@@ -71,12 +71,12 @@ export class EntitlementClaimModel extends CreateUpdateModel {
    */
   REQUEST_REMARKS: string;
   /**
-   * Final request remarks
+   * Final approval remarks
    *
    * @type {string}
    * @memberof EntitlementClaimModel
    */
-  FINAL_REQUEST_REMARKS: string;
+  FINAL_APPROVAL_REMARKS: string;
   /**
    * Attachment
    *

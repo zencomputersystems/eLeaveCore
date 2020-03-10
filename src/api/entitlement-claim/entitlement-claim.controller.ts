@@ -3,6 +3,7 @@ import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { EntitlementClaimService } from './entitlement-claim.service';
 import { EntitlementClaimRequestDto } from './dto/entitlement-claim-request.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { EntitlementClaimApproveDto } from './dto/entitlement-claim-approve.dto';
 
 /**
  * Entitlement claim controller
@@ -60,10 +61,10 @@ export class EntitlementClaimController {
 
   @Post('approve')
   @ApiOperation({ title: 'Approve entitlement claim' })
-  approveEntitlementClaim(@Req() req, @Res() res) {
-    this.entitlementClaimService.approveEntitlementClaim(['']).subscribe(
+  approveEntitlementClaim(@Body() entitlementClaimApproveDTO: EntitlementClaimApproveDto, @Req() req, @Res() res) {
+    this.entitlementClaimService.approveEntitlementClaim([entitlementClaimApproveDTO, req.user]).subscribe(
       data => {
-        res.send(data);
+        res.send(data.data.resource);
       }, err => {
         res.send(err);
       }

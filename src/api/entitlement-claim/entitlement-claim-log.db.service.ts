@@ -5,6 +5,8 @@ import { EntitlementClaimRequestDto } from './dto/entitlement-claim-request.dto'
 import { Resource } from 'src/common/model/resource.model';
 import { EntitlementClaimModel } from './model/entitlement-claim.model';
 import { v1 } from 'uuid';
+import { EntitlementClaimApproveDto } from './dto/entitlement-claim-approve.dto';
+import { setUpdateData } from '../../common/helper/basic-functions';
 
 /**
  * Entitlement claim log db service
@@ -47,6 +49,20 @@ export class EntitlementClaimLogDbService extends BaseDBService {
     resource.resource.push(data);
     console.log(resource);
     return this.createByModel(resource, [], [], []);
+  }
+
+  update([entitlementClaimApproveDTO, user]: [EntitlementClaimApproveDto, any]) {
+    const resource = new Resource(new Array());
+    const data = new EntitlementClaimModel();
+    console.log(user);
+    data.ENTITLEMENT_CLAIM_GUID = entitlementClaimApproveDTO.entitlementClaimId;
+    data.STATUS = entitlementClaimApproveDTO.status;
+    data.FINAL_APPROVAL_REMARKS = entitlementClaimApproveDTO.finalApprovalRemarks;
+    setUpdateData([data, user.USER_GUID]);
+
+    resource.resource.push(data);
+    console.log(resource);
+    return this.updateByModel(resource, [], [], []);
   }
 
 }

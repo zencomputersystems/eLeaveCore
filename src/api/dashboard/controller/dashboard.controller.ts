@@ -101,7 +101,8 @@ export class DashboardController {
 				if (data[0].data.resource.length > 0) {
 					result = this.dashboardService.processLongLeave(data[0].data.resource, data[1]);
 				} else {
-					result = { "status": "Not available" };
+					result = this.dashboardService.processLongLeave([], []);
+					// result = { "status": "Not available" };
 				}
 				res.send(result);
 			}, err => {

@@ -157,4 +157,14 @@ export class ApplyOnBehalfReportDto {
   @ApiModelProperty({ description: 'Remarks', example: 'No access internet' })
   @IsString()
   remarks: string;
+
+  /**
+   * Link storage
+   *
+   * @type {string}
+   * @memberof ApplyOnBehalfReportDto
+   */
+  @ApiModelProperty({ description: 'Link storage', example: 'Cloud storage' })
+  @IsString()
+  link: string;
 }

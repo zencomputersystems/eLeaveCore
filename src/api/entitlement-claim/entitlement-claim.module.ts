@@ -5,6 +5,7 @@ import { EntitlementClaimController } from './entitlement-claim.controller';
 import { EntitlementClaimDbService } from './entitlement-claim.db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { EntitlementClaimLogDbService } from './entitlement-claim-log.db.service';
+import { UserLeaveEntitlementDbService } from '../userprofile/db/user-leave-entitlement.db.service';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { EntitlementClaimLogDbService } from './entitlement-claim-log.db.service
     EntitlementClaimService,
     EntitlementClaimDbService,
     EntitlementClaimLogDbService,
-    QueryParserService
+    QueryParserService,
+    UserLeaveEntitlementDbService
   ],
   controllers: [
     EntitlementClaimController

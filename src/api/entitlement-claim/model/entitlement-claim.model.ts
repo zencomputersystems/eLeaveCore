@@ -36,6 +36,13 @@ export class EntitlementClaimModel extends CreateUpdateModel {
    */
   LEAVE_TYPE_GUID: string;
   /**
+   * Entitlement guid
+   *
+   * @type {string}
+   * @memberof EntitlementClaimModel
+   */
+  ENTITLEMENT_GUID: string;
+  /**
    * Start date
    *
    * @type {string}

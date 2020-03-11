@@ -3,6 +3,7 @@ import { ReportDBService } from './report-db.service';
 import { map, filter, mergeMap, find } from 'rxjs/operators';
 import { LeaveTakenReportDto, LeaveTakenDetailsDto } from '../dto/leave-taken-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
+import { linkStorage } from '../../../constant/commonUsed';
 
 /**
  * Leave taken report service
@@ -59,6 +60,8 @@ export class LeaveTakenReportService {
             leaveTakenReportDTO.userGuid = element.USER_GUID;
             leaveTakenReportDTO.employeeNo = resultUser.STAFF_ID;
             leaveTakenReportDTO.employeeName = resultUser.FULLNAME;
+            leaveTakenReportDTO.link = linkStorage + '/eleave/';
+
             // const leaveData = new LeaveTakenDetailsDto;
             const leaveData = this.runService([element, leaveTypeList, resultAll]);
             //   // console.log('a');
@@ -115,7 +118,7 @@ export class LeaveTakenReportService {
     leaveData.endDate = element.END_DATE;
     leaveData.noOfDays = element.NO_OF_DAYS;
     leaveData.approveBy = approverData;
-    leaveData.remarks = element.REMARKS
+    leaveData.remarks = element.REMARKS;
     return leaveData;
   }
 }

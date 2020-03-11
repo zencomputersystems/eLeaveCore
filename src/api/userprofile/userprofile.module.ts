@@ -31,6 +31,9 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
 import { PassportModule } from '@nestjs/passport';
 import { LeaveBalanceValidationParentService } from 'src/common/policy/leave-application-validation/services/leave-balance-validation-parent.service';
 import { EntitledFullService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/entitledFull.service';
+import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
+import { CompanyDbService } from 'src/admin/company/company.service';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
 
 /**
  * Module for user profile
@@ -62,7 +65,10 @@ import { EntitledFullService } from 'src/common/policy/entitlement-type/services
     UserProfileStatusService,
     UserInfoDetailsService,
     LeaveBalanceValidationParentService,
-    EntitledFullService
+    EntitledFullService,
+    PendingLeaveService,
+    CompanyDbService,
+    LeavetypeService
   ],
   imports: [
     PassportModule.register({ session: false }),

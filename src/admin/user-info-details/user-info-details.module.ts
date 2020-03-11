@@ -7,6 +7,9 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { UserInfoActivateService } from './user-info-activate.service';
 import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { PendingLeaveService } from '../approval-override/pending-leave.service';
+import { CompanyDbService } from '../company/company.service';
+import { LeavetypeService } from '../leavetype/leavetype.service';
 
 @Module({
   imports: [getModuleHttp()],
@@ -16,7 +19,10 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
     UserInfoDetailsService,
     UserInfoDbService,
     UserInfoActivateService,
-    UserprofileDbService
+    UserprofileDbService,
+    PendingLeaveService,
+    CompanyDbService,
+    LeavetypeService
   ],
   controllers: [UserInfoDetailsController]
 })

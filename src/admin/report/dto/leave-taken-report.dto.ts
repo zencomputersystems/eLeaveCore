@@ -129,4 +129,14 @@ export class LeaveTakenReportDto {
   @IsNotEmpty()
   @Type(() => LeaveTakenDetailsDto)
   leaveDetail: LeaveTakenDetailsDto[];
+
+  /**
+   * Link storage
+   *
+   * @type {string}
+   * @memberof LeaveTakenReportDto
+   */
+  @ApiModelProperty({ description: 'Link storage', example: 'Cloud service' })
+  @IsString()
+  link: string;
 }

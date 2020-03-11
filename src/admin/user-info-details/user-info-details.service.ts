@@ -6,6 +6,7 @@ import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { map, mergeMap } from 'rxjs/operators';
 import { personalDetailAssign, employmentDetailAssign, notificationRuleAssign } from './function/user-info-details.function';
+import { PendingLeaveService } from '../approval-override/pending-leave.service';
 /** XMLparser from zen library  */
 var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -23,7 +24,8 @@ export class UserInfoDetailsService {
    * @memberof UserInfoDetailsService
    */
   constructor(
-    private readonly userinfoDbService: UserInfoDbService
+    private readonly userinfoDbService: UserInfoDbService,
+    private readonly pendingLeaveService: PendingLeaveService
   ) { }
 
   /**
@@ -211,7 +213,7 @@ export class UserInfoDetailsService {
    * @param {*} [data, res, dataId]
    * @memberof UserInfoDetailsService
    */
-  public filterResults([data, res, dataId]) {
+  public async filterResults([data, res, dataId]) {
     let results = data[0];
     let resultItem = {};
 
@@ -224,6 +226,15 @@ export class UserInfoDetailsService {
       if (dataId == 'personal-details') {
         personalDetailAssign([resultItem, results, dataXML]);
       } else if (dataId == 'employment-detail') {
+
+        // get manager name
+        if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
+          if (dataXML.root.employmentDetail) {
+            let managerName = await this.pendingLeaveService.getUserInfo(results.MANAGER_USER_GUID);
+            results.MANAGER_USER_GUID = managerName[0].FULLNAME; // Replace manager guid to fullname
+          }
+        }
+
         employmentDetailAssign([resultItem, results, dataXML]);
       } else if (dataId == 'notification-rule') {
         notificationRuleAssign([resultItem, dataXML]);

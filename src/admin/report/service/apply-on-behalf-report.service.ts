@@ -4,6 +4,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { ApplyOnBehalfReportDto } from '../dto/apply-on-behalf-report.dto';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 import { getEmployeeServiceYear } from 'src/common/helper/basic-functions';
+import { linkStorage } from '../../../constant/commonUsed';
 
 /**
  * Apply on behalf report service
@@ -64,6 +65,7 @@ export class ApplyOnBehalfReportService {
           applyOnBehalfReportDto.status = element.STATUS;
           applyOnBehalfReportDto.dayType = element.TIME_SLOT || 'fullday';
           applyOnBehalfReportDto.remarks = element.REMARKS;
+          applyOnBehalfReportDto.link = linkStorage + '/eleave/';
 
           userIdList.push(applyOnBehalfReportDto);
         });

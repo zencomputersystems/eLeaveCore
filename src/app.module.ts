@@ -28,6 +28,7 @@ import { UserInfoDetailsModule } from './admin/user-info-details/user-info-detai
 import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
 import { ReportModule } from './admin/report/report.module';
 import { EntitlementClaimModule } from './api/entitlement-claim/entitlement-claim.module';
+import { ProfilePictureModule } from './api/profile-picture/profile-picture.module';
 
 
 @Module({
@@ -77,7 +78,8 @@ import { EntitlementClaimModule } from './api/entitlement-claim/entitlement-clai
     DashboardModule,
     DashboardAdminModule,
     ReportModule,
-    EntitlementClaimModule
+    EntitlementClaimModule,
+    ProfilePictureModule
   ],
   controllers: [AppController],
   providers: [

@@ -1,1 +1,2 @@
 export const linkStorage = 'https://zencloudservicesstore.blob.core.windows.net/cloudservices';
+export const linkStorageEleave = 'https://zencloudservicesstore.blob.core.windows.net/cloudservices/eleave/';

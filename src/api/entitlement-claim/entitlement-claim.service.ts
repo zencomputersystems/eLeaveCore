@@ -71,45 +71,47 @@ export class EntitlementClaimService {
           console.log('approve');
 
 
-          const resource = new Resource(new Array());
+          // const resource = new Resource(new Array());
 
-          //get the entitlement days
-          const entitlementDay = result.NO_OF_DAYS as any;
+          // //get the entitlement days
+          // const entitlementDay = parseInt(result.NO_OF_DAYS);
 
-          // assign new policy to user
-          const entitlementModel = new UserLeaveEntitlementModel();
-          entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
-          entitlementModel.LEAVE_TYPE_GUID = result.LEAVE_TYPE_GUID;
-          entitlementModel.ENTITLEMENT_GUID = result.ENTITLEMENT_GUID
-          entitlementModel.USER_GUID = result.USER_GUID;
-          entitlementModel.EXPIREDATE = new Date(moment().add(3, 'M').format('YYYY-MM-DD'));
-          entitlementModel.PARENT_FLAG = 0;
-          entitlementModel.CF_FLAG = 0;
-          // entitlementModel.PROPERTIES_XML = res.res[0].PROPERTIES_XML;
-          entitlementModel.YEAR = moment().year();
-          entitlementModel.REMARKS = null;
-          entitlementModel.ACTIVE_FLAG = 1;
+          // // assign new policy to user
+          // const entitlementModel = new UserLeaveEntitlementModel();
+          // entitlementModel.USER_LEAVE_ENTITLEMENT_GUID = v1();
+          // entitlementModel.LEAVE_TYPE_GUID = result.LEAVE_TYPE_GUID;
+          // entitlementModel.ENTITLEMENT_GUID = result.ENTITLEMENT_GUID
+          // entitlementModel.USER_GUID = result.USER_GUID;
+          // entitlementModel.EXPIREDATE = new Date(moment().add(3, 'M').format('YYYY-MM-DD'));
+          // entitlementModel.PARENT_FLAG = 0;
+          // entitlementModel.CF_FLAG = 0;
+          // // entitlementModel.PROPERTIES_XML = res.res[0].PROPERTIES_XML;
+          // entitlementModel.YEAR = moment().year();
+          // entitlementModel.REMARKS = null;
+          // entitlementModel.ACTIVE_FLAG = 1;
 
-          entitlementModel.TENANT_GUID = user.TENANT_GUID;
-          entitlementModel.CREATION_USER_GUID = user.USER_GUID;
+          // entitlementModel.TENANT_GUID = user.TENANT_GUID;
+          // entitlementModel.CREATION_USER_GUID = user.USER_GUID;
 
-          entitlementModel.DAYS_ADDED = entitlementDay;
+          // entitlementModel.DAYS_ADDED = entitlementDay;
 
-          resource.resource.push(entitlementModel);
+          // resource.resource.push(entitlementModel);
+          // console.log(resource);
 
-          this.userLeaveEntitlementDbService.createByModel(resource, [], [], []).pipe(
-            map(res => {
-              const rsUserLeaveEntitlement = res.status == 200 ? res.data.resource : new BadRequestException();
-              return rsUserLeaveEntitlement;
-            })
-          ).subscribe(
-            data => {
-              console.log(data);
-            }, err => {
-              console.log(err);
-              Logger.log('msg', err);
-            }
-          );
+          // this.userLeaveEntitlementDbService.createByModel(resource, [], [], []).pipe(
+          //   map(res => {
+          //     const rsUserLeaveEntitlement = res.status == 200 ? res.data.resource : new BadRequestException();
+          //     return rsUserLeaveEntitlement;
+          //   })
+          // ).subscribe(
+          //   data => {
+          //     console.log('pass');
+          //     console.log(data.data.resource);
+          //   }, err => {
+          //     console.log('error');
+          //     console.log(err);
+          //   }
+          // );
 
 
 

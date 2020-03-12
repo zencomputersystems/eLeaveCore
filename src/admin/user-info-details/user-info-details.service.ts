@@ -37,16 +37,7 @@ export class UserInfoDetailsService {
    */
   public getUserXMLInfo(userInfoGuid: string) {
     const filters = ['(USER_INFO_GUID=' + userInfoGuid + ')'];
-    return this.userinfoDbService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1]).pipe(
-      mergeMap(res => {
-        let managerData = this.userinfoDbService.findByFilterV2(['FULLNAME'], [`(USER_GUID=${res[0].MANAGER_USER_GUID})`])
-        return forkJoin(of(res), managerData);
-      }),
-      map(res => {
-        res[0][0].MANAGER_USER_GUID = res[1][0].FULLNAME;
-        return res[0];
-      })
-    );
+    return this.userinfoDbService.findByFilterV4([[], filters, 'CREATION_TS DESC', 1]);
   }
 
   /**

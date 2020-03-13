@@ -24,6 +24,18 @@ export class EntitlementClaimController {
     private readonly entitlementClaimService: EntitlementClaimService
   ) { }
 
+  @Get('leave-claimable')
+  @ApiOperation({ title: 'Claimable leavetype' })
+  claimableLeavetype(@Req() req, @Res() res) {
+    this.entitlementClaimService.availableClaimLeavetype([req.user]).subscribe(
+      data => {
+        res.send(data);
+      }, err => {
+        res.send(err);
+      }
+    );
+  }
+
   /**
    * Request entitlement claim
    *
@@ -35,13 +47,10 @@ export class EntitlementClaimController {
   @Post('request')
   @ApiOperation({ title: 'Entitlement claim request' })
   requestEntitlementClaim(@Body() entitlementClaimRequestDto: EntitlementClaimRequestDto, @Req() req, @Res() res) {
-    console.log(req.user);
     this.entitlementClaimService.entitlementClaimProcess([entitlementClaimRequestDto, req.user]).subscribe(
       data => {
-        console.log(data);
         res.send(data.data.resource);
       }, err => {
-        console.log(err);
         res.send(err);
       }
     );

@@ -6,6 +6,7 @@ import { EntitlementClaimDbService } from './entitlement-claim.db.service';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { EntitlementClaimLogDbService } from './entitlement-claim-log.db.service';
 import { UserLeaveEntitlementDbService } from '../userprofile/db/user-leave-entitlement.db.service';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UserLeaveEntitlementDbService } from '../userprofile/db/user-leave-enti
     EntitlementClaimDbService,
     EntitlementClaimLogDbService,
     QueryParserService,
-    UserLeaveEntitlementDbService
+    UserLeaveEntitlementDbService,
+    LeavetypeService
   ],
   controllers: [
     EntitlementClaimController

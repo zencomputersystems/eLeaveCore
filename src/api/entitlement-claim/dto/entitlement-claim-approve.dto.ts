@@ -14,7 +14,7 @@ export class EntitlementClaimApproveDto {
    * @type {string}
    * @memberof EntitlementClaimApproveDto
    */
-  @ApiModelProperty({ description: 'Entitlement claim guid', example: '5cc4ddb0-5dde-11ea-9a4d-5f2b8a8912ac' })
+  @ApiModelProperty({ description: 'Entitlement claim guid', example: '5003f8a0-6445-11ea-aa9f-319f491ed5a7' })
   @IsString()
   entitlementClaimId: string;
   /**

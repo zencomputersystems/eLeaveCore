@@ -14,7 +14,7 @@ export class EntitlementClaimRequestDto {
    * @type {string}
    * @memberof EntitlementClaimRequestDto
    */
-  @ApiModelProperty({ description: 'User guid requestor', example: 'HKJN' })
+  @ApiModelProperty({ description: 'User guid requestor', example: '697b25ac-bff1-b1d1-f17e-fa0206fc7a2a' })
   @IsString()
   userGuid: string;
 
@@ -24,7 +24,7 @@ export class EntitlementClaimRequestDto {
    * @type {string}
    * @memberof EntitlementClaimRequestDto
    */
-  @ApiModelProperty({ description: 'Leave type guid', example: 'HUKHJJHKJ' })
+  @ApiModelProperty({ description: 'Leave type guid', example: 'aa84b3c0-7849-11e9-a449-bd6134fe73e4' })
   @IsString()
   leavetypeGuid: string;
 

@@ -39,8 +39,7 @@ export class LeaveTypeEntitlementService {
                 mergeMap(async res => {
                     let userData = await this.pendingLeaveService.getAllUserInfo(tenantId) as any[];
                     return { res, userData };
-                }
-                ),
+                }),
                 map(result => {
                     let { res, userData } = result;
                     if (res.status == 200) {
@@ -60,18 +59,20 @@ export class LeaveTypeEntitlementService {
                             entitlementItem.totalEmployee = element.TOTAL_EMPLOYEE_ATTACH;
 
                             let userAttachArr = [];
-                            let userId = element.USER_ATTACH.split(",");
+                            if (element.USER_ATTACH != null) {
+                                let userId = element.USER_ATTACH.split(",");
 
-                            if (userId.length > 0) {
-                                userId.forEach(userAttach => {
-                                    const userFullname = userData.find(x => x.USER_GUID === userAttach);
-                                    if (userFullname) {
-                                        let userInfo = {};
-                                        userInfo['guid'] = userAttach;
-                                        userInfo['employeeName'] = userFullname.FULLNAME;
-                                        userAttachArr.push(userInfo);
-                                    }
-                                });
+                                if (userId.length > 0) {
+                                    userId.forEach(userAttach => {
+                                        const userFullname = userData.find(x => x.USER_GUID === userAttach);
+                                        if (userFullname) {
+                                            let userInfo = {};
+                                            userInfo['guid'] = userAttach;
+                                            userInfo['employeeName'] = userFullname.FULLNAME;
+                                            userAttachArr.push(userInfo);
+                                        }
+                                    });
+                                }
                             }
                             entitlementItem.userAttach = userAttachArr;
 

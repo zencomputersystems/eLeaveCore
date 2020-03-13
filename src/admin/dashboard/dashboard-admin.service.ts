@@ -32,7 +32,7 @@ export class DashboardAdminService {
    */
   public getUpcomingJoiner(tenantGuid: string) {
     let filterJoiner = ['(JOIN_DATE > "' + moment().format('YYYY-MM-DD') + '") AND (TENANT_GUID=' + tenantGuid + ')'];
-    let fieldsJoiner = ['FULLNAME', 'DESIGNATION', 'JOIN_DATE'];
+    let fieldsJoiner = ['USER_GUID', 'FULLNAME', 'DESIGNATION', 'JOIN_DATE'];
     return this.userInfoDbService.findByFilterV3(fieldsJoiner, filterJoiner);
   }
 
@@ -45,7 +45,7 @@ export class DashboardAdminService {
    */
   public getUpcomingLeaver(tenantGuid: string) {
     let filter = ['(RESIGNATION_DATE > "' + moment().format('YYYY-MM-DD') + '") AND (TENANT_GUID=' + tenantGuid + ')'];
-    let fields = ['FULLNAME', 'DESIGNATION', 'RESIGNATION_DATE'];
+    let fields = ['USER_GUID', 'FULLNAME', 'DESIGNATION', 'RESIGNATION_DATE'];
     return this.userInfoDbService.findByFilterV3(fields, filter);
   }
 
@@ -58,7 +58,7 @@ export class DashboardAdminService {
    */
   public getBirthdayList(tenantGuid: string) {
     let filter = ['(DELETED_AT IS NULL) AND (TENANT_GUID=' + tenantGuid + ')'];
-    let fields = ['FULLNAME', 'DESIGNATION', 'DOB'];
+    let fields = ['USER_GUID', 'FULLNAME', 'DESIGNATION', 'DOB'];
     return this.userprofileDbService.findByFilterV3(fields, filter);
   }
 

@@ -10,6 +10,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { ActiveDirectoryStrategy } from './passport/ad.strategy';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { getModuleHttp } from '../common/helper/basic-functions';
+import { AuthDbService } from './auth.db.service';
 
 /**
  * Module for auth
@@ -24,7 +25,9 @@ import { getModuleHttp } from '../common/helper/basic-functions';
         UserService,
         LocalStrategy,
         ActiveDirectoryStrategy,
-        JwtStrategy],
+        JwtStrategy,
+        AuthDbService
+    ],
     controllers: [
         AuthController
     ],

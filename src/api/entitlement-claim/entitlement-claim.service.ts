@@ -13,7 +13,7 @@ import { EntitlementClaimModel } from './model/entitlement-claim.model';
 import { logger } from '../../common/middleware/logger.middleware';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -36,19 +36,32 @@ export class EntitlementClaimService {
     private readonly leavetypeService: LeavetypeService
   ) { }
 
+  /**
+   * Get list of available entitlement claim based on policy
+   *
+   * @param {[any]} [user]
+   * @returns
+   * @memberof EntitlementClaimService
+   */
   public availableClaimLeavetype([user]: [any]) {
+    // Get existing entitlement leave assigned to employee
     return this.userLeaveEntitlementDbService.findByFilterV2([], [`(USER_GUID=${user.USER_GUID})`, '(YEAR=' + moment().format('YYYY') + ')', `(PARENT_FLAG=1)`]).pipe(
       mergeMap(res => {
+        // Get leavetype list
         let leavetypeList = this.leavetypeService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`]);
-        return forkJoin(res, leavetypeList);
+        return forkJoin(of(res), leavetypeList);
       }),
       map(res => {
-        console.log(res[0]);
-        let availableLeave = [];
-        res[0].forEach(element => {
+        let entitlementAssigned = res[0]; // Get data entitlement assigned
+        let leavetypeList = res[1]; // Get data leavetype list
+
+        let availableLeave = []; // To store leavetype can claim entitlement 
+        entitlementAssigned.forEach(element => {
           const dataXml: LeaveTypePropertiesXmlDTO = convertXMLToJson(element.PROPERTIES_XML);
+          let leaveData = leavetypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
           if (dataXml.claimEntitlement == true) {
-            delete element.PROPERTIES_XML;
+            delete element.PROPERTIES_XML; // Remove properties xml
+            element.LEAVE_TYPE_NAME = leaveData.CODE; // Add leavetype name
             availableLeave.push(element);
           }
         });

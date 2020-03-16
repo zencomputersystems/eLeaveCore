@@ -39,6 +39,26 @@ export class LeaveAdjustmentReportDto {
   employeeName: string;
 
   /**
+   * Company name
+   *
+   * @type {string}
+   * @memberof LeaveAdjustmentReportDto
+   */
+  @ApiModelProperty({ description: 'Company Name', example: 'Zen Computer System Sdn. Bhd.' })
+  @IsString()
+  companyName: string;
+
+  /**
+   * Department name
+   *
+   * @type {string}
+   * @memberof LeaveAdjustmentReportDto
+   */
+  @ApiModelProperty({ description: 'Department Name', example: 'Research and Development' })
+  @IsString()
+  departmentName: string;
+
+  /**
    * Leavetype guid
    *
    * @type {string}
@@ -57,6 +77,16 @@ export class LeaveAdjustmentReportDto {
   @ApiModelProperty({ description: 'Leave type name', example: 'Annual Leave' })
   @IsString()
   leaveTypeName: string;
+
+  /**
+   * Leavetype Abbr
+   *
+   * @type {string}
+   * @memberof LeaveAdjustmentReportDto
+   */
+  @ApiModelProperty({ description: 'Leave type Abbr', example: 'AL' })
+  @IsString()
+  leavetypeAbbr: string;
 
   /**
    * Adjustment

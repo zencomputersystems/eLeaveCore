@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
 import { UserService } from 'src/admin/user/user.service';
 import { ldap } from './passport/mock/ldap';
+import { AuthDbService } from './auth.db.service';
 
 /**
  * Service for auth
@@ -16,7 +17,7 @@ export class AuthService {
    * @param {UserService} userService
    * @memberof AuthService
    */
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService, private readonly authDbService: AuthDbService) { }
 
   /**
    * Method auth
@@ -61,10 +62,19 @@ export class AuthService {
 
     return await this.userService.findByFilterV2([], ['(LOGIN_ID=' + data._json.userPrincipalName + ')']).toPromise()
       .then(async user => {
-
-        return (user.length > 0)
-          ? Promise.resolve(user[0])
-          : Promise.reject(new UnauthorizedException('Invalid Credential'))
+        let statusTenant = await this.authDbService.findByFilterV2([], ['(SUBSCRIPTION_GUID=' + user[0].TENANT_GUID + ')']).toPromise();
+        return { user, statusTenant };
+      })
+      .then(async result => {
+        let { user, statusTenant } = result;
+        if (statusTenant[0].STATUS == 1) {
+          return (user.length > 0)
+            ? Promise.resolve(user[0])
+            : Promise.reject(new UnauthorizedException('Invalid Credential'))
+        }
+        else {
+          return Promise.reject(new UnauthorizedException('Inactive Subscription'))
+        }
       })
   }
 
@@ -102,9 +112,21 @@ export class AuthService {
   public async verify(payload) {
     return await this.userService.findOneByPayload(payload)
       .then(async user => {
-        return (user.data.resource.length > 0)
-          ? Promise.resolve(user.data.resource[0])
-          : Promise.reject(new UnauthorizedException('Invalid Authorization'))
+        let statusTenant = await this.authDbService.findByFilterV2([], ['(SUBSCRIPTION_GUID=' + user.data.resource[0].TENANT_GUID + ')']).toPromise();
+        return { user, statusTenant };
       })
+      .then(async result => {
+        let { user, statusTenant } = result;
+        if (statusTenant[0].STATUS == 1) {
+          return (user.data.resource.length > 0)
+            ? Promise.resolve(user.data.resource[0])
+            : Promise.reject(new UnauthorizedException('Invalid Authorization'))
+        }
+        else {
+          return Promise.reject(new UnauthorizedException('Inactive Subscription'))
+        }
+
+      })
+
   }
 }

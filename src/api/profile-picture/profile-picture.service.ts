@@ -40,7 +40,7 @@ export class ProfilePictureService {
     const data = new ProfilePictureModel();
 
     data.PROFILE_PICTURE_GUID = v1();
-    data.USER_GUID = user.USER_GUID;
+    data.USER_GUID = profilePictureDto.userGuid;
     data.PROFILE_PICTURE_FILE = profilePictureDto.profilePictureFile;
 
     resource.resource.push(data);

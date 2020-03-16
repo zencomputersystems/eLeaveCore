@@ -14,10 +14,10 @@ export class ProfilePictureDto {
    * @type {string}
    * @memberof ProfilePictureDto
    */
-  // @ApiModelProperty({ description: 'user guid', example: 'H8f7eg8g87GUHG' })
-  // @IsNotEmpty()
-  // @IsString()
-  // userGuid: string;
+  @ApiModelProperty({ description: 'user guid', example: '697b25ac-bff1-b1d1-f17e-fa0206fc7a2a' })
+  @IsNotEmpty()
+  @IsString()
+  userGuid: string;
 
   /**
    * Profile picture file

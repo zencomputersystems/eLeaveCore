@@ -13,7 +13,7 @@ export class ProfilePictureController {
   constructor(private readonly profilePictureService: ProfilePictureService) { }
 
   @Post()
-  @ApiOperation({ title: 'Get company list' })
+  @ApiOperation({ title: 'Upoad profile picture' })
   storeProfilePicture(@Body() profilePictureDto: ProfilePictureDto, @Req() req, @Res() res) {
     this.profilePictureService.create([req.user, profilePictureDto]).subscribe(
       data => {

@@ -1,28 +1,81 @@
-/**
-    * rolesMock
-    */
+// /**
+//     * rolesMock
+//     */
+// export const roles = {
+//   "code": "Super Admin",
+//   "description": "Super Admin for all staff",
+//   "property": {
+//     "allowLeaveSetup": {
+//       "allowLeaveTypeSetup": "true",
+//       "allowLeaveEntitlementSetup": "true",
+//       "allowApprovalGroupSetup": "true",
+//       "allowYearEndClosingSetup": "true"
+//     },
+//     "allowViewReport": { "value": "true", "level": "All" },
+//     "allowViewCalendar": { "value": "true", "level": "All" },
+//     "allowLeaveManagement": {
+//       "allowLeaveAdjustmant": { "value": "true", "level": "All" },
+//       "allowApplyOnBehalf": { "value": "true", "level": "Department" },
+//       "allowApprovalOverride": { "value": "true", "level": "All" }
+//     },
+//     "allowProfileManagement": {
+//       "allowViewProfile": { "value": "true", "level": "All" },
+//       "allowEditProfile": { "value": "true", "level": "All" },
+//       "allowChangePassword": { "value": "true", "level": "All" },
+//       "allowProfileAdmin": { "value": "true", "level": "All" }
+//     }
+//   }
+// }
+
 export const roles = {
   "code": "Super Admin",
   "description": "Super Admin for all staff",
   "property": {
     "allowLeaveSetup": {
-      "allowLeaveTypeSetup": "true",
-      "allowLeaveEntitlementSetup": "true",
-      "allowApprovalGroupSetup": "true",
-      "allowYearEndClosingSetup": "true"
+      "allowLeaveTypeSetup": { "value": "true" },
+      "allowLeaveEntitlementSetup": { "value": "true" },
+      "allowApprovalGroupSetup": { "value": "true" },
+      "allowYearEndClosingSetup": { "value": "true" }
     },
-    "allowViewReport": { "value": "true", "level": "All" },
-    "allowViewCalendar": { "value": "true", "level": "All" },
+    "allowViewReport": {
+      "value": "true",
+      "level": "All"
+    },
+    "allowViewCalendar": {
+      "value": "true",
+      "level": "Company"
+    },
     "allowLeaveManagement": {
-      "allowLeaveAdjustmant": { "value": "true", "level": "All" },
-      "allowApplyOnBehalf": { "value": "true", "level": "Department" },
-      "allowApprovalOverride": { "value": "true", "level": "All" }
+      "allowLeaveAdjustmant": {
+        "value": "true",
+        "level": "All"
+      },
+      "allowApplyOnBehalf": {
+        "value": "true",
+        "level": "All"
+      },
+      "allowApprovalOverride": {
+        "value": "true",
+        "level": "All"
+      }
     },
     "allowProfileManagement": {
-      "allowViewProfile": { "value": "true", "level": "All" },
-      "allowEditProfile": { "value": "true", "level": "All" },
-      "allowChangePassword": { "value": "true", "level": "All" },
-      "allowProfileAdmin": { "value": "true", "level": "All" }
+      "allowViewProfile": {
+        "value": "true",
+        "level": "All"
+      },
+      "allowEditProfile": {
+        "value": "true",
+        "level": "All"
+      },
+      "allowChangePassword": {
+        "value": "true",
+        "level": "All"
+      },
+      "allowProfileAdmin": {
+        "value": "true",
+        "level": "All"
+      }
     }
   }
 }

@@ -8,6 +8,9 @@ import { CreateCalendarDTO } from './dto/create-calendar.dto';
 import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { map } from 'rxjs/operators';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Controller for Holiday
@@ -81,7 +84,16 @@ export class HolidayController {
 	@Get('/calendar-profile')
 	@ApiOperation({ title: 'Get calendar profile list' })
 	findAllCalendar(@Req() req, @Res() res) {
-		this.commonFunctionService.runGetServiceV2(this.holidayService.getCalendarProfileList(req.user), res);
+		const method = this.holidayService.getCalendarProfileList(req.user).pipe(
+			map(res => {
+				res.forEach(element => {
+					element.filter_criteria = convertXMLToJson(element.filter_criteria);
+				});
+				return res;
+			})
+		);
+		// this.commonFunctionService.runGetServiceV2(this.holidayService.getCalendarProfileList(req.user), res);
+		this.commonFunctionService.runGetServiceV2(method, res);
 	}
 
 	/**

@@ -70,12 +70,13 @@ export class DashboardProcController {
    */
   @Get('/employee/calendar-leave-list')
   @UseGuards(AccessPermissionGuard)
-  @AccessPermission({ rulesName: 'allowViewCalendar', rulesDetail: '' }, { rulesName: 'allowLeaveSetup', rulesDetail: 'allowLeaveEntitlementSetup' }, { rulesName: 'allowProfileManagement', rulesDetail: 'allowViewProfile' })
+  // @AccessPermission({ rulesName: 'allowViewCalendar', rulesDetail: '' }, { rulesName: 'allowLeaveSetup', rulesDetail: 'allowLeaveEntitlementSetup' }, { rulesName: 'allowProfileManagement', rulesDetail: 'allowViewProfile' })
+  @AccessPermission({ rulesName: 'allowViewCalendar', rulesDetail: '' })
   @ApiOperation({ title: 'Get all list of employee to calendar' })
   @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: false })
   @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: false })
   findCalendarLeaveList(@Req() req, @Res() res) {
-    console.log(req.accessLevel);
+    // console.log(req.accessLevel);
 
     // this.accessLevelValidateService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, 'branch', []])
     //   .subscribe(
@@ -117,7 +118,7 @@ export class DashboardProcController {
       if (method_procedure == 'calendar_leave') {
         // for calendar leave list add time to start date and end date
         data.data.forEach(element => { this.dashboardCommonService.dashboardService.addTime(element); });
-        data.data = data.data.filter(x => x.TENANT_GUID == '' && x.req.accessLevelTemp);
+        // data.data = data.data.filter(x => x.TENANT_GUID == '' && x.req.accessLevelTemp);
       }
       res.send(data.data);
 

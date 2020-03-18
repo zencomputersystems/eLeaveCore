@@ -165,6 +165,7 @@ export class ApprovalOverrideService {
           let personal = element.userData;
           dataRes['leaveTransactionId'] = element.LEAVE_TRANSACTION_GUID;
           dataRes['employeeName'] = personal.FULLNAME;
+          dataRes['companyId'] = element.TENANT_COMPANY_GUID;
           dataRes['staffNumber'] = personal.STAFF_ID;
           dataRes['status'] = element.STATUS;
           dataRes['startDate'] = element.START_DATE;

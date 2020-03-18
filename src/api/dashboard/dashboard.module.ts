@@ -21,6 +21,9 @@ import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 import { CompanyDbService } from 'src/admin/company/company.service';
 import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { RoleDbService } from '../../admin/role/db/role.db.service';
+import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
+import { UserInfoService } from 'src/admin/user-info/user-info.service';
 
 /**
  * Module for dashboard
@@ -50,7 +53,10 @@ import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
         UserprofileDbService,
         PendingLeaveService,
         CompanyDbService,
-        LeavetypeService
+        LeavetypeService,
+        RoleDbService,
+        AccessLevelValidateService,
+        UserInfoService
     ],
     controllers: [DashboardController, DashboardLeaveController, DashboardProcController]
 })

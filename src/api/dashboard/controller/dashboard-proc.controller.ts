@@ -4,6 +4,9 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { DashboardCommonService } from '../service/dashboard-common.service';
 import { AuthGuard } from '@nestjs/passport';
 import moment = require('moment');
+import { AccessPermission } from 'src/decorator/resource.decorator';
+import { AccessPermissionGuard } from '../../../guard/access-permission.guard';
+import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 
 /**
  * Controller for process using stored procedure
@@ -24,7 +27,8 @@ export class DashboardProcController {
    */
   constructor(
     private http: HttpService,
-    private dashboardCommonService: DashboardCommonService
+    private dashboardCommonService: DashboardCommonService,
+    private accessLevelValidateService: AccessLevelValidateService
   ) { }
 
   /**
@@ -65,10 +69,29 @@ export class DashboardProcController {
    * @memberof DashboardProcController
    */
   @Get('/employee/calendar-leave-list')
+  @UseGuards(AccessPermissionGuard)
+  // @AccessPermission({ rulesName: 'allowViewCalendar', rulesDetail: '' }, { rulesName: 'allowLeaveSetup', rulesDetail: 'allowLeaveEntitlementSetup' }, { rulesName: 'allowProfileManagement', rulesDetail: 'allowViewProfile' })
+  @AccessPermission({ rulesName: 'allowViewCalendar', rulesDetail: '' })
   @ApiOperation({ title: 'Get all list of employee to calendar' })
   @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: false })
   @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: false })
   findCalendarLeaveList(@Req() req, @Res() res) {
+    // console.log(req.accessLevel);
+
+    // this.accessLevelValidateService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, 'branch', []])
+    //   .subscribe(
+    //     data => {
+    //       req.accessLevelTemp = data;
+
+    //       console.log(data);
+    //       let testSplit = data[1].split('(');
+    //       let testSplit2 = testSplit[1].split('=');
+    //       console.log(testSplit2);
+    //       this.runService(req, res, 'calendar_leave');
+    //     },
+    //     err => { console.log(err) }
+    //   )
+
     this.runService(req, res, 'calendar_leave');
   }
 
@@ -95,6 +118,7 @@ export class DashboardProcController {
       if (method_procedure == 'calendar_leave') {
         // for calendar leave list add time to start date and end date
         data.data.forEach(element => { this.dashboardCommonService.dashboardService.addTime(element); });
+        // data.data = data.data.filter(x => x.TENANT_GUID == '' && x.req.accessLevelTemp);
       }
       res.send(data.data);
 

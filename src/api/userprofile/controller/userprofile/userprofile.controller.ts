@@ -190,6 +190,7 @@ export class UserprofileController {
 
 		this.userprofileService.getEntitlementDetail(user.TENANT_GUID, data1.userId).subscribe(
 			data => {
+				let abbrMerge = [];
 				let leaveData = [];
 				for (let i = 0; i < data.length; i++) {
 					let tempObj = new EntitlementDetailDTO;
@@ -202,7 +203,9 @@ export class UserprofileController {
 					tempObj.takenDays = data[i].TOTAL_APPROVED;
 					tempObj.balanceDays = data[i].BALANCE_DAYS;
 					leaveData.push(tempObj);
+					abbrMerge.push(data[i].ABBR);
 				}
+				data1.abbr = abbrMerge;
 				data1.entitlementDetail = leaveData;
 				res.send(data1);
 			},

@@ -42,6 +42,19 @@ export class ApprovalOverrideController {
     )
   }
 
+  @Get('company/:id')
+  @ApiOperation({ title: 'Get pending leave' })
+  @ApiImplicitParam({ name: 'id', description: 'Company guid', required: true })
+  findAllByCompany(@Param() param, @Req() req, @Res() res) {
+    this.approvalOverrideService.findAllPendingLeave(req.user.TENANT_GUID).subscribe(
+      data => {
+        data = data.filter(x => x.companyId === param.id);
+        res.send(data);
+      },
+      err => { this.commonFunctionService.sendResErrorV3(err, res); }
+    )
+  }
+
   /**
    * Find own leave history
    *

@@ -109,11 +109,11 @@ export class DashboardService {
     let dateToday = moment().format('YYYY-MM-DD');
     let filters = ['LEAVE_TYPE_GUID', 'USER_GUID', 'START_DATE', 'END_DATE', 'NO_OF_DAYS'];
     if (role == 'admin') {
-      filters = ['(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+      filters = ['(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 4)'];
     } else if (role == 'superior') {
-      filters = ['(USER_GUID IN ( SELECT USER_GUID FROM l_view_user_profile_list WHERE MANAGER_USER_GUID = "' + user_guid + '" ))', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+      filters = ['(USER_GUID IN ( SELECT USER_GUID FROM l_view_user_profile_list WHERE MANAGER_USER_GUID = "' + user_guid + '" ))', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 4)'];
     } else {
-      filters = ['(USER_GUID=' + user_guid + ')', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+      filters = ['(USER_GUID=' + user_guid + ')', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 4)'];
     }
 
     return this.leaveTransactionDbService.findLongLeave(filters).pipe(mergeMap(res => {
@@ -157,7 +157,7 @@ export class DashboardService {
       }), mergeMap(res => {
         let { downline, userList } = res;
         let dateToday = moment().format('YYYY-MM-DD');
-        const filterLeave = ['(USER_GUID IN ( ' + userList + ' ))', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 5)'];
+        const filterLeave = ['(USER_GUID IN ( ' + userList + ' ))', '(TENANT_GUID=' + tenant_guid + ')', '(STATUS=APPROVED)', '(START_DATE > ' + dateToday + ')', '(NO_OF_DAYS > 4)'];
         let resultsLeave = this.leaveTransactionDbService.findLongLeave(filterLeave);
         return forkJoin(resultsLeave, of(downline));
       }));

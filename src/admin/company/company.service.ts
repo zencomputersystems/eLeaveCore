@@ -69,9 +69,11 @@ export class CompanyService {
 	 * @returns {Observable<any>}
 	 * @memberof CompanyService
 	 */
-	public findAll(TENANT_GUID: string): Observable<any> {
-
-		const fields = ['TENANT_COMPANY_GUID', 'NAME'];
+	public findAll([TENANT_GUID, PROCESS]: [string, string]): Observable<any> {
+		let fields = ['TENANT_COMPANY_GUID', 'NAME'];
+		if (PROCESS == 'year-end') {
+			fields = ['TENANT_COMPANY_GUID', 'NAME', 'YEAR_END'];
+		}
 		let result = findAllList([fields, TENANT_GUID, this.companyDbService.queryService, this.companyDbService.httpService, this.companyDbService.tableDB]);
 
 		return getListData(result);

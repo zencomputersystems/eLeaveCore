@@ -11,6 +11,7 @@ import { CompanySiteController } from './company-site.controller';
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
 
 /**
  * Module for company
@@ -33,7 +34,8 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
     // CompanySiteDbService,
     CompanyDbService,
     UserInfoDbService,
-    UserprofileDbService
+    UserprofileDbService,
+    GeneralLeavePolicyService
   ],
   controllers: [
     CompanyController,

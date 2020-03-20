@@ -48,7 +48,7 @@ export class AnnouncementService extends BaseDBService {
 
     const fields = [];
     const filters = ['(DELETED_AT IS NULL)'];
-    const orders = 'CREATION_TS DESC';
+    const orders = 'IS_PINNED DESC,CREATION_TS DESC';
 
     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, orders, 20]);
 

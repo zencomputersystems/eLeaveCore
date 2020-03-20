@@ -6,6 +6,35 @@ import { ForfeitCFLeave } from './forfeit-carry-forward-xml.dto';
 import { Type } from 'class-transformer';
 
 /**
+ * Anniversary bonus dto
+ *
+ * @export
+ * @class AnniversaryBonusDTO
+ */
+export class AnniversaryBonusDTO {
+  /**
+   * Value is allow or not
+   *
+   * @type {boolean}
+   * @memberof AnniversaryBonusDTO
+   */
+  @ApiModelProperty({ description: 'Allow anniversary leave or not', example: true })
+  @IsBoolean()
+  allowAutoApplyLeave: boolean;
+
+  /**
+   * Auto apply anniversary on date
+   *
+   * @type {string}
+   * @memberof AnniversaryBonusDTO
+   */
+  @ApiModelProperty({ description: 'Auto apply anniversary leave on', enum: ['birthday', 'join-date'] })
+  @IsString()
+  applyLeaveOnDate: string;
+
+}
+
+/**
  * XML data for general leave policy
  *
  * @export
@@ -64,4 +93,17 @@ export class GeneralLeavePolicyXMLDTO {
   @ApiModelProperty({ description: 'allow email reminder features', example: false })
   @IsBoolean()
   emailReminder: boolean;
+
+  /**
+   * Anniversary bonus setup
+   *
+   * @type {AnniversaryBonusDTO}
+   * @memberof GeneralLeavePolicyXMLDTO
+   */
+  @ApiModelProperty({ description: 'Anniversary leave setup', type: AnniversaryBonusDTO })
+  @IsNotEmpty()
+  @Type(() => AnniversaryBonusDTO)
+  anniversaryBonus: AnniversaryBonusDTO
 }
+
+

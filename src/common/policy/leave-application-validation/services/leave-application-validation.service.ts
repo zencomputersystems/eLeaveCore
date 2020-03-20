@@ -61,7 +61,9 @@ export class LeaveApplicationValidationService {
             .pipe(
                 map((result: boolean) => {
                     if (!result) {
-                        validationStatus.message.push("You have applied another leave between this date");
+                        // validationStatus.message.push("You have applied another leave between this date");
+                        validationStatus.message.push("Leave unsuccessfully submitted due to another leave has been applied between this date");
+
                     }
                 }),
                 mergeMap(res => {

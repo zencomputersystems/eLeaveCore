@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsISO8601, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsISO8601, IsNumber, IsOptional } from 'class-validator';
 
 /**
  * Data to create announcement
@@ -47,4 +47,17 @@ export class CreateAnnouncementDto {
   @IsNotEmpty()
   @IsNumber()
   isPinned: number;
+
+  /**
+   * Attachment filename
+   *
+   * @type {string[]}
+   * @memberof CreateAnnouncementDto
+   */
+  @ApiModelProperty({
+    description: 'Attachment file announcement',
+    example: `["779419_firstfile.png","6987604_secondfile.jpg"]`
+  })
+  @IsOptional()
+  attachment: string[];
 }

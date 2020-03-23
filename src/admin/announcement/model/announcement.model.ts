@@ -37,6 +37,13 @@ export class AnnouncementModel extends CreateUpdateModel {
    */
   IS_PINNED: number;
   /**
+   * Attachment filename
+   *
+   * @type {string[]}
+   * @memberof AnnouncementModel
+   */
+  ATTACHMENT: string[];
+  /**
    * Deleted at
    *
    * @type {string}

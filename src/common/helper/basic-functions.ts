@@ -93,7 +93,7 @@ export function findAllList([fields, tenantId, queryService, httpService, tableN
 
   let filters = ['(TENANT_GUID=' + tenantId + ')'];
 
-  if (tableName === 'tenant_company') { filters = ['(DELETED_AT IS NULL)'] }
+  if (tableName === 'tenant_company') { filters.push('(DELETED_AT IS NULL)') }
 
   //url
   const url = queryService.generateDbQueryV2(tableName, fields, filters, []);

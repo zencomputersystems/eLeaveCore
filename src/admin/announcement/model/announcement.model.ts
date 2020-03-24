@@ -46,10 +46,10 @@ export class AnnouncementModel extends CreateUpdateModel {
   /**
    * Attachment filename
    *
-   * @type {string[]}
+   * @type {string}
    * @memberof AnnouncementModel
    */
-  ATTACHMENT: string[];
+  ATTACHMENT: string;
   /**
    * Deleted at
    *

@@ -5,6 +5,8 @@ import { AnnouncementService } from './announcement.service';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
+import { split } from 'lodash';
+import { map } from 'rxjs/operators';
 
 /**
  * Controller for announcement
@@ -36,7 +38,15 @@ export class AnnouncementController {
   @Get()
   @ApiOperation({ title: 'get announcement list' })
   findAll(@Req() req, @Res() res) {
-    this.commonFunctionService.getResults([this.announcementService.findAll(req.user), res, 'Fail to fetch resource']);
+    let method = this.announcementService.findAll(req.user).pipe(
+      map(res => {
+        res.data.resource.forEach(element => {
+          element.ATTACHMENT = split(element.ATTACHMENT, ',');
+        });
+        return res;
+      })
+    )
+    this.commonFunctionService.getResults([method, res, 'Fail to fetch resource']);
   }
 
   /**

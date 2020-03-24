@@ -44,10 +44,10 @@ export class AnnouncementService extends BaseDBService {
    * @returns
    * @memberof AnnouncementService
    */
-  findAll() {
+  findAll(user: any) {
 
     const fields = [];
-    const filters = ['(DELETED_AT IS NULL)'];
+    const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ')', 'AND (DELETED_AT IS NULL)'];
     const orders = 'IS_PINNED DESC,CREATION_TS DESC';
 
     const url = this.queryService.generateDbQueryV3([this._tableName, fields, filters, orders, 20]);
@@ -113,6 +113,7 @@ export class AnnouncementService extends BaseDBService {
 
     modelData.ANNOUNCEMENT_GUID = v1();
     modelData.CREATION_USER_GUID = user.USER_GUID;
+    modelData.TENANT_GUID = user.TENANT_GUID;
     this.inputDataAnnouncement([modelData, data]);
 
     resource.resource.push(modelData);

@@ -35,8 +35,8 @@ export class AnnouncementController {
    */
   @Get()
   @ApiOperation({ title: 'get announcement list' })
-  findAll(@Res() res) {
-    this.commonFunctionService.getResults([this.announcementService.findAll(), res, 'Fail to fetch resource']);
+  findAll(@Req() req, @Res() res) {
+    this.commonFunctionService.getResults([this.announcementService.findAll(req.user), res, 'Fail to fetch resource']);
   }
 
   /**

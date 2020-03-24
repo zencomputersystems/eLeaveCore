@@ -16,6 +16,13 @@ export class AnnouncementModel extends CreateUpdateModel {
    */
   ANNOUNCEMENT_GUID: string;
   /**
+   * Tenant guid
+   *
+   * @type {string}
+   * @memberof AnnouncementModel
+   */
+  TENANT_GUID: string;
+  /**
    * Title
    *
    * @type {string}

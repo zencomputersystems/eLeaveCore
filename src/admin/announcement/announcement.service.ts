@@ -132,7 +132,7 @@ export class AnnouncementService extends BaseDBService {
     model.TITLE = data.title;
     model.MESSAGE = data.message;
     model.IS_PINNED = data.isPinned;
-    model.ATTACHMENT = data.attachment;
+    model.ATTACHMENT = data.attachment.toString();
 
     return model;
 

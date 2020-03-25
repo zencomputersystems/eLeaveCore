@@ -29,6 +29,7 @@ import { DashboardAdminModule } from './admin/dashboard/dashboard-admin.module';
 import { ReportModule } from './admin/report/report.module';
 import { EntitlementClaimModule } from './api/entitlement-claim/entitlement-claim.module';
 import { ProfilePictureModule } from './api/profile-picture/profile-picture.module';
+import { ProfileDefaultModule } from './admin/profile-default/profile-default.module';
 
 
 @Module({
@@ -79,7 +80,8 @@ import { ProfilePictureModule } from './api/profile-picture/profile-picture.modu
     DashboardAdminModule,
     ReportModule,
     EntitlementClaimModule,
-    ProfilePictureModule
+    ProfilePictureModule,
+    ProfileDefaultModule
   ],
   controllers: [AppController],
   providers: [

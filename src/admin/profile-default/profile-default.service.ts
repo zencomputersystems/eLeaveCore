@@ -34,7 +34,12 @@ export class ProfileDefaultService {
     let pdm = new ProfileDefaultModel();
 
     pdm.TENANT_GUID = user.TENANT_GUID;
-    pdm.CALENDAR_PROFILE_GUID = data;
+    if (data.profile == 'calendar')
+      pdm.CALENDAR_PROFILE_GUID = data.id;
+    else if (data.profile == 'working-hour')
+      pdm.WORKING_HOURS_PROFILE_GUID = data.id;
+    else if (data.profile == 'role')
+      pdm.ROLE_PROFILE_GUID = data.id;
 
     resource.resource.push(pdm);
 

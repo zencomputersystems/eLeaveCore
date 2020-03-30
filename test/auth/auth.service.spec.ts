@@ -1,6 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { UserService } from 'src/admin/user/user.service';
 import { AuthService } from '../../src/auth/auth.service';
+import { AuthDbService } from '../../src/auth/auth.db.service';
+import { HttpService } from '@nestjs/common';
+import { QueryParserService } from '../../src/common/helper/query-parser.service';
 describe('AuthService', () => {
   let service: AuthService;
   beforeEach(async () => {
@@ -11,10 +14,21 @@ describe('AuthService', () => {
       }),
       findOneByPayload: payload1 => ({ then: () => ({}) })
     };
+    const httpServiceStub = {
+      get: url1 => ({
+        subscribe: () => ({})
+      })
+    };
     const module = await Test.createTestingModule({
       providers: [
         AuthService,
-        { provide: UserService, useValue: userServiceStub }
+        AuthDbService,
+        { provide: UserService, useValue: userServiceStub },
+        HttpService, {
+          provide: HttpService,
+          useValue: httpServiceStub
+        },
+        QueryParserService
       ]
     }).compile();
     service = await module.get<AuthService>(AuthService);

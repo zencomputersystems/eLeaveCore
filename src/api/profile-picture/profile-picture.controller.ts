@@ -5,17 +5,36 @@ import { ProfilePictureService } from './profile-picture.service';
 import { ProfilePictureDto } from './dto/profile-picture.dto';
 import { linkStorageEleave } from '../../constant/commonUsed';
 
+/**
+ * Profile picture controller
+ *
+ * @export
+ * @class ProfilePictureController
+ */
 @Controller('api/profile-picture')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class ProfilePictureController {
 
+  /**
+   *Creates an instance of ProfilePictureController.
+   * @param {ProfilePictureService} profilePictureService Profile picture service
+   * @memberof ProfilePictureController
+   */
   constructor(private readonly profilePictureService: ProfilePictureService) { }
 
+  /**
+   * Save profile picture
+   *
+   * @param {ProfilePictureDto} profilePictureDto
+   * @param {*} req
+   * @param {*} res
+   * @memberof ProfilePictureController
+   */
   @Post()
   @ApiOperation({ title: 'Upoad profile picture' })
-  storeProfilePicture(@Body() profilePictureDto: ProfilePictureDto, @Req() req, @Res() res) {
-    this.profilePictureService.create([req.user, profilePictureDto]).subscribe(
+  storeProfilePicture(@Body() profilePictureDto: ProfilePictureDto, @Res() res) {
+    this.profilePictureService.create([profilePictureDto]).subscribe(
       data => {
         res.send(data.data.resource);
       }, err => {
@@ -24,6 +43,14 @@ export class ProfilePictureController {
     );
   }
 
+  /**
+   * Get profile picture filename
+   *
+   * @param {*} param
+   * @param {*} req
+   * @param {*} res
+   * @memberof ProfilePictureController
+   */
   @Get(':type')
   @ApiOperation({ title: 'Get profile picture' })
   @ApiImplicitParam({ name: 'type', description: 'all or personal', required: false })

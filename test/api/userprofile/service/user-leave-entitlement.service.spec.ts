@@ -12,6 +12,7 @@ import { XMLParserService } from 'src/common/helper/xml-parser.service';
 import { UserLeaveEntitlementService } from '../../../../src/api/userprofile/service/user-leave-entitlement.service';
 import { UserEntitlementAssignEntitlement } from '../../../../src/api/userprofile/service/userentitlement-assign-entitlement.service';
 import { UserEntitlementAssignPolicy } from '../../../../src/api/userprofile/service/userentitlement-assign-policy.service';
+import { EntitlementRoundingService } from '../../../../src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 describe('UserLeaveEntitlementService', () => {
   let service: UserLeaveEntitlementService;
   beforeEach(async () => {
@@ -67,7 +68,8 @@ describe('UserLeaveEntitlementService', () => {
         },
         { provide: XMLParserService, useValue: xMLParserServiceStub },
         UserEntitlementAssignEntitlement,
-        UserEntitlementAssignPolicy
+        UserEntitlementAssignPolicy,
+        EntitlementRoundingService
       ]
     }).compile();
     service = await module.get<UserLeaveEntitlementService>(UserLeaveEntitlementService);

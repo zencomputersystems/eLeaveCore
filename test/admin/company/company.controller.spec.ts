@@ -4,6 +4,7 @@ import { CompanyService } from '../../../src/admin/company/company.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from 'src/common/helper/query-parser.service';
+import { GeneralLeavePolicyService } from '../../../src/admin/general-leave-policy/general-leave-policy.service';
 describe('CompanyController', () => {
   let pipe: CompanyController;
   beforeEach(async () => {
@@ -31,7 +32,8 @@ describe('CompanyController', () => {
           provide: QueryParserService,
           useValue: queryParserServiceStub
         },
-        CommonFunctionService
+        CommonFunctionService,
+        GeneralLeavePolicyService
       ]
     }).compile();
     pipe = await module.get<CompanyController>(CompanyController);

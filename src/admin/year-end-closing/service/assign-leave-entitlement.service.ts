@@ -5,7 +5,6 @@ import { LeaveTypeEntitlementModel } from 'src/admin/leavetype-entitlement/model
 import { Resource } from 'src/common/model/resource.model';
 import { map } from 'rxjs/operators';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
-import { ApplyAnniversaryLeaveService } from './apply-anniversary-leave.service';
 
 /**
  * Service assign leave entitlement
@@ -19,13 +18,11 @@ export class AssignLeaveEntitlementService {
    *Creates an instance of AssignLeaveEntitlementService.
    * @param {LeavetypeEntitlementDbService} leavetypeEntitlementDbService leavetype entitlement db service 
    * @param {AssignLeaveFunctionService} assignLeaveFunctionService assign leave function service
-   * @param {ApplyAnniversaryLeaveService} applyAnniversaryLeaveService apply anniversary leave service
    * @memberof AssignLeaveEntitlementService
    */
   constructor(
     public leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-    private readonly assignLeaveFunctionService: AssignLeaveFunctionService,
-    public applyAnniversaryLeaveService: ApplyAnniversaryLeaveService
+    private readonly assignLeaveFunctionService: AssignLeaveFunctionService
   ) { }
 
   /**

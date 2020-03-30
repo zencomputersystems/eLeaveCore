@@ -42,6 +42,14 @@ export class ApprovalOverrideController {
     )
   }
 
+  /**
+   * Get pending leave by company
+   *
+   * @param {*} param
+   * @param {*} req
+   * @param {*} res
+   * @memberof ApprovalOverrideController
+   */
   @Get('company/:id')
   @ApiOperation({ title: 'Get pending leave' })
   @ApiImplicitParam({ name: 'id', description: 'Company guid', required: true })

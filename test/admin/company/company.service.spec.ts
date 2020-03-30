@@ -4,6 +4,7 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { CompanyService, CompanyDbService } from '../../../src/admin/company/company.service';
 import { CommonFunctionService } from '../../../src/common/helper/common-function.services';
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
+import { UserprofileDbService } from '../../../src/api/userprofile/db/userprofile.db.service';
 describe('CompanyService', () => {
   let service: CompanyService;
   beforeEach(async () => {
@@ -18,7 +19,8 @@ describe('CompanyService', () => {
         { provide: QueryParserService, useValue: queryParserServiceStub },
         CommonFunctionService,
         CompanyDbService,
-        UserInfoDbService
+        UserInfoDbService,
+        UserprofileDbService
       ]
     }).compile();
     service = await module.get<CompanyService>(CompanyService);

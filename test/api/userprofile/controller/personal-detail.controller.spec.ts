@@ -9,6 +9,10 @@ import { HttpService } from '@nestjs/common';
 import { QueryParserService } from '../../../../src/common/helper/query-parser.service';
 import { UserInfoDetailsService } from 'src/admin/user-info-details/user-info-details.service';
 import { UserInfoDbService } from 'src/admin/holiday/db/user-info.db.service';
+import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
+import { UserprofileDbService } from '../../../../src/api/userprofile/db/userprofile.db.service';
+import { CompanyDbService } from '../../../../src/admin/company/company.service';
+import { LeavetypeService } from '../../../../src/admin/leavetype/leavetype.service';
 describe('PersonalDetailController', () => {
   let pipe: PersonalDetailController;
   beforeEach(async () => {
@@ -43,7 +47,11 @@ describe('PersonalDetailController', () => {
         { provide: HttpService, useValue: httpServiceStub },
         QueryParserService,
         UserInfoDetailsService,
-        UserInfoDbService
+        UserInfoDbService,
+        PendingLeaveService,
+        UserprofileDbService,
+        CompanyDbService,
+        LeavetypeService
       ]
     }).compile();
     // pipe = Test.get(PersonalDetailController);

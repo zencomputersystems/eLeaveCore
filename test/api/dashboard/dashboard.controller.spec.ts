@@ -5,6 +5,11 @@ import { DashboardController } from '../../../src/api/dashboard/controller/dashb
 import { XMLParserService } from '../../../src/common/helper/xml-parser.service';
 import { DashboardService } from '../../../src/api/dashboard/service/dashboard.service';
 import { DashboardLeaveService } from '../../../src/api/dashboard/service/dashboard-leave.service';
+import { PendingLeaveService } from '../../../src/admin/approval-override/pending-leave.service';
+import { UserprofileDbService } from '../../../src/api/userprofile/db/userprofile.db.service';
+import { CompanyDbService } from 'src/admin/company/company.service';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { QueryParserService } from '../../../src/common/helper/query-parser.service';
 describe('DashboardController', () => {
   let pipe: DashboardController;
   beforeEach(async () => {
@@ -39,7 +44,12 @@ describe('DashboardController', () => {
         {
           provide: DashboardLeaveService,
           useValue: DashboardLeaveServiceStub
-        }
+        },
+        PendingLeaveService,
+        UserprofileDbService,
+        CompanyDbService,
+        LeavetypeService,
+        QueryParserService
       ]
     }).compile();
     pipe = await module.get<DashboardController>(DashboardController);

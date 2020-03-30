@@ -48,6 +48,13 @@ export class CompanyController {
 		this.commonFunctionService.runGetServiceV2(method, res);
 	}
 
+	/**
+	 * Company year end
+	 *
+	 * @param {*} req
+	 * @param {*} res
+	 * @memberof CompanyController
+	 */
 	@Get('year-end')
 	@ApiOperation({ title: 'Get company list with year end verification' })
 	findCompyearEnd(@Req() req, @Res() res) {

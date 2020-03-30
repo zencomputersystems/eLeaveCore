@@ -8,6 +8,9 @@ import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { LeaveTransactionDbService } from '../../../src/api/leave/db/leave-transaction.db.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 import { ApplyLeaveService } from '../../../src/api/leave/service/apply-leave.service';
+import { GeneralLeavePolicyService } from 'src/admin/general-leave-policy/general-leave-policy.service';
+import { HttpService } from '@nestjs/common';
+import { QueryParserService } from '../../../src/common/helper/query-parser.service';
 describe('ApplyLeaveService', () => {
   let service: ApplyLeaveService;
   beforeEach(async () => {
@@ -33,6 +36,11 @@ describe('ApplyLeaveService', () => {
     const dateCalculationServiceStub = {
       getLeaveDuration: (arg1, arg2, arg3, arg4, arg5) => ({})
     };
+    const httpServiceStub = {
+      get: url1 => ({
+        subscribe: () => ({})
+      })
+    };
     const module = await Test.createTestingModule({
       providers: [
         ApplyLeaveService,
@@ -55,7 +63,13 @@ describe('ApplyLeaveService', () => {
         {
           provide: DateCalculationService,
           useValue: dateCalculationServiceStub
-        }
+        },
+        GeneralLeavePolicyService,
+        {
+          provide: HttpService,
+          useValue: httpServiceStub
+        },
+        QueryParserService
       ]
     }).compile();
     // service = Test.get(ApplyLeaveService);

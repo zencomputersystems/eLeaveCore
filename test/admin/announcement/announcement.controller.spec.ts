@@ -22,7 +22,7 @@ describe('AnnouncementController', () => {
           })
         }),
 
-        findAll: (res: Response) => ({
+        findAll: (req: any, res: Response) => ({
           subscribe: () => ({
           })
         }),
@@ -40,7 +40,7 @@ describe('AnnouncementController', () => {
       }
 
       const AnnouncementServiceStub = {
-        findAll: () => ({}),
+        findAll: (user: any) => ({}),
 
         create: (AnnouncementData: CreateAnnouncementDto, user: any) => ({
         }),
@@ -128,13 +128,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -146,13 +146,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -260,13 +260,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -278,13 +278,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -380,13 +380,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -398,13 +398,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -501,13 +501,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -519,13 +519,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -621,13 +621,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -639,135 +639,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -865,13 +743,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -883,255 +761,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1229,13 +865,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1247,13 +883,255 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1351,13 +1229,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1369,376 +1247,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1836,13 +1351,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1854,13 +1369,376 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1958,13 +1836,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -1976,13 +1854,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2080,13 +1958,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2098,134 +1976,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Create Announcement method
-  describe('Create Announcement', () => {
-    // Controller
-    it('Should not call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      expect(Controller.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in controller announcement', () => {
-      spyOn(Controller, 'create').and.callThrough();
-      Controller.create(CreateData, null, null);
-      expect(Controller.create).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      expect(Service.create).not.toHaveBeenCalled();
-    })
-
-    it('Should call method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalled();
-    })
-
-    it('Should call one time method create Announcement in service announcement', () => {
-      spyOn(Service, 'create').and.callThrough();
-      Service.create(CreateData, null);
-      expect(Service.create).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-  // Update Announcement method
-  describe('Update Announcement', () => {
-    // Controller
-    it('Should not call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in controller announcement', () => {
-      spyOn(Controller, 'updateAnnouncement').and.callThrough();
-      Controller.updateAnnouncement(UpdateData, null, null);
-      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
-    })
-
-    it('Should call method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalled();
-    })
-
-    it('Should call one time method update Announcement in service announcement', () => {
-      spyOn(Service, 'updateAnnouncement').and.callThrough();
-      Service.updateAnnouncement(UpdateData, null);
-      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
-    })
-
-  });
-
-
-  // Get Announcement method
-  describe('Get Announcement', () => {
-    // Controller
-    it('Should not call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      expect(Controller.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in controller announcement', () => {
-      spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
-      expect(Controller.findAll).toHaveBeenCalledTimes(1);
-    })
-
-    // Service
-    it('Should not call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      expect(Service.findAll).not.toHaveBeenCalled();
-    })
-
-    it('Should call method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
-      expect(Service.findAll).toHaveBeenCalled();
-    })
-
-    it('Should call one time method get Announcement in service announcement', () => {
-      spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2323,13 +2080,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2341,13 +2098,134 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2445,13 +2323,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2463,13 +2341,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2567,13 +2445,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2585,13 +2463,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2679,7 +2557,6 @@ describe('AnnouncementController', () => {
 
 
 
-
   // Get Announcement method
   describe('Get Announcement', () => {
     // Controller
@@ -2690,13 +2567,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2708,13 +2585,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2813,13 +2690,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2831,13 +2708,136 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Create Announcement method
+  describe('Create Announcement', () => {
+    // Controller
+    it('Should not call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      expect(Controller.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in controller announcement', () => {
+      spyOn(Controller, 'create').and.callThrough();
+      Controller.create(CreateData, null, null);
+      expect(Controller.create).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      expect(Service.create).not.toHaveBeenCalled();
+    })
+
+    it('Should call method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalled();
+    })
+
+    it('Should call one time method create Announcement in service announcement', () => {
+      spyOn(Service, 'create').and.callThrough();
+      Service.create(CreateData, null);
+      expect(Service.create).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+  // Update Announcement method
+  describe('Update Announcement', () => {
+    // Controller
+    it('Should not call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      expect(Controller.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in controller announcement', () => {
+      spyOn(Controller, 'updateAnnouncement').and.callThrough();
+      Controller.updateAnnouncement(UpdateData, null, null);
+      expect(Controller.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      expect(Service.updateAnnouncement).not.toHaveBeenCalled();
+    })
+
+    it('Should call method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalled();
+    })
+
+    it('Should call one time method update Announcement in service announcement', () => {
+      spyOn(Service, 'updateAnnouncement').and.callThrough();
+      Service.updateAnnouncement(UpdateData, null);
+      expect(Service.updateAnnouncement).toHaveBeenCalledTimes(1);
+    })
+
+  });
+
+
+
+
+  // Get Announcement method
+  describe('Get Announcement', () => {
+    // Controller
+    it('Should not call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      expect(Controller.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in controller announcement', () => {
+      spyOn(Controller, 'findAll').and.callThrough();
+      Controller.findAll(null, null);
+      expect(Controller.findAll).toHaveBeenCalledTimes(1);
+    })
+
+    // Service
+    it('Should not call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      expect(Service.findAll).not.toHaveBeenCalled();
+    })
+
+    it('Should call method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
+      expect(Service.findAll).toHaveBeenCalled();
+    })
+
+    it('Should call one time method get Announcement in service announcement', () => {
+      spyOn(Service, 'findAll').and.callThrough();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2935,13 +2935,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -2953,13 +2953,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -3057,13 +3057,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -3075,13 +3075,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -3179,13 +3179,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -3197,13 +3197,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -3301,13 +3301,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in controller announcement', () => {
       spyOn(Controller, 'findAll').and.callThrough();
-      Controller.findAll(null);
+      Controller.findAll(null, null);
       expect(Controller.findAll).toHaveBeenCalledTimes(1);
     })
 
@@ -3319,13 +3319,13 @@ describe('AnnouncementController', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 

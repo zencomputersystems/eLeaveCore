@@ -19,7 +19,7 @@ describe('AnnouncementService', () => {
         create: (data: CreateAnnouncementDto, user: any) => ({
         }),
 
-        findAll: () => ({
+        findAll: (user: any) => ({
         }),
 
         updateAnnouncement: (d: UpdateAnnouncementDto, user: any) => ({
@@ -100,13 +100,13 @@ describe('AnnouncementService', () => {
 
     it('Should call method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalled();
     })
 
     it('Should call one time method get Announcement in service announcement', () => {
       spyOn(Service, 'findAll').and.callThrough();
-      Service.findAll();
+      Service.findAll(null);
       expect(Service.findAll).toHaveBeenCalledTimes(1);
     })
 

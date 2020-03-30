@@ -7,6 +7,9 @@ import { UpdateRoleDTO } from '../../../src/admin/role/dto/update-role.dto';
 import { UpdateUserRoleDTO } from '../../../src/admin/role/dto/update-userrole.dto';
 import { UserInfoDbService } from '../../../src/admin/holiday/db/user-info.db.service';
 import { RoleService } from '../../../src/admin/role/role.service';
+import { UserprofileDbService } from '../../../src/api/userprofile/db/userprofile.db.service';
+import { HttpService } from '@nestjs/common';
+import { QueryParserService } from '../../../src/common/helper/query-parser.service';
 describe('RoleService', () => {
   let service: RoleService;
   let roleDbService: RoleDbService;
@@ -34,6 +37,11 @@ describe('RoleService', () => {
     const userInfoDbServiceStub = {
       updateByModel: (resource1, array2, array3, array4) => ({})
     };
+    const httpServiceStub = {
+      get: url1 => ({
+        subscribe: () => ({})
+      })
+    };
     const module = await Test.createTestingModule({
       providers: [
         RoleService,
@@ -43,7 +51,13 @@ describe('RoleService', () => {
         { provide: AssignerDataService, useValue: assignerDataServiceStub },
         { provide: UpdateRoleDTO, useValue: updateRoleDTOStub },
         { provide: UpdateUserRoleDTO, useValue: updateUserRoleDTOStub },
-        { provide: UserInfoDbService, useValue: userInfoDbServiceStub }
+        { provide: UserInfoDbService, useValue: userInfoDbServiceStub },
+        UserprofileDbService,
+        {
+          provide: HttpService,
+          useValue: httpServiceStub
+        },
+        QueryParserService
       ]
     }).compile();
     // service = Test.get(RoleService);

@@ -4,25 +4,52 @@ import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { ProfileDefaultService } from './profile-default.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
+/**
+ * Profile default controller
+ *
+ * @export
+ * @class ProfileDefaultController
+ */
 @Controller('/api/admin/profile-default')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class ProfileDefaultController {
 
+  /**
+   *Creates an instance of ProfileDefaultController.
+   * @param {ProfileDefaultService} profileDefaultService Profile default service
+   * @param {CommonFunctionService} commonFunctionService Common function service
+   * @memberof ProfileDefaultController
+   */
   constructor(
     private readonly profileDefaultService: ProfileDefaultService,
     private readonly commonFunctionService: CommonFunctionService
   ) { }
 
+  /**
+   * Find default profile
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof ProfileDefaultController
+   */
   @Get()
   @ApiOperation({ title: 'Find default profile' })
-  findAllLeavetype(@Req() req, @Res() res) {
+  findDefaultProfile(@Req() req, @Res() res) {
     this.profileDefaultService.findOne([req.user.TENANT_GUID]).subscribe(
       data => { res.send(data); },
       err => { this.commonFunctionService.sendResErrorV2(res, 400, 'Fail to fetch resource'); }
     );
   }
 
+  /**
+   * Update and create profile default
+   *
+   * @param {*} param
+   * @param {*} req
+   * @param {*} res
+   * @memberof ProfileDefaultController
+   */
   @Post(':profile/:id')
   @ApiOperation({ title: 'Update profile default' })
   @ApiImplicitParam({ name: 'id', description: 'Calendar guid', required: true })

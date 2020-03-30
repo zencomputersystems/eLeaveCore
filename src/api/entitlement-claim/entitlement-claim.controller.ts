@@ -24,6 +24,13 @@ export class EntitlementClaimController {
     private readonly entitlementClaimService: EntitlementClaimService
   ) { }
 
+  /**
+   * Leave claimable
+   *
+   * @param {*} req
+   * @param {*} res
+   * @memberof EntitlementClaimController
+   */
   @Get('leave-claimable')
   @ApiOperation({ title: 'Claimable leavetype' })
   claimableLeavetype(@Req() req, @Res() res) {

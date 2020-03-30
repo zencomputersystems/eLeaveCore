@@ -59,8 +59,6 @@ export class LeaveAdjustmentReportService {
           leaveAdjustmentReportDto.userGuid = element.USER_GUID;
           leaveAdjustmentReportDto.employeeNo = resultUser.STAFF_ID;
           leaveAdjustmentReportDto.employeeName = resultUser.FULLNAME;
-          leaveAdjustmentReportDto.departmentName = resultUser.DEPARTMENT;
-          leaveAdjustmentReportDto.companyName = resultUser.COMPANY_NAME;
           leaveAdjustmentReportDto.leaveTypeId = element.LEAVE_TYPE_GUID;
           leaveAdjustmentReportDto.leaveTypeName = findLeaveData.CODE;
           leaveAdjustmentReportDto.leavetypeAbbr = findLeaveData.ABBR;
@@ -68,6 +66,11 @@ export class LeaveAdjustmentReportService {
           leaveAdjustmentReportDto.adjustBy = resultCreator.FULLNAME;
           leaveAdjustmentReportDto.adjustDate = element.CREATION_TS;
           leaveAdjustmentReportDto.remarks = element.REMAKRS;
+
+          leaveAdjustmentReportDto.companyName = resultUser.COMPANY_NAME;
+          leaveAdjustmentReportDto.department = resultUser.DEPARTMENT;
+          leaveAdjustmentReportDto.costcentre = resultUser.COSTCENTRE;
+          leaveAdjustmentReportDto.branch = resultUser.BRANCH;
 
           leaveAdjustmentData.push(leaveAdjustmentReportDto);
 

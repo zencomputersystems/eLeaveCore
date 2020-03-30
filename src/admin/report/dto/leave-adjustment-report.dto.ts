@@ -1,5 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { MainItemReportDto } from './main-item-report.dto';
 
 /**
  * Leave adjustment report dto
@@ -7,7 +8,7 @@ import { IsString } from 'class-validator';
  * @export
  * @class LeaveAdjustmentReportDto
  */
-export class LeaveAdjustmentReportDto {
+export class LeaveAdjustmentReportDto extends MainItemReportDto {
   /**
    * User guid
    *
@@ -37,26 +38,6 @@ export class LeaveAdjustmentReportDto {
   @ApiModelProperty({ description: 'Employee Name', example: 'Wan' })
   @IsString()
   employeeName: string;
-
-  /**
-   * Company name
-   *
-   * @type {string}
-   * @memberof LeaveAdjustmentReportDto
-   */
-  @ApiModelProperty({ description: 'Company Name', example: 'Zen Computer System Sdn. Bhd.' })
-  @IsString()
-  companyName: string;
-
-  /**
-   * Department name
-   *
-   * @type {string}
-   * @memberof LeaveAdjustmentReportDto
-   */
-  @ApiModelProperty({ description: 'Department Name', example: 'Research and Development' })
-  @IsString()
-  departmentName: string;
 
   /**
    * Leavetype guid

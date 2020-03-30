@@ -28,6 +28,11 @@ export class LeaveForfeitedReportService {
     leaveForfeitedReportDto.leaveTypeName = "Annual Leave";
     leaveForfeitedReportDto.noOfDays = '1';
 
+    leaveForfeitedReportDto.companyName = '';//resultUser.COMPANY_NAME;
+    leaveForfeitedReportDto.department = '';//resultUser.DEPARTMENT;
+    leaveForfeitedReportDto.costcentre = '';//resultUser.COSTCENTRE;
+    leaveForfeitedReportDto.branch = '';//resultUser.BRANCH;
+
     userForfeitedData.push(leaveForfeitedReportDto);
 
     return of(userForfeitedData);

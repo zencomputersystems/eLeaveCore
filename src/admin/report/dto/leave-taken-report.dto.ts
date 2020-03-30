@@ -1,6 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
+import { MainItemReportDto } from './main-item-report.dto';
 
 
 /**
@@ -88,7 +89,7 @@ export class LeaveTakenDetailsDto {
  * @export
  * @class LeaveTakenReportDto
  */
-export class LeaveTakenReportDto {
+export class LeaveTakenReportDto extends MainItemReportDto {
   /**
    * user guid
    *

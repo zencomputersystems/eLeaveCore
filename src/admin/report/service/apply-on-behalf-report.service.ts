@@ -67,6 +67,11 @@ export class ApplyOnBehalfReportService {
           applyOnBehalfReportDto.remarks = element.REMARKS;
           applyOnBehalfReportDto.link = linkStorage + '/eleave/';
 
+          applyOnBehalfReportDto.companyName = resultUser.COMPANY_NAME;
+          applyOnBehalfReportDto.department = resultUser.DEPARTMENT;
+          applyOnBehalfReportDto.costcentre = resultUser.COSTCENTRE;
+          applyOnBehalfReportDto.branch = resultUser.BRANCH;
+
           userIdList.push(applyOnBehalfReportDto);
         });
 

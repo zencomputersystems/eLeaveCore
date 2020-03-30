@@ -82,6 +82,11 @@ export class ApprovalOverrideReportService {
           approvalOverrideReportDto.status = element.STATUS;
           approvalOverrideReportDto.remarks = element.REMARKS;
 
+          approvalOverrideReportDto.companyName = resultUser.COMPANY_NAME;
+          approvalOverrideReportDto.department = resultUser.DEPARTMENT;
+          approvalOverrideReportDto.costcentre = resultUser.COSTCENTRE;
+          approvalOverrideReportDto.branch = resultUser.BRANCH;
+
           approvalOverrideData.push(approvalOverrideReportDto);
 
         });

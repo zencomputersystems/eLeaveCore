@@ -38,18 +38,16 @@ export class LeaveEntitlementReportService {
       mergeMap(async res => {
         let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
-        let companyList = await this.pendingLeaveService.getCompanyList(res[0].TENANT_GUID) as any[];
 
-        return { res, leaveTypeList, resultAll, companyList };
+        return { res, leaveTypeList, resultAll };
       }),
       map(result => {
-        let { res, leaveTypeList, resultAll, companyList } = result;
+        let { res, leaveTypeList, resultAll } = result;
         let userIdList = [];
 
         res.forEach(async element => {
           const userId = userIdList.find(x => (x.userGuid == element.USER_GUID));
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
-          let companyData = companyList.find(x => x.TENANT_COMPANY_GUID === resultUser.TENANT_COMPANY_GUID);
 
           if (!userId) {
             let leaveEntitlementReportDTO = new LeaveEntitlementReportDto;
@@ -57,8 +55,11 @@ export class LeaveEntitlementReportService {
             leaveEntitlementReportDTO.employeeNo = resultUser.STAFF_ID;
             leaveEntitlementReportDTO.employeeName = resultUser.FULLNAME;
             leaveEntitlementReportDTO.designation = resultUser.DESIGNATION;
+
+            leaveEntitlementReportDTO.companyName = resultUser.COMPANY_NAME;
             leaveEntitlementReportDTO.department = resultUser.DEPARTMENT;
-            leaveEntitlementReportDTO.companyName = companyData ? companyData.NAME : null;
+            leaveEntitlementReportDTO.costcentre = resultUser.COSTCENTRE;
+            leaveEntitlementReportDTO.branch = resultUser.BRANCH;
 
             leaveEntitlementReportDTO.yearService = 1;
 

@@ -62,6 +62,11 @@ export class LeaveTakenReportService {
             leaveTakenReportDTO.employeeName = resultUser.FULLNAME;
             leaveTakenReportDTO.link = linkStorage + '/eleave/';
 
+            leaveTakenReportDTO.companyName = resultUser.COMPANY_NAME;
+            leaveTakenReportDTO.department = resultUser.DEPARTMENT;
+            leaveTakenReportDTO.costcentre = resultUser.COSTCENTRE;
+            leaveTakenReportDTO.branch = resultUser.BRANCH;
+
             // const leaveData = new LeaveTakenDetailsDto;
             const leaveData = this.runService([element, leaveTypeList, resultAll]);
             //   // console.log('a');

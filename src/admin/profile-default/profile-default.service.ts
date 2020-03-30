@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ProfileDefaultDbService } from './profile-default.db.service';
-import { of, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { Resource } from '../../common/model/resource.model';
 import { ProfileDefaultModel } from './model/profile-default.model';
-import uuid = require('uuid');
 
 @Injectable()
 export class ProfileDefaultService {
@@ -52,7 +51,12 @@ export class ProfileDefaultService {
     let pdm = new ProfileDefaultModel();
 
     pdm.TENANT_GUID = user.TENANT_GUID;
-    pdm.CALENDAR_PROFILE_GUID = data;
+    if (data.profile == 'calendar')
+      pdm.CALENDAR_PROFILE_GUID = data.id;
+    else if (data.profile == 'working-hour')
+      pdm.WORKING_HOURS_PROFILE_GUID = data.id;
+    else if (data.profile == 'role')
+      pdm.ROLE_PROFILE_GUID = data.id;
 
     resource.resource.push(pdm);
 

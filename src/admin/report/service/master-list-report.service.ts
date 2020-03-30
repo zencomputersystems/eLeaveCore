@@ -34,27 +34,22 @@ export class MasterListReportService {
 
     return this.reportDBService.userprofileDbService.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
-        let companyList = await this.pendingLeaveService.getCompanyList(res[0].TENANT_GUID) as any[];
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
-        return await { res, companyList, resultAll };
+        return await { res, resultAll };
 
       }),
       mergeMap(async result => {
         let userIdList = []
-        let { res, companyList, resultAll } = result;
+        let { res, resultAll } = result;
         res.forEach(element => {
           let masterListReportDTO = new MasterListReportDto;
           let managerUser = element.MANAGER_USER_GUID != null ? resultAll.find(x => x.USER_GUID === element.MANAGER_USER_GUID) : [];
 
           let managerName = managerUser != undefined ? managerUser.hasOwnProperty('FULLNAME') ? managerUser.FULLNAME : '' : '';
 
-          let resultCompany = element.TENANT_COMPANY_GUID != null ? companyList.find(x => x.TENANT_COMPANY_GUID === element.TENANT_COMPANY_GUID) : [];
-
           masterListReportDTO.userGuid = element.USER_GUID;
           masterListReportDTO.employeeNo = element.STAFF_ID;
           masterListReportDTO.employeeName = element.FULLNAME;
-          masterListReportDTO.companyName = resultCompany.NAME || null;
-          masterListReportDTO.department = element.DEPARTMENT;
           masterListReportDTO.designation = element.DESIGNATION;
           masterListReportDTO.email = element.EMAIL;
           masterListReportDTO.approver = managerName;
@@ -62,6 +57,11 @@ export class MasterListReportService {
           masterListReportDTO.confirmDate = element.CONFIRMATION_DATE;
           masterListReportDTO.resignDate = element.RESIGNATION_DATE;
           masterListReportDTO.status = element.EMPLOYEE_STATUS;
+
+          masterListReportDTO.companyName = element.COMPANY_NAME;
+          masterListReportDTO.department = element.DEPARTMENT;
+          masterListReportDTO.costcentre = element.COSTCENTRE;
+          masterListReportDTO.branch = element.BRANCH;
 
           userIdList.push(masterListReportDTO);
         });

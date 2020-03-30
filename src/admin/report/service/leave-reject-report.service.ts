@@ -67,6 +67,11 @@ export class LeaveRejectReportService {
           leaveRejectReportDTO.leaveRemarks = element.REMARKS;
           leaveRejectReportDTO.rejectRemarks = element.REASON;
 
+          leaveRejectReportDTO.companyName = resultUser.COMPANY_NAME;
+          leaveRejectReportDTO.department = resultUser.DEPARTMENT;
+          leaveRejectReportDTO.costcentre = resultUser.COSTCENTRE;
+          leaveRejectReportDTO.branch = resultUser.BRANCH;
+
           userIdList.push(leaveRejectReportDTO);
 
         });

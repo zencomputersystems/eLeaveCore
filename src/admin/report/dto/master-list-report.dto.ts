@@ -1,10 +1,12 @@
+import { MainItemReportDto } from './main-item-report.dto';
+
 /**
  * Master list report dto
  *
  * @export
  * @class MasterListReportDto
  */
-export class MasterListReportDto {
+export class MasterListReportDto extends MainItemReportDto {
   /**
    * User guid
    *
@@ -26,20 +28,6 @@ export class MasterListReportDto {
    * @memberof MasterListReportDto
    */
   employeeName: string;
-  /**
-   * Company name
-   *
-   * @type {string}
-   * @memberof MasterListReportDto
-   */
-  companyName: string;
-  /**
-   * Department
-   *
-   * @type {string}
-   * @memberof MasterListReportDto
-   */
-  department: string;
   /**
    * Designation
    *

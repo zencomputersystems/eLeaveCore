@@ -1,5 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { MainItemReportDto } from './main-item-report.dto';
 
 /**
  * Leave forfeited report dto
@@ -7,7 +8,7 @@ import { IsString } from 'class-validator';
  * @export
  * @class LeaveForfeitedReportDto
  */
-export class LeaveForfeitedReportDto {
+export class LeaveForfeitedReportDto extends MainItemReportDto {
   /**
    * User guid
    *

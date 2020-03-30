@@ -34,6 +34,11 @@ export class EntitlementClaimReportService {
     entitlementClaimReportDto.requestRemarks = '';
     entitlementClaimReportDto.finalApproveRemarks = '';
 
+    entitlementClaimReportDto.companyName = '';// resultUser.COMPANY_NAME;
+    entitlementClaimReportDto.department = '';// resultUser.DEPARTMENT;
+    entitlementClaimReportDto.costcentre = '';// resultUser.COSTCENTRE;
+    entitlementClaimReportDto.branch = '';// resultUser.BRANCH;
+
     entitlementClaimData.push(entitlementClaimReportDto);
 
     return of(entitlementClaimData);

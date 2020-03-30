@@ -66,6 +66,11 @@ export class LeaveCancelReportService {
           leaveRejectReportDTO.leaveRemarks = element.REMARKS;
           leaveRejectReportDTO.cancelRemarks = element.REASON;
 
+          leaveRejectReportDTO.companyName = resultUser.COMPANY_NAME;
+          leaveRejectReportDTO.department = resultUser.DEPARTMENT;
+          leaveRejectReportDTO.costcentre = resultUser.COSTCENTRE;
+          leaveRejectReportDTO.branch = resultUser.BRANCH;
+
           userIdList.push(leaveRejectReportDTO);
         });
         return userIdList;

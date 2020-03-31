@@ -54,10 +54,23 @@ export class LeaveApplicationValidationService {
         const startDateTemp = applyLeaveDTO.data[0].startDate;
         const endDatetemp = applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate;
 
+        const extraFilter = [];
+        const halfDayFilter = applyLeaveDTO.data.find(x => x.dayType === 1);
+        const quarterDayFilter = applyLeaveDTO.data.find(x => x.dayType === 2);
+
+        if (halfDayFilter) {
+            console.log(halfDayFilter);
+            extraFilter.push('(TIME_SLOT = ' + halfDayFilter.slot + ')');
+        }
+        if (quarterDayFilter) {
+            console.log(quarterDayFilter);
+            extraFilter.push('(TIME_SLOT = ' + halfDayFilter.quarterDay + ')');
+        }
+
         const startDate = this.convertDateToMoment(startDateTemp);
         const endDate = this.convertDateToMoment(endDatetemp);
 
-        return this.validateOverlapLeave([startDateTemp, endDatetemp, userInfo])
+        return this.validateOverlapLeave([startDateTemp, endDatetemp, userInfo, extraFilter])
             .pipe(
                 map((result: boolean) => {
                     if (!result) {
@@ -334,10 +347,16 @@ export class LeaveApplicationValidationService {
      */
     // public validateOverlapLeave(startDate: Date, endDate: Date, userInfo: UserInfoModel) {
 
-    public validateOverlapLeave([startDate, endDate, userInfo]: [Date, Date, UserInfoModel]) {
+    public validateOverlapLeave([startDate, endDate, userInfo, extrafilter]: [Date, Date, UserInfoModel, any]) {
 
-        const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")"];
+        // const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")"];
 
+        const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")AND(STATUS NOT IN ('CANCELLED','REJECTED'))"];
+
+        console.log(extrafilter.length);
+        if (extrafilter.length > 0)
+            filter.push(extrafilter);
+        console.log(filter);
         return this.leaveTransactionDbService.findByFilterV2([], filter)
             .pipe(map(res => {
 

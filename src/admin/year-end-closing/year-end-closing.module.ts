@@ -26,6 +26,10 @@ import { AssignLeaveFunctionService } from './service/assign-leave-function.serv
 import { AssignLeaveEntitlementService } from './service/assign-leave-entitlement.service';
 import { AssignCarryForwardService } from './service/assign-carry-forward.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { ApplyAnniversaryLeaveService } from './service/apply-anniversary-leave.service';
+import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
+import { LeavetypeService } from '../leavetype/leavetype.service';
+import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
 
 
 @Module({
@@ -52,7 +56,11 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     DisableResignUser,
     AssignLeaveFunctionService,
     AssignLeaveEntitlementService,
-    AssignCarryForwardService
+    AssignCarryForwardService,
+    ApplyAnniversaryLeaveService,
+    LeaveTransactionDbService,
+    LeavetypeService,
+    DateCalculationService
   ],
   imports: [
     // AuthModule,

@@ -51,6 +51,34 @@ export class YearEndClosingController {
   }
 
   /**
+   * Close by company
+   *
+   * @param {*} param
+   * @param {*} req
+   * @param {*} res
+   * @memberof YearEndClosingController
+   */
+  @Post('/:year/:companyid')
+  @ApiImplicitParam({ name: 'year', description: 'Closing year', required: true })
+  @ApiImplicitParam({ name: 'companyid', description: 'Company guid', required: true })
+  @ApiOperation({ title: 'Assign leave entitlement for next year' })
+  closeYearEnd(@Param() param, @Req() req, @Res() res) {
+    let year = param.year;
+    let companyId = param.companyid;
+    year = year == new Date().getFullYear() ? year - 1 : year;
+    this.yearEndClosingService.yearEndProcessCompany([req.user, new Date(year).getFullYear() + 1, companyId]).subscribe(data => {
+      let dataRes = {};
+      dataRes['resignUser'] = this.trimData(data[0]);
+      dataRes['disabledUser'] = this.trimData(data[1]);
+      dataRes['activeUser'] = this.trimData(data[2]);
+
+      res.send(dataRes);
+    }, err => {
+      res.send(err);
+    })
+  }
+
+  /**
    * Get only wanted data, trim some keys
    *
    * @param {string[]} dataArr
@@ -58,7 +86,7 @@ export class YearEndClosingController {
    * @memberof YearEndClosingController
    */
   public trimData(dataArr: string[]) {
-    const keyDelete = ["TENANT_GUID", "TENANT_COMPANY_GUID", "USER_INFO_GUID", "DESIGNATION", "DEPARTMENT", "DIVISION", "BRANCH", "ATTACHMENT_ID", "STATUS_ACTIVATION", "RESIGNATION_DATE", "ACTIVATION_FLAG", "JOIN_DATE"]
+    const keyDelete = ["TENANT_GUID", "TENANT_COMPANY_GUID", "USER_INFO_GUID", "DESIGNATION", "DEPARTMENT", "DIVISION", "BRANCH", "ATTACHMENT_ID", "STATUS_ACTIVATION", "RESIGNATION_DATE", "ACTIVATION_FLAG"]
     dataArr.forEach(userData => {
       keyDelete.forEach(keyTemp => {
         delete userData[keyTemp];

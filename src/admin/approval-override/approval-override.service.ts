@@ -175,6 +175,7 @@ export class ApprovalOverrideService {
           dataRes['dateApplied'] = element.CREATION_TS;
           dataRes['reason'] = element.REASON;
           dataRes['leaveTypeName'] = element.leavetypeName;
+          dataRes['leaveTypeId'] = element.LEAVE_TYPE_GUID;
           dataRes['leaveTypeAbbr'] = element.leavetypeAbbr;
           dataRes['departmentName'] = personal.DEPARTMENT;
           dataRes['companyName'] = element.companyName;

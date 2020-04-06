@@ -71,7 +71,7 @@ export class ApprovalOverrideReportService {
           approvalOverrideReportDto.userGuid = getLeaveInfo.USER_GUID;
           approvalOverrideReportDto.employeeNo = resultUser.STAFF_ID;
           approvalOverrideReportDto.employeeName = resultUser.FULLNAME;
-          approvalOverrideReportDto.leaveTypeId = element.LEAVE_TYPE_GUID;
+          approvalOverrideReportDto.leaveTypeId = getLeaveInfo.LEAVE_TYPE_GUID;
           approvalOverrideReportDto.leaveTypeName = findLeaveData.CODE;
           approvalOverrideReportDto.applicationDate = getLeaveInfo.CREATION_TS;
           approvalOverrideReportDto.overrideBy = resultCreator.FULLNAME;

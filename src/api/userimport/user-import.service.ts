@@ -10,6 +10,7 @@ import { of } from 'rxjs';
 import { Resource } from 'src/common/model/resource.model';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserImport } from './dto/user-import';
+import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
 
 
 /**
@@ -63,7 +64,8 @@ export class UserImportService {
      */
     constructor(
         private readonly userService: UserService,
-        private readonly userInfoService: UserInfoService
+        private readonly userInfoService: UserInfoService,
+        private readonly pendingLeaveService: PendingLeaveService
     ) { }
 
     /**
@@ -87,7 +89,8 @@ export class UserImportService {
                 map(res => this.filterData([importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL'])),
                 map(res => this.filterDuplicateUser(res)),
                 mergeMap(successUser => this.saveImportList(successUser, user)),
-                mergeMap(successUser => this.saveInfoDataList(successUser, user))
+                mergeMap(async successUser => await this.saveInfoDataList(successUser, user)),
+                mergeMap(res => { return res; })
 
             )
     }
@@ -145,7 +148,10 @@ export class UserImportService {
      * @returns
      * @memberof UserImportService
      */
-    private saveInfoDataList(importData: Array<UserCsvDto>, user: any) {
+    private async saveInfoDataList(importData: Array<UserCsvDto>, user: any) {
+
+        let userList = await this.pendingLeaveService.getAllUserInfo(user.TENANT_GUID) as any[];
+        let companyList = await this.pendingLeaveService.getCompanyList(user.TENANT_GUID) as any[];
 
         if (importData.length == 0) {
             return of(this.importResult);
@@ -176,6 +182,23 @@ export class UserImportService {
                 userInfoModel.DOB = element.hasOwnProperty('DOB') ? element.DOB : null;
                 userInfoModel.GENDER = element.hasOwnProperty('GENDER') ? (element.GENDER.toLowerCase() == 'male' ? 1 : 0) : null;
                 userInfoModel.MARITAL_STATUS = element.hasOwnProperty('MARITAL_STATUS') ? (element.MARITAL_STATUS.toLowerCase() == 'single' ? 0 : 1) : null;
+
+                if (element.hasOwnProperty('COMPANY')) {
+                    let companyData = companyList.find(x => x.NAME === element.COMPANY || x.TENANT_COMPANY_GUID === element.COMPANY);
+                    if (companyData != undefined) {
+                        userInfoModel.TENANT_COMPANY_GUID = companyData.TENANT_COMPANY_GUID;
+                    }
+                }
+
+                if (element.hasOwnProperty('MANAGER_EMAIL')) {
+                    let managerData = userList.find(x => x.EMAIL === element.MANAGER_EMAIL);
+                    if (managerData != undefined) {
+                        userInfoModel.MANAGER_USER_GUID = managerData.USER_GUID;
+                    }
+                }
+
+                // userInfoModel.TENANT_COMPANY_GUID = element.hasOwnProperty('COMPANY') ? element.COMPANY : null;
+                // userInfoModel.MANAGER_USER_GUID = element.hasOwnProperty('MANAGER_EMAIL') ? element.MANAGER_EMAIL : null;
 
                 userInfoModel.JOIN_DATE = element.hasOwnProperty('JOIN_DATE') ? new Date(element.JOIN_DATE) : null;
                 userInfoModel.CONFIRMATION_DATE = element.hasOwnProperty('CONFIRMATION_DATE') ? new Date(element.CONFIRMATION_DATE) : null;

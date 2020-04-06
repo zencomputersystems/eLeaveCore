@@ -8,6 +8,10 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
+import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
+import { CompanyDbService } from 'src/admin/company/company.service';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
 
 
 /**
@@ -22,7 +26,11 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     UserImportService,
     UserService,
     QueryParserService,
-    UserInfoService
+    UserInfoService,
+    PendingLeaveService,
+    UserprofileDbService,
+    CompanyDbService,
+    LeavetypeService
   ],
   imports: [
     PassportModule.register({ session: false }),

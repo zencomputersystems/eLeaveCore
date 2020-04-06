@@ -149,6 +149,15 @@ export class UserCsvDto {
     COUNTRY: string;
 
     /**
+     * Manager email
+     *
+     * @type {string}
+     * @memberof UserCsvDto
+     */
+    @ApiModelProperty()
+    MANAGER_EMAIL: string;
+
+    /**
      * Data user csv - designation
      *
      * @type {string}

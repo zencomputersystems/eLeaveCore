@@ -184,7 +184,7 @@ export class UserImportService {
                 userInfoModel.MARITAL_STATUS = element.hasOwnProperty('MARITAL_STATUS') ? (element.MARITAL_STATUS.toLowerCase() == 'single' ? 0 : 1) : null;
 
                 if (element.hasOwnProperty('COMPANY')) {
-                    let companyData = companyList.find(x => x.NAME === element.COMPANY);
+                    let companyData = companyList.find(x => x.NAME === element.COMPANY || x.TENANT_COMPANY_GUID === element.COMPANY);
                     if (companyData != undefined) {
                         userInfoModel.TENANT_COMPANY_GUID = companyData.TENANT_COMPANY_GUID;
                     }

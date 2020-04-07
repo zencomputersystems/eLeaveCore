@@ -59,12 +59,12 @@ export class LeaveApplicationValidationService {
         const quarterDayFilter = applyLeaveDTO.data.find(x => x.dayType === 2);
 
         if (halfDayFilter) {
-            console.log(halfDayFilter);
+            // console.log(halfDayFilter);
             extraFilter.push('(TIME_SLOT = ' + halfDayFilter.slot + ')');
         }
         if (quarterDayFilter) {
-            console.log(quarterDayFilter);
-            extraFilter.push('(TIME_SLOT = ' + halfDayFilter.quarterDay + ')');
+            // console.log(quarterDayFilter);
+            extraFilter.push('(TIME_SLOT = ' + quarterDayFilter.quarterDay + ')');
         }
 
         const startDate = this.convertDateToMoment(startDateTemp);
@@ -353,10 +353,10 @@ export class LeaveApplicationValidationService {
 
         const filter = ["((START_DATE <= " + startDate + ")AND(END_DATE >=" + startDate + ")OR(START_DATE <= " + endDate + ")AND(END_DATE>=" + endDate + "))AND(USER_GUID=" + userInfo.USER_GUID + ")AND(STATUS NOT IN ('CANCELLED','REJECTED'))"];
 
-        console.log(extrafilter.length);
+        // console.log(extrafilter.length);
         if (extrafilter.length > 0)
             filter.push(extrafilter);
-        console.log(filter);
+        // console.log(filter);
         return this.leaveTransactionDbService.findByFilterV2([], filter)
             .pipe(map(res => {
 

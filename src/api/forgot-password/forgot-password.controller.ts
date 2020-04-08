@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Req, Res, Body, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Param, Req, Res, Body, Get, UseGuards, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ApiOperation, ApiImplicitParam, ApiBearerAuth } from '@nestjs/swagger';
 import { ForgotPasswordService } from './forgot-password.service';
 import { UserService } from '../../admin/user/user.service';
@@ -7,6 +7,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from 'src/admin/user/model/user.model';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ExecuteChangePasswordDto } from './dto/execute-change-password.dto';
+import { map, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 /**
  * Controller forgot password
@@ -55,20 +58,9 @@ export class ForgotPasswordController {
 
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @Post('change-password/:process')
+  @Post('change-password/verify')
   @ApiOperation({ title: 'Send email forgot password' })
-  @ApiImplicitParam({ name: 'process', description: 'Check or change', enum: ['verify', 'execute'], required: true })
-  verifyPassword(@Param('process') process, @Body() data: ChangePasswordDto, @Res() res) {
-    if (process == 'execute') {
-      this.executeChangePassword([data, res]);
-    } else {
-      this.verifyPasswordProcess([data, res]);
-    }
-
-
-  }
-
-  private verifyPasswordProcess([data, res]) {
+  verifyPassword(@Body() data: ChangePasswordDto, @Res() res) {
     this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`, `(PASSWORD=${data.password})`]).subscribe(
       data => {
         let status = data.length > 0 ? true : false;
@@ -82,22 +74,37 @@ export class ForgotPasswordController {
     )
   }
 
-  private executeChangePassword([data, res]) {
-    let resource = new Resource(new Array);
-    let model = new UserModel();
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @Post('change-password/execute')
+  @ApiOperation({ title: 'Send email forgot password' })
+  changePassword(@Body() data: ExecuteChangePasswordDto, @Res() res) {
 
-    // model.USER_GUID = req.user.USER_GUID;
-    model.LOGIN_ID = data.loginId;
-    model.PASSWORD = data.password;
+    this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`, `(PASSWORD=${data.oldPassword})`]).pipe(
+      mergeMap(res => {
+        let status = res.length > 0 ? true : false;
+        if (status) {
+          let resource = new Resource(new Array);
+          let model = new UserModel();
 
-    resource.resource.push(model);
-    this.userService.updateByModel(resource, [], [`(LOGIN_ID=${data.loginId})`], []).subscribe(
-      data => {
-        res.send(data.data.resource);
-      }, err => {
-        res.send(err);
-      }
-    )
+          // model.USER_GUID = req.user.USER_GUID;
+          model.LOGIN_ID = data.loginId;
+          model.PASSWORD = data.password;
+
+          resource.resource.push(model);
+          return this.userService.updateByModel(resource, [], [`(LOGIN_ID=${data.loginId})`], [])
+        } else {
+          throw new ForbiddenException();
+        }
+      })).subscribe(
+        data => {
+          res.send(data.data.resource);
+        }, err => {
+          res.send(err);
+        }
+      )
+
+
   }
 
   @UseGuards(AuthGuard('jwt'))

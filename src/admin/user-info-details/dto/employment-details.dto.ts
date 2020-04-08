@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 /**
  * Data employment details
@@ -179,8 +179,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'EPF Number', example: 'TY279FY' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   epfNumber: string;
 
   /**
@@ -190,8 +191,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Income tax number', example: '22170145' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   incomeTaxNumber: string;
 
   /**
@@ -201,8 +203,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Bank account name', example: 'Cimb Bank Berhad' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   bankAccountName: string;
 
   /**
@@ -212,7 +215,8 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Bank account number', example: '7071516435' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   bankAccountNumber: string;
 }

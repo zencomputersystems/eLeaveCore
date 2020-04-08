@@ -221,10 +221,10 @@ export class UserInfoDetailsService {
         // get manager name
         if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
           if (dataXML.root.employmentDetail) {
-            if (results.MANAGER_USER_GUID) {
-              let managerName = await this.pendingLeaveService.getUserInfo(results.MANAGER_USER_GUID);
+            let managerName = await this.pendingLeaveService.getUserInfo(results.MANAGER_USER_GUID) as any[];
+            console.log(managerName);
+            if (managerName.length > 0)
               results.MANAGER_USER_GUID = managerName[0].FULLNAME; // Replace manager guid to fullname
-            }
           }
         }
 

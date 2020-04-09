@@ -98,7 +98,10 @@ export class ForgotPasswordController {
         }
       })).subscribe(
         data => {
-          res.send(data.data.resource);
+          if (data.data.resource.length > 0)
+            res.send({ "message": "You've successfully changed your password" });
+          else
+            throw new ForbiddenException();
         }, err => {
           res.send(err);
         }

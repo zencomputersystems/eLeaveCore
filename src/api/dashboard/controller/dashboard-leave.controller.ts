@@ -61,7 +61,7 @@ export class DashboardLeaveController {
   getReplacementLeave(@Req() req, @Res() res) {
     this.dashboardLeaveService.getReplacementLeave(req.user.USER_GUID).subscribe(
       data => {
-        if (data.length > 0)
+        if (data)
           res.send(data);
         else
           res.send({ "status": "Not available" });

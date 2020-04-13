@@ -86,8 +86,8 @@ export class LeaveBalanceValidationService {
         const currentDateStartYear = new Date().getFullYear() + '-01-01';
 
         // ((START_DATE <=
-        const filter = ['((START_DATE >= ' + currentDateStartYear + ')OR(END_DATE >=' + currentDateStartYear + ')AND(START_DATE <= ' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + ')OR(END_DATE>=' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + '))AND(USER_GUID = ' + userInfo.USER_GUID + ')'];
-        console.log(filter);
+        const filter = ['((START_DATE >= ' + currentDateStartYear + ')OR(END_DATE >=' + currentDateStartYear + ')AND(START_DATE <= ' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + ')OR(END_DATE>=' + applyLeaveDTO.data[applyLeaveDTO.data.length - 1].endDate + '))AND(USER_GUID = ' + userInfo.USER_GUID + ')AND(STATUS IN ("APPROVED","PENDING")'];
+        // console.log(filter);
         return this.leaveTransactionDbService.findByFilterV2([], filter)
             .pipe(map((leaveTransactions: LeaveTransactionModel[]) => {
 
@@ -126,8 +126,8 @@ export class LeaveBalanceValidationService {
                 const childBalance = this.getChildBalance([applyLeaveDTO, userEntitlement, policy]);
 
                 const balance = ((parentBalance + childBalance) - (leaveDuration + counterAppliedDay));
-                console.log(parentBalance + "-" + childBalance + "-" + leaveDuration + "-" + counterAppliedDay + " bal");
-                console.log(balance);
+                // console.log(parentBalance + "-" + childBalance + "-" + leaveDuration + "-" + counterAppliedDay + " bal");
+                // console.log(balance);
                 if (balance < 0) {
                     return false;
                 }

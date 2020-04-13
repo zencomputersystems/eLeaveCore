@@ -18,9 +18,9 @@ import { QueryParserService } from 'src/common/helper/query-parser.service';
     getModuleHttp()
   ],
   providers: [
-    ForgotPasswordService,
-    EmailNodemailerService,
-    ProfileDefaultDbService,
+    // ForgotPasswordService,
+    // EmailNodemailerService,
+    // ProfileDefaultDbService,
     UserService,
     QueryParserService
   ],

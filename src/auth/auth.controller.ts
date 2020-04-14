@@ -1,9 +1,12 @@
-import { Controller, Req, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Req, Post, UseGuards, Body, Param, Res, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
 import { ADAuthGuard } from './passport/ad-extend';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
+import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
+import { map, mergeMap } from 'rxjs/operators';
+import { Response } from 'express';
 
 /**
  * Controller for auth
@@ -20,7 +23,8 @@ export class AuthController {
      * @memberof AuthController
      */
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly profileDefaultDbService: ProfileDefaultDbService
     ) { }
 
     /**
@@ -35,8 +39,8 @@ export class AuthController {
     @ApiOperation({ title: 'Login' })
     @UseGuards(AuthGuard('ad'))
     public async login(@Body() loginDTO: LoginDto, @Req() req) {
-
-        return await this.authService.createToken(req.user);
+        // console.log(req.user);
+        return await this.authService.createToken([req.user, 'ad']);
         //return this.ad(loginDTO,req);
     }
 
@@ -52,8 +56,10 @@ export class AuthController {
     @ApiOperation({ title: 'Login ad' })
     @UseGuards(AuthGuard('ad'))
     public async ad(@Body() loginDTO: LoginDto, @Req() req) {
-
-        return await this.authService.createToken(req.user);
+        // console.log('ad');
+        // console.log(loginDTO);
+        // console.log(req.user);
+        return await this.authService.createToken([req.user, 'ad']);
     }
 
     /**
@@ -69,6 +75,33 @@ export class AuthController {
     @UseGuards(AuthGuard('local'))
     public async local(@Body() loginDTO: LoginDto, @Req() req) {
 
-        return await this.authService.createToken(req.user);
+        return await this.authService.createToken([req.user, 'local']);
     }
+
+    // @Post('login/verify')
+    // @ApiOperation({ title: 'Login and verify' })
+    // @UseGuards(AuthGuard('ad'))
+    // public async checkLoginType(@Body() loginDTO: LoginDto, @Req() req, @Res() result: Response) {
+    //     // return await result.redirect(this.ad(loginDTO, req1).toString());
+    //     try {
+    //         this.authService.userService.findByFilterV2(['EMAIL', 'TENANT_GUID'], [`(LOGIN_ID=${loginDTO.email})`]).pipe(map(res => {
+    //             return this.profileDefaultDbService.findByFilterV2([], [`(TENANT_GUID=${res[0].TENANT_GUID})`]);
+    //         }), mergeMap(res => {
+    //             return res;
+    //         }), map(async res => {
+    //             if (res[0].LOGIN_TYPE == 'ad') {
+    //                 return this.ad(loginDTO, req);
+    //             }
+    //             else if (res[0].LOGIN_TYPE == 'local') {
+    //                 return this.local(loginDTO, req);
+    //             }
+    //         })).subscribe(
+    //             async data => { console.log(await data); },
+    //             err => { console.log(err); }
+    //         );
+
+    //     } catch (error) {
+    //         result.send(error);
+    //     }
+    // }
 }

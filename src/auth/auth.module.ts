@@ -11,6 +11,7 @@ import { ActiveDirectoryStrategy } from './passport/ad.strategy';
 import { DreamFactory } from 'src/config/dreamfactory';
 import { getModuleHttp } from '../common/helper/basic-functions';
 import { AuthDbService } from './auth.db.service';
+import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 
 /**
  * Module for auth
@@ -26,7 +27,8 @@ import { AuthDbService } from './auth.db.service';
         LocalStrategy,
         ActiveDirectoryStrategy,
         JwtStrategy,
-        AuthDbService
+        AuthDbService,
+        ProfileDefaultDbService
     ],
     controllers: [
         AuthController

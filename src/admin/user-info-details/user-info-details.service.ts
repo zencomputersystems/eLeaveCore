@@ -221,10 +221,14 @@ export class UserInfoDetailsService {
         // get manager name
         if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
           if (dataXML.root.employmentDetail) {
-            let managerName = await this.pendingLeaveService.getUserInfo(results.MANAGER_USER_GUID) as any[];
-            console.log(managerName);
-            if (managerName.length > 0)
-              results.MANAGER_USER_GUID = managerName[0].FULLNAME; // Replace manager guid to fullname
+            if (results.MANAGER_USER_GUID != null) {
+              results.MANAGER_USER_GUID = results.MANAGER_USER_GUID.replace(" ", "") != "" ? results.MANAGER_USER_GUID : null;
+              if (results.MANAGER_USER_GUID != null) {
+                let managerName = await this.pendingLeaveService.getUserInfo(results.MANAGER_USER_GUID) as any[];
+                if (managerName.length > 0)
+                  results.MANAGER_USER_GUID = managerName[0].FULLNAME; // Replace manager guid to fullname
+              }
+            }
           }
         }
 

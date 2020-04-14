@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserLeaveEntitlementSummaryDbService } from '../../userprofile/db/user-leave-summary.db.service';
 import { UserLeaveEntitlementDbService } from '../../userprofile/db/user-leave-entitlement.db.service';
-import { of, Observable } from 'rxjs';
+import { of, Observable, forkJoin } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 import * as moment from 'moment';
+import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 
 /**
  * Service for dashboard leave
@@ -108,12 +109,25 @@ export class DashboardLeaveService {
           ];
           const filter = ['(USER_GUID=' + userGuid + ')', '(LEAVE_TYPE_GUID=' + replacementLeaveId + ')', '(ACTIVE_FLAG=1)', '(YEAR=' + new Date().getFullYear() + ')'];
           return this.userLeaveEntitlementDbService.findByFilterV2(field, filter);
-        }), map(res => {
+        }), mergeMap(res => {
+          const filter = ['(USER_GUID=' + userGuid + ')', '(LEAVE_TYPE_GUID=' + replacementLeaveId + ')', '(YEAR=' + new Date().getFullYear() + ')'];
+          // this.leaveTransactionDbService.findByFilterV2([],filter);
+          let leaveBalance = this.userLeaveEntitlementSummaryDbService.findByFilterV2(['BALANCE_DAYS'], filter);
+          return forkJoin(of(res), leaveBalance);
+          // return res;
+        }), map(result => {
+          let [res, leaveBalance] = result;
+          // let res = res1;
+          // let leaveBalance = res2;
+          // console.log(res);
+          // console.log(leaveBalance);
+
           let activeRL = res.filter(x => moment(x.EXPIREDATE, 'YYYY-MM-DD') > moment());
           let expiredRL = res.filter(x => moment(x.EXPIREDATE, 'YYYY-MM-DD') <= moment());
           let resultTemp = {};
           resultTemp['active'] = activeRL;
           resultTemp['expired'] = expiredRL;
+          resultTemp['balance'] = leaveBalance[0].BALANCE_DAYS;
           return resultTemp;
         })
 

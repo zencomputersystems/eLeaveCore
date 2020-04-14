@@ -17,7 +17,7 @@ export class AuthService {
    * @param {UserService} userService
    * @memberof AuthService
    */
-  constructor(private readonly userService: UserService, private readonly authDbService: AuthDbService) { }
+  constructor(public readonly userService: UserService, private readonly authDbService: AuthDbService) { }
 
   /**
    * Method auth
@@ -86,7 +86,7 @@ export class AuthService {
    * @returns
    * @memberof AuthService
    */
-  public async createToken(signedUser) {
+  public async createToken([signedUser, typeLogin]) {
     // 3300(55m) 28800(8h) 600(10m)
     // 32400(9h)
     const expiresIn = 32400, secretOrKey = 'this_is_secret';
@@ -95,8 +95,10 @@ export class AuthService {
       userId: signedUser.USER_GUID,
       tenantId: signedUser.TENANT_GUID
     };
+
     return {
       expires_in: expiresIn,
+      login_type: typeLogin,
       access_token: await sign(user, secretOrKey, { expiresIn })
     }
   }

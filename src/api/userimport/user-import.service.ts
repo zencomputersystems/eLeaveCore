@@ -209,11 +209,10 @@ export class UserImportService {
 
         })
 
-        return this.userInfoService.createByModel(userInfoResourceArray, [], [], ['USER_INFO_GUID', 'USER_GUID'])
+        return this.userInfoService.createByModel(userInfoResourceArray, ['USER_INFO_GUID', 'USER_GUID', 'TENANT_COMPANY_GUID'], [], [])
             .pipe(map(res => {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
-
                     return this.filterSaveUserByID(saveUser, importData);
                 }
             }))
@@ -259,7 +258,7 @@ export class UserImportService {
 
 
             if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
-                data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
+                data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
                 if (data.category == 'Fail') {
                     let userTemp = checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase());
                     if (userTemp) {
@@ -301,7 +300,7 @@ export class UserImportService {
         importData.forEach(element => {
 
             if (successList.find(x => x.STAFF_EMAIL.toUpperCase() === element.STAFF_EMAIL.toUpperCase())) {
-                duplicateUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
+                duplicateUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
             } else {
                 successList.push(element);
             }
@@ -336,13 +335,14 @@ export class UserImportService {
         importData.forEach(element => {
 
             const checkUser = saveUser.find(x => x.USER_GUID.toUpperCase() === element.ID.toUpperCase())
+            // console.log(checkUser);
             if (checkUser) {
                 element.ID = checkUser.USER_GUID;
                 successList.push(element);
-                successUser.data.push(new UserImport(checkUser.USER_GUID, element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
+                successUser.data.push(new UserImport(checkUser.USER_GUID, element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, checkUser.TENANT_COMPANY_GUID, element.COMPANY));
 
             } else {
-                failUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME));
+                failUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
             }
 
         });

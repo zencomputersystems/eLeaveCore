@@ -106,8 +106,8 @@ export class LeaveEntitlementReportService {
     leaveData.leaveTypeName = findLeaveData.CODE;
     leaveData.leaveTypeAbbr = findLeaveData.ABBR;
     leaveData.entitledDays = element.ENTITLED_DAYS;
-    leaveData.carriedForward = 2;
-    leaveData.forfeited = '12';
+    leaveData.carriedForward = element.CF_DAYS ? element.CF_DAYS : 0;
+    leaveData.forfeited = "0";
     leaveData.taken = element.TOTAL_APPROVED;
     leaveData.pending = element.TOTAL_PENDING;
     leaveData.balance = element.BALANCE_DAYS;

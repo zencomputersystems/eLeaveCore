@@ -18,5 +18,9 @@ export class UserImport {
         public USER_GUID: string,
         public EMAIL: string,
         public STAFF_ID: string,
-        public NAME: string) { }
+        public NAME: string,
+        public JOIN_DATE: string,
+        public SECTION: string,
+        public TENANT_COMPANY_GUID: string,
+        public COMPANY_NAME: string) { }
 }

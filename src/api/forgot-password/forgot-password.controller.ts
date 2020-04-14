@@ -26,9 +26,10 @@ export class ForgotPasswordController {
    * @memberof ForgotPasswordController
    */
   constructor(
-    private readonly forgotPasswordService: ForgotPasswordService,
-    private readonly userService: UserService,
-    private readonly profileDefaultDbService: ProfileDefaultDbService
+    // private readonly forgotPasswordService: ForgotPasswordService,
+    private readonly userService: UserService
+    // ,
+    // private readonly profileDefaultDbService: ProfileDefaultDbService
   ) { }
 
   // /**
@@ -56,23 +57,23 @@ export class ForgotPasswordController {
 
   // }
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
-  @Post('change-password/verify')
-  @ApiOperation({ title: 'Send email forgot password' })
-  verifyPassword(@Body() data: ChangePasswordDto, @Res() res) {
-    this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`, `(PASSWORD=${data.password})`]).subscribe(
-      data => {
-        let status = data.length > 0 ? true : false;
-        const arrStatus = {};
-        arrStatus['status'] = status;
-        res.send(arrStatus);
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth()
+  // @Post('change-password/verify')
+  // @ApiOperation({ title: 'Send email forgot password' })
+  // verifyPassword(@Body() data: ChangePasswordDto, @Res() res) {
+  //   this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`, `(PASSWORD=${data.password})`]).subscribe(
+  //     data => {
+  //       let status = data.length > 0 ? true : false;
+  //       const arrStatus = {};
+  //       arrStatus['status'] = status;
+  //       res.send(arrStatus);
 
-      }, err => {
-        res.send(err);
-      }
-    )
-  }
+  //     }, err => {
+  //       res.send(err);
+  //     }
+  //   )
+  // }
 
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
@@ -110,18 +111,18 @@ export class ForgotPasswordController {
 
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
-  @Get('login-type')
-  @ApiOperation({ title: 'Get login type' })
-  getLeaveType(@Req() req, @Res() res) {
-    this.profileDefaultDbService.findByFilterV2(['LOGIN_TYPE'], [`(TENANT_GUID=${req.user.TENANT_GUID})`]).subscribe(
-      data => {
-        res.send(data);
-      }, err => {
-        res.send(err);
-      }
-    )
-  }
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth()
+  // @Get('login-type')
+  // @ApiOperation({ title: 'Get login type' })
+  // getLeaveType(@Req() req, @Res() res) {
+  //   this.profileDefaultDbService.findByFilterV2(['LOGIN_TYPE'], [`(TENANT_GUID=${req.user.TENANT_GUID})`]).subscribe(
+  //     data => {
+  //       res.send(data);
+  //     }, err => {
+  //       res.send(err);
+  //     }
+  //   )
+  // }
 
 }

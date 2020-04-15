@@ -105,7 +105,7 @@ export class UserInfoDbService extends BaseDBService {
 
         resource.resource.push(data);
 
-        return this.updateByModel(resource, [], ['(USER_INFO_GUID=' + user_info_guid + ')'], ['PROPERTIES_XML']);
+        return this.updateByModel(resource, ['PROPERTIES_XML', 'USER_GUID'], ['(USER_INFO_GUID=' + user_info_guid + ')'], []);
     }
 
     // /**

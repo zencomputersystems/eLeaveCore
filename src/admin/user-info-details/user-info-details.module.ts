@@ -10,6 +10,7 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
 import { PendingLeaveService } from '../approval-override/pending-leave.service';
 import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
+import { UserService } from '../user/user.service';
 
 @Module({
   imports: [getModuleHttp()],
@@ -22,7 +23,8 @@ import { LeavetypeService } from '../leavetype/leavetype.service';
     UserprofileDbService,
     PendingLeaveService,
     CompanyDbService,
-    LeavetypeService
+    LeavetypeService,
+    UserService
   ],
   controllers: [UserInfoDetailsController]
 })

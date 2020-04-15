@@ -7,6 +7,9 @@ import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { map, mergeMap } from 'rxjs/operators';
 import { personalDetailAssign, employmentDetailAssign, notificationRuleAssign } from './function/user-info-details.function';
 import { PendingLeaveService } from '../approval-override/pending-leave.service';
+import { UserService } from '../user/user.service';
+import { UserModel } from '../user/model/user.model';
+import { Resource } from 'src/common/model/resource.model';
 /** XMLparser from zen library  */
 var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -25,7 +28,8 @@ export class UserInfoDetailsService {
    */
   constructor(
     private readonly userinfoDbService: UserInfoDbService,
-    private readonly pendingLeaveService: PendingLeaveService
+    private readonly pendingLeaveService: PendingLeaveService,
+    private readonly userService: UserService
   ) { }
 
   /**
@@ -195,7 +199,17 @@ export class UserInfoDetailsService {
    */
   public sendResult([res, userInfoGuid, user]) {
     let xmlData = convertJsonToXML(res);
-    return this.updateUserInfoData([xmlData, userInfoGuid, user, res]);
+    return this.updateUserInfoData([xmlData, userInfoGuid, user, res]).pipe(
+      map(result => {
+        let resource = new Resource(new Array());
+        let model = new UserModel();
+        model.USER_GUID = result.data.resource[0].USER_GUID;
+        model.STAFF_ID = res.root.employmentDetail.employeeId;
+        resource.resource.push(model);
+        this.userService.updateByModel(resource, [], [], []).subscribe();
+        return result;
+      })
+    );
   }
 
   /**

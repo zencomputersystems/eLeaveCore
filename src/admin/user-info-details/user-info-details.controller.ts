@@ -7,6 +7,10 @@ import { EmploymentDetailsDTO } from './dto/employment-details.dto';
 import { PersonalDetailsDTO } from './dto/personal-details.dto';
 import { UserInfoActivateService } from './user-info-activate.service';
 import { ReactivateUserDTO } from './dto/reactivate-user.dto';
+import { UserService } from '../user/user.service';
+import { map, mergeMap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { UserprofileDbService } from '../../api/userprofile/db/userprofile.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -28,7 +32,8 @@ export class UserInfoDetailsController {
    */
   constructor(
     private readonly userInfoDetailsService: UserInfoDetailsService,
-    private readonly userInfoActivateService: UserInfoActivateService
+    private readonly userInfoActivateService: UserInfoActivateService,
+    private readonly userprofileDbService: UserprofileDbService
   ) { }
 
   // @Get('/inactive/:id')
@@ -105,8 +110,6 @@ export class UserInfoDetailsController {
     if (param.id != '{id}' && param.id != '' && param.item != '{item}' && param.item != '') {
       this.userInfoDetailsService.getUserXMLInfo(param.id).subscribe(
         data => {
-          // console.log('i am here');
-          // console.log(data)
           if (data.length > 0)
             this.userInfoDetailsService.filterResults([data, res, param.item]);
           else
@@ -133,7 +136,10 @@ export class UserInfoDetailsController {
   @ApiOperation({ title: 'Edit user info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
   editUserInfo(@Param('id') id, @Body() updateUserInfoItemDTO: UpdateUserInfoItemDTO, @Req() req, @Res() res) {
-    this.runService([this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all']);
+    // this.runService([this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all']);
+    const filter = [`(STAFF_ID=${updateUserInfoItemDTO.root.employmentDetail.employeeId})`, `(USER_INFO_GUID!=${id})`];
+    const method = [this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all'];
+    this.checkEmployeeId([method, filter, res]);
   }
 
   /**
@@ -149,7 +155,10 @@ export class UserInfoDetailsController {
   @ApiOperation({ title: 'Edit employment info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
   editEmploymentInfo(@Param('id') id, @Body() employmentDetailsDTO: EmploymentDetailsDTO, @Req() req, @Res() res) {
-    this.runService([this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail']);
+    const filter = [`(STAFF_ID=${employmentDetailsDTO.employeeId})`, `(USER_INFO_GUID!=${id})`];
+    const method = [this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail'];
+    this.checkEmployeeId([method, filter, res]);
+    // this.runService([this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail']);
   }
 
   /**
@@ -207,6 +216,28 @@ export class UserInfoDetailsController {
         res.send(err);
       }
     )
+  }
+
+  private checkEmployeeId([param, filter, res]: [any, string[], any]) {
+
+    this.userprofileDbService.findByFilterV2([], filter).pipe(
+      mergeMap(res => {
+        let recentId = this.userprofileDbService.findByFilterV4([['STAFF_ID'], [], 'CREATION_TS DESC', 1]);
+        return forkJoin(of(res), recentId);
+      })
+    ).subscribe(
+      data => {
+        let [dataDuplicate, recentId] = data;
+
+        if (dataDuplicate.length > 0) {
+          res.send(new BadRequestException(`Duplicate employee id. Recent id is ${recentId[0].STAFF_ID}`));
+        }
+        else {
+          this.runService(param);
+        }
+
+      }, err => { res.send(err); }
+    );
   }
 
 }

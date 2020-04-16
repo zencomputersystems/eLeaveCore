@@ -108,21 +108,31 @@ export class UserLeaveEntitlementService {
 
                     if (leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-confirm to current month').toUpperCase() || leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-join to current month').toUpperCase()) {
                         let currentmonth = moment().format('M') as any;
-                        let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
+                        // element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
 
-                        earnedLeave = this.entitlementRoundingService.leaveEntitlementRounding(earnedLeave, leavePolicy.leaveEntitlementRounding);
+                        let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
+                        // earnedLeave = this.entitlementRoundingService.leaveEntitlementRounding(earnedLeave, leavePolicy.leaveEntitlementRounding);
                         // earnedLeave = (Math.floor(earnedLeave * 4) / 4);
                         element.EARNED_LEAVE = earnedLeave;
                     } else {
+                        // element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
                         element.EARNED_LEAVE = element.ENTITLED_DAYS;
+                        // element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
                     }
+                    element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
 
+                    element.POLICY_ROUNDING = leavePolicy.leaveEntitlementRounding.toLowerCase();
+                    element.POLICY_TYPE = leavePolicy.leaveEntitlementType.toLowerCase();
                     element.BALANCE_DAYS = (element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING);
+                    // element.BALANCE_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.BALANCE_DAYS, leavePolicy.leaveEntitlementRounding);
 
                     element.TOTAL_APPROVED = element.TOTAL_APPROVED.toFixed(2);
                     element.TOTAL_PENDING = element.TOTAL_PENDING.toFixed(2);
 
                     element.EARNED_LEAVE = element.EARNED_LEAVE.toFixed(2);
+
+                    element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+
                     element.ENTITLED_DAYS = element.ENTITLED_DAYS.toFixed(2);
                     element.BALANCE_DAYS = element.BALANCE_DAYS.toFixed(2);
 

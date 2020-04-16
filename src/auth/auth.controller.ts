@@ -1,4 +1,4 @@
-import { Controller, Req, Post, UseGuards, Body, Param, Res, UnauthorizedException } from '@nestjs/common';
+import { Controller, Req, Post, UseGuards, Body, Param, Res, UnauthorizedException, HttpService } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
@@ -24,24 +24,61 @@ export class AuthController {
      */
     constructor(
         private readonly authService: AuthService,
-        private readonly profileDefaultDbService: ProfileDefaultDbService
+        private readonly profileDefaultDbService: ProfileDefaultDbService,
+        private readonly httpService: HttpService
     ) { }
 
-    /**
-     * Login api
-     *
-     * @param {LoginDto} loginDTO
-     * @param {*} req
-     * @returns
-     * @memberof AuthController
-     */
+    // /**
+    //  * Login api
+    //  *
+    //  * @param {LoginDto} loginDTO
+    //  * @param {*} req
+    //  * @returns
+    //  * @memberof AuthController
+    //  */
+    // @Post('login')
+    // @ApiOperation({ title: 'Login' })
+    // @UseGuards(AuthGuard('ad'))
+    // public async login(@Body() loginDTO: LoginDto, @Req() req) {
+    //     // console.log(req.user);
+    //     return await this.authService.createToken([req.user, 'ad']);
+    //     //return this.ad(loginDTO,req);
+    // }
+
     @Post('login')
-    @ApiOperation({ title: 'Login' })
-    @UseGuards(AuthGuard('ad'))
-    public async login(@Body() loginDTO: LoginDto, @Req() req) {
-        // console.log(req.user);
-        return await this.authService.createToken([req.user, 'ad']);
-        //return this.ad(loginDTO,req);
+    @ApiOperation({ title: 'Login and verify' })
+    public checkLoginType(@Body() loginDTO: LoginDto, @Req() req, @Res() result: Response) {
+        let baseUrlLogin = `${req.headers.origin}${req.url}`; // 'http://zencore.zen.com.my:3000/api/auth/login/';
+        let urlAD = baseUrlLogin + '/ad';
+        let urlLocal = baseUrlLogin + '/email';
+
+        this.authService.userService.findByFilterV2(['EMAIL', 'TENANT_GUID'], [`(LOGIN_ID=${loginDTO.email})`]).pipe(
+            mergeMap(res => {
+                return this.profileDefaultDbService.findByFilterV2([], [`(TENANT_GUID=${res[0].TENANT_GUID})`]);
+            })
+        ).subscribe(
+            async data => {
+                let url = '';
+                if (data[0].LOGIN_TYPE == 'ad') {
+                    url = urlAD;
+                }
+                else if (data[0].LOGIN_TYPE == 'local') {
+                    url = urlLocal;
+                }
+
+                this.httpService.post(url, loginDTO).subscribe(
+                    data => {
+                        result.send(data.data);
+                    }, err => {
+                        result.send(new UnauthorizedException('Invalid Credential'));
+                    }
+                );
+
+            },
+            err => {
+                result.send(new UnauthorizedException('Invalid Credential'));
+            }
+        );
     }
 
     /**
@@ -104,4 +141,7 @@ export class AuthController {
     //         result.send(error);
     //     }
     // }
+
+
+
 }

@@ -48,9 +48,10 @@ export class AuthController {
     @Post('login')
     @ApiOperation({ title: 'Login and verify' })
     public checkLoginType(@Body() loginDTO: LoginDto, @Req() req, @Res() result: Response) {
-        let baseUrlLogin = `${req.headers.origin}${req.url}`; // 'http://zencore.zen.com.my:3000/api/auth/login/';
-        let urlAD = baseUrlLogin + '/ad';
-        let urlLocal = baseUrlLogin + '/email';
+        // let baseUrlLogin = `${req.headers.origin}${req.url}`; // 
+        let baseUrlLogin = 'http://zencore.zen.com.my:3000/api/auth/login/';
+        let urlAD = baseUrlLogin + 'ad';
+        let urlLocal = baseUrlLogin + 'email';
 
         this.authService.userService.findByFilterV2(['EMAIL', 'TENANT_GUID'], [`(LOGIN_ID=${loginDTO.email})`]).pipe(
             mergeMap(res => {

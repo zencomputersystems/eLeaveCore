@@ -73,6 +73,26 @@ export class UserInfoDetailsController {
   }
 
   /**
+   * Recent staff id
+   *
+   * @param {*} id
+   * @param {*} res
+   * @memberof UserInfoDetailsController
+   */
+  @Get('recent-staff-id/:id')
+  @ApiOperation({ title: 'Get employee personal info' })
+  @ApiImplicitParam({ name: 'id', description: 'Tenant company guid', required: true })
+  getRecentStaffId(@Param('id') id, @Res() res) {
+    this.userprofileDbService.findByFilterV4([['STAFF_ID'], [`(TENANT_COMPANY_GUID!=${id})`], 'CREATION_TS DESC', 1]).subscribe(
+      data => {
+        res.send({ "recentStaffId": data[0].STAFF_ID });
+      },
+      err => { res.send(err); }
+    );
+
+  }
+
+  /**
    * Get personal info
    *
    * @param {*} item

@@ -86,7 +86,7 @@ export class UserImportService {
                     const existingUsers: UserModel[] = res;
                     return existingUsers;
                 }),
-                map(res => this.filterData([importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL'])),
+                map(res => this.filterData([importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL', 'STAFF_ID', 'STAFF_ID'])),
                 map(res => this.filterDuplicateUser(res)),
                 mergeMap(successUser => this.saveImportList(successUser, user)),
                 mergeMap(async successUser => await this.saveInfoDataList(successUser, user)),
@@ -132,7 +132,7 @@ export class UserImportService {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
                     // console.log(saveUser);
-                    return this.filterData([importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL'])
+                    return this.filterData([importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL', 'STAFF_ID', 'STAFF_ID'])
                     // return importData;
                 }
             }))
@@ -236,7 +236,7 @@ export class UserImportService {
     //     categoryName: string,
     //     findElement: any,
     //     findItem: any) {
-    private filterData([importData, checkModelArray, categoryName, findElement, findItem]: [Array<UserCsvDto>, any, string, any, any]) {
+    private filterData([importData, checkModelArray, categoryName, findElement, findItem, findElement2, findItem2]: [Array<UserCsvDto>, any, string, any, any, any, any]) {
 
         // console.log(importData);
         // console.log(checkModelArray[0]);
@@ -257,7 +257,7 @@ export class UserImportService {
             // });
 
 
-            if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
+            if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase() || x[findElement2].toUpperCase() === element[findItem2].toUpperCase())) {
                 data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
                 if (data.category == 'Fail') {
                     let userTemp = checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase());

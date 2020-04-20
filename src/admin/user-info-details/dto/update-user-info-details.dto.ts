@@ -1,7 +1,7 @@
 import { EmploymentDetailsDTO } from './employment-details.dto';
 import { PersonalDetailsDTO } from './personal-details.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, IsArray, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
@@ -18,8 +18,9 @@ export class NotificationRuleDTO {
    * @memberof NotificationRuleDTO
    */
   @ApiModelProperty({ description: 'User guid to notify', example: '7756ab98-e69e-48e1-5fc3-b7e30a157cf3' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   id: string;
 }
 

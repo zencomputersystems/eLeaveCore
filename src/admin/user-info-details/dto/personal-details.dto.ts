@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
@@ -16,8 +16,9 @@ export class EmergencyContactDetailsDTO {
    * @memberof EmergencyContactDetailsDTO
    */
   @ApiModelProperty({ description: 'Contact name', example: 'Raymond' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   contactName: string;
 
   /**
@@ -27,8 +28,9 @@ export class EmergencyContactDetailsDTO {
    * @memberof EmergencyContactDetailsDTO
    */
   @ApiModelProperty({ description: 'Contact number', example: '0197993312' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   contactNumber: string;
 
   /**
@@ -38,8 +40,9 @@ export class EmergencyContactDetailsDTO {
    * @memberof EmergencyContactDetailsDTO
    */
   @ApiModelProperty({ description: 'Contact relationship', example: 'Father' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   contactRelationship: string;
 }
 
@@ -57,8 +60,9 @@ export class EducationDetailsDTO {
    * @memberof EducationDetailsDTO
    */
   @ApiModelProperty({ description: 'Qualification Level', example: 'Bachelor Degree' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   qualificationLevel: string;
 
   /**
@@ -68,8 +72,9 @@ export class EducationDetailsDTO {
    * @memberof EducationDetailsDTO
    */
   @ApiModelProperty({ description: 'Major course', example: 'Software Engineering' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   major: string;
 
   /**
@@ -79,8 +84,9 @@ export class EducationDetailsDTO {
    * @memberof EducationDetailsDTO
    */
   @ApiModelProperty({ description: 'University', example: 'Universiti Putra Malaysia' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   university: string;
 
   /**
@@ -90,8 +96,9 @@ export class EducationDetailsDTO {
    * @memberof EducationDetailsDTO
    */
   @ApiModelProperty({ description: 'Year duration period', example: '2011-2015' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   year: string;
 }
 
@@ -109,8 +116,9 @@ export class CertificationDetailsDTO {
    * @memberof CertificationDetailsDTO
    */
   @ApiModelProperty({ description: 'Certification name', example: 'Bachelor Degree In Computer Science' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   certificationName: string;
 
   /**
@@ -120,8 +128,9 @@ export class CertificationDetailsDTO {
    * @memberof CertificationDetailsDTO
    */
   @ApiModelProperty({ description: 'Certification enroll year', example: 2011 })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsNumber()
+  @IsOptional()
   certificationEnrollYear: number;
 
   /**
@@ -131,8 +140,9 @@ export class CertificationDetailsDTO {
    * @memberof CertificationDetailsDTO
    */
   @ApiModelProperty({ description: 'Certification graduate year', example: 2015 })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsNumber()
+  @IsOptional()
   certificationGraduateYear: number;
 
   /**
@@ -142,8 +152,9 @@ export class CertificationDetailsDTO {
    * @memberof CertificationDetailsDTO
    */
   @ApiModelProperty({ description: 'Certification attachment', example: 'attachment1.png' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   certificationAttachment: string;
 }
 
@@ -161,8 +172,9 @@ export class SpouseDetailsDTO {
    * @memberof SpouseDetailsDTO
    */
   @ApiModelProperty({ description: 'Spouse name', example: 'Billy' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   spouseName: string;
 
   /**
@@ -172,8 +184,9 @@ export class SpouseDetailsDTO {
    * @memberof SpouseDetailsDTO
    */
   @ApiModelProperty({ description: 'Spouse NRIC', example: '900912102212' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   spouseIdentificationNumber: string;
 }
 
@@ -191,8 +204,9 @@ export class ChildDetailsDTO {
    * @memberof ChildDetailsDTO
    */
   @ApiModelProperty({ description: 'Child name', example: 'Akmal' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   childName: string;
 
   /**
@@ -202,8 +216,9 @@ export class ChildDetailsDTO {
    * @memberof ChildDetailsDTO
    */
   @ApiModelProperty({ description: 'Child NRIC', example: '011012109814' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   childIdentificationNumber: string;
 }
 
@@ -262,8 +277,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Nick name', example: 'Pratap' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   nickname: string;
 
   /**
@@ -295,8 +311,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Gender (Female/ Male)', example: 'Male' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   gender: string;
 
   /**
@@ -306,8 +323,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Marital status (0-SINGLE,1-MARRIED)', example: 'Single' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   maritalStatus: string;
 
   /**
@@ -317,8 +335,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Race', example: 'Chinese' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   race: string;
 
   /**
@@ -328,8 +347,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Religion', example: 'Christian' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   religion: string;
 
   /**
@@ -339,8 +359,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Nationality', example: 'Malaysian' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   nationality: string;
 
   /**
@@ -352,6 +373,7 @@ export class PersonalDetailsDTO {
   @ApiModelProperty({ description: 'Phone Number', example: '017-33314141' })
   @IsNotEmpty()
   @IsString()
+  // @IsOptional()
   phoneNumber: string;
 
   /**
@@ -363,6 +385,7 @@ export class PersonalDetailsDTO {
   @ApiModelProperty({ description: 'Work Phone Number', example: '019-88831235' })
   @IsNotEmpty()
   @IsString()
+  // @IsOptional()
   workPhoneNumber: string;
 
   /**
@@ -394,8 +417,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Address 1', example: 'Unit No. C-6-4, Block C' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   address1: string;
 
   /**
@@ -405,8 +429,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Address 2', example: 'Persiaran Ceria, Cyber 12' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   address2: string;
 
   /**
@@ -416,8 +441,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Postcode', example: 63000 })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsNumber()
+  @IsOptional()
   postcode: number;
 
   /**
@@ -427,8 +453,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'City', example: 'Cyberjaya' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   city: string;
 
   /**
@@ -438,8 +465,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'State', example: 'Selangor' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   state: string;
 
   /**
@@ -449,8 +477,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Country', example: 'Malaysia' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   country: string;
 
   /**

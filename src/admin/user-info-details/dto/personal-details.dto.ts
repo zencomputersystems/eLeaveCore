@@ -371,9 +371,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Phone Number', example: '017-33314141' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
-  // @IsOptional()
+  @IsOptional()
   phoneNumber: string;
 
   /**
@@ -383,9 +383,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Work Phone Number', example: '019-88831235' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
-  // @IsOptional()
+  @IsOptional()
   workPhoneNumber: string;
 
   /**

@@ -157,7 +157,7 @@ export class UserInfoDetailsController {
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
   editUserInfo(@Param('id') id, @Body() updateUserInfoItemDTO: UpdateUserInfoItemDTO, @Req() req, @Res() res) {
     // this.runService([this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all']);
-    const filter = [`(STAFF_ID=${updateUserInfoItemDTO.root.employmentDetail.employeeId})`, `(USER_INFO_GUID!=${id})`];
+    const filter = [`(STAFF_ID=${updateUserInfoItemDTO.root.employmentDetail.employeeId})`, `(USER_INFO_GUID!=${id})`, `(TENANT_GUID=${req.user.TENANT_GUID})`];
     const method = [this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all'];
     this.checkEmployeeId([method, filter, res]);
   }
@@ -175,7 +175,7 @@ export class UserInfoDetailsController {
   @ApiOperation({ title: 'Edit employment info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
   editEmploymentInfo(@Param('id') id, @Body() employmentDetailsDTO: EmploymentDetailsDTO, @Req() req, @Res() res) {
-    const filter = [`(STAFF_ID=${employmentDetailsDTO.employeeId})`, `(USER_INFO_GUID!=${id})`];
+    const filter = [`(STAFF_ID=${employmentDetailsDTO.employeeId})`, `(USER_INFO_GUID!=${id})`, `(TENANT_GUID=${req.user.TENANT_GUID})`];
     const method = [this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail'];
     this.checkEmployeeId([method, filter, res]);
     // this.runService([this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail']);
@@ -238,7 +238,7 @@ export class UserInfoDetailsController {
     )
   }
 
-  private checkEmployeeId([param, filter, res]: [any, string[], any]) {
+  public checkEmployeeId([param, filter, res]: [any, string[], any]) {
 
     this.userprofileDbService.findByFilterV2([], filter).pipe(
       mergeMap(res => {

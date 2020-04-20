@@ -15,8 +15,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Staff id', example: '3909' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   employeeId: string;
 
   /**
@@ -48,8 +49,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Department', example: 'Research and Development' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   department: string;
 
   /**
@@ -59,8 +61,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Designation', example: 'Service Desk Consultant' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   designation: string;
 
   /**
@@ -70,8 +73,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Section', example: 'Management' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   section: string;
 
   /**
@@ -81,8 +85,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Branch', example: 'Cyberjaya' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   branch: string;
 
   /**
@@ -92,8 +97,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Costcentre', example: 'Service' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   costcentre: string;
 
   /**
@@ -103,8 +109,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Employment status', example: 'Confirmed' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   employmentStatus: string;
 
   /**
@@ -114,8 +121,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Employment Type', example: 'Permanent' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   employmentType: string;
 
   /**
@@ -127,6 +135,7 @@ export class EmploymentDetailsDTO {
   @ApiModelProperty({ description: 'Manager user guid', example: 'b022d1b1-ff12-9cdf-2272-8c01cb75fbe0' })
   @IsNotEmpty()
   @IsString()
+  // @IsOptional()
   reportingTo: string;
 
   // /**
@@ -158,8 +167,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Date of confirmation', example: '2019-10-09' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   dateOfConfirmation: string;
 
   /**
@@ -170,6 +180,7 @@ export class EmploymentDetailsDTO {
    */
   @ApiModelProperty({ description: 'Date of resign', example: '2019-12-09' })
   @IsString()
+  @IsOptional()
   dateOfResignation: string;
 
   /**

@@ -21,6 +21,8 @@ import { json } from 'body-parser';
 import { ApplyLeaveDataDTO } from '../dto/apply-leave-data.dto';
 import { setTimeout } from 'timers';
 import { GeneralLeavePolicyService } from '../../../admin/general-leave-policy/general-leave-policy.service';
+import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -48,7 +50,8 @@ export class ApplyLeaveService {
 		private readonly userInfoService: UserInfoService,
 		private readonly leaveTransactionDbService: LeaveTransactionDbService,
 		private readonly dateCalculationService: DateCalculationService,
-		private readonly generalLeavePolicyService: GeneralLeavePolicyService
+		private readonly generalLeavePolicyService: GeneralLeavePolicyService,
+		private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService
 	) { }
 
 	/**
@@ -130,24 +133,58 @@ export class ApplyLeaveService {
 							})
 						)
 				}),
-				mergeMap((result) => {
+				mergeMap(async (result) => {
 					// find the parent leave
 					const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
+					// console.log(parent);
+					let method = this.leavetypeEntitlementDbService.findByFilterV2(['PROPERTIES_XML'], [`(ENTITLEMENT_GUID=${parent.ENTITLEMENT_GUID})`]);
 
-					if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
-						const res = new ValidationStatusDTO();
-						res.valid = false;
-						res.message.push("Policy Not Found");
-						throw res;
-					}
+					// call leavetype entitlement def (before this read from xml snapshot)
+					let restemp = runServiceCallback(method).then(
+						result1 => {
+							// console.log(result1);
+							// console.log(restemp);
+							// console.log('siapa dulu?');
 
-					const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
-					const validation = this.leaveValidationService.validateLeave([policy, y, result.userInfo, result.userEntitlement]);
 
-					return validation.pipe(map((validationResult) => {
-						validationResult.userId = result.userInfo.USER_GUID;
-						return { result, validationResult, policy };
-					}));
+							// if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
+							if (result1[0].PROPERTIES_XML == null || result1[0].PROPERTIES_XML == undefined) {
+								const res = new ValidationStatusDTO();
+								res.valid = false;
+								res.message.push("Policy Not Found");
+								throw res;
+							}
+
+							const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(result1[0].PROPERTIES_XML);
+							const validation = this.leaveValidationService.validateLeave([policy, y, result.userInfo, result.userEntitlement]);
+
+							return validation.pipe(map((validationResult) => {
+								validationResult.userId = result.userInfo.USER_GUID;
+								return { result, validationResult, policy };
+							}));
+						}
+					);
+					return await restemp;
+
+					// console.log(restemp);
+					// console.log('siapa dulu?');
+
+					// if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
+					// 	const res = new ValidationStatusDTO();
+					// 	res.valid = false;
+					// 	res.message.push("Policy Not Found");
+					// 	throw res;
+					// }
+
+					// const policy: LeaveTypePropertiesXmlDTO = convertXMLToJson(parent.PROPERTIES_XML);
+					// const validation = this.leaveValidationService.validateLeave([policy, y, result.userInfo, result.userEntitlement]);
+
+					// return validation.pipe(map((validationResult) => {
+					// 	validationResult.userId = result.userInfo.USER_GUID;
+					// 	return { result, validationResult, policy };
+					// }));
+				}), mergeMap(res => {
+					return res;
 				}), mergeMap(res => {
 					let { result, validationResult, policy } = res;
 					return this.generalLeavePolicyService.findByFilterV2([], ['(TENANT_COMPANY_GUID=' + result.userInfo.TENANT_COMPANY_GUID + ')']).pipe(map((generalPolicyData) => {

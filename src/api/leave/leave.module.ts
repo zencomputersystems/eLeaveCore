@@ -23,6 +23,7 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
 import { GeneralLeavePolicyService } from '../../admin/general-leave-policy/general-leave-policy.service';
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 import { LeaveTransactionLogDbService } from './db/leave-transaction-log.db.service';
+import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 
 /**
  * Module for leave
@@ -56,7 +57,8 @@ import { LeaveTransactionLogDbService } from './db/leave-transaction-log.db.serv
     LeaveBalanceValidationParentService,
     GeneralLeavePolicyService,
     UserprofileDbService,
-    LeaveTransactionLogDbService
+    LeaveTransactionLogDbService,
+    LeavetypeEntitlementDbService
   ],
 })
 export class LeaveModule { }

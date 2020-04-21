@@ -157,9 +157,9 @@ export class UserInfoDetailsController {
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
   editUserInfo(@Param('id') id, @Body() updateUserInfoItemDTO: UpdateUserInfoItemDTO, @Req() req, @Res() res) {
     // this.runService([this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all']);
-    const filter = [`(STAFF_ID=${updateUserInfoItemDTO.root.employmentDetail.employeeId})`, `(USER_INFO_GUID!=${id})`, `(TENANT_GUID=${req.user.TENANT_GUID})`];
+    const filter = [`(STAFF_ID=${updateUserInfoItemDTO.root.employmentDetail.employeeId})`, `(USER_INFO_GUID!=${id})`, `(TENANT_GUID=${req.user.TENANT_GUID})`, `(STAFF_ID IS NOT NULL)`];
     const method = [this.userInfoDetailsService.updateUserInfo([updateUserInfoItemDTO, id, req.user]), res, 'all'];
-    this.checkEmployeeId([method, filter, res]);
+    this.checkEmployeeId([method, filter, res, req]);
   }
 
   /**
@@ -175,9 +175,9 @@ export class UserInfoDetailsController {
   @ApiOperation({ title: 'Edit employment info by user info guid' })
   @ApiImplicitParam({ name: 'id', description: 'Edit by user info guid', required: true })
   editEmploymentInfo(@Param('id') id, @Body() employmentDetailsDTO: EmploymentDetailsDTO, @Req() req, @Res() res) {
-    const filter = [`(STAFF_ID=${employmentDetailsDTO.employeeId})`, `(USER_INFO_GUID!=${id})`, `(TENANT_GUID=${req.user.TENANT_GUID})`];
+    const filter = [`(STAFF_ID=${employmentDetailsDTO.employeeId})`, `(USER_INFO_GUID!=${id})`, `(TENANT_GUID=${req.user.TENANT_GUID})`, `(STAFF_ID != '')`];
     const method = [this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail'];
-    this.checkEmployeeId([method, filter, res]);
+    this.checkEmployeeId([method, filter, res, req]);
     // this.runService([this.userInfoDetailsService.updateEmploymentInfo([employmentDetailsDTO, id, req.user]), res, 'employmentDetail']);
   }
 
@@ -238,17 +238,16 @@ export class UserInfoDetailsController {
     )
   }
 
-  public checkEmployeeId([param, filter, res]: [any, string[], any]) {
+  public checkEmployeeId([param, filter, res, req]: [any, string[], any, any]) {
 
     this.userprofileDbService.findByFilterV2([], filter).pipe(
       mergeMap(res => {
-        let recentId = this.userprofileDbService.findByFilterV4([['STAFF_ID'], [], 'CREATION_TS DESC', 1]);
+        let recentId = this.userprofileDbService.findByFilterV4([['STAFF_ID'], [`(TENANT_GUID=${req.user.TENANT_GUID})`,], 'CREATION_TS DESC', 1]);
         return forkJoin(of(res), recentId);
       })
     ).subscribe(
       data => {
         let [dataDuplicate, recentId] = data;
-
         if (dataDuplicate.length > 0) {
           res.send(new BadRequestException(`Duplicate employee id. Recent id is ${recentId[0].STAFF_ID}`));
         }

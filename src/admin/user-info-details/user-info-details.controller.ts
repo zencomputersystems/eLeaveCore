@@ -1,4 +1,4 @@
-import { Controller, Patch, Req, Res, Body, Param, UseGuards, Get, BadRequestException, NotFoundException, HttpStatus, Post } from '@nestjs/common';
+import { Controller, Patch, Req, Res, Body, Param, UseGuards, Get, BadRequestException, NotFoundException, HttpStatus, Post, HttpCode } from '@nestjs/common';
 import { ApiOperation, ApiBearerAuth, ApiImplicitParam } from '@nestjs/swagger';
 import { UpdateUserInfoItemDTO } from './dto/update-user-info-details.dto';
 import { UserInfoDetailsService } from './user-info-details.service';
@@ -86,6 +86,7 @@ export class UserInfoDetailsController {
     this.userprofileDbService.findByFilterV4([['STAFF_ID'], [`(TENANT_COMPANY_GUID!=${id})`], 'CREATION_TS DESC', 1]).subscribe(
       data => {
         res.send({ "recentStaffId": data[0].STAFF_ID });
+        // res.status(HttpStatus.BAD_REQUEST).send(new BadRequestException);
       },
       err => { res.send(err); }
     );
@@ -249,7 +250,7 @@ export class UserInfoDetailsController {
       data => {
         let [dataDuplicate, recentId] = data;
         if (dataDuplicate.length > 0) {
-          res.send(new BadRequestException(`Duplicate employee id. Recent id is ${recentId[0].STAFF_ID}`));
+          res.status(HttpStatus.BAD_REQUEST).send(new BadRequestException(`Duplicate employee id. Recent id is ${recentId[0].STAFF_ID}`));
         }
         else {
           this.runService(param);

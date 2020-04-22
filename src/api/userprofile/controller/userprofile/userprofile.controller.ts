@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException, Delete, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Patch, NotFoundException, Delete, Body, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
@@ -138,7 +138,7 @@ export class UserprofileController {
 			).subscribe(data => {
 				// console.log(data);
 				if (data) { this.getEntitlementProcess([data, res, user]); }
-				else { res.send(new NotFoundException(`Data user guid not found`)); }
+				else { res.status(HttpStatus.NOT_FOUND).send(new NotFoundException(`Data user guid not found`)); }
 			}, err => {
 				res.status(500);
 				// if (err.response.data) { res.send(err.response.data1.error) } 

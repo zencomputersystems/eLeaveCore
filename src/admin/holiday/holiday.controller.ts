@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpService, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, Post, Body, Patch, HttpService, Delete, BadRequestException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitQuery, ApiImplicitParam } from '@nestjs/swagger';
 import { HolidayService } from './holiday.service';
@@ -70,7 +70,7 @@ export class HolidayController {
 			.subscribe((response) => {
 				res.send(response.data);
 			}, err => {
-				res.send(new BadRequestException('Please input filter data'));
+				res.status(HttpStatus.NOT_FOUND).send(new BadRequestException('Please input filter data'));
 			});
 
 	}

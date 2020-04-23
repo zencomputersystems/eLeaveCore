@@ -1,4 +1,4 @@
-import { Controller, Req, Post, UseGuards, Body, Param, Res, UnauthorizedException, HttpService } from '@nestjs/common';
+import { Controller, Req, Post, UseGuards, Body, Param, Res, UnauthorizedException, HttpService, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
@@ -71,13 +71,13 @@ export class AuthController {
                     data => {
                         result.send(data.data);
                     }, err => {
-                        result.send(new UnauthorizedException('Invalid Credential'));
+                        result.status(HttpStatus.UNAUTHORIZED).send(new UnauthorizedException('Invalid Credential'));
                     }
                 );
 
             },
             err => {
-                result.send(new UnauthorizedException('Invalid Credential'));
+                result.status(HttpStatus.UNAUTHORIZED).send(new UnauthorizedException('Invalid Credential'));
             }
         );
     }

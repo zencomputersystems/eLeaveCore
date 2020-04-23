@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException, HttpStatus } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
@@ -60,7 +60,7 @@ export class DashboardAdminController {
 
         res.send(data.data.resource);
       }, err => {
-        res.send(new NotFoundException('No data retrieved', 'Failed to get data'));
+        res.status(HttpStatus.NOT_FOUND).send(new NotFoundException('No data retrieved', 'Failed to get data'));
       }
     );
 

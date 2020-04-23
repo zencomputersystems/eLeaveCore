@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Param, NotFoundException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { DashboardService } from '../service/dashboard.service';
@@ -106,7 +106,7 @@ export class DashboardController {
 				}
 				res.send(result);
 			}, err => {
-				res.send(new NotFoundException('Failed to get long elave'));
+				res.status(HttpStatus.NOT_FOUND).send(new NotFoundException('Failed to get long elave'));
 			}
 		);
 

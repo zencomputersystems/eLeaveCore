@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, HttpStatus } from '@nestjs/common';
 
 /**
  * Common function used
@@ -115,7 +115,7 @@ export class CommonFunctionService {
         //     res.send(err);
         // }
 
-        res.send(new BadRequestException('Input missing'));
+        res.status(HttpStatus.BAD_REQUEST).send(new BadRequestException('Input missing'));
     }
 
 

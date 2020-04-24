@@ -77,7 +77,6 @@ export class UserImportService {
      * @memberof UserImportService
      */
     public processImportData(user: any, importData: [UserCsvDto]) {
-        // console.log(importData);
         this.importResult = new Array<UserImportResult>();
         //get all the the user for this tenant
         return this.userService.findByFilterV2([], ['(TENANT_GUID=' + user.TENANT_GUID + ')'])
@@ -256,8 +255,7 @@ export class UserImportService {
             //     console.log(element.STAFF_EMAIL + ' - ' + x[findElement]);
             // });
 
-
-            if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase() || x[findElement2].toUpperCase() === element[findItem2].toUpperCase())) {
+            if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase() || x[findElement2] === element[findItem2])) {
                 data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
                 if (data.category == 'Fail') {
                     let userTemp = checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase());

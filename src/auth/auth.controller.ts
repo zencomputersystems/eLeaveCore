@@ -7,6 +7,7 @@ import { ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { Response } from 'express';
+var atob = require('atob');
 
 /**
  * Controller for auth
@@ -48,7 +49,8 @@ export class AuthController {
     @Post('login')
     @ApiOperation({ title: 'Login and verify' })
     public checkLoginType(@Body() loginDTO: LoginDto, @Req() req, @Res() result: Response) {
-        // let baseUrlLogin = `${req.headers.origin}${req.url}`; // 
+        loginDTO.password = atob(loginDTO.password);
+
         let baseUrlLogin = 'http://zencore.zen.com.my:3000/api/auth/login/';
         let urlAD = baseUrlLogin + 'ad';
         let urlLocal = baseUrlLogin + 'email';

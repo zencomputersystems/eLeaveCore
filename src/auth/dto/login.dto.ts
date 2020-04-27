@@ -24,8 +24,8 @@ export class LoginDto {
      * @type {string}
      * @memberof LoginDto
      */
-    @ApiModelProperty({ description: 'Password for email account', example: 'P@ss1234' })
+    @ApiModelProperty({ description: 'Password for email account', example: 'UEBzczEyMzQ=' })
     @IsNotEmpty()
-    readonly password: string;
+    password: string;
 
 }

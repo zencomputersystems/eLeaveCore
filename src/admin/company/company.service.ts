@@ -223,7 +223,7 @@ export class CompanyService {
 		const fields = ['DEPARTMENT'];
 		const filters = ['(TENANT_COMPANY_GUID=' + companyId + ')', '(TENANT_GUID=' + tenantId + ')'];
 
-		const url = this.companyDbService.queryService.generateDbQueryV2('view_departments', fields, filters, []);
+		const url = this.companyDbService.queryService.generateDbQueryV2('view_department_details', fields, filters, []);
 		let result = this.companyDbService.httpService.get(url);
 		return getListData(result);
 	}

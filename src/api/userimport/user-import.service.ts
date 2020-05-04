@@ -244,6 +244,7 @@ export class UserImportService {
         // this.filterData(importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL')),
         const data = new UserImportResult();
         data.category = categoryName;
+        data.message = this.messageResult(categoryName);
 
         const successList = new Array<UserCsvDto>();
 
@@ -280,6 +281,19 @@ export class UserImportService {
         return successList;
     }
 
+    private messageResult(categoryName: string) {
+        let message;
+        if (categoryName == "Duplicate")
+            message = 'Duplicate email in user list';
+        else if (categoryName == 'Existing User')
+            message = 'User email or staff id already exist';
+        else if (categoryName == "Success")
+            message = 'User successfully created';
+        else if (categoryName == "Fail")
+            message = 'Failed to create user';
+        return message;
+    }
+
     /**
      * Method to filter duplicate user
      *
@@ -291,6 +305,7 @@ export class UserImportService {
     private filterDuplicateUser(importData: Array<UserCsvDto>) {
         const duplicateUser = new UserImportResult();
         duplicateUser.category = "Duplicate";
+        duplicateUser.message = this.messageResult(duplicateUser.category);
 
         const successList = new Array<UserCsvDto>();
 
@@ -323,9 +338,11 @@ export class UserImportService {
     private filterSaveUserByID(saveUser: any, importData: Array<UserCsvDto>) {
         const failUser = new UserImportResult();
         failUser.category = "Fail";
+        failUser.message = this.messageResult(failUser.category);
 
         const successUser = new UserImportResult();
         successUser.category = "Success";
+        successUser.message = this.messageResult(successUser.category);
 
         const successList = new Array<UserCsvDto>();
 

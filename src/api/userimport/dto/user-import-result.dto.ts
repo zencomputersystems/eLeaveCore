@@ -20,4 +20,11 @@ export class UserImportResult {
      * @memberof UserImportResult
      */
     data = new Array<UserImport>();
+    /**
+     * Data import user - message
+     *
+     * @type {string}
+     * @memberof UserImportResult
+     */
+    message: string;
 }

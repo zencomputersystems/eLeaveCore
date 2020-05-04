@@ -52,6 +52,7 @@ export class AuthController {
         loginDTO.password = atob(loginDTO.password);
 
         let baseUrlLogin = 'http://zencore.zen.com.my:3000/api/auth/login/';
+        // let baseUrlLogin = 'http://localhost:3000/api/auth/login/';
         let urlAD = baseUrlLogin + 'ad';
         let urlLocal = baseUrlLogin + 'email';
 

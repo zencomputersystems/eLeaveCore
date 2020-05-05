@@ -12,6 +12,11 @@ import { map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 /**
+ * Declare cryptojs library
+ */
+var CryptoJS = require("crypto-js");
+
+/**
  * Controller forgot password
  *
  * @export
@@ -26,36 +31,36 @@ export class ForgotPasswordController {
    * @memberof ForgotPasswordController
    */
   constructor(
-    // private readonly forgotPasswordService: ForgotPasswordService,
+    private readonly forgotPasswordService: ForgotPasswordService,
     private readonly userService: UserService
     // ,
     // private readonly profileDefaultDbService: ProfileDefaultDbService
   ) { }
 
-  // /**
-  //  * Send email forgot password
-  //  *
-  //  * @param {*} email
-  //  * @param {*} req
-  //  * @param {*} res
-  //  * @memberof ForgotPasswordController
-  //  */
-  // @Post('forgot-password/:email')
-  // @ApiOperation({ title: 'Send email forgot password' })
-  // @ApiImplicitParam({ name: 'email', description: 'Email user', required: true })
-  // create(@Param('email') email, @Req() req, @Res() res) {
+  /**
+   * Send email forgot password
+   *
+   * @param {*} email
+   * @param {*} req
+   * @param {*} res
+   * @memberof ForgotPasswordController
+   */
+  @Post('forgot-password/:email')
+  @ApiOperation({ title: 'Send email forgot password' })
+  @ApiImplicitParam({ name: 'email', description: 'Email user', required: true })
+  create(@Param('email') email, @Req() req, @Res() res) {
 
-  //   this.forgotPasswordService.forgotPasswordProcess(email).subscribe(
-  //     data => {
-  //       console.log(data);
-  //       res.send(data);
-  //     }, err => {
-  //       console.log(err);
-  //       res.send(err);
-  //     }
-  //   );
+    this.forgotPasswordService.forgotPasswordProcess(email).subscribe(
+      data => {
+        console.log(data);
+        res.send(data);
+      }, err => {
+        console.log(err);
+        res.send(err);
+      }
+    );
 
-  // }
+  }
 
   // @UseGuards(AuthGuard('jwt'))
   // @ApiBearerAuth()
@@ -78,8 +83,12 @@ export class ForgotPasswordController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Post('change-password/execute')
-  @ApiOperation({ title: 'Send email forgot password' })
+  @ApiOperation({ title: 'Change password' })
   changePassword(@Body() data: ExecuteChangePasswordDto, @Res() res) {
+    var atob = require('atob');
+    data.oldPassword = atob(data.oldPassword);
+    data.password = atob(data.password);
+    console.log(data.oldPassword + '-' + data.password);
 
     this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`, `(PASSWORD=${data.oldPassword})`]).pipe(
       mergeMap(res => {
@@ -88,8 +97,15 @@ export class ForgotPasswordController {
           let resource = new Resource(new Array);
           let model = new UserModel();
 
+          // store encrypted password
+          data.password = CryptoJS.SHA256(data.password.trim()).toString(CryptoJS.enc.Hex);
+          console.log(data.password);
+          data.password = CryptoJS.AES.encrypt(data.password, 'secret key 122').toString();
+          console.log(data.password);
+
           // model.USER_GUID = req.user.USER_GUID;
           model.LOGIN_ID = data.loginId;
+
           model.PASSWORD = data.password;
 
           resource.resource.push(model);

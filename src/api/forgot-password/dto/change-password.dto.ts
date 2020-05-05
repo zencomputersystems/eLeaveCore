@@ -7,7 +7,7 @@ export class ChangePasswordDto {
   @IsNotEmpty()
   loginId: string;
 
-  @ApiModelProperty({ description: 'encrypted password', example: 'dnwkejfnoiwenf' })
+  @ApiModelProperty({ description: 'encrypted password', example: 'MTExMQ==' })
   @IsString()
   @IsNotEmpty()
   password: string

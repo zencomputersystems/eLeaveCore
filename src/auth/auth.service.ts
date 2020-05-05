@@ -44,9 +44,27 @@ export class AuthService {
    * @memberof AuthService
    */
   public async logIn(email, password) {
+    /** 
+     * The atob already done from the login. so we have plain password here. 
+     * we need to verify as cryptojs.sha256. right now db encryption is if form of cryptojs.aes of cryptojs.sha256 with a key */
+
     return await this.userService.findOne(email, password)
       .then(async user => {
-        const result = user.data.resource.length > 0 ? Promise.resolve(user.data.resource[0]) : Promise.reject(new UnauthorizedException('Invalid Credential'))
+        // encrypt plain password to sha256
+        var CryptoJS = require("crypto-js");
+        password = CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex);
+
+        // const result = user.data.resource.length > 0 ? Promise.resolve(user.data.resource[0]) : Promise.reject(new UnauthorizedException('Invalid Credential'))
+
+        let result;
+        if (user.data.resource.length > 0) {
+          // decrypt aes to form as sha256
+          const dbPass = CryptoJS.AES.decrypt(user.data.resource[0].PASSWORD, 'secret key 122').toString(CryptoJS.enc.Utf8);
+          result = dbPass === password ? Promise.resolve(user.data.resource[0]) : Promise.reject(new UnauthorizedException('Invalid Credential'));
+        } else {
+          result = Promise.reject(new UnauthorizedException('Invalid Credential'))
+        }
+
         return result;
       })
   }

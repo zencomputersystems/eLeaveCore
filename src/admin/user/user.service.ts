@@ -66,9 +66,10 @@ export class UserService extends BaseDBService {
      */
     public async findOne(email: string, password: string): Promise<any> {
 
-        const fields = ['USER_GUID', 'EMAIL', 'TENANT_GUID'];
+        const fields = ['USER_GUID', 'EMAIL', 'TENANT_GUID', 'PASSWORD'];
         //const filters = ['(EMAIL='+email+')','(PASSWORD='+CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex)+')'];
-        const filters = ['(EMAIL=' + email + ')', '(PASSWORD=' + password + ')'];
+        // const filters = ['(EMAIL=' + email + ')', '(PASSWORD=' + password + ')'];
+        const filters = ['(EMAIL=' + email + ')'];
 
         // console.log(filters);
 

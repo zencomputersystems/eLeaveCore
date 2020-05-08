@@ -15,6 +15,11 @@ import { UserInviteModel } from './model/user-invite.model';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { validate } from 'class-validator';
 import { setTimeout } from 'timers';
+import { AuthDbService } from 'src/auth/auth.db.service';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
+import { linkResetPassword } from 'src/constant/commonUsed';
+const dotenv = require('dotenv');
+dotenv.config();
 
 /**
  * Service for invitation invite
@@ -37,11 +42,12 @@ export class InvitationInviteService {
      */
     constructor(
         private readonly inviteDbService: InvitationDbService,
-        private readonly mailerService: MailerService,
+        // private readonly mailerService: MailerService,
         public readonly httpService: HttpService,
         public readonly queryService: QueryParserService,
         private readonly userService: UserService,
-        private readonly emailNodemailerService: EmailNodemailerService
+        private readonly emailNodemailerService: EmailNodemailerService,
+        private readonly authDbService: AuthDbService
     ) {
     }
 
@@ -60,24 +66,30 @@ export class InvitationInviteService {
         return this.userService.findByFilterV2([], userFilter)
             .pipe(
                 map(res => {
-                    console.log('filter user');
+                    // console.log('filter user');
                     return this.filterUser(inviteList, res);
                 }),
                 mergeMap(res => {
-                    console.log('check invite');
+                    // console.log('check invite');
                     return this.checkInvitationStatus(res, user.TENANT_GUID);
                 }),
                 mergeMap(res => {
-                    console.log('save invite');
+                    // console.log('save invite');
                     return this.saveInvitation(res, user);
                 }),
-                mergeMap((res) => {
-                    console.log('send email');
+                mergeMap(async (res) => {
+                    // console.log('send email');
                     const observableEmail$ = [];
 
+                    let loginType = await runServiceCallback(this.authDbService.findByFilterV2([], [`(SUBSCRIPTION_GUID=${user.TENANT_GUID})`]));
+                    // console.log(loginType);
+                    // console.log(res);
+
                     res.forEach(element => {
-                        observableEmail$.push(this.sendEmailV2(element.email, element.invitationId));
+                        // console.log('checking2....');
+                        observableEmail$.push(this.sendEmailV2(element.email, element.invitationId, loginType[0].LOGIN_TYPE));
                         console.log(observableEmail$);
+                        // console.log('checking....');
                     });
 
                     console.log(observableEmail$);
@@ -246,32 +258,32 @@ export class InvitationInviteService {
 
     }
 
-    // send email to user
-    /**
-     * Method send mail using gmail service
-     *
-     * @private
-     * @param {string} email
-     * @param {string} token
-     * @returns
-     * @memberof InvitationInviteService
-     */
-    private sendEmail(email: string, token: string) {
-        let results = this.mailerService
-            .sendMail({
-                to: email, // sender address
-                from: 'wantan.wonderland.2018@gmail.com', // list of receivers
-                subject: 'Testing Invitation System ✔',
-                template: 'userinvitation.html',
-                context: {  // Data to be sent to template files.
-                    email: email,
-                    code: "http://zencore.zen.com.my:3000/api/invitation/" + token
-                }
-            });
+    // // send email to user
+    // /**
+    //  * Method send mail using gmail service
+    //  *
+    //  * @private
+    //  * @param {string} email
+    //  * @param {string} token
+    //  * @returns
+    //  * @memberof InvitationInviteService
+    //  */
+    // private sendEmail(email: string, token: string) {
+    //     let results = this.mailerService
+    //         .sendMail({
+    //             to: email, // sender address
+    //             from: 'wantan.wonderland.2018@gmail.com', // list of receivers
+    //             subject: 'Testing Invitation System ✔',
+    //             template: 'userinvitation.html',
+    //             context: {  // Data to be sent to template files.
+    //                 email: email,
+    //                 code: "http://zencore.zen.com.my:3000/api/invitation/" + token
+    //             }
+    //         });
 
-        console.log(results);
-        return results;
-    }
+    //     console.log(results);
+    //     return results;
+    // }
 
     /**
      * Method send email using nodemailer
@@ -282,11 +294,17 @@ export class InvitationInviteService {
      * @returns
      * @memberof InvitationInviteService
      */
-    private sendEmailV2(email: string, token: string) {
-        console.log('before function');
-        let results = this.emailNodemailerService.mailProcess(email, token);
-        console.log('after function');
-        console.log(results);
+    private sendEmailV2(email: string, token: string, loginType: string) {
+
+        // console.log('before function');
+        // let url = "http://zencore.zen.com.my:3000/api/invitation/" + token;
+        // let url = "http://localhost:3000/api/invitation/" + token;
+        // let url = "http://zencore.zen.com.my:8104/#/reset-password/user/" + token + "/" + loginType;
+        let url = process.env.URL_SET_PASSWORD || linkResetPassword + "/" + token + "/" + loginType;
+
+        let results = this.emailNodemailerService.mailProcess(email, url);
+        // console.log('after function');
+        // console.log(results);
         return results;
     }
 

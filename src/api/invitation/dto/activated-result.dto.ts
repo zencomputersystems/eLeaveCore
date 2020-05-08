@@ -69,4 +69,13 @@ export class ActivatedResultDTO {
      */
     @ApiModelProperty()
     email: string;
+
+    /**
+     * Data activated result - tenantId
+     *
+     * @type {string}
+     * @memberof ActivatedResultDTO
+     */
+    @ApiModelProperty()
+    tenantId: string;
 }

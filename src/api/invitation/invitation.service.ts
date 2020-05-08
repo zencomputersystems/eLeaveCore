@@ -6,7 +6,8 @@ import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from 'src/admin/user/model/user.model';
 import { ActivatedResultDTO } from './dto/activated-result.dto';
 import { InvitationDbService } from './db/invitation.db.service';
-
+var atob = require('atob');
+var CryptoJS = require("crypto-js");
 /**
  * Service for invitation
  *
@@ -66,7 +67,12 @@ export class InvitationService {
      * @memberof InvitationService
      */
     public setNewUserPassword(invitationId: string, password: string) {
+        // decrypt encryption
+        password = atob(password);
+
         // hash the password
+        password = CryptoJS.SHA256(password.trim()).toString(CryptoJS.enc.Hex);
+        password = CryptoJS.AES.encrypt(password, 'secret key 122').toString();
 
         //const filters = ['(USER_GUID='+token+')','(STATUS=1)'];
 
@@ -138,6 +144,7 @@ export class InvitationService {
                     activatedResult.invitationId = invitationData.INVITATION_GUID;
                     activatedResult.name = "My Name";
                     activatedResult.userId = result.USER_GUID;
+                    activatedResult.tenantId = result.TENANT_GUID;
                     return activatedResult;
                 })
             )

@@ -31,12 +31,12 @@ export class EmailNodemailerService {
      * @returns
      * @memberof EmailNodemailerService
      */
-    public mailProcess(email: string, token: string) {
+    public mailProcess(email: string, codeUrl: string) {
         smtpTransport = this.createSMTP();
 
         var replacements = {
             email: email,
-            code: "http://zencore.zen.com.my:3000/api/invitation/" + token
+            code: codeUrl
         };
         var from = 'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;

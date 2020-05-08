@@ -10,6 +10,7 @@ import { InvitationController } from './invitation.controller';
 import { InvitationInviteService } from './invitation-invite.service';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { getModuleHttp } from '../../common/helper/basic-functions';
+import { AuthDbService } from 'src/auth/auth.db.service';
 
 /**
  * Module invitation
@@ -24,7 +25,8 @@ import { getModuleHttp } from '../../common/helper/basic-functions';
     InvitationInviteService,
     UserService,
     QueryParserService,
-    EmailNodemailerService
+    EmailNodemailerService,
+    AuthDbService
   ],
   imports: [
     // AuthModule,

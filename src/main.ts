@@ -3,7 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { logger } from './common/middleware/logger.middleware';
-
+const dotenv = require('dotenv');
+dotenv.config();
 /**
  * Bootstrap the application
  *

@@ -18,6 +18,7 @@ import { setTimeout } from 'timers';
 import { AuthDbService } from 'src/auth/auth.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import { linkResetPassword } from 'src/constant/commonUsed';
+/** Read dotenv file */
 const dotenv = require('dotenv');
 dotenv.config();
 

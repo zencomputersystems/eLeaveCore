@@ -6,7 +6,9 @@ import { Resource } from 'src/common/model/resource.model';
 import { UserModel } from 'src/admin/user/model/user.model';
 import { ActivatedResultDTO } from './dto/activated-result.dto';
 import { InvitationDbService } from './db/invitation.db.service';
+/** Decrypt process atob */
 var atob = require('atob');
+/** CryptoJS encryption */
 var CryptoJS = require("crypto-js");
 /**
  * Service for invitation

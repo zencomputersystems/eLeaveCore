@@ -239,6 +239,12 @@ export class UserInfoDetailsController {
     )
   }
 
+  /**
+   * check employee id
+   *
+   * @param {[any, string[], any, any]} [param, filter, res, req]
+   * @memberof UserInfoDetailsController
+   */
   public checkEmployeeId([param, filter, res, req]: [any, string[], any, any]) {
 
     this.userprofileDbService.findByFilterV2([], filter).pipe(

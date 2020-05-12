@@ -14,7 +14,8 @@ import { AuthDbService } from './auth.db.service';
 export class AuthService {
   /**
    *Creates an instance of AuthService.
-   * @param {UserService} userService
+   * @param {UserService} userService User service to find user
+   * @param {AuthDbService} authDbService auth db service to get login type
    * @memberof AuthService
    */
   constructor(public readonly userService: UserService, private readonly authDbService: AuthDbService) { }

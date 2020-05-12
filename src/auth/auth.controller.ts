@@ -7,6 +7,7 @@ import { ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { Response } from 'express';
+/** atob decryption */
 var atob = require('atob');
 
 /**
@@ -46,6 +47,14 @@ export class AuthController {
     //     //return this.ad(loginDTO,req);
     // }
 
+    /**
+     * Login for ad and local merged
+     *
+     * @param {LoginDto} loginDTO
+     * @param {*} req
+     * @param {Response} result
+     * @memberof AuthController
+     */
     @Post('login')
     @ApiOperation({ title: 'Login and verify' })
     public checkLoginType(@Body() loginDTO: LoginDto, @Req() req, @Res() result: Response) {

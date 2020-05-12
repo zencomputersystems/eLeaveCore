@@ -80,6 +80,13 @@ export class ForgotPasswordController {
   //   )
   // }
 
+  /**
+   * Execute change password
+   *
+   * @param {ExecuteChangePasswordDto} data
+   * @param {*} res
+   * @memberof ForgotPasswordController
+   */
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Post('change-password/execute')

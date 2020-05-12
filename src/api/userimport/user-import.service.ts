@@ -281,6 +281,14 @@ export class UserImportService {
         return successList;
     }
 
+    /**
+     * Message result
+     *
+     * @private
+     * @param {string} categoryName
+     * @returns
+     * @memberof UserImportService
+     */
     private messageResult(categoryName: string) {
         let message;
         if (categoryName == "Duplicate")

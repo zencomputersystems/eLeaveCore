@@ -6,6 +6,7 @@ import { UserService } from 'src/admin/user/user.service';
 import { InvitationDbService } from '../../../src/api/invitation/db/invitation.db.service';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { InvitationInviteService } from '../../../src/api/invitation/invitation-invite.service';
+import { AuthDbService } from 'src/auth/auth.db.service';
 describe('InvitationInviteService', () => {
   let service: InvitationInviteService;
   beforeEach(async () => {
@@ -35,7 +36,8 @@ describe('InvitationInviteService', () => {
         {
           provide: EmailNodemailerService,
           useValue: emailNodemailerServiceStub
-        }
+        },
+        AuthDbService
       ]
     }).compile();
     // service = Test.get(InvitationInviteService);

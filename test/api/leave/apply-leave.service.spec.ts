@@ -11,6 +11,7 @@ import { ApplyLeaveService } from '../../../src/api/leave/service/apply-leave.se
 import { GeneralLeavePolicyService } from 'src/admin/general-leave-policy/general-leave-policy.service';
 import { HttpService } from '@nestjs/common';
 import { QueryParserService } from '../../../src/common/helper/query-parser.service';
+import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 describe('ApplyLeaveService', () => {
   let service: ApplyLeaveService;
   beforeEach(async () => {
@@ -69,7 +70,8 @@ describe('ApplyLeaveService', () => {
           provide: HttpService,
           useValue: httpServiceStub
         },
-        QueryParserService
+        QueryParserService,
+        LeavetypeEntitlementDbService
       ]
     }).compile();
     // service = Test.get(ApplyLeaveService);

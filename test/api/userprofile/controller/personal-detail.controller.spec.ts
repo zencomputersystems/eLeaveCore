@@ -13,6 +13,7 @@ import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.s
 import { UserprofileDbService } from '../../../../src/api/userprofile/db/userprofile.db.service';
 import { CompanyDbService } from '../../../../src/admin/company/company.service';
 import { LeavetypeService } from '../../../../src/admin/leavetype/leavetype.service';
+import { UserService } from 'src/admin/user/user.service';
 describe('PersonalDetailController', () => {
   let pipe: PersonalDetailController;
   beforeEach(async () => {
@@ -51,7 +52,8 @@ describe('PersonalDetailController', () => {
         PendingLeaveService,
         UserprofileDbService,
         CompanyDbService,
-        LeavetypeService
+        LeavetypeService,
+        UserService
       ]
     }).compile();
     // pipe = Test.get(PersonalDetailController);

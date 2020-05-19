@@ -33,6 +33,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('leave')
     .addBearerAuth('Authorization', 'header', 'apiKey')
+    .setSchemes("http", "https")
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

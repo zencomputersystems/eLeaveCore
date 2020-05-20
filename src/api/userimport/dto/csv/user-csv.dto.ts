@@ -131,6 +131,15 @@ export class UserCsvDto {
     POSTCODE: string;
 
     /**
+     * Data user csv - city
+     *
+     * @type {string}
+     * @memberof UserCsvDto
+     */
+    @ApiModelProperty()
+    CITY: string;
+
+    /**
      * Data user csv - state
      *
      * @type {string}

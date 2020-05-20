@@ -11,7 +11,9 @@ import { Resource } from 'src/common/model/resource.model';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserImport } from './dto/user-import';
 import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
-
+import { UpdateUserInfoItemDTO } from 'src/admin/user-info-details/dto/update-user-info-details.dto';
+/** XMLparser from zen library  */
+var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for user import
@@ -161,6 +163,7 @@ export class UserImportService {
         importData.forEach(element => {
 
             if (element.ID != null || element.ID != '') {
+
                 const userInfoModel = new UserInfoModel();
                 userInfoModel.USER_INFO_GUID = v1();
                 userInfoModel.USER_GUID = element.ID;
@@ -202,11 +205,14 @@ export class UserImportService {
                 userInfoModel.JOIN_DATE = element.hasOwnProperty('JOIN_DATE') ? new Date(element.JOIN_DATE) : null;
                 userInfoModel.CONFIRMATION_DATE = element.hasOwnProperty('CONFIRMATION_DATE') ? new Date(element.CONFIRMATION_DATE) : null;
                 userInfoModel.RESIGNATION_DATE = element.hasOwnProperty('RESIGNATION_DATE') ? new Date(element.RESIGNATION_DATE) : null;
-
+                this.setUserInfoXML([element, userInfoModel]);
+                // userInfoModel.PROPERTIES_XML = null;
                 userInfoResourceArray.resource.push(userInfoModel);
             }
 
         })
+
+        console.log(userInfoResourceArray);
 
         return this.userInfoService.createByModel(userInfoResourceArray, ['USER_INFO_GUID', 'USER_GUID', 'TENANT_COMPANY_GUID'], [], [])
             .pipe(map(res => {
@@ -215,6 +221,74 @@ export class UserImportService {
                     return this.filterSaveUserByID(saveUser, importData);
                 }
             }))
+    }
+
+    private setUserInfoXML([element, userInfoModel]: [UserCsvDto, UserInfoModel]) {
+
+        console.log(userInfoModel);
+        console.log(element);
+
+        let dataXML = {};
+        let dataRoot = {};
+        let dataEmployment = {};
+        let dataPersonal = {};
+
+        dataEmployment['employeeId'] = element.STAFF_ID;
+        dataEmployment['companyId'] = userInfoModel.TENANT_COMPANY_GUID;
+        dataEmployment['department'] = userInfoModel.DEPARTMENT;
+        dataEmployment['designation'] = userInfoModel.DESIGNATION;
+        dataEmployment['section'] = userInfoModel.SECTION;
+        dataEmployment['branch'] = userInfoModel.BRANCH;
+        dataEmployment['costcentre'] = userInfoModel.COSTCENTRE;
+        dataEmployment['employmentStatus'] = userInfoModel.EMPLOYEE_STATUS;
+        dataEmployment['employmentType'] = userInfoModel.EMPLOYEE_TYPE;
+        dataEmployment['reportingTo'] = userInfoModel.MANAGER_USER_GUID;
+        dataEmployment['dateOfJoin'] = userInfoModel.JOIN_DATE;
+        dataEmployment['dateOfConfirmation'] = userInfoModel.CONFIRMATION_DATE;
+        dataEmployment['dateOfResignation'] = userInfoModel.RESIGNATION_DATE;
+        dataEmployment['epfNumber'] = '';
+        dataEmployment['incomeTaxNumber'] = '';
+        dataEmployment['bankAccountName'] = '';
+        dataEmployment['bankAccountNumber'] = '';
+
+        dataPersonal['fullname'] = userInfoModel.FULLNAME;
+        dataPersonal['nickname'] = userInfoModel.NICKNAME;
+        dataPersonal['nric'] = element.NRIC;
+        dataPersonal['dob'] = element.DOB;
+        dataPersonal['gender'] = element.GENDER;
+        dataPersonal['maritalStatus'] = userInfoModel.MARITAL_STATUS;
+        dataPersonal['race'] = '';
+        dataPersonal['religion'] = '';
+        dataPersonal['nationality'] = '';
+        dataPersonal['phoneNumber'] = element.MOBILE_NUMBER;
+        dataPersonal['workPhoneNumber'] = element.WORK_NUMBER;
+        dataPersonal['emailAddress'] = '';
+        dataPersonal['workEmailAddress'] = element.STAFF_EMAIL;
+        dataPersonal['address1'] = element.ADDRESS;
+        dataPersonal['address2'] = '';
+        dataPersonal['postcode'] = element.POSTCODE;
+        dataPersonal['city'] = element.CITY;
+        dataPersonal['state'] = element.STATE;
+        dataPersonal['country'] = element.COUNTRY;
+        dataPersonal['emergencyContact'] = [];
+        dataPersonal['education'] = [];
+        dataPersonal['certification'] = [];
+        dataPersonal['family'] = [];
+
+        dataRoot['employmentDetail'] = dataEmployment;
+        dataRoot['notificationRule'] = [];
+        dataRoot['personalDetails'] = dataPersonal;
+
+        dataXML['root'] = dataRoot;
+
+        console.log(dataXML);
+        // let root = data['root'];
+        // let personal = root['personalDetails'];
+        // // data.root.employmentDetail.reportingTo = userInfoModel.MANAGER_USER_GUID;
+        // personal['fullname'] = 'userInfoModel.FULLNAME';
+        // console.log(data);
+        userInfoModel.PROPERTIES_XML = convertJsonToXML(dataXML);
+        // return 'data';
     }
 
     /**

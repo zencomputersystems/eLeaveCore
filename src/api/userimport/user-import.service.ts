@@ -12,6 +12,7 @@ import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserImport } from './dto/user-import';
 import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
 import { UpdateUserInfoItemDTO } from 'src/admin/user-info-details/dto/update-user-info-details.dto';
+import * as moment from 'moment';
 /** XMLparser from zen library  */
 var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -202,9 +203,9 @@ export class UserImportService {
                 // userInfoModel.TENANT_COMPANY_GUID = element.hasOwnProperty('COMPANY') ? element.COMPANY : null;
                 // userInfoModel.MANAGER_USER_GUID = element.hasOwnProperty('MANAGER_EMAIL') ? element.MANAGER_EMAIL : null;
 
-                userInfoModel.JOIN_DATE = element.hasOwnProperty('JOIN_DATE') ? new Date(element.JOIN_DATE) : null;
-                userInfoModel.CONFIRMATION_DATE = element.hasOwnProperty('CONFIRMATION_DATE') ? new Date(element.CONFIRMATION_DATE) : null;
-                userInfoModel.RESIGNATION_DATE = element.hasOwnProperty('RESIGNATION_DATE') ? new Date(element.RESIGNATION_DATE) : null;
+                userInfoModel.JOIN_DATE = element.hasOwnProperty('JOIN_DATE') ? new Date(moment(element.JOIN_DATE, 'DD/M/YYYY').format('YYYY-MM-DD')) : null;
+                userInfoModel.CONFIRMATION_DATE = element.hasOwnProperty('CONFIRMATION_DATE') ? new Date(moment(element.CONFIRMATION_DATE, 'DD/M/YYYY').format('YYYY-MM-DD')) : null;
+                userInfoModel.RESIGNATION_DATE = element.hasOwnProperty('RESIGNATION_DATE') ? new Date(moment(element.RESIGNATION_DATE, 'DD/M/YYYY').format('YYYY-MM-DD')) : null;
                 this.setUserInfoXML([element, userInfoModel]);
                 // userInfoModel.PROPERTIES_XML = null;
                 userInfoResourceArray.resource.push(userInfoModel);
@@ -212,7 +213,7 @@ export class UserImportService {
 
         })
 
-        console.log(userInfoResourceArray);
+        // console.log(userInfoResourceArray);
 
         return this.userInfoService.createByModel(userInfoResourceArray, ['USER_INFO_GUID', 'USER_GUID', 'TENANT_COMPANY_GUID'], [], [])
             .pipe(map(res => {
@@ -225,8 +226,8 @@ export class UserImportService {
 
     private setUserInfoXML([element, userInfoModel]: [UserCsvDto, UserInfoModel]) {
 
-        console.log(userInfoModel);
-        console.log(element);
+        // console.log(userInfoModel);
+        // console.log(element);
 
         let dataXML = {};
         let dataRoot = {};
@@ -243,9 +244,9 @@ export class UserImportService {
         dataEmployment['employmentStatus'] = userInfoModel.EMPLOYEE_STATUS;
         dataEmployment['employmentType'] = userInfoModel.EMPLOYEE_TYPE;
         dataEmployment['reportingTo'] = userInfoModel.MANAGER_USER_GUID;
-        dataEmployment['dateOfJoin'] = userInfoModel.JOIN_DATE;
-        dataEmployment['dateOfConfirmation'] = userInfoModel.CONFIRMATION_DATE;
-        dataEmployment['dateOfResignation'] = userInfoModel.RESIGNATION_DATE;
+        dataEmployment['dateOfJoin'] = moment(element.JOIN_DATE, 'DD/M/YYYY').format('YYYY-MM-DD');
+        dataEmployment['dateOfConfirmation'] = moment(element.CONFIRMATION_DATE, 'DD/MM/YYYY').format('YYYY-MM-DD') || null;
+        dataEmployment['dateOfResignation'] = moment(element.RESIGNATION_DATE, 'DD/MM/YYYY').format('YYYY-MM-DD') || null;
         dataEmployment['epfNumber'] = '';
         dataEmployment['incomeTaxNumber'] = '';
         dataEmployment['bankAccountName'] = '';
@@ -281,7 +282,7 @@ export class UserImportService {
 
         dataXML['root'] = dataRoot;
 
-        console.log(dataXML);
+        // console.log(dataXML);
         // let root = data['root'];
         // let personal = root['personalDetails'];
         // // data.root.employmentDetail.reportingTo = userInfoModel.MANAGER_USER_GUID;

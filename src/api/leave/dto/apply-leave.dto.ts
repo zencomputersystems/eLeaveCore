@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsISO8601, IsString, IsNumber, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsISO8601, IsString, IsNumber, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApplyLeaveDataDTO } from './apply-leave-data.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -30,6 +30,16 @@ export class ApplyLeaveDTO {
     @ApiModelProperty({ description: 'Reason for leave', example: 'Hari raya' })
     @IsNotEmpty()
     reason: string;
+
+    /**
+     * Data apply leave - attachment
+     *
+     * @type {string}
+     * @memberof ApplyLeaveDTO
+     */
+    @ApiModelProperty({ description: 'Attachment filename', example: 'filename.jpg' })
+    @IsOptional()
+    attachment: string;
 
     /**
      * Data apply leave - data apply leave 

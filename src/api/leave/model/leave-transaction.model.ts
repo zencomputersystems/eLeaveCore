@@ -84,6 +84,13 @@ export class LeaveTransactionModel extends CreateUpdateModel {
      */
     REASON: string;
     /**
+     * Attachment
+     *
+     * @type {string}
+     * @memberof LeaveTransactionModel
+     */
+    ATTACHMENT: string;
+    /**
      * Entitlement xml snapshot
      *
      * @type {string}

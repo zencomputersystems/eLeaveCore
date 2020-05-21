@@ -176,6 +176,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 		leaveData.START_DATE = applyLeaveDataDTO.startDate;
 		leaveData.END_DATE = applyLeaveDataDTO.endDate;
 		leaveData.REASON = y.reason;
+		leaveData.ATTACHMENT = y.attachment;
 		leaveData.NO_OF_DAYS = this.dateCalculationService.getLeaveDuration([applyLeaveDataDTO.startDate, applyLeaveDataDTO.endDate, applyLeaveDataDTO.dayType, result.policy.excludeDayType.isExcludeHoliday, result.policy.excludeDayType.isExcludeRestDay]);
 		// leaveData.ENTITLEMENT_XML_SNAPSHOT = convertJsonToXML(result.policy);
 		leaveData.ENTITLEMENT_XML_SNAPSHOT = convertJsonToXML(xmlData);

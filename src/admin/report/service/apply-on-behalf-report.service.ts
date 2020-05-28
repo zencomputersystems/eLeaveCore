@@ -66,6 +66,7 @@ export class ApplyOnBehalfReportService {
           applyOnBehalfReportDto.dayType = element.TIME_SLOT || 'fullday';
           applyOnBehalfReportDto.remarks = element.REMARKS;
           applyOnBehalfReportDto.link = linkStorage + '/eleave/';
+          applyOnBehalfReportDto.attachment = element.ATTACHMENT;
 
           applyOnBehalfReportDto.companyName = resultUser.COMPANY_NAME;
           applyOnBehalfReportDto.department = resultUser.DEPARTMENT;

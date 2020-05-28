@@ -168,4 +168,14 @@ export class ApplyOnBehalfReportDto extends MainItemReportDto {
   @ApiModelProperty({ description: 'Link storage', example: 'Cloud storage' })
   @IsString()
   link: string;
+
+  /**
+   * Attachment
+   *
+   * @type {string}
+   * @memberof ApplyOnBehalfReportDto
+   */
+  @ApiModelProperty({ description: 'Attachment', example: 'filename.png' })
+  @IsString()
+  attachment: string;
 }

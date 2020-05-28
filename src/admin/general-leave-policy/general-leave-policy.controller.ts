@@ -1,10 +1,13 @@
-import { Controller, UseGuards, Get, Req, Res, Post, Patch, Body, Param, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Get, Req, Res, Post, Patch, Body, Param, NotFoundException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { GeneralLeavePolicyService } from './general-leave-policy.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { CreateGeneralLeavePolicyDTO } from './dto/create-general-leave-policy.dto';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
+import { ApplyAnniversaryLeaveService } from '../year-end-closing/service/apply-anniversary-leave.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -26,7 +29,8 @@ export class GeneralLeavePolicyController {
 	 */
 	constructor(
 		private readonly generalLeavePolicyService: GeneralLeavePolicyService,
-		private readonly commonFunctionService: CommonFunctionService
+		private readonly commonFunctionService: CommonFunctionService,
+		private readonly applyAnniversaryLeaveService: ApplyAnniversaryLeaveService
 	) { }
 
 	/**
@@ -66,7 +70,7 @@ export class GeneralLeavePolicyController {
 					data.PROPERTIES_XML = convertXMLToJson(data.PROPERTIES_XML);
 					res.send(data);
 				} else {
-					res.send(new NotFoundException('Failed to retrieve data', 'Failed to get data'));
+					res.status(HttpStatus.NOT_FOUND).send(new NotFoundException('Failed to retrieve data', 'Failed to get data'));
 				}
 			},
 			err => { this.commonFunctionService.sendResErrorV3(err, res); }
@@ -88,7 +92,7 @@ export class GeneralLeavePolicyController {
 		// 	data => { res.send(data.data); },
 		// 	err => { res.send(err); }
 		// );
-		this.runServicePolicy([this.generalLeavePolicyService.create(req.user, data), res]);
+		this.runServicePolicy([this.generalLeavePolicyService.create(req.user, data), res, data]);
 	}
 
 	/**
@@ -106,7 +110,7 @@ export class GeneralLeavePolicyController {
 		// 	data => { res.send(data.data); },
 		// 	err => { res.send(err); }
 		// )
-		this.runServicePolicy([this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO), res]);
+		this.runServicePolicy([this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO), res, updateGeneralLeavePolicyDTO.data]);
 	}
 
 	/**
@@ -116,9 +120,17 @@ export class GeneralLeavePolicyController {
 	 * @param {*} [method, res]
 	 * @memberof GeneralLeavePolicyController
 	 */
-	private runServicePolicy([method, res]) {
-		method.subscribe(
-			data => { res.send(data.data); },
+	private runServicePolicy([method, res, data]: [Observable<any>, any, CreateGeneralLeavePolicyDTO]) {
+		method.pipe(map(res => {
+			console.log(res.data);
+			this.applyAnniversaryLeaveService.verifyAnniversaryLeave([data, null, null]);
+			return res;
+		})
+		).subscribe(
+			data => {
+				console.log(data.data);
+				res.send(data.data);
+			},
 			err => { res.send(err); }
 		)
 	}

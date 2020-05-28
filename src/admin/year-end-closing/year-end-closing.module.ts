@@ -30,6 +30,7 @@ import { ApplyAnniversaryLeaveService } from './service/apply-anniversary-leave.
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { DateCalculationService } from 'src/common/calculation/service/date-calculation.service';
+import { CompanyDbService } from '../company/company.service';
 
 
 @Module({
@@ -60,7 +61,8 @@ import { DateCalculationService } from 'src/common/calculation/service/date-calc
     ApplyAnniversaryLeaveService,
     LeaveTransactionDbService,
     LeavetypeService,
-    DateCalculationService
+    DateCalculationService,
+    CompanyDbService
   ],
   imports: [
     // AuthModule,

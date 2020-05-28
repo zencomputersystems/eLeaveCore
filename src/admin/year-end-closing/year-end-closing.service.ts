@@ -5,6 +5,9 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
 import { GenerateNewCalendarService } from './service/generate-new-calendar.service';
 import { AssignLeaveEntitlementService } from './service/assign-leave-entitlement.service';
 import { DisableResignUser } from './service/disable-resign-user.service';
+import { CompanyDbService } from '../company/company.service';
+import { Resource } from 'src/common/model/resource.model';
+import { CompanyModel } from '../company/model/company.model';
 
 /**
  * Service year end closing
@@ -27,7 +30,8 @@ export class YearEndClosingService {
     private readonly userprofileDbService: UserprofileDbService,
     private readonly generateNewCalendarService: GenerateNewCalendarService,
     private readonly assignLeaveEntitlementService: AssignLeaveEntitlementService,
-    private readonly disableResignUser: DisableResignUser
+    private readonly disableResignUser: DisableResignUser,
+    private readonly companyDbService: CompanyDbService
   ) { }
   /**
    * Method year end process
@@ -154,6 +158,7 @@ export class YearEndClosingService {
    * @memberof YearEndClosingService
    */
   public yearEndProcessCompany([user, year, companyId]: [any, number, string]): Observable<any> {
+    // console.log(year);
     // Find user under company
     const userFilter = ['(TENANT_COMPANY_GUID=' + companyId + ')'];
 
@@ -248,6 +253,17 @@ export class YearEndClosingService {
       }), mergeMap(res => {
         let { resignUser, disabledUser, activeUser, disableResult, leavetypePolicy, generalPolicy } = res;
         this.generateNewCalendarService.generateNewCalendar(user, year - 1);
+        let resource = new Resource(new Array);
+        let data = {};
+        // console.log(year);
+        data['TENANT_COMPANY_GUID'] = companyId;
+        data['YEAR_END'] = year;
+        data['UPDATE_USER_GUID'] = user.USER_GUID;
+        resource.resource.push(data);
+        this.companyDbService.updateByModel(resource, [], [], []).subscribe(
+          data => { console.log('success'); },
+          err => { console.log('error'); }
+        )
         // return res;
         // return { resignUser, disabledUser, activeUser, disableResult, leavetypePolicy, generalPolicy };
         // return generalPolicy;

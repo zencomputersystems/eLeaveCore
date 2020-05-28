@@ -150,14 +150,17 @@ export class GenerateNewCalendarService {
         return forkJoin(of(res), calendarificData);
       })
     ).subscribe(data => {
-      if (data[0].data.resource[0].PROPERTIES_XML != null) {
+      // if (data[0].data.resource[0].PROPERTIES_XML != null) {
+      if (data[0].data.resource.length > 0) {
         let resource = new Resource(new Array);
 
         let dataCurrent: CreateCalendarDTO = convertXMLToJson(data[0].data.resource[0].PROPERTIES_XML);
 
-        console.log(element.CALENDAR_GUID);
+        // console.log(element.CALENDAR_GUID);
         let dataNewYear = new CreateCalendarDTO;
         let newYearHoliday = [];
+        // console.log('__________________________________________');
+        // console.log(dataCurrent);
 
         dataCurrent.holiday.forEach(element2 => {
           if (element2.holidayName != undefined) {
@@ -187,7 +190,8 @@ export class GenerateNewCalendarService {
         // console.log(dataNewYear);
 
         let resTemp = this.createNewYearCalendar([resource, element.CALENDAR_GUID, year, dataNewYear, user]);
-        console.log(resTemp);
+        // console.log(resTemp);
+        console.log('Calendar created');
         // dataCurrent.holiday.forEach(element => {
         //   if (element.holidayName != undefined) {
         //     console.log(element.holidayName);

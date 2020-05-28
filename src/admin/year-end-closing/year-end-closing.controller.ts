@@ -63,10 +63,16 @@ export class YearEndClosingController {
   @ApiImplicitParam({ name: 'companyid', description: 'Company guid', required: true })
   @ApiOperation({ title: 'Assign leave entitlement for next year' })
   closeYearEnd(@Param() param, @Req() req, @Res() res) {
-    let year = param.year;
+    let year: number = param.year;
     let companyId = param.companyid;
-    year = year == new Date().getFullYear() ? year - 1 : year;
-    this.yearEndClosingService.yearEndProcessCompany([req.user, new Date(year).getFullYear() + 1, companyId]).subscribe(data => {
+    // console.log(year);
+    // console.log(new Date().getFullYear());
+    // year = year == new Date().getFullYear() ? year - 1 : year;
+    // console.log(year);
+    // console.log(year + 1);
+    year++;
+    // console.log(year)
+    this.yearEndClosingService.yearEndProcessCompany([req.user, year, companyId]).subscribe(data => {
       let dataRes = {};
       dataRes['resignUser'] = this.trimData(data[0]);
       dataRes['disabledUser'] = this.trimData(data[1]);

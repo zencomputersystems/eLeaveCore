@@ -25,12 +25,11 @@ export class AnniversaryBonusDTO {
   /**
    * Auto apply anniversary on date
    *
-   * @type {string}
+   * @type {string[]}
    * @memberof AnniversaryBonusDTO
    */
-  @ApiModelProperty({ description: 'Auto apply anniversary leave on', enum: ['birthday', 'join-date'] })
-  @IsString()
-  applyLeaveOnDate: string;
+  @ApiModelProperty({ description: 'Auto apply anniversary leave on', example: ['birthday', 'join-date'] })
+  applyLeaveOnDate: string[];
 
 }
 

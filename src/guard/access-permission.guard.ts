@@ -60,30 +60,35 @@ export class AccessPermissionGuard implements CanActivate {
     // initiate status to allow run service
     let status = true;
 
-    // loop each permission to validate
-    permissionData.forEach(element => {
-      // check if need to validate second level object role property
-      if (element.rulesDetail == '') {
-        if (permissionList.property[element.rulesName].value === true) {
-          // merge all permission level to verify
-          request.accessLevel.push({ permission: element, level: permissionList.property[element.rulesName].level });
-          // set if allow or disallow
-          status = status == false ? false : true;
-        } else {
-          status = false;
+    if (permissionList != null) {
+      // loop each permission to validate
+      permissionData.forEach(element => {
+        // check if need to validate second level object role property
+        if (element.rulesDetail == '') {
+          if (permissionList.property[element.rulesName].value === true) {
+            // merge all permission level to verify
+            request.accessLevel.push({ permission: element, level: permissionList.property[element.rulesName].level });
+            // set if allow or disallow
+            status = status == false ? false : true;
+          } else {
+            status = false;
+          }
+        } else if (element.rulesName != '' && element.rulesDetail != '') { // if have second level rules validation
+          if (permissionList.property[element.rulesName][element.rulesDetail].value === true) {
+            // merge all permission level to verify
+            request.accessLevel.push({ permission: element, level: permissionList.property[element.rulesName][element.rulesDetail].level });
+            // set if allow or disallow
+            status = status == false ? false : true;
+          } else {
+            status = false;
+          }
         }
-      } else if (element.rulesName != '' && element.rulesDetail != '') { // if have second level rules validation
-        if (permissionList.property[element.rulesName][element.rulesDetail].value === true) {
-          // merge all permission level to verify
-          request.accessLevel.push({ permission: element, level: permissionList.property[element.rulesName][element.rulesDetail].level });
-          // set if allow or disallow
-          status = status == false ? false : true;
-        } else {
-          status = false;
-        }
-      }
 
-    });
+      });
+    }
+    else {
+      request.accessLevel.push({ permission: null, level: null });
+    }
     // send back final status if true allow to use the api
     return status;
 
@@ -105,8 +110,12 @@ export class AccessPermissionGuard implements CanActivate {
       })
     )
     // Run callback method
-    let dataRolePermission = await runServiceCallback(method);
-    // send back json instead of xml format structure
-    return convertXMLToJson(dataRolePermission[0].PROPERTIES_XML);
+    let dataRolePermission = await runServiceCallback(method) as any[];
+
+    if (dataRolePermission.length > 0)
+      // send back json instead of xml format structure
+      return convertXMLToJson(dataRolePermission[0].PROPERTIES_XML);
+    else
+      return null;
   }
 }

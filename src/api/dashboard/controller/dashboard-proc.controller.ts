@@ -76,23 +76,30 @@ export class DashboardProcController {
   @ApiImplicitQuery({ name: 'startdate', description: 'Start date leave', required: false })
   @ApiImplicitQuery({ name: 'enddate', description: 'End date leave', required: false })
   findCalendarLeaveList(@Req() req, @Res() res) {
+    // console.log('yuhuu');
     // console.log(req.accessLevel);
+    // console.log(req.accessLevel[0].level);
 
-    // this.accessLevelValidateService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, 'branch', []])
-    //   .subscribe(
-    //     data => {
-    //       req.accessLevelTemp = data;
+    if (req.accessLevel[0].level != null) {
+      this.accessLevelValidateService.generateFilterWithChecking([req.user.TENANT_GUID, req.user.USER_GUID, req.accessLevel[0].level, []])
+        .subscribe(
+          data => {
+            req.accessLevelTemp = data;
 
-    //       console.log(data);
-    //       let testSplit = data[1].split('(');
-    //       let testSplit2 = testSplit[1].split('=');
-    //       console.log(testSplit2);
-    //       this.runService(req, res, 'calendar_leave');
-    //     },
-    //     err => { console.log(err) }
-    //   )
+            // console.log(data);
+            let testSplit = data[1].split('(');
+            let testSplit2 = testSplit[1].split('=');
+            // console.log(testSplit2);
+            this.runService(req, res, 'calendar_leave');
+          },
+          err => { console.log(err) }
+        )
+    }
+    else {
+      res.send([]);
+    }
 
-    this.runService(req, res, 'calendar_leave');
+    // this.runService(req, res, 'calendar_leave');
   }
 
   /**

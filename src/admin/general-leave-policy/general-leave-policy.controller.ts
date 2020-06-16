@@ -56,9 +56,6 @@ export class GeneralLeavePolicyController {
 							pxml.anniversaryBonus.applyLeaveOnDate = temp;
 						}
 					}
-					//  else {
-					// 	pxml['anniversaryBonus']['applyLeaveOnDate'] = [];
-					// }
 					element.PROPERTIES_XML = pxml;
 				});
 				res.send(data);
@@ -82,7 +79,17 @@ export class GeneralLeavePolicyController {
 		this.generalLeavePolicyService.findOne(req.user.TENANT_GUID, id).subscribe(
 			data => {
 				if (data) {
-					data.PROPERTIES_XML = convertXMLToJson(data.PROPERTIES_XML);
+					let pxml = convertXMLToJson(data.PROPERTIES_XML);
+					if (pxml.hasOwnProperty('anniversaryBonus')) {
+						if (pxml.anniversaryBonus.applyLeaveOnDate == '')
+							pxml.anniversaryBonus.applyLeaveOnDate = [];
+						else if (pxml.anniversaryBonus.applyLeaveOnDate == 'birthday' || pxml.anniversaryBonus.applyLeaveOnDate == 'join-date') {
+							let temp = [];
+							temp.push(pxml.anniversaryBonus.applyLeaveOnDate);
+							pxml.anniversaryBonus.applyLeaveOnDate = temp;
+						}
+					}
+					data.PROPERTIES_XML = pxml;
 					res.send(data);
 				} else {
 					res.status(HttpStatus.NOT_FOUND).send(new NotFoundException('Failed to retrieve data', 'Failed to get data'));

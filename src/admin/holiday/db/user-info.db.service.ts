@@ -89,6 +89,7 @@ export class UserInfoDbService extends BaseDBService {
         data.JOIN_DATE = new Date(employmentData.dateOfJoin);
         data.CONFIRMATION_DATE = new Date(employmentData.dateOfConfirmation);
         data.RESIGNATION_DATE = new Date(employmentData.dateOfResignation);
+        data.TENANT_COMPANY_GUID = employmentData.companyId;
 
         data.FULLNAME = personalData.fullname;
         data.NICKNAME = personalData.nickname;

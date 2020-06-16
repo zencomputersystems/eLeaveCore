@@ -45,7 +45,22 @@ export class GeneralLeavePolicyController {
 	findAll(@Req() req, @Res() res) {
 		this.generalLeavePolicyService.findAll(req.user.TENANT_GUID).subscribe(
 			data => {
-				data.forEach(element => { element.PROPERTIES_XML = convertXMLToJson(element.PROPERTIES_XML); });
+				data.forEach(element => {
+					let pxml = convertXMLToJson(element.PROPERTIES_XML);
+					if (pxml.hasOwnProperty('anniversaryBonus')) {
+						if (pxml.anniversaryBonus.applyLeaveOnDate == '')
+							pxml.anniversaryBonus.applyLeaveOnDate = [];
+						else if (pxml.anniversaryBonus.applyLeaveOnDate == 'birthday' || pxml.anniversaryBonus.applyLeaveOnDate == 'join-date') {
+							let temp = [];
+							temp.push(pxml.anniversaryBonus.applyLeaveOnDate);
+							pxml.anniversaryBonus.applyLeaveOnDate = temp;
+						}
+					}
+					//  else {
+					// 	pxml['anniversaryBonus']['applyLeaveOnDate'] = [];
+					// }
+					element.PROPERTIES_XML = pxml;
+				});
 				res.send(data);
 			},
 			err => { this.commonFunctionService.sendResErrorV3(err, res); }

@@ -10,6 +10,12 @@ import { QueryParserService } from '../../common/helper/query-parser.service';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { ProfileDefaultDbService } from '../profile-default/profile-default.db.service';
+import { UserInfoService } from '../user-info/user-info.service';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
+import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 
 @Module({
   imports: [
@@ -24,7 +30,13 @@ import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leave
     QueryParserService,
     CommonFunctionService,
     LeavetypeService,
-    LeavetypeEntitlementDbService
+    LeavetypeEntitlementDbService,
+    ProfileDefaultDbService,
+    UserInfoService,
+    UserLeaveEntitlementDbService,
+    ServiceYearCalc,
+    ProratedDateEndYearService,
+    EntitlementRoundingService
   ],
   controllers: [
     DefaultProfileController,

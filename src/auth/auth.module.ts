@@ -12,6 +12,7 @@ import { DreamFactory } from 'src/config/dreamfactory';
 import { getModuleHttp } from '../common/helper/basic-functions';
 import { AuthDbService } from './auth.db.service';
 import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
+import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 
 /**
  * Module for auth
@@ -28,7 +29,8 @@ import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-defau
         ActiveDirectoryStrategy,
         JwtStrategy,
         AuthDbService,
-        ProfileDefaultDbService
+        ProfileDefaultDbService,
+        UserprofileDbService
     ],
     controllers: [
         AuthController

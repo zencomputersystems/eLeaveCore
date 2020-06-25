@@ -7,9 +7,12 @@ import { ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { Response } from 'express';
+import { AuthDbService } from './auth.db.service';
 /** atob decryption */
 var atob = require('atob');
-
+/** dot env library */
+const dotenv = require('dotenv');
+dotenv.config();
 /**
  * Controller for auth
  *
@@ -27,7 +30,8 @@ export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly profileDefaultDbService: ProfileDefaultDbService,
-        private readonly httpService: HttpService
+        private readonly httpService: HttpService,
+        private readonly authDbService: AuthDbService
     ) { }
 
     // /**
@@ -60,14 +64,17 @@ export class AuthController {
     public checkLoginType(@Body() loginDTO: LoginDto, @Req() req, @Res() result: Response) {
         loginDTO.password = atob(loginDTO.password);
 
-        let baseUrlLogin = 'https://zencore.zen.com.my:3000/api/auth/login/';
+        let baseUrlLogin = process.env.URL_API + '/api/auth/login/';
         // let baseUrlLogin = 'http://localhost:3000/api/auth/login/';
         let urlAD = baseUrlLogin + 'ad';
         let urlLocal = baseUrlLogin + 'email';
+        // console.log(urlAD + '-' + urlLocal);
+        // console.log(loginDTO.email + '-' + loginDTO.password);
 
         this.authService.userService.findByFilterV2(['EMAIL', 'TENANT_GUID'], [`(LOGIN_ID=${loginDTO.email})`]).pipe(
             mergeMap(res => {
                 return this.profileDefaultDbService.findByFilterV2([], [`(TENANT_GUID=${res[0].TENANT_GUID})`]);
+                // return this.authDbService.findByFilterV2([], [`(SUBSCRIPTION_GUID=${res[0].TENANT_GUID})`]);
             })
         ).subscribe(
             async data => {

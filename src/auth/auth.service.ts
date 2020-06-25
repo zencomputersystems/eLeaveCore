@@ -3,6 +3,7 @@ import { sign } from 'jsonwebtoken';
 import { UserService } from 'src/admin/user/user.service';
 import { ldap } from './passport/mock/ldap';
 import { AuthDbService } from './auth.db.service';
+import { UserprofileDbService } from '../api/userprofile/db/userprofile.db.service';
 
 /**
  * Service for auth
@@ -18,7 +19,11 @@ export class AuthService {
    * @param {AuthDbService} authDbService auth db service to get login type
    * @memberof AuthService
    */
-  constructor(public readonly userService: UserService, private readonly authDbService: AuthDbService) { }
+  constructor(
+    public readonly userService: UserService,
+    private readonly authDbService: AuthDbService,
+    private readonly userprofileDbService: UserprofileDbService
+  ) { }
 
   /**
    * Method auth
@@ -61,6 +66,7 @@ export class AuthService {
         if (user.data.resource.length > 0) {
           // decrypt aes to form as sha256
           const dbPass = CryptoJS.AES.decrypt(user.data.resource[0].PASSWORD, 'secret key 122').toString(CryptoJS.enc.Utf8);
+
           result = dbPass === password ? Promise.resolve(user.data.resource[0]) : Promise.reject(new UnauthorizedException('Invalid Credential'));
         } else {
           result = Promise.reject(new UnauthorizedException('Invalid Credential'))
@@ -81,9 +87,18 @@ export class AuthService {
 
     return await this.userService.findByFilterV2([], ['(LOGIN_ID=' + data._json.userPrincipalName + ')']).toPromise()
       .then(async user => {
-        let statusTenant = await this.authDbService.findByFilterV2([], ['(SUBSCRIPTION_GUID=' + user[0].TENANT_GUID + ')']).toPromise();
+        let subsId = await this.userprofileDbService.findByFilterV2(['SUBSCRIPTION_GUID'], ['(USER_GUID=' + user[0].USER_GUID + ')']).toPromise();
+        return { user, subsId };
+      })
+      .then(async sub => {
+        let { user, subsId } = sub;
+        let statusTenant = await this.authDbService.findByFilterV2([], ['(CUSTOMER_GUID=' + user[0].TENANT_GUID + ')', '(SUBSCRIPTION_GUID=' + subsId[0].SUBSCRIPTION_GUID + ')']).toPromise();
         return { user, statusTenant };
       })
+      // .then(async user => {
+      //   let statusTenant = await this.authDbService.findByFilterV2([], ['(SUBSCRIPTION_GUID=' + user[0].TENANT_GUID + ')']).toPromise();
+      //   return { user, statusTenant };
+      // })
       .then(async result => {
         let { user, statusTenant } = result;
         if (statusTenant[0].STATUS == 1) {
@@ -133,7 +148,12 @@ export class AuthService {
   public async verify(payload) {
     return await this.userService.findOneByPayload(payload)
       .then(async user => {
-        let statusTenant = await this.authDbService.findByFilterV2([], ['(SUBSCRIPTION_GUID=' + user.data.resource[0].TENANT_GUID + ')']).toPromise();
+        let subsId = await this.userprofileDbService.findByFilterV2(['SUBSCRIPTION_GUID'], ['(USER_GUID=' + user.data.resource[0].USER_GUID + ')']).toPromise();
+        return { user, subsId };
+      })
+      .then(async sub => {
+        let { user, subsId } = sub;
+        let statusTenant = await this.authDbService.findByFilterV2([], ['(CUSTOMER_GUID=' + user.data.resource[0].TENANT_GUID + ')', '(SUBSCRIPTION_GUID=' + subsId[0].SUBSCRIPTION_GUID + ')']).toPromise();
         return { user, statusTenant };
       })
       .then(async result => {

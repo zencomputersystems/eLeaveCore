@@ -20,9 +20,17 @@ import { LeaveTypeEntitlementModel } from '../leavetype-entitlement/model/leavet
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import { CreateHolidayDetailsModel } from '../holiday/model/create-holiday-details.model';
 import * as ls from "local-storage";
+import { ProfileDefaultDbService } from '../profile-default/profile-default.db.service';
+import { UserInfoService } from '../user-info/user-info.service';
+import { UserInfoModel } from '../user-info/model/user-info.model';
+import { UserLeaveEntitlementModel } from '../../api/userprofile/model/user-leave-entitlement.model';
+import { UserLeaveEntitlementDbService } from '../../api/userprofile/db/user-leave-entitlement.db.service';
+import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
+import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
+import moment = require('moment');
 
 /** XMLparser from zen library  */
-var { convertJsonToXML } = require('@zencloudservices/xmlparser');
+var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 @Injectable()
 export class DefaultProfileService {
   constructor(
@@ -31,7 +39,11 @@ export class DefaultProfileService {
     private readonly calendarProfileDbService: CalendarProfileDbService,
     private readonly holidayDbService: HolidayDbService,
     private readonly leavetypeService: LeavetypeService,
-    private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService
+    private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
+    private readonly userinfoService: UserInfoService,
+    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+    private readonly serviceYearCalcService: ServiceYearCalc,
+    private readonly proratedMonthEndYearService: ProratedDateEndYearService
   ) { }
   public createDefaultProfile(tenantId: string): Observable<any> {
     return this.createRoleProfile(tenantId).pipe(
@@ -47,7 +59,7 @@ export class DefaultProfileService {
         //   err => { return err.response.data.error.context.resource[0].message; }
         // );
 
-        return forkJoin(of(res), whProfile, calendarDetails, calendarProfiles, leavetypeCreate);
+        return forkJoin(of(res), whProfile, calendarProfiles, calendarDetails, leavetypeCreate);
         // return of(tenantId);
       })
     )
@@ -323,6 +335,86 @@ export class DefaultProfileService {
     data.PROPERTIES_XML = convertJsonToXML(holidayObj);
 
     resource.resource.push(data);
+    return resource;
+  }
+
+  public assignDefaultToUser([tenantId, userId]: [string, string]) {
+    // check tenant n user
+    // check default
+    // assign to user
+
+    let roleId = '';
+    let workingHoursId = '';
+    let calendarId = '';
+    let leavetypeData = [];
+    let leavetypeEntitlementData = [];
+
+    return this.roleDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]).pipe(
+      mergeMap(res => {
+        roleId = res[0].ROLE_GUID;
+        console.log(res);
+        return this.workingHourDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
+      }), mergeMap(res => {
+        workingHoursId = res[0].WORKING_HOURS_GUID;
+        return this.holidayDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
+      }), mergeMap(res => {
+        calendarId = res[0].CALENDAR_GUID;
+        return this.leavetypeService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
+        // return forkJoin(of(roleId), of(workingHoursId), of(calendarId));
+      }), mergeMap(res => {
+        leavetypeData = res;
+        return this.leavetypeEntitlementDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
+      }), mergeMap(res => {
+        leavetypeEntitlementData = res;
+        return forkJoin(of(roleId), of(workingHoursId), of(calendarId), of(leavetypeData), of(leavetypeEntitlementData));
+      }), mergeMap(res => {
+        let resource = new Resource(new Array());
+        let data = new UserInfoModel();
+        // data.USER_GUID = userId;
+        data.ROLE_GUID = roleId;
+        data.CALENDAR_GUID = calendarId;
+        data.WORKING_HOURS_GUID = workingHoursId;
+
+        resource.resource.push(data);
+        return this.userinfoService.updateByModel(resource, [], [`(USER_GUID=${userId})`], []);
+      }), mergeMap(res => {
+        let resource = new Resource(new Array());
+        this.setupLeavetype([userId, leavetypeEntitlementData, resource]);
+
+        return this.userLeaveEntitlementDbService.createByModel(resource, [], [], []);
+
+      }), map(res => {
+        return res.data.resource;
+      })
+    )
+
+  }
+
+  private setupLeavetype([userId, leavePolicy, resource]: [string, any[], Resource]) {
+    leavePolicy.forEach(element => {
+      let data = new UserLeaveEntitlementModel();
+      data.USER_LEAVE_ENTITLEMENT_GUID = v1();
+      data.USER_GUID = userId;
+      data.LEAVE_TYPE_GUID = element.LEAVE_TYPE_GUID;
+      data.ENTITLEMENT_GUID = element.ENTITLEMENT_GUID;
+      data.PROPERTIES_XML = element.PROPERTIES_XML;
+      data.TENANT_GUID = element.TENANT_GUID;
+
+      let dateOfJoin = new Date(moment().format('YYYY-MM-DD'));
+      console.log(dateOfJoin);
+      // const dateOfJoin = new Date(userData.JOIN_DATE);
+      const serviceYear = this.serviceYearCalcService.calculateEmployeeServiceYear(dateOfJoin);
+      console.log(serviceYear);
+      const policy = convertXMLToJson(element.PROPERTIES_XML);
+      console.log(policy);
+      const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
+
+      data.DAYS_ADDED = entitlementDay;
+      data.ACTIVE_FLAG = 1;
+      data.YEAR = new Date().getFullYear();
+      resource.resource.push(data);
+    });
+
     return resource;
   }
 

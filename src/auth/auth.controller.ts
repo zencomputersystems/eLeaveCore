@@ -68,7 +68,7 @@ export class AuthController {
         // let baseUrlLogin = 'http://localhost:3000/api/auth/login/';
         let urlAD = baseUrlLogin + 'ad';
         let urlLocal = baseUrlLogin + 'email';
-        // console.log(urlAD + '-' + urlLocal);
+        console.log(urlAD + '-' + urlLocal);
         // console.log(loginDTO.email + '-' + loginDTO.password);
 
         this.authService.userService.findByFilterV2(['EMAIL', 'TENANT_GUID'], [`(LOGIN_ID=${loginDTO.email})`]).pipe(

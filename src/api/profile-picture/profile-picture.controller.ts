@@ -59,7 +59,7 @@ export class ProfilePictureController {
       data => {
         let dataTemp = {};
 
-        dataTemp['link'] = linkStorageEleave;
+        dataTemp['link'] = process.env.URL_STORAGE_ELEAVE || linkStorageEleave;
         dataTemp['details'] = data;
 
         res.send(dataTemp);

@@ -13,6 +13,8 @@ import { getModuleHttp } from '../common/helper/basic-functions';
 import { AuthDbService } from './auth.db.service';
 import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
+import { RoleDbService } from 'src/admin/role/db/role.db.service';
+import { CommonFunctionService } from 'src/common/helper/common-function.services';
 
 /**
  * Module for auth
@@ -30,7 +32,9 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
         JwtStrategy,
         AuthDbService,
         ProfileDefaultDbService,
-        UserprofileDbService
+        UserprofileDbService,
+        RoleDbService,
+        CommonFunctionService
     ],
     controllers: [
         AuthController

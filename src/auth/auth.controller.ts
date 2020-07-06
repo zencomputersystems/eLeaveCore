@@ -8,11 +8,19 @@ import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-defau
 import { map, mergeMap } from 'rxjs/operators';
 import { Response } from 'express';
 import { AuthDbService } from './auth.db.service';
+import { RoleDbService } from '../admin/role/db/role.db.service';
+import { of } from 'rxjs';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
 /** atob decryption */
 var atob = require('atob');
 /** dot env library */
 const dotenv = require('dotenv');
 dotenv.config();
+
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
+
+
 /**
  * Controller for auth
  *
@@ -31,7 +39,8 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly profileDefaultDbService: ProfileDefaultDbService,
         private readonly httpService: HttpService,
-        private readonly authDbService: AuthDbService
+        private readonly authDbService: AuthDbService,
+        private readonly roleDbService: RoleDbService
     ) { }
 
     // /**
@@ -113,10 +122,8 @@ export class AuthController {
     @ApiOperation({ title: 'Login ad' })
     @UseGuards(AuthGuard('ad'))
     public async ad(@Body() loginDTO: LoginDto, @Req() req) {
-        // console.log('ad');
-        // console.log(loginDTO);
-        // console.log(req.user);
-        return await this.authService.createToken([req.user, 'ad']);
+        let temp = await this.getRole([req.user]);
+        return await this.authService.createToken([req.user, 'ad', temp]);
     }
 
     /**
@@ -131,8 +138,8 @@ export class AuthController {
     @ApiOperation({ title: 'Login email' })
     @UseGuards(AuthGuard('local'))
     public async local(@Body() loginDTO: LoginDto, @Req() req) {
-
-        return await this.authService.createToken([req.user, 'local']);
+        let temp = await this.getRole([req.user]);
+        return await this.authService.createToken([req.user, 'local', temp]);
     }
 
     // @Post('login/verify')
@@ -162,6 +169,25 @@ export class AuthController {
     //     }
     // }
 
+    public async getRole([user]: [any]) {
+        let roleProcess = this.authService.userprofileDbService.findByFilterV2(['ROLE_GUID'], [`(USER_GUID=${user.USER_GUID})`]).pipe(
+            mergeMap(res => {
+                if (res[0].ROLE_GUID != null && res[0].ROLE_GUID != '') {
+                    return this.roleDbService.findAll(res[0].ROLE_GUID).pipe(
+                        map(res => {
+                            let details = convertXMLToJson(res.data.resource[0].PROPERTIES_XML);
+                            return details.property.allowProfileManagement.allowProfileAdmin;
+                        })
+                    );
+                } else {
+                    return of({ value: false, level: '' });
+                }
+            })
+        );
 
+        let data = await runServiceCallback(roleProcess);
+
+        return data;
+    }
 
 }

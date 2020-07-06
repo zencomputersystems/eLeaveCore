@@ -12,6 +12,7 @@ import { PendingLeaveService } from '../../admin/approval-override/pending-leave
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 import { CompanyDbService } from 'src/admin/company/company.service';
 import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { SubscriptionDbService } from './subscription.db.service';
 
 
 /**
@@ -30,7 +31,8 @@ import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
     PendingLeaveService,
     UserprofileDbService,
     CompanyDbService,
-    LeavetypeService
+    LeavetypeService,
+    SubscriptionDbService
   ],
   imports: [
     PassportModule.register({ session: false }),

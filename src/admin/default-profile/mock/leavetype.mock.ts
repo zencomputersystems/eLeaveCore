@@ -55,7 +55,7 @@ export const leavetypeMock = [
         isCheck: false,
         textValue: "Some value"
       },
-      leaveEntitlementType: "Some value",
+      leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
       levels: {
         leaveEntitlement: [
@@ -140,7 +140,7 @@ export const leavetypeMock = [
         isCheck: false,
         textValue: "Some value"
       },
-      leaveEntitlementType: "Some value",
+      leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
       levels: {
         leaveEntitlement: [
@@ -225,7 +225,7 @@ export const leavetypeMock = [
         isCheck: false,
         textValue: "Some value"
       },
-      leaveEntitlementType: "Some value",
+      leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
       levels: {
         leaveEntitlement: [
@@ -296,7 +296,7 @@ export const leavetypeMock = [
         isCheck: false,
         textValue: "Some value"
       },
-      leaveEntitlementType: "Some value",
+      leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
       levels: {
         leaveEntitlement: [

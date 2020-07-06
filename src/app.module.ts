@@ -30,6 +30,7 @@ import { ReportModule } from './admin/report/report.module';
 import { EntitlementClaimModule } from './api/entitlement-claim/entitlement-claim.module';
 import { ProfilePictureModule } from './api/profile-picture/profile-picture.module';
 import { ProfileDefaultModule } from './admin/profile-default/profile-default.module';
+import { DefaultProfileModule } from './admin/default-profile/default-profile.module';
 
 
 @Module({
@@ -81,7 +82,8 @@ import { ProfileDefaultModule } from './admin/profile-default/profile-default.mo
     ReportModule,
     EntitlementClaimModule,
     ProfilePictureModule,
-    ProfileDefaultModule
+    ProfileDefaultModule,
+    DefaultProfileModule
   ],
   controllers: [AppController],
   providers: [

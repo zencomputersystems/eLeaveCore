@@ -33,7 +33,7 @@ export class DashboardLeaveController {
   @Get('/employee/dashboard-annual-leave')
   @ApiOperation({ title: 'Get dashboard annual leave' })
   getAnnualLeave(@Req() req, @Res() res) {
-    this.getData(this.dashboardLeaveService.getAnnualLeave(req.user.USER_GUID), res);
+    this.getData(this.dashboardLeaveService.findLeaveData([req.user.USER_GUID, 'AL']), res);
   }
 
   /**
@@ -46,7 +46,7 @@ export class DashboardLeaveController {
   @Get('/employee/dashboard-medical-leave')
   @ApiOperation({ title: 'Get dashboard medical leave' })
   getMedicalLeave(@Req() req, @Res() res) {
-    this.getData(this.dashboardLeaveService.getMedicalLeave(req.user.USER_GUID), res);
+    this.getData(this.dashboardLeaveService.findLeaveData([req.user.USER_GUID, 'ML']), res);
   }
 
   /**

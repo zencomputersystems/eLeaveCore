@@ -26,52 +26,27 @@ export class DashboardLeaveService {
   ) { }
 
   /**
-   * Get annual leave
+   * Find leave Data
+   * AL and ML
    *
-   * @param {string} userGuid
+   * @param {[string, string]} [userGuid, abbr]
    * @returns
    * @memberof DashboardLeaveService
    */
-  public getAnnualLeave(userGuid: string) {
-    let annualLeaveId;
-    let filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', `(ABBR='AL')`];
+  public findLeaveData([userGuid, abbr]: [string, string]) {
+    let leaveId;
+    let filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', `(ABBR='${abbr}')`];
     return this.userLeaveEntitlementSummaryDbService.findByFilterV2([], filter).pipe(
       mergeMap(
         data => {
           if (data.length > 0) {
-            annualLeaveId = data[0].LEAVE_TYPE_GUID;
-          } else {
-            throw new NotFoundException('Leavetype not found');
-          }
-          const field = [];
-          const filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', '(LEAVE_TYPE_GUID=' + annualLeaveId + ')'];
-          return this.userLeaveEntitlementSummaryDbService.findByFilterV2(field, filter);
-        })
-    );
-  }
-
-  /**
-   * Get medical leave
-   *
-   * @param {string} userGuid
-   * @returns
-   * @memberof DashboardLeaveService
-   */
-  public getMedicalLeave(userGuid: string) {
-    let medicalLeaveId;
-
-    let filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', `(ABBR='ML')`];
-    return this.userLeaveEntitlementSummaryDbService.findByFilterV2([], filter).pipe(
-      mergeMap(
-        data => {
-          if (data.length > 0) {
-            medicalLeaveId = data[0].LEAVE_TYPE_GUID;
+            leaveId = data[0].LEAVE_TYPE_GUID;
           } else {
             throw new NotFoundException('Leavetype not found');
           }
 
           const field = [];
-          const filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', '(LEAVE_TYPE_GUID=' + medicalLeaveId + ')'];
+          const filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', '(LEAVE_TYPE_GUID=' + leaveId + ')'];
           return this.userLeaveEntitlementSummaryDbService.findByFilterV2(field, filter);
         })
     );

@@ -6,7 +6,7 @@
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
-  
+
   <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -32,6 +32,27 @@
 
 ```bash
 $ npm install
+```
+
+## Environment
+
+```bash
+PORT = XXXX
+SMTPHOST = XXXX
+SMTPPORT = XXXX
+SMTPSECURE = XXXX
+SMTPUSER = XXXX
+SMTPPASSWORD = XXXX
+URL_API = XXXX
+URL_SET_PASSWORD = XXXX
+URL_STORAGE = XXXX
+URL_STORAGE_ELEAVE = XXXX
+AZURE_STORAGE_SAS_KEY = XXXX
+AZURE_STORAGE_ACCOUNT = XXXX
+AZURE_CONTAINER_NAME = XXXX
+DF_HOST = XXXX
+DF_KEY = XXXX
+DF_HOST_PROC = XXXX
 ```
 
 ## Running the app
@@ -82,4 +103,4 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## License
 
-  Nest is [MIT licensed](LICENSE).
+Nest is [MIT licensed](LICENSE).

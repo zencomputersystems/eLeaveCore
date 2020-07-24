@@ -38,7 +38,7 @@ export class EmailNodemailerService {
             email: email,
             code: codeUrl
         };
-        var from = 'wantan.wonderland.2018@gmail.com';
+        var from = process.env.SMTPUSER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
         var subject = 'Testing Invitation System ✔';
 
@@ -70,7 +70,7 @@ export class EmailNodemailerService {
             code: "#" + name,
             name: name
         };
-        var from = 'wantan.wonderland.2018@gmail.com';
+        var from = process.env.SMTPUSER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
         var subject = 'Leave approval ✔';
 
@@ -100,7 +100,7 @@ export class EmailNodemailerService {
             code: "whereami." + email,
             name: email
         };
-        var from = 'wantan.wonderland.2018@gmail.com';
+        var from = process.env.SMTPUSER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
         var subject = 'Forgot password eLeave';
 
@@ -173,8 +173,8 @@ export class EmailNodemailerService {
     public createSMTP() {
         smtpTransport = nodemailer.createTransport({
             host: process.env.SMTPHOST || "smtp.ethereal.email",
-            port: process.env.SMTPPORT || 587,
-            secure: process.env.SMTPSECURE || false, // true for 465, false for other ports
+            port: parseInt(process.env.SMTPPORT) || 587,
+            secure: JSON.parse(process.env.SMTPSECURE) || false, // true for 465, false for other ports
             auth: {
                 user: process.env.SMTPUSER || 'casimir.mcglynn@ethereal.email',
                 pass: process.env.SMTPPASSWORD || 'GYSA4r14EQRPB9guAK'

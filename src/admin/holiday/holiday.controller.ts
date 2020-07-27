@@ -9,6 +9,7 @@ import { UpdateCalendarDTO } from './dto/update-calendar.dto';
 import { UpdateUserCalendarDTO } from './dto/update-usercalendar.dto';
 import { CommonFunctionService } from 'src/common/helper/common-function.services';
 import { map } from 'rxjs/operators';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -48,7 +49,7 @@ export class HolidayController {
 	@ApiImplicitQuery({ name: 'year', description: '2019, 2020, ...', required: false })
 	@ApiImplicitQuery({ name: 'location', description: 'my-10, my-09, ...', required: false })
 	@ApiImplicitQuery({ name: 'month', description: '1, 2, ...', required: false })
-	findHoliday(@Req() req, @Res() res) {
+	async findHoliday(@Req() req, @Res() res) {
 		var dt = new Date();
 
 		let countryLink = req.query.country != null ? '&country=' + req.query.country : '&country=my';
@@ -57,22 +58,37 @@ export class HolidayController {
 		let monthLink = req.query.month != null ? '&month=' + req.query.month : '';
 		let localNational = '&type=local,national';
 
-		let arrKey = ['29106b407bdd770140057e044bcb3db0d64a3a51', 'fc56e1848bee6b48e3af29bcb042a2d76c17ff55'];
+		let arrKey = JSON.parse(process.env.CALENDARIFIC_KEY);
+		arrKey = arrKey.apikey;
 
-		let randomNumber = Math.round(Math.random());
+		let calendarBaseUrl = process.env.CALENDARIFIC_URL;
 
-		let calendarBaseUrl = 'https://calendarific.com/api/v2/holidays';
-		let calendarApiKey = '?api_key=' + arrKey[randomNumber];
+		let apiKeySelect = 0;
+		let tempRun = null;
+		let statusPending = true;
 
-		let calendarFullURL = calendarBaseUrl + calendarApiKey;
+		while (statusPending && apiKeySelect < arrKey.length) {
 
-		this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink + localNational)
-			.subscribe((response) => {
-				res.send(response.data);
-			}, err => {
-				res.status(HttpStatus.NOT_FOUND).send(new BadRequestException('Please input filter data'));
+			let calendarApiKey = '?api_key=' + arrKey[apiKeySelect];
+
+			let calendarFullURL = calendarBaseUrl + calendarApiKey;
+			tempRun = await runServiceCallback(this.http.get(calendarFullURL + countryLink + yearLink + locationLink + monthLink + localNational)).then(result => {
+				console.log(calendarApiKey + " : success");
+				statusPending = false;
+				return result;
+			}).catch(err => {
+				console.log(calendarApiKey + " : failed");
+				statusPending = true;
+				apiKeySelect++;
+				return statusPending;
 			});
+		}
 
+		if (statusPending != true) {
+			res.send(tempRun.data);
+		} else {
+			res.status(HttpStatus.NOT_FOUND).send(new BadRequestException('Failed to get data'));
+		}
 	}
 
 	/**

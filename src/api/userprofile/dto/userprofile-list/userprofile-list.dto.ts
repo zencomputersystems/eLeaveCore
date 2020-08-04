@@ -28,6 +28,7 @@ export class UserprofileListDTO {
         this.email = element.EMAIL;
         this.status = element.ACTIVATION_FLAG == 1 ? 'Active' : 'Inactive';
         this.statusInvite = element.STATUS_ACTIVATION;
+        this.leaveAbbr = element.LEAVE_ABBR;
         this.access = accessData;
     }
 
@@ -122,6 +123,13 @@ export class UserprofileListDTO {
      * @memberof UserprofileListDTO
      */
     public statusInvite: string;
+    /**
+     * Data userprofilelist = leaveAbbr
+     *
+     * @type {string}
+     * @memberof UserprofileListDTO
+     */
+    public leaveAbbr: string;
     /**
      * Data userprofilelist - access
      *

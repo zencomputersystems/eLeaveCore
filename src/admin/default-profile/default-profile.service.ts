@@ -27,7 +27,12 @@ import { UserLeaveEntitlementModel } from '../../api/userprofile/model/user-leav
 import { UserLeaveEntitlementDbService } from '../../api/userprofile/db/user-leave-entitlement.db.service';
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
+import { CompanyModel } from '../company/model/company.model';
 import moment = require('moment');
+import { CompanyDbService } from '../company/company.service';
+import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
+import { GeneralLeavePolicyModel } from '../general-leave-policy/model/general-leave-policy.model';
+import { generalPolicyMock } from './mock/general-policy.mock';
 
 /** XMLparser from zen library  */
 var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
@@ -43,7 +48,9 @@ export class DefaultProfileService {
     private readonly userinfoService: UserInfoService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly serviceYearCalcService: ServiceYearCalc,
-    private readonly proratedMonthEndYearService: ProratedDateEndYearService
+    private readonly proratedMonthEndYearService: ProratedDateEndYearService,
+    private readonly companyDbService: CompanyDbService,
+    private readonly generalLeavePolicyService: GeneralLeavePolicyService
   ) { }
   public createDefaultProfile(tenantId: string): Observable<any> {
     return this.createRoleProfile(tenantId).pipe(
@@ -352,7 +359,7 @@ export class DefaultProfileService {
     return this.roleDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]).pipe(
       mergeMap(res => {
         roleId = res[0].ROLE_GUID;
-        console.log(res);
+        // console.log(res);
         return this.workingHourDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
       }), mergeMap(res => {
         workingHoursId = res[0].WORKING_HOURS_GUID;
@@ -418,4 +425,51 @@ export class DefaultProfileService {
     return resource;
   }
 
+  public defaultCompanyPolicy([tenantId, companyName, userId]: [string, string, string]) {
+    const resource = new Resource(new Array);
+    const data = new CompanyModel();
+
+    data.TENANT_COMPANY_GUID = v1();
+    data.CREATION_TS = new Date().toISOString();
+    data.CREATION_USER_GUID = userId;
+    data.ACTIVATION_FLAG = 1;
+    data.NAME = companyName;
+    data.TENANT_GUID = tenantId;
+
+    resource.resource.push(data);
+    console.log(resource);
+
+    return this.companyDbService.createByModel(resource, [], [], []);
+  }
+
+  public assignCompanyToUser([userId, companyId]) {
+    const resource = new Resource(new Array);
+    const data = new UserInfoModel();
+
+    data.TENANT_COMPANY_GUID = companyId;
+    data.CREATION_TS = new Date().toISOString();
+    data.CREATION_USER_GUID = userId;
+
+    resource.resource.push(data);
+    console.log(resource);
+    return this.userinfoService.updateByModel(resource, [], [`(USER_GUID=${userId})`], []);
+  }
+
+  public createPolicy([tenantId, userId, companyId]) {
+    const resource = new Resource(new Array);
+    const data = new GeneralLeavePolicyModel();
+    generalPolicyMock.tenantCompanyId = companyId;
+
+    data.MAIN_GENERAL_POLICY_GUID = v1();
+    data.TENANT_COMPANY_GUID = companyId;
+    data.CREATION_TS = new Date().toISOString();
+    data.CREATION_USER_GUID = userId;
+    data.PROPERTIES_XML = convertJsonToXML(generalPolicyMock);
+    data.TENANT_GUID = tenantId;
+
+    resource.resource.push(data);
+    console.log(resource);
+
+    return this.generalLeavePolicyService.createByModel(resource, [], [], []);
+  }
 }

@@ -85,7 +85,11 @@ export class UserInfoDetailsController {
   getRecentStaffId(@Param('id') id, @Res() res) {
     this.userprofileDbService.findByFilterV4([['STAFF_ID'], [`(TENANT_COMPANY_GUID!=${id})`], 'CREATION_TS DESC', 1]).subscribe(
       data => {
-        res.send({ "recentStaffId": data[0].STAFF_ID });
+        if (data.length > 0) {
+          res.send({ "recentStaffId": data[0].STAFF_ID });
+        } else {
+          res.send({ "recentStaffId": null });
+        }
         // res.status(HttpStatus.BAD_REQUEST).send(new BadRequestException);
       },
       err => { res.send(err); }

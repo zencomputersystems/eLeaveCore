@@ -16,6 +16,8 @@ import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave
 import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/service-year-calculation-service/serviceYearCalc.service';
 import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/services/leave-entitlement-type/proratedDateEndYear.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+import { CompanyDbService } from '../company/company.service';
+import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { EntitlementRoundingService } from 'src/common/policy/entitlement-roundi
     UserLeaveEntitlementDbService,
     ServiceYearCalc,
     ProratedDateEndYearService,
-    EntitlementRoundingService
+    EntitlementRoundingService,
+    CompanyDbService,
+    GeneralLeavePolicyService
   ],
   controllers: [
     DefaultProfileController,

@@ -419,6 +419,7 @@ export class DefaultProfileService {
       data.DAYS_ADDED = entitlementDay;
       data.ACTIVE_FLAG = 1;
       data.YEAR = new Date().getFullYear();
+      data.PARENT_FLAG = 1;
       resource.resource.push(data);
     });
 

@@ -149,24 +149,24 @@ export class AuthService {
   public async verify(payload) {
     return await this.userService.findOneByPayload(payload)
       .then(async user => {
-        let subsId = await this.userprofileDbService.findByFilterV2(['SUBSCRIPTION_GUID'], ['(USER_GUID=' + user.data.resource[0].USER_GUID + ')']).toPromise();
-        return { user, subsId };
-      })
-      .then(async sub => {
-        let { user, subsId } = sub;
-        let statusTenant = await this.authDbService.findByFilterV2([], ['(CUSTOMER_GUID=' + user.data.resource[0].TENANT_GUID + ')', '(SUBSCRIPTION_GUID=' + subsId[0].SUBSCRIPTION_GUID + ')']).toPromise();
-        return { user, statusTenant };
-      })
-      .then(async result => {
-        let { user, statusTenant } = result;
-        if (statusTenant[0].STATUS == 1) {
-          return (user.data.resource.length > 0)
-            ? Promise.resolve(user.data.resource[0])
-            : Promise.reject(new UnauthorizedException('Invalid Authorization'))
-        }
-        else {
-          return Promise.reject(new UnauthorizedException('Inactive Subscription'))
-        }
+        //   let subsId = await this.userprofileDbService.findByFilterV2(['SUBSCRIPTION_GUID'], ['(USER_GUID=' + user.data.resource[0].USER_GUID + ')']).toPromise();
+        //   return { user, subsId };
+        // })
+        // .then(async sub => {
+        //   let { user, subsId } = sub;
+        //   let statusTenant = await this.authDbService.findByFilterV2([], ['(CUSTOMER_GUID=' + user.data.resource[0].TENANT_GUID + ')', '(SUBSCRIPTION_GUID=' + subsId[0].SUBSCRIPTION_GUID + ')']).toPromise();
+        //   return { user, statusTenant };
+        // })
+        // .then(async result => {
+        //   let { user, statusTenant } = result;
+        //   if (statusTenant[0].STATUS == 1) {
+        return (user.data.resource.length > 0)
+          ? Promise.resolve(user.data.resource[0])
+          : Promise.reject(new UnauthorizedException('Invalid Authorization'))
+        //   }
+        //   else {
+        //     return Promise.reject(new UnauthorizedException('Inactive Subscription'))
+        //   }
 
       })
 

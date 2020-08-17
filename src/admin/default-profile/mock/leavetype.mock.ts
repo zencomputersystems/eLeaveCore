@@ -4,10 +4,10 @@ export const leavetypeMock = [
     code: 'Annual Leave',
     description: 'Annual leave',
     property: {
-      applyInAdvance: false,
+      applyInAdvance: true,
       applyNextYear: false,
-      claimEntitlement: false,
-      applyFractionUnit: false,
+      claimEntitlement: true,
+      applyFractionUnit: true,
       includeOtherLeaveType: "Some value",
       attachmentRequired: false,
       excludeDayType: {
@@ -89,12 +89,12 @@ export const leavetypeMock = [
     code: 'Medical Leave',
     description: 'Medical leave',
     property: {
-      applyInAdvance: false,
+      applyInAdvance: true,
       applyNextYear: false,
       claimEntitlement: false,
-      applyFractionUnit: false,
+      applyFractionUnit: true,
       includeOtherLeaveType: "Some value",
-      attachmentRequired: false,
+      attachmentRequired: true,
       excludeDayType: {
         isExcludeHoliday: true,
         isExcludeRestDay: true
@@ -174,7 +174,7 @@ export const leavetypeMock = [
     code: 'Maternity Leave',
     description: 'Maternity leave',
     property: {
-      applyInAdvance: false,
+      applyInAdvance: true,
       applyNextYear: false,
       claimEntitlement: false,
       applyFractionUnit: false,
@@ -245,10 +245,10 @@ export const leavetypeMock = [
     code: 'Hospitalization Leave',
     description: 'Hospitalization leave',
     property: {
-      applyInAdvance: false,
+      applyInAdvance: true,
       applyNextYear: false,
       claimEntitlement: false,
-      applyFractionUnit: false,
+      applyFractionUnit: true,
       includeOtherLeaveType: "Some value",
       attachmentRequired: false,
       excludeDayType: {

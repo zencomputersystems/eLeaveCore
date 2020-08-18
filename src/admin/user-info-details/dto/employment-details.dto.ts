@@ -133,9 +133,9 @@ export class EmploymentDetailsDTO {
    * @memberof EmploymentDetailsDTO
    */
   @ApiModelProperty({ description: 'Manager user guid', example: 'b022d1b1-ff12-9cdf-2272-8c01cb75fbe0' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
-  // @IsOptional()
+  @IsOptional()
   reportingTo: string;
 
   // /**

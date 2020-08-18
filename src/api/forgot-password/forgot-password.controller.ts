@@ -95,28 +95,43 @@ export class ForgotPasswordController {
     var atob = require('atob');
     data.oldPassword = atob(data.oldPassword);
     data.password = atob(data.password);
-    console.log(data.oldPassword + '-' + data.password);
+    // console.log(data.oldPassword + '-' + data.password);
 
-    this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`, `(PASSWORD=${data.oldPassword})`]).pipe(
+    data.oldPassword = CryptoJS.SHA256(data.oldPassword.trim()).toString(CryptoJS.enc.Hex);
+    // console.log(data.oldPassword);
+    // data.oldPassword = CryptoJS.AES.encrypt(data.oldPassword, 'secret key 122').toString();
+    // console.log(data.oldPassword);
+    // console.log(data.loginId);
+
+
+    this.userService.findByFilterV2([], [`(LOGIN_ID=${data.loginId})`]).pipe(
       mergeMap(res => {
         let status = res.length > 0 ? true : false;
         if (status) {
           let resource = new Resource(new Array);
           let model = new UserModel();
+          // console.log(res[0].PASSWORD);
+          const dbPass = CryptoJS.AES.decrypt(res[0].PASSWORD, 'secret key 122').toString(CryptoJS.enc.Utf8);
+          // console.log(dbPass);
+          // console.log(data.oldPassword);
 
-          // store encrypted password
-          data.password = CryptoJS.SHA256(data.password.trim()).toString(CryptoJS.enc.Hex);
-          console.log(data.password);
-          data.password = CryptoJS.AES.encrypt(data.password, 'secret key 122').toString();
-          console.log(data.password);
+          if (dbPass === data.oldPassword) {
+            // store encrypted password
+            data.password = CryptoJS.SHA256(data.password.trim()).toString(CryptoJS.enc.Hex);
+            // console.log(data.password);
+            data.password = CryptoJS.AES.encrypt(data.password, 'secret key 122').toString();
+            // console.log(data.password);
 
-          // model.USER_GUID = req.user.USER_GUID;
-          model.LOGIN_ID = data.loginId;
+            // model.USER_GUID = req.user.USER_GUID;
+            model.LOGIN_ID = data.loginId;
 
-          model.PASSWORD = data.password;
+            model.PASSWORD = data.password;
 
-          resource.resource.push(model);
-          return this.userService.updateByModel(resource, [], [`(LOGIN_ID=${data.loginId})`], [])
+            resource.resource.push(model);
+            return this.userService.updateByModel(resource, [], [`(LOGIN_ID=${data.loginId})`], [])
+          } else {
+            throw new ForbiddenException();
+          }
         } else {
           throw new ForbiddenException();
         }

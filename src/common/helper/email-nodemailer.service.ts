@@ -38,7 +38,7 @@ export class EmailNodemailerService {
             email: email,
             code: codeUrl
         };
-        var from = process.env.SMTPUSER;//'wantan.wonderland.2018@gmail.com';
+        var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
         var subject = 'Testing Invitation System ✔';
 
@@ -70,7 +70,7 @@ export class EmailNodemailerService {
             code: "#" + name,
             name: name
         };
-        var from = process.env.SMTPUSER;//'wantan.wonderland.2018@gmail.com';
+        var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
         var subject = 'Leave approval ✔';
 
@@ -100,7 +100,7 @@ export class EmailNodemailerService {
             code: "whereami." + email,
             name: email
         };
-        var from = process.env.SMTPUSER;//'wantan.wonderland.2018@gmail.com';
+        var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
         var subject = 'Forgot password eLeave';
 

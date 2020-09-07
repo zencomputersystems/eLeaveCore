@@ -87,7 +87,8 @@ export class HolidayController {
 		if (statusPending != true) {
 			res.send(tempRun.data);
 		} else {
-			res.status(HttpStatus.NOT_FOUND).send(new BadRequestException('Failed to get data'));
+			res.send(new BadRequestException('Failed to get data'));
+			// res.status(HttpStatus.NOT_FOUND).send(new BadRequestException('Failed to get data'));
 		}
 	}
 

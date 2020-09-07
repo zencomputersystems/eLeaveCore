@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { LeaveEntitlementReportDto, LeaveDetailsDto } from '../dto/leave-entitlement-report.dto';
 import { Observable } from 'rxjs';
 import { ReportDBService } from './report-db.service';
-import { map, mergeMap, flatMap } from 'rxjs/operators';
+import { map, mergeMap, flatMap, filter } from 'rxjs/operators';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
+import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
+import moment = require('moment');
 
 /**
  * Leave entitlement report service
@@ -21,7 +23,8 @@ export class LeaveEntitlementReportService {
    */
   constructor(
     private readonly reportDBService: ReportDBService,
-    private readonly pendingLeaveService: PendingLeaveService
+    private readonly pendingLeaveService: PendingLeaveService,
+    private readonly leaveTransactionDbService: LeaveTransactionDbService
   ) { }
   /**
    * Get leave entitlement data
@@ -31,18 +34,30 @@ export class LeaveEntitlementReportService {
    * @memberof LeaveEntitlementReportService
    */
   getLeaveEntitlementData([tenantId, userId]: [string, string]): Observable<any> {
-    let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`];
-    const extra = ['(USER_GUID=' + userId + ')'];
-    filter = userId != null ? filter.concat(extra) : filter;
+    let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`]; // for all user
+    const extra = ['(USER_GUID=' + userId + ')']; // for one user
+    filter = userId != null ? filter.concat(extra) : filter; // chcek if one user add extra filter
+
+    // get leave entitlement summary
     return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
         let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+        // let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD')})`];
+        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
+        filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
 
-        return { res, leaveTypeList, resultAll };
+        let fieldTemp = ['LEAVE_TYPE_GUID', 'USER_GUID', 'ENTITLEMENT_GUID', 'START_DATE', 'END_DATE', 'NO_OF_DAYS', 'STATUS', 'CREATION_TS'];
+        let method = this.leaveTransactionDbService.findByFilterV2(fieldTemp, filterTemp);
+        let leaveTransactionData = await this.pendingLeaveService.runService(method);
+
+        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`]);
+        let leaveEntitlementData = await this.pendingLeaveService.runService(method2);
+
+        return { res, leaveTypeList, resultAll, leaveTransactionData, leaveEntitlementData };
       }),
       map(result => {
-        let { res, leaveTypeList, resultAll } = result;
+        let { res, leaveTypeList, resultAll, leaveTransactionData, leaveEntitlementData } = result;
         let userIdList = [];
 
         res.forEach(async element => {
@@ -63,7 +78,7 @@ export class LeaveEntitlementReportService {
 
             leaveEntitlementReportDTO.yearService = 1;
 
-            const leaveData = this.assignData([element, leaveTypeList]);
+            const leaveData = this.assignData([element, leaveTypeList, leaveTransactionData, leaveEntitlementData]);
 
             leaveEntitlementReportDTO.abbr = [];
             leaveEntitlementReportDTO.abbr.push(leaveData.leaveTypeAbbr);
@@ -73,7 +88,7 @@ export class LeaveEntitlementReportService {
             userIdList.push(leaveEntitlementReportDTO);
 
           } else {
-            const leaveData = this.assignData([element, leaveTypeList]);
+            const leaveData = this.assignData([element, leaveTypeList, leaveTransactionData, leaveEntitlementData]);
             userId.abbr.push(leaveData.leaveTypeAbbr);
             userId.leaveDetail.push(leaveData);
           }
@@ -97,21 +112,60 @@ export class LeaveEntitlementReportService {
    * @returns
    * @memberof LeaveEntitlementReportService
    */
-  assignData([element, leaveTypeList]) {
+  assignData([element, leaveTypeList, leaveTransactionData, leaveEntitlementData]) {
     // merge leave for user 
     const leaveData = new LeaveDetailsDto;
     let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+    const forfeitedDays = this.calculateForfeited([element, leaveTransactionData, leaveEntitlementData, findLeaveData]);
 
     leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
     leaveData.leaveTypeName = findLeaveData.CODE;
     leaveData.leaveTypeAbbr = findLeaveData.ABBR;
     leaveData.entitledDays = element.ENTITLED_DAYS;
     leaveData.carriedForward = element.CF_DAYS ? element.CF_DAYS : 0;
-    leaveData.forfeited = "0";
+    leaveData.forfeited = forfeitedDays.toString();// "0";
     leaveData.taken = element.TOTAL_APPROVED;
     leaveData.pending = element.TOTAL_PENDING;
     leaveData.balance = element.BALANCE_DAYS;
     return leaveData;
+  }
+
+  /**
+   * Calculate forfeited
+   *
+   * @param {*} [element, leaveTransactionData, leaveEntitlementData, findLeaveData]
+   * @returns
+   * @memberof LeaveEntitlementReportService
+   */
+  calculateForfeited([element, leaveTransactionData, leaveEntitlementData, findLeaveData]) {
+
+    // get leavetransaction from user
+    let leaveDataTransaction = leaveTransactionData.filter(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID && x.USER_GUID === element.USER_GUID);
+    // get leave entitlement assign for this user
+    let leaveDataEntitlement = leaveEntitlementData.filter(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID && x.USER_GUID === element.USER_GUID);
+
+    let hasExpired = leaveDataEntitlement.filter(x => x.EXPIREDATE !== null);
+    let hasInDate = [];
+    let forfeited = 0;
+
+    hasExpired.forEach(element => {
+      let totalDaysAdded = 0;
+      totalDaysAdded += element.DAYS_ADDED;
+
+      hasInDate = leaveDataTransaction.filter(x => x.START_DATE <= element.EXPIREDATE && x.START_DATE >= element.CREATION_TS);
+
+      let totalApplied = 0;
+      hasInDate.forEach(hid => {
+        totalApplied += hid.NO_OF_DAYS;
+      });
+
+      let count = totalDaysAdded - totalApplied;
+
+      if (count > 0)
+        forfeited += count;
+    });
+    forfeited = forfeited < 0 ? 0 : forfeited;
+    return forfeited;
   }
 
 }

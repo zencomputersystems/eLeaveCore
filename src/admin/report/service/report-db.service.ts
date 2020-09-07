@@ -4,6 +4,7 @@ import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db
 import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.service';
 import { LeaveAdjustmentDbLogService } from '../../leave-adjustment/leave-adjustment-log.service';
 import { LeaveTransactionLogDbService } from '../../../api/leave/db/leave-transaction-log.db.service';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 
 /**
  * Db service for report
@@ -20,6 +21,7 @@ export class ReportDBService {
    * @param {UserprofileDbService} userprofileDbService user profile db service
    * @param {LeaveAdjustmentDbLogService} leaveAdjustmentLogDbService leave adjustment db log service
    * @param {LeaveTransactionLogDbService} leaveTransactionLogDbService leave transaction log db service
+   * @param {UserLeaveEntitlementDbService} userLeaveEntitlementDbService user Leave Entitlement Db Service
    * @memberof ReportDBService
    */
   constructor(
@@ -27,6 +29,7 @@ export class ReportDBService {
     public leaveTransactionDbService: LeaveTransactionDbService,
     public userprofileDbService: UserprofileDbService,
     public leaveAdjustmentLogDbService: LeaveAdjustmentDbLogService,
-    public leaveTransactionLogDbService: LeaveTransactionLogDbService
+    public leaveTransactionLogDbService: LeaveTransactionLogDbService,
+    public userLeaveEntitlementDbService: UserLeaveEntitlementDbService
   ) { }
 }

@@ -23,6 +23,7 @@ import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeaveAdjustmentDbLogService } from '../leave-adjustment/leave-adjustment-log.service';
 import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
+import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction
     UserprofileDbService,
     LeaveAdjustmentDbLogService,
     LeaveTransactionLogDbService,
+    UserLeaveEntitlementDbService,
 
     QueryParserService,
     DateCalculationService

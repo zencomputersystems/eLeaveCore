@@ -13,6 +13,8 @@ import { UserImport } from './dto/user-import';
 import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
 import { UpdateUserInfoItemDTO } from 'src/admin/user-info-details/dto/update-user-info-details.dto';
 import * as moment from 'moment';
+import { ProfileDefaultDbService } from '../../admin/profile-default/profile-default.db.service';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -68,7 +70,8 @@ export class UserImportService {
     constructor(
         private readonly userService: UserService,
         private readonly userInfoService: UserInfoService,
-        private readonly pendingLeaveService: PendingLeaveService
+        private readonly pendingLeaveService: PendingLeaveService,
+        private readonly profileDefaultDbService: ProfileDefaultDbService
     ) { }
 
     /**
@@ -155,6 +158,8 @@ export class UserImportService {
         let userList = await this.pendingLeaveService.getAllUserInfo(user.TENANT_GUID) as any[];
         let companyList = await this.pendingLeaveService.getCompanyList(user.TENANT_GUID) as any[];
 
+        let defaultData = await runServiceCallback(this.profileDefaultDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`])) as any[];
+
         if (importData.length == 0) {
             return of(this.importResult);
         }
@@ -206,6 +211,10 @@ export class UserImportService {
                 userInfoModel.JOIN_DATE = element.hasOwnProperty('JOIN_DATE') ? new Date(moment(element.JOIN_DATE, 'DD/M/YYYY').format('YYYY-MM-DD')) : null;
                 userInfoModel.CONFIRMATION_DATE = element.hasOwnProperty('CONFIRMATION_DATE') ? new Date(moment(element.CONFIRMATION_DATE, 'DD/M/YYYY').format('YYYY-MM-DD')) : null;
                 userInfoModel.RESIGNATION_DATE = element.hasOwnProperty('RESIGNATION_DATE') ? new Date(moment(element.RESIGNATION_DATE, 'DD/M/YYYY').format('YYYY-MM-DD')) : null;
+                userInfoModel.ROLE_GUID = defaultData[0].ROLE_PROFILE_GUID;
+                userInfoModel.WORKING_HOURS_GUID = defaultData[0].WORKING_HOURS_PROFILE_GUID;
+                userInfoModel.CALENDAR_GUID = defaultData[0].CALENDAR_PROFILE_GUID;
+
                 this.setUserInfoXML([element, userInfoModel]);
                 // userInfoModel.PROPERTIES_XML = null;
                 userInfoResourceArray.resource.push(userInfoModel);

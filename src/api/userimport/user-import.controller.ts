@@ -72,7 +72,8 @@ export class UserImportController {
 
 		const records = parse(file.buffer, {
 			columns: true,
-			skip_empty_lines: true
+			skip_empty_lines: true,
+			skip_lines_with_empty_values: true
 		})
 
 		let method = this.subscriptionDbService.findByFilterV2([], [`(CUSTOMER_GUID=${req.user.TENANT_GUID})`]);

@@ -31,16 +31,21 @@ export class EmailNodemailerService {
      * @returns
      * @memberof EmailNodemailerService
      */
-    public mailProcess(email: string, codeUrl: string) {
+    public mailProcess([emailAdmin, emailUser, codeUrl]: [string, string, string]) {
         smtpTransport = this.createSMTP();
 
         var replacements = {
-            email: email,
-            code: codeUrl
+            email: emailUser,
+            code: codeUrl,
+            product_name: 'beeSuite',
+            url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
+            email_admin: emailAdmin,
+            url_app: "a.beesuite.app",
+            support_url: "https://www.beesuite.app/contact-us/",
         };
         var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
-        var emailTosend = email;
-        var subject = 'Testing Invitation System ✔';
+        var emailTosend = emailUser;
+        var subject = replacements.product_name + ' User Invitation';
 
         let data = {};
         data['replacement'] = replacements;
@@ -49,6 +54,15 @@ export class EmailNodemailerService {
         data['subject'] = subject;
 
         let dataRes = this.readHTMLFile('src/common/email-templates/userinvitation.html', this.callbackReadHTML(data));
+
+        const fs = require('fs');
+
+        // append data to a file
+        fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(data), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
 
         return "success";
     }
@@ -82,6 +96,15 @@ export class EmailNodemailerService {
 
         let dataRes = this.readHTMLFile('src/common/email-templates/notifyleaveapprove.html', this.callbackReadHTML(data));
 
+        const fs = require('fs');
+
+        // append data to a file
+        fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(data), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+
         return "success";
     }
 
@@ -111,6 +134,15 @@ export class EmailNodemailerService {
         data['subject'] = subject;
 
         let dataRes = this.readHTMLFile('src/common/email-templates/forgotpassword.html', this.callbackReadHTML(data));
+
+        const fs = require('fs');
+
+        // append data to a file
+        fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(data), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
 
         return { "status": "email send" };
     }

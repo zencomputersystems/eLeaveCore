@@ -95,7 +95,7 @@ export class InvitationController {
 		this.invitationInviteService.invite(inviteListDto, req.user).subscribe(
 			result => {
 				let respon = '{"status":"Email send"}';
-				console.log(result);
+				// console.log(result);
 				res.status(200);
 				// res.send(result);
 				res.send(respon);

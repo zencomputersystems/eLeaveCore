@@ -7,6 +7,8 @@ import { UserCsvDto } from './dto/csv/user-csv.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SubscriptionDbService } from './subscription.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
+import { InvitationInviteService } from '../invitation/invitation-invite.service';
+import { InviteDTO } from '../invitation/dto/invite.dto';
 
 /**
  * Controller for user import
@@ -26,7 +28,8 @@ export class UserImportController {
 	 */
 	constructor(
 		private readonly userImportService: UserImportService,
-		private readonly subscriptionDbService: SubscriptionDbService
+		private readonly subscriptionDbService: SubscriptionDbService,
+		private readonly invitationInviteService: InvitationInviteService
 	) { }
 
 	/**
@@ -103,7 +106,30 @@ export class UserImportController {
 	 */
 	private runService([user, data, res]) {
 		this.userImportService.processImportData(user, data).subscribe(
-			data => { res.send(data); },
+			data => {
+				const successList = data.find(x => x.category === "Success")
+				// const existingList = data.find(x => x.category === "Existing User")
+
+				// console.log(successList);
+				// console.log(existingList);
+				if (successList != undefined) {
+					// console.log('Send email');
+					let successArr: InviteDTO[] = [];
+
+					successList.data.map(x => {
+						let inviteUser = new InviteDTO;
+						inviteUser.id = x.USER_GUID;
+						successArr.push(inviteUser);
+					});
+					// console.log(successArr);
+					this.invitationInviteService.invite(successArr, user).subscribe(
+						data => { /*console.log(data);*/ },
+						err => { /*console.log(err);*/ }
+					);
+				}
+
+				res.send(data);
+			},
 			err => { res.status(400).send("fail to process data"); }
 		)
 	}

@@ -82,18 +82,19 @@ export class InvitationInviteService {
                     // console.log('send email');
                     const observableEmail$ = [];
 
-                    let loginType = await runServiceCallback(this.authDbService.findByFilterV2([], [`(SUBSCRIPTION_GUID=${user.TENANT_GUID})`]));
+                    let loginType = await runServiceCallback(this.authDbService.findByFilterV2([], [`(CUSTOMER_GUID=${user.TENANT_GUID})`]));
                     // console.log(loginType);
                     // console.log(res);
+                    // console.log(user);
 
                     res.forEach(element => {
                         // console.log('checking2....');
-                        observableEmail$.push(this.sendEmailV2(element.email, element.invitationId, loginType[0].LOGIN_TYPE));
-                        console.log(observableEmail$);
+                        observableEmail$.push(this.sendEmailV2([user.EMAIL, element.email, element.invitationId, loginType[0].LOGIN_TYPE]));
+                        // console.log(observableEmail$);
                         // console.log('checking....');
                     });
 
-                    console.log(observableEmail$);
+                    // console.log(observableEmail$);
                     const tempVar = forkJoin(observableEmail$);
                     // setTimeout(function () {
                     //     tempVar.subscribe(val => { console.log(val); });
@@ -295,15 +296,15 @@ export class InvitationInviteService {
      * @returns
      * @memberof InvitationInviteService
      */
-    private sendEmailV2(email: string, token: string, loginType: string) {
+    private sendEmailV2([emailAdmin, emailUser, token, loginType]: [string, string, string, string]) {
 
         // console.log('before function');
         // let url = "http://zencore.zen.com.my:3000/api/invitation/" + token;
         // let url = "http://localhost:3000/api/invitation/" + token;
         // let url = "http://zencore.zen.com.my:8104/#/reset-password/user/" + token + "/" + loginType;
-        let url = process.env.URL_SET_PASSWORD || linkResetPassword + "/" + token + "/" + loginType;
-
-        let results = this.emailNodemailerService.mailProcess(email, url);
+        let url = (process.env.URL_SET_PASSWORD || linkResetPassword) + "/" + token + "/" + loginType;
+        // console.log(url);
+        let results = this.emailNodemailerService.mailProcess([emailAdmin, emailUser, url]);
         // console.log('after function');
         // console.log(results);
         return results;

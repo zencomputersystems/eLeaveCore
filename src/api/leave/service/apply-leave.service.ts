@@ -23,6 +23,8 @@ import { setTimeout } from 'timers';
 import { GeneralLeavePolicyService } from '../../../admin/general-leave-policy/general-leave-policy.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
+import { CalendarProfileDbService } from '../../../admin/holiday/db/calendar-profile-db.service';
+import { setHoliday } from '../../../common/calculation/mock/holiday.mock';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -51,7 +53,8 @@ export class ApplyLeaveService {
 		private readonly leaveTransactionDbService: LeaveTransactionDbService,
 		private readonly dateCalculationService: DateCalculationService,
 		private readonly generalLeavePolicyService: GeneralLeavePolicyService,
-		private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService
+		private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
+		private readonly calendarProfileDbService: CalendarProfileDbService
 	) { }
 
 	/**
@@ -120,10 +123,16 @@ export class ApplyLeaveService {
 	private applyLeaveProcess([applyLeaveDTO, user, extensionQuery, onbehalf]: [ApplyLeaveDTO, any, any, boolean]) {
 		let y = applyLeaveDTO;
 
-		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID'], extensionQuery)
+		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID'], extensionQuery)
 			.pipe(
-				map(res => {
-					return res[0];
+				map(async res => {
+					let holidayData = await runServiceCallback(this.calendarProfileDbService.findByFilterV2([], [`(CALENDAR_GUID=${res[0].CALENDAR_GUID})`, `(YEAR=${new Date().getFullYear()})`]));
+					const holidayJSON = convertXMLToJson(holidayData[0].PROPERTIES_XML);
+					setHoliday(holidayJSON);
+					return await res[0];
+				}),
+				mergeMap(res => {
+					return res;
 				}),
 				mergeMap((userInfo: UserInfoModel) => {
 					return this.checkUserLeaveEntitlement(y.leaveTypeID, userInfo)

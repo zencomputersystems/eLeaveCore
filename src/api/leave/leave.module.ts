@@ -24,6 +24,7 @@ import { GeneralLeavePolicyService } from '../../admin/general-leave-policy/gene
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 import { LeaveTransactionLogDbService } from './db/leave-transaction-log.db.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
 
 /**
  * Module for leave
@@ -58,7 +59,8 @@ import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/d
     GeneralLeavePolicyService,
     UserprofileDbService,
     LeaveTransactionLogDbService,
-    LeavetypeEntitlementDbService
+    LeavetypeEntitlementDbService,
+    CalendarProfileDbService
   ],
 })
 export class LeaveModule { }

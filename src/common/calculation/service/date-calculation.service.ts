@@ -1,6 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import moment = require("moment");
-import { holidayMock } from '../mock/holiday.mock';
+import { getHoliday } from '../mock/holiday.mock';
 import { HolidayModel } from 'src/admin/holiday/model/holiday.model';
 // import { HolidayService } from 'src/admin/holiday/holiday.service';
 // import { Observable } from 'rxjs';
@@ -52,9 +52,8 @@ export class DateCalculationService {
         // mock holiday
 
         // console.log(HolidayModel);
-
-        const mockHoliday = holidayMock;
-        // console.log(mockHoliday);
+        const mockHoliday = getHoliday();
+        // const mockHoliday = holidayMock;
         const filterRestDay = new Array<any>();
         const filterHoliday = new Array<any>(); // hold the filtered holiday date
 
@@ -77,7 +76,7 @@ export class DateCalculationService {
 
             // if (!isIncludeHoliday) {
             if (isExcludeHoliday) {
-                if (mockHoliday.holiday.find(x => x.date == copyStartDate.format("YYYY-MM-DD"))) {
+                if (mockHoliday.holiday.find(x => x.start == copyStartDate.format("YYYY-MM-DD"))) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterHoliday.push(copyStartDate);
                 }
@@ -91,7 +90,7 @@ export class DateCalculationService {
         if (isExcludeHoliday) {
             mockHoliday.holiday.forEach(element => {
 
-                const holidayDate = moment(element.date, 'YYYY-MM-DD');
+                const holidayDate = moment(element.start, 'YYYY-MM-DD');
                 holidayDate.startOf('days');
 
                 // check if holiday overlap with rest day

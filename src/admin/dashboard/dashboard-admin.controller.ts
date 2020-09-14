@@ -51,7 +51,7 @@ export class DashboardAdminController {
             element.DATE_OF_BIRTH = element.DOB;
             element.DOB = moment(element.DOB).format('MM-DD');
 
-            if (element.DOB > moment().format('MM-DD') && element.DATE_OF_BIRTH != null)
+            if (element.DOB > moment().format('MM-DD') && element.DATE_OF_BIRTH != null && element.DOB != 'Invalid date')
               userBirthday.push(element);
           });
 

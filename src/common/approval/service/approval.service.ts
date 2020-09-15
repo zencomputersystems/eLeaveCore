@@ -396,12 +396,11 @@ export class ApprovalService {
 			leave.STATUS = "REJECTED";
 			if (statusApprove == 'cancelled') {
 				leave.STATUS = "CANCELLED";
-				leave.CURRENT_APPROVAL_LEVEL = null;
-				leave.STATES = null;
+				// leave.CURRENT_APPROVAL_LEVEL = null;
+				// leave.STATES = null;
 			}
 
 		}
-
 		return leave;
 
 	}
@@ -430,8 +429,8 @@ export class ApprovalService {
 			leave.STATUS = "REJECTED";
 			if (statusApprove == 'cancelled') {
 				leave.STATUS = "CANCELLED";
-				leave.CURRENT_APPROVAL_LEVEL = 0;
-				leave.STATES = null;
+				// leave.CURRENT_APPROVAL_LEVEL = 0;
+				// leave.STATES = null;
 			}
 
 		}

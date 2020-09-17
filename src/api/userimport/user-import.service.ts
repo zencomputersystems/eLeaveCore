@@ -253,7 +253,7 @@ export class UserImportService {
         dataEmployment['employmentStatus'] = userInfoModel.EMPLOYEE_STATUS;
         dataEmployment['employmentType'] = userInfoModel.EMPLOYEE_TYPE;
         dataEmployment['reportingTo'] = userInfoModel.MANAGER_USER_GUID;
-        dataEmployment['dateOfJoin'] = moment(element.JOIN_DATE, 'DD/M/YYYY').format('YYYY-MM-DD');
+        dataEmployment['dateOfJoin'] = moment(element.JOIN_DATE, 'DD/MM/YYYY').format('YYYY-MM-DD');
         dataEmployment['dateOfConfirmation'] = moment(element.CONFIRMATION_DATE, 'DD/MM/YYYY').format('YYYY-MM-DD') || null;
         dataEmployment['dateOfResignation'] = moment(element.RESIGNATION_DATE, 'DD/MM/YYYY').format('YYYY-MM-DD') || null;
         dataEmployment['epfNumber'] = '';
@@ -264,7 +264,7 @@ export class UserImportService {
         dataPersonal['fullname'] = userInfoModel.FULLNAME;
         dataPersonal['nickname'] = userInfoModel.NICKNAME;
         dataPersonal['nric'] = element.NRIC;
-        dataPersonal['dob'] = element.DOB;
+        dataPersonal['dob'] = moment(element.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
         dataPersonal['gender'] = element.GENDER;
         dataPersonal['maritalStatus'] = userInfoModel.MARITAL_STATUS;
         dataPersonal['race'] = '';
@@ -280,10 +280,64 @@ export class UserImportService {
         dataPersonal['city'] = element.CITY;
         dataPersonal['state'] = element.STATE;
         dataPersonal['country'] = element.COUNTRY;
+
+        // dataPersonal['emergencyContact'] = [];
+        // dataPersonal['education'] = [];
+        // dataPersonal['certification'] = [];
+        // dataPersonal['family'] = [];
+
+        // Emergency contact data
         dataPersonal['emergencyContact'] = [];
+        let emergencyContactArray = [];
+        let emergencyContactDetail = {};
+        emergencyContactDetail['contactName'] = ' ';
+        emergencyContactDetail['contactNumber'] = ' ';
+        emergencyContactDetail['contactRelationship'] = ' ';
+        emergencyContactArray.push(emergencyContactDetail);
+        dataPersonal['emergencyContact'] = emergencyContactArray;
+
+        // Education data
         dataPersonal['education'] = [];
+        let educationArray = [];
+        let educationDetail = {};
+        educationDetail['qualificationLevel'] = ' ';
+        educationDetail['major'] = ' ';
+        educationDetail['university'] = ' ';
+        educationDetail['year'] = ' ';
+        educationArray.push(educationDetail);
+        dataPersonal['education'] = educationArray;
+
+        // Certification data
         dataPersonal['certification'] = [];
-        dataPersonal['family'] = [];
+        let certificationArray = [];
+        let certificationDetail = {};
+        certificationDetail['certificationName'] = ' ';
+        certificationDetail['certificationEnrollYear'] = ' ';
+        certificationDetail['certificationGraduateYear'] = ' ';
+        certificationDetail['certificationAttachment'] = ' ';
+        certificationArray.push(certificationDetail);
+        dataPersonal['certification'] = certificationArray;
+
+        // Family data
+        let familyDetails = {};
+        // Child data
+        familyDetails['child'] = [];
+        let childArray = [];
+        let childDetails = {};
+        childDetails['childName'] = ' ';
+        childDetails['childIdentificationNumber'] = ' ';
+        childArray.push(childDetails);
+        familyDetails['child'] = childArray;
+        // Spouse data
+        familyDetails['spouse'] = [];
+        let spouseArray = [];
+        let spouseDetails = {};
+        spouseDetails['spouseName'] = ' ';
+        spouseDetails['spouseIdentificationNumber'] = ' ';
+        spouseArray.push(spouseDetails);
+        familyDetails['spouse'] = spouseArray;
+
+        dataPersonal['family'] = familyDetails;
 
         dataRoot['employmentDetail'] = dataEmployment;
         dataRoot['notificationRule'] = [];

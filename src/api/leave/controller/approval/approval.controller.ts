@@ -142,35 +142,35 @@ export class ApprovedController {
 
     }
 
-    /**
-     * Test error code
-     *
-     * @param {*} res
-     * @memberof ApprovedController
-     */
-    @Post('error-code')
-    errorCodeTest(@Res() res) {
-        this.handleErrror().pipe(map(res => {
-            return res;
-        })).subscribe(
-            data => {
-                res.send(data);
-            }, err => {
-                res.send(err);
-            }
-        );
-    }
+    // /**
+    //  * Test error code
+    //  *
+    //  * @param {*} res
+    //  * @memberof ApprovedController
+    //  */
+    // @Post('error-code')
+    // errorCodeTest(@Res() res) {
+    //     this.handleErrror().pipe(map(res => {
+    //         return res;
+    //     })).subscribe(
+    //         data => {
+    //             res.send(data);
+    //         }, err => {
+    //             res.send(err);
+    //         }
+    //     );
+    // }
 
-    /**
-     * Handle error
-     *
-     * @private
-     * @returns
-     * @memberof ApprovedController
-     */
-    private handleErrror() {
-        let temp = new Error("Hi, i am error!");
-        return of(temp);
-    }
+    // /**
+    //  * Handle error
+    //  *
+    //  * @private
+    //  * @returns
+    //  * @memberof ApprovedController
+    //  */
+    // private handleErrror() {
+    //     let temp = new Error("Hi, i am error!");
+    //     return of(temp);
+    // }
 
 }

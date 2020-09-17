@@ -92,7 +92,7 @@ export class UserImportController {
 			this.runService([req.user, records, res]);
 		// res.send('data');
 		else
-			res.send(new BadRequestException(`You don't have enough quota to add users. Total quota is ${quotaData[0].ACTIVE_QUOTA} and only ${balanceQuota} left`));
+			res.send(new BadRequestException(`You don't have enough quota to add users. Total quota is ${quotaData[0].ACTIVE_QUOTA} and only ${balanceQuota} left. You try to import ${records.length} users.`));
 
 		// this.runService([req.user, records, res]);
 	}

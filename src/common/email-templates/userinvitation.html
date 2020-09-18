@@ -638,8 +638,8 @@
                         mc:edit="body_content00"
                       >
                         <h3>
-                          <a>{{email_admin}}</a> has invited you to join
-                          {{product_name}}
+                          <a>{{admin_name}} ({{email_admin}})</a> has invited
+                          you to join {{product_name}}
                         </h3>
                       </td>
                     </tr>
@@ -670,8 +670,9 @@
                         </h2>
                         <p>
                           You’ve been invited to have an account by
-                          <a>{{email_admin}}</a>. You will need to verify your
-                          account by clicking on the button below.
+                          <a>{{admin_name}} ({{email_admin}})</a>. You will need
+                          to verify your account by clicking on the button
+                          below.
                         </p>
 
                         <!-- <p>
@@ -679,6 +680,11 @@
                           product description and what it can offers to users.
                           It must be brief and not too long].
                         </p> -->
+
+                        <p>
+                          Herewith your user credential detail.<br />
+                          Username : <strong>{{email}}</strong>
+                        </p>
 
                         <p>
                           If you have any question, please contact

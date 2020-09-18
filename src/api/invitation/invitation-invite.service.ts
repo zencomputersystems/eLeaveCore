@@ -18,6 +18,7 @@ import { setTimeout } from 'timers';
 import { AuthDbService } from 'src/auth/auth.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import { linkResetPassword } from 'src/constant/commonUsed';
+import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 /** Read dotenv file */
 const dotenv = require('dotenv');
 dotenv.config();
@@ -48,7 +49,8 @@ export class InvitationInviteService {
         public readonly queryService: QueryParserService,
         private readonly userService: UserService,
         private readonly emailNodemailerService: EmailNodemailerService,
-        private readonly authDbService: AuthDbService
+        private readonly authDbService: AuthDbService,
+        private readonly userprofileDbService: UserprofileDbService
     ) {
     }
 
@@ -89,7 +91,7 @@ export class InvitationInviteService {
 
                     res.forEach(element => {
                         // console.log('checking2....');
-                        observableEmail$.push(this.sendEmailV2([user.EMAIL, element.email, element.invitationId, loginType[0].LOGIN_TYPE]));
+                        observableEmail$.push(this.sendEmailV2([user.USER_GUID, user.EMAIL, element.email, element.invitationId, loginType[0].LOGIN_TYPE]));
                         // console.log(observableEmail$);
                         // console.log('checking....');
                     });
@@ -296,18 +298,25 @@ export class InvitationInviteService {
      * @returns
      * @memberof InvitationInviteService
      */
-    private sendEmailV2([emailAdmin, emailUser, token, loginType]: [string, string, string, string]) {
+    private sendEmailV2([userAdminGuid, emailAdmin, emailUser, token, loginType]: [string, string, string, string, string]) {
 
+        return this.userprofileDbService.findByFilterV2(['FULLNAME'], [`(USER_GUID=${userAdminGuid})`]).pipe(
+            map(res => {
+                let url = (process.env.URL_SET_PASSWORD || linkResetPassword) + "/" + token + "/" + loginType;
+                // console.log(url);
+                return this.emailNodemailerService.mailProcess([res[0].FULLNAME, emailAdmin, emailUser, url]);
+            })
+        ).subscribe();
         // console.log('before function');
         // let url = "http://zencore.zen.com.my:3000/api/invitation/" + token;
         // let url = "http://localhost:3000/api/invitation/" + token;
         // let url = "http://zencore.zen.com.my:8104/#/reset-password/user/" + token + "/" + loginType;
-        let url = (process.env.URL_SET_PASSWORD || linkResetPassword) + "/" + token + "/" + loginType;
-        // console.log(url);
-        let results = this.emailNodemailerService.mailProcess([emailAdmin, emailUser, url]);
+        // let url = (process.env.URL_SET_PASSWORD || linkResetPassword) + "/" + token + "/" + loginType;
+        // // console.log(url);
+        // let results = this.emailNodemailerService.mailProcess([emailAdmin, emailUser, url]);
         // console.log('after function');
         // console.log(results);
-        return results;
+        // return results;
     }
 
 }

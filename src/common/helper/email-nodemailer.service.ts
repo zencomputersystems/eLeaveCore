@@ -31,10 +31,11 @@ export class EmailNodemailerService {
      * @returns
      * @memberof EmailNodemailerService
      */
-    public mailProcess([emailAdmin, emailUser, codeUrl]: [string, string, string]) {
+    public mailProcess([adminName, emailAdmin, emailUser, codeUrl]: [string, string, string, string]) {
         smtpTransport = this.createSMTP();
 
         var replacements = {
+            admin_name: adminName,
             email: emailUser,
             code: codeUrl,
             product_name: 'beeSuite',
@@ -174,6 +175,12 @@ export class EmailNodemailerService {
                 return await error;
             } else {
                 console.log(info);
+                const fs = require('fs');
+                fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(info), (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                });
                 return await info;
             }
         });

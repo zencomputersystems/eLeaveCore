@@ -85,13 +85,15 @@ export class UserImportService {
     public processImportData(user: any, importData: [UserCsvDto]) {
         this.importResult = new Array<UserImportResult>();
         //get all the the user for this tenant
-        return this.userService.findByFilterV2([], ['(TENANT_GUID=' + user.TENANT_GUID + ')'])
+        // return this.userService.findByFilterV2([], ['(TENANT_GUID=' + user.TENANT_GUID + ')'])
+        // get add users except deleted user
+        return this.userService.findByFilterV2([], ['(DELETED_AT IS NULL)'])
             .pipe(
                 map(res => {
                     const existingUsers: UserModel[] = res;
                     return existingUsers;
                 }),
-                map(res => this.filterData([importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL', 'STAFF_ID', 'STAFF_ID'])),
+                map(res => this.filterData([user, importData, res, 'Existing User', 'EMAIL', 'STAFF_EMAIL', 'STAFF_ID', 'STAFF_ID'])),
                 map(res => this.filterDuplicateUser(res)),
                 mergeMap(successUser => this.saveImportList(successUser, user)),
                 mergeMap(async successUser => await this.saveInfoDataList(successUser, user)),
@@ -137,7 +139,7 @@ export class UserImportService {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
                     // console.log(saveUser);
-                    return this.filterData([importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL', 'STAFF_ID', 'STAFF_ID'])
+                    return this.filterData([user, importData, saveUser, 'Fail', 'EMAIL', 'STAFF_EMAIL', 'STAFF_ID', 'STAFF_ID'])
                     // return importData;
                 }
             }))
@@ -373,7 +375,7 @@ export class UserImportService {
     //     categoryName: string,
     //     findElement: any,
     //     findItem: any) {
-    private filterData([importData, checkModelArray, categoryName, findElement, findItem, findElement2, findItem2]: [Array<UserCsvDto>, any, string, any, any, any, any]) {
+    private filterData([user, importData, checkModelArray, categoryName, findElement, findItem, findElement2, findItem2]: [any, Array<UserCsvDto>, any, string, any, any, any, any]) {
 
         // console.log(importData);
         // console.log(checkModelArray[0]);
@@ -394,7 +396,16 @@ export class UserImportService {
             //     console.log(element.STAFF_EMAIL + ' - ' + x[findElement]);
             // });
 
-            if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase() || x[findElement2] === element[findItem2])) {
+
+            // if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
+            //     data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
+            // } else {
+            //     successList.push(element);
+            // }
+
+            if (checkModelArray.find(x => x.TENANT_GUID === user.TENANT_GUID && x[findElement2] === element[findItem2])) {
+                data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
+            } else if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
                 data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
                 if (data.category == 'Fail') {
                     let userTemp = checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase());

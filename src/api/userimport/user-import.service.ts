@@ -268,7 +268,7 @@ export class UserImportService {
         dataPersonal['nric'] = element.NRIC;
         dataPersonal['dob'] = moment(element.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
         dataPersonal['gender'] = element.GENDER;
-        dataPersonal['maritalStatus'] = userInfoModel.MARITAL_STATUS;
+        dataPersonal['maritalStatus'] = element.MARITAL_STATUS;
         dataPersonal['race'] = '';
         dataPersonal['religion'] = '';
         dataPersonal['nationality'] = '';

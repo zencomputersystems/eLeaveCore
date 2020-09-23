@@ -25,6 +25,8 @@ import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/d
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import { CalendarProfileDbService } from '../../../admin/holiday/db/calendar-profile-db.service';
 import { setHoliday } from '../../../common/calculation/mock/holiday.mock';
+import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
+import { UserprofileDbService } from '../../userprofile/db/userprofile.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -54,7 +56,9 @@ export class ApplyLeaveService {
 		private readonly dateCalculationService: DateCalculationService,
 		private readonly generalLeavePolicyService: GeneralLeavePolicyService,
 		private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-		private readonly calendarProfileDbService: CalendarProfileDbService
+		private readonly calendarProfileDbService: CalendarProfileDbService,
+		private readonly emailNodemailerService: EmailNodemailerService,
+		private readonly userprofileDbService: UserprofileDbService
 	) { }
 
 	/**
@@ -123,7 +127,7 @@ export class ApplyLeaveService {
 	private applyLeaveProcess([applyLeaveDTO, user, extensionQuery, onbehalf]: [ApplyLeaveDTO, any, any, boolean]) {
 		let y = applyLeaveDTO;
 
-		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID'], extensionQuery)
+		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID', 'MANAGER_USER_GUID', 'FULLNAME'], extensionQuery)
 			.pipe(
 				map(async res => {
 					let holidayData = await runServiceCallback(this.calendarProfileDbService.findByFilterV2([], [`(CALENDAR_GUID=${res[0].CALENDAR_GUID})`, `(YEAR=${new Date().getFullYear()})`]));
@@ -221,6 +225,9 @@ export class ApplyLeaveService {
 	 * @memberof ApplyLeaveService
 	 */
 	private applyLeaveData([result, y, user, onbehalf]: [any, ApplyLeaveDTO, any, boolean]) {
+		let userInfo = result.result.userInfo;
+		let userEntitlement = result.result.userEntitlement;
+		console.log(userInfo);
 		let resArr = [];
 		let sumDays = 0;
 		for (let i = 0; i < y.data.length; i++) {
@@ -241,7 +248,20 @@ export class ApplyLeaveService {
 
 					return result.validationResult;
 				})).subscribe(data => {
+					// console.log(userInfo);
+					// console.log(userEntitlement);
+					this.userprofileDbService.findByFilterV2([], [`(USER_GUID=${userInfo.MANAGER_USER_GUID})`]).subscribe(
+						data1 => {
+							// console.log(data);
+							let message = "from " + leaveDetail.startDate + " to " + leaveDetail.endDate;
+							if (noOfDays == 1) { message = "on " + leaveDetail.startDate; }
+							let results = this.emailNodemailerService.mailProcessApply([data1[0].EMAIL, userInfo.FULLNAME, leaveDetail.startDate, leaveDetail.endDate, message]);
+						}, err => {
+							console.log(err);
+						}
+					)
 
+					// let results = this.emailNodemailerService.mailProcessApply('fakhri@zen.com.my', userInfo.FULLNAME);
 				})
 			}
 			resArr.push(msjStatus);

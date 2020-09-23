@@ -68,6 +68,47 @@ export class EmailNodemailerService {
         return "success";
     }
 
+    /**
+     * mail process for apply leave
+     *
+     * @param {string} email
+     * @param {string} name
+     * @returns
+     * @memberof EmailNodemailerService
+     */
+    public mailProcessApply([email, name, startDate, endDate, message]: [string, string, Date, Date, string]) {
+        smtpTransport = this.createSMTP();
+
+        var replacements = {
+            email: email,
+            user_name: name,
+            url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
+            url_app: "https://a.beesuite.app/",
+            message: message
+        };
+        var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
+        var emailTosend = email;
+        var subject = 'beeSuite Leave applied';
+
+        let data = {};
+        data['replacement'] = replacements;
+        data['from'] = from;
+        data['emailTosend'] = emailTosend;
+        data['subject'] = subject;
+
+        let dataRes = this.readHTMLFile('src/common/email-templates/notifyapplyleave.html', this.callbackReadHTML(data));
+
+        const fs = require('fs');
+
+        // append data to a file
+        fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(data), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+
+        return "success";
+    }
 
     /**
      * mail process for approval leave

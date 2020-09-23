@@ -25,6 +25,7 @@ import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 import { LeaveTransactionLogDbService } from './db/leave-transaction-log.db.service';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
+import { EmailNodemailerService } from '../../common/helper/email-nodemailer.service';
 
 /**
  * Module for leave
@@ -60,7 +61,8 @@ import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profil
     UserprofileDbService,
     LeaveTransactionLogDbService,
     LeavetypeEntitlementDbService,
-    CalendarProfileDbService
+    CalendarProfileDbService,
+    EmailNodemailerService
   ],
 })
 export class LeaveModule { }

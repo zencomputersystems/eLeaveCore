@@ -66,7 +66,7 @@ export class ProfilePictureService {
   getProfilePicture([user, process]: [any, string]) {
     let filter = [];
     if (process == 'all')
-      filter = [`(TENANT_GUID=${user.TENANT_GUID})`];
+      filter = [`(TENANT_GUID=${user.TENANT_GUID})`, `(DELETED_AT IS NULL)`];
     else
       filter = [`(USER_GUID=${user.USER_GUID})`];
 

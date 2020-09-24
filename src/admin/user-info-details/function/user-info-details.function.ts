@@ -35,6 +35,7 @@ export function employmentDetailAssign([resultItem, results, dataXML]) {
   if (dataXML.hasOwnProperty('root') && dataXML.root.hasOwnProperty('employmentDetail')) {
     if (dataXML.root.employmentDetail) {
       dataXML.root.employmentDetail.reportingTo = results.MANAGER_USER_GUID;
+      dataXML.root.employmentDetail.reportingToName = results.MANAGER_NAME;
       resultItem['employmentDetail'] = dataXML.root.employmentDetail;
       const { years, months, days } = dateDuration([moment().format('YYYY-MM-DD'), results.JOIN_DATE]);
       const serviceDuration = years + ' years ' + months + ' months ' + days + ' days';

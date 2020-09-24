@@ -250,7 +250,7 @@ export class ApplyLeaveService {
 				})).subscribe(data => {
 					// console.log(userInfo);
 					// console.log(userEntitlement);
-					this.userprofileDbService.findByFilterV2([], [`(USER_GUID=${userInfo.MANAGER_USER_GUID})`]).subscribe(
+					this.userprofileDbService.findByFilterV2([], [`(USER_GUID=${userInfo.MANAGER_USER_GUID}) OR (FULLNAME=${userInfo.MANAGER_USER_GUID})`, `(DELETED_AT IS NULL)`]).subscribe(
 						data1 => {
 							// console.log(data);
 							let message = "from " + leaveDetail.startDate + " to " + leaveDetail.endDate;

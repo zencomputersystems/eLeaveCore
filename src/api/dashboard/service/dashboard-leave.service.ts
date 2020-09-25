@@ -4,8 +4,10 @@ import { UserLeaveEntitlementDbService } from '../../userprofile/db/user-leave-e
 import { of, Observable, forkJoin } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
-
+import { LeavetypeEntitlementDbService } from '../../../admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+/** XMLparser from zen library  */
+var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 /**
  * Service for dashboard leave
  *
@@ -22,7 +24,9 @@ export class DashboardLeaveService {
    */
   constructor(
     private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
-    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService
+    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+    private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
+    private readonly entitlementRoundingService: EntitlementRoundingService
   ) { }
 
   /**
@@ -41,13 +45,18 @@ export class DashboardLeaveService {
         data => {
           if (data.length > 0) {
             leaveId = data[0].LEAVE_TYPE_GUID;
+            const field = [];
+            const filter = ['(ENTITLEMENT_GUID=' + data[0].ENTITLEMENT_GUID + ')'];
+            return forkJoin(of(data), this.leavetypeEntitlementDbService.findByFilterV2(field, filter));
           } else {
             throw new NotFoundException('Leavetype not found');
           }
-
-          const field = [];
-          const filter = ['(USER_GUID=' + userGuid + ')', '(YEAR=' + new Date().getFullYear() + ')', '(LEAVE_TYPE_GUID=' + leaveId + ')'];
-          return this.userLeaveEntitlementSummaryDbService.findByFilterV2(field, filter);
+        }), mergeMap(res => {
+          let [data, entitlement] = res;
+          let leavePolicy = convertXMLToJson(entitlement[0].PROPERTIES_XML);
+          data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+          data[0].BALANCE_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].BALANCE_DAYS, leavePolicy.leaveEntitlementRounding);
+          return of(data);
         })
     );
   }

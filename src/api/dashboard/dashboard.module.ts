@@ -24,6 +24,8 @@ import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
 import { RoleDbService } from '../../admin/role/db/role.db.service';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { UserInfoService } from 'src/admin/user-info/user-info.service';
+import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 
 /**
  * Module for dashboard
@@ -56,7 +58,9 @@ import { UserInfoService } from 'src/admin/user-info/user-info.service';
         LeavetypeService,
         RoleDbService,
         AccessLevelValidateService,
-        UserInfoService
+        UserInfoService,
+        LeavetypeEntitlementDbService,
+        EntitlementRoundingService
     ],
     controllers: [DashboardController, DashboardLeaveController, DashboardProcController]
 })

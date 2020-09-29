@@ -1,5 +1,5 @@
 import { Injectable, Res, Req } from '@nestjs/common';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { UserInfoModel } from 'src/admin/user-info/model/user-info.model';
 import { UserPersonalDetailDTO } from '../dto/userprofile-detail/personal-detail/user-personal-detail.dto';
 import { UserProfileDTO } from '../dto/userprofile-detail/userprofile.dto';
@@ -18,9 +18,9 @@ import { ServiceYearCalc } from 'src/common/policy/entitlement-type/services/ser
 import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
 import { UserLeaveEntitlementService } from './user-leave-entitlement.service';
 import { UserprofileAssignerService } from './userprofile-assigner.service';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 /** XMLparser from zen library  */
-var { convertJsonToXML } = require('@zencloudservices/xmlparser');
+var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Service for user profile
@@ -57,15 +57,53 @@ export class UserprofileService {
     public getList(filters: string[]) {
         // filters.push('(RESIGNATION_DATE IS NULL)');
         // console.log(filters);
+        // return this.userInfoService.findByFilterV2([], []).pipe(
+        //     mergeMap(res => {
+        //         return res;
+        //     }), mergeMap(res => {
+        //         let dataProfile = this.userprofileDBService.findByFilterV2([], filters);
+        //         return forkJoin(of(res), dataProfile);
+        //     }), map(res => {
+        //         // console.log(res);
+        //         console.log(res[0]);
+        //         console.log(res[1][0]);
+
+        //         // const userArray = new Array();
+
+        //         // res.forEach(element => {
+
+        //         //     userArray.push(
+        //         //         new UserprofileListDTO(element, new Access()));
+
+        //         // });
+
+        //         // return userArray;
+        //         return res[1];
+        //     })
+        // )
         return this.userprofileDBService.findByFilterV2([], filters)
             .pipe(
                 map(res => {
                     const userArray = new Array();
 
                     res.forEach(element => {
-
+                        element.NOTIFICATION_RULE = [];
+                        let notificationRule = [];
+                        let finalArr = [];
+                        if (element.PROPERTIES_XML != undefined) {
+                            let dataObj = convertXMLToJson(element.PROPERTIES_XML);
+                            notificationRule = dataObj.root.notificationRule;
+                            if (typeof (notificationRule) === 'string') {
+                                finalArr.push(notificationRule);
+                            }
+                            else {
+                                finalArr = notificationRule;
+                            }
+                            element.NOTIFICATION_RULE = finalArr || [];
+                        }
                         userArray.push(
-                            new UserprofileListDTO(element, new Access()));
+                            new UserprofileListDTO(element, new Access())
+                        );
 
                     });
 

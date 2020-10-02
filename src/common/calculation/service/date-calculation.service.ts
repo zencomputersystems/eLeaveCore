@@ -5,7 +5,7 @@ import { HolidayModel } from 'src/admin/holiday/model/holiday.model';
 // import { HolidayService } from 'src/admin/holiday/holiday.service';
 // import { Observable } from 'rxjs';
 // import { QueryParserService } from 'src/common/helper/query-parser.service';
-// import { map } from 'rxjs/operators';
+// import { map, filter } from 'rxjs/operators';
 
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
@@ -67,7 +67,7 @@ export class DateCalculationService {
             startEndDuration++;
 
             // if (!isIncludeRestDay) {
-            if (isExcludeRestDay) {
+            if (!isExcludeRestDay) {
                 if (mockHoliday.rest.find(x => x.fullname == copyStartDate.format("dddd").toUpperCase())) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterRestDay.push(copyStartDate);
@@ -75,8 +75,8 @@ export class DateCalculationService {
             }
 
             // if (!isIncludeHoliday) {
-            if (isExcludeHoliday) {
-                if (mockHoliday.holiday.find(x => x.start == copyStartDate.format("YYYY-MM-DD"))) {
+            if (!isExcludeHoliday) {
+                if (mockHoliday.holiday.find(x => x.start === copyStartDate.format("YYYY-MM-DD"))) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterHoliday.push(copyStartDate);
                 }

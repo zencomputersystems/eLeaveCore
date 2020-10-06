@@ -8,7 +8,7 @@ export const leavetypeMock = [
       applyNextYear: false,
       claimEntitlement: true,
       applyFractionUnit: true,
-      includeOtherLeaveType: "Some value",
+      includeOtherLeaveType: "NONE",
       attachmentRequired: false,
       excludeDayType: {
         isExcludeHoliday: true,
@@ -22,7 +22,7 @@ export const leavetypeMock = [
         },
         isAllowShortNotice: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "SHORT NOTICE APPLICATION"
         },
         markAsEmergency: false
       },
@@ -34,26 +34,26 @@ export const leavetypeMock = [
         },
         isAllowBackdated: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "BACK DATED APPLICATION"
         }
       },
       isAllowAppliedMoreThanBalance: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "CONVERT TO UNPAID LEAVE"
       },
-      convertExceedLeaveAmount: "Some value",
+      convertExceedLeaveAmount: "UNPAID LEAVE",
       maxDayPerLeave: 0,
       isAllowAfterJoinDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "APPLY AFTER JOIN DATE"
       },
       isAllowLeaveCancelAfterDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "LEAVE CANCELLATION"
       },
       isLimitApplicationToCarryForward: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
@@ -93,7 +93,7 @@ export const leavetypeMock = [
       applyNextYear: false,
       claimEntitlement: false,
       applyFractionUnit: true,
-      includeOtherLeaveType: "Some value",
+      includeOtherLeaveType: "HOSPITALIZATION LEAVE",
       attachmentRequired: true,
       excludeDayType: {
         isExcludeHoliday: true,
@@ -107,7 +107,7 @@ export const leavetypeMock = [
         },
         isAllowShortNotice: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "SHORT NOTICE APPLICATION"
         },
         markAsEmergency: false
       },
@@ -119,26 +119,26 @@ export const leavetypeMock = [
         },
         isAllowBackdated: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "BACK DATED APPLICATION"
         }
       },
       isAllowAppliedMoreThanBalance: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "CONVERT TO UNPAID LEAVE"
       },
-      convertExceedLeaveAmount: "Some value",
+      convertExceedLeaveAmount: "UNPAID LEAVE",
       maxDayPerLeave: 0,
       isAllowAfterJoinDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "APPLY AFTER JOIN DATE"
       },
       isAllowLeaveCancelAfterDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "LEAVE CANCELLATION"
       },
       isLimitApplicationToCarryForward: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "NO BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
@@ -178,7 +178,7 @@ export const leavetypeMock = [
       applyNextYear: false,
       claimEntitlement: false,
       applyFractionUnit: false,
-      includeOtherLeaveType: "Some value",
+      includeOtherLeaveType: "NONE",
       attachmentRequired: false,
       excludeDayType: {
         isExcludeHoliday: true,
@@ -192,7 +192,7 @@ export const leavetypeMock = [
         },
         isAllowShortNotice: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "SHORT NOTICE APPLICATION"
         },
         markAsEmergency: false
       },
@@ -204,26 +204,26 @@ export const leavetypeMock = [
         },
         isAllowBackdated: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "BACK DATED APPLICATION"
         }
       },
       isAllowAppliedMoreThanBalance: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "CONVERT TO UNPAID LEAVE"
       },
-      convertExceedLeaveAmount: "Some value",
+      convertExceedLeaveAmount: "UNPAID LEAVE",
       maxDayPerLeave: 0,
       isAllowAfterJoinDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "APPLY AFTER JOIN DATE"
       },
       isAllowLeaveCancelAfterDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "LEAVE CANCELLATION"
       },
       isLimitApplicationToCarryForward: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "NO BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",
@@ -249,7 +249,7 @@ export const leavetypeMock = [
       applyNextYear: false,
       claimEntitlement: false,
       applyFractionUnit: true,
-      includeOtherLeaveType: "Some value",
+      includeOtherLeaveType: "MEDICAL LEAVE",
       attachmentRequired: false,
       excludeDayType: {
         isExcludeHoliday: true,
@@ -263,7 +263,7 @@ export const leavetypeMock = [
         },
         isAllowShortNotice: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "SHORT NOTICE APPLICATION"
         },
         markAsEmergency: false
       },
@@ -275,26 +275,26 @@ export const leavetypeMock = [
         },
         isAllowBackdated: {
           isCheck: false,
-          textValue: "Some value"
+          textValue: "BACK DATED APPLICATION"
         }
       },
       isAllowAppliedMoreThanBalance: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "CONVERT TO UNPAID LEAVE"
       },
-      convertExceedLeaveAmount: "Some value",
+      convertExceedLeaveAmount: "UNPAID LEAVE",
       maxDayPerLeave: 0,
       isAllowAfterJoinDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "APPLY AFTER JOIN DATE"
       },
       isAllowLeaveCancelAfterDate: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "LEAVE CANCELLATION"
       },
       isLimitApplicationToCarryForward: {
         isCheck: false,
-        textValue: "Some value"
+        textValue: "BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
       leaveEntitlementRounding: "Round Up 0.5",

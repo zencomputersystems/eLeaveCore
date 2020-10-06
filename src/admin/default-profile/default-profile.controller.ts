@@ -22,8 +22,9 @@ export class DefaultProfileController {
         let roleId = data[0][0].ROLE_GUID;
         let workingHoursId = data[1][0].WORKING_HOURS_GUID;
         let calendarId = data[3][0].CALENDAR_GUID;
+        let attendanceId = data[5][0].ATTENDANCE_GUID;
 
-        this.storeDefaultSettingTenant([param.tenantId, calendarId, workingHoursId, roleId]);
+        this.storeDefaultSettingTenant([param.tenantId, calendarId, workingHoursId, roleId, attendanceId]);
         res.send(data);
       },
       err => { res.send(err); }
@@ -70,13 +71,14 @@ export class DefaultProfileController {
     );
   }
 
-  public storeDefaultSettingTenant([tenantId, calendarId, workingHoursId, roleId]: [any, any, any, any]) {
+  public storeDefaultSettingTenant([tenantId, calendarId, workingHoursId, roleId, attendanceId]: [any, any, any, any, any]) {
     let resource = new Resource(new Array());
     let data = {};
     data['TENANT_GUID'] = tenantId;
     data['CALENDAR_PROFILE_GUID'] = calendarId;
     data['WORKING_HOURS_PROFILE_GUID'] = workingHoursId;
     data['ROLE_PROFILE_GUID'] = roleId;
+    data['ATTENDANCE_PROFILE_GUID'] = attendanceId;
     data['LOGIN_TYPE'] = 'local';
     resource.resource.push(data);
 

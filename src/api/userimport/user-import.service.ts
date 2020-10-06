@@ -216,6 +216,7 @@ export class UserImportService {
                 userInfoModel.ROLE_GUID = defaultData[0].ROLE_PROFILE_GUID;
                 userInfoModel.WORKING_HOURS_GUID = defaultData[0].WORKING_HOURS_PROFILE_GUID;
                 userInfoModel.CALENDAR_GUID = defaultData[0].CALENDAR_PROFILE_GUID;
+                userInfoModel.ATTENDANCE_GUID = defaultData[0].ATTENDANCE_GUID;
 
                 this.setUserInfoXML([element, userInfoModel]);
                 // userInfoModel.PROPERTIES_XML = null;

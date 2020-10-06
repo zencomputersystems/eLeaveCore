@@ -71,6 +71,8 @@ export class ProfileDefaultService {
       pdm.WORKING_HOURS_PROFILE_GUID = data.id;
     else if (data.profile == 'role')
       pdm.ROLE_PROFILE_GUID = data.id;
+    else if (data.profile == 'attendance')
+      pdm.ATTENDANCE_PROFILE_GUID = data.id;
 
     resource.resource.push(pdm);
 
@@ -96,6 +98,8 @@ export class ProfileDefaultService {
       pdm.WORKING_HOURS_PROFILE_GUID = data.id;
     else if (data.profile == 'role')
       pdm.ROLE_PROFILE_GUID = data.id;
+    else if (data.profile == 'attendance')
+      pdm.ATTENDANCE_PROFILE_GUID = data.id;
 
     resource.resource.push(pdm);
 

@@ -52,8 +52,8 @@ export class ProfileDefaultController {
    */
   @Post(':profile/:id')
   @ApiOperation({ title: 'Update profile default' })
-  @ApiImplicitParam({ name: 'id', description: 'Calendar guid', required: true })
-  @ApiImplicitParam({ name: 'profile', description: 'Profile to set default', enum: ['calendar', 'working-hour', 'role'], required: true })
+  @ApiImplicitParam({ name: 'id', description: 'Profile guid', required: true })
+  @ApiImplicitParam({ name: 'profile', description: 'Profile to set default', enum: ['calendar', 'working-hour', 'role', 'attendance'], required: true })
   updateProfileDefault(@Param() param, @Req() req, @Res() res) {
     this.profileDefaultService.updateProfile([req.user, param]).subscribe(
       data => { res.send(data.data.resource) },

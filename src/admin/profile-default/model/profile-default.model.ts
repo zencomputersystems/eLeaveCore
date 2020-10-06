@@ -33,4 +33,11 @@ export class ProfileDefaultModel {
    * @memberof ProfileDefaultModel
    */
   ROLE_PROFILE_GUID: string;
+  /**
+   * Attendance profile guid
+   *
+   * @type {string}
+   * @memberof ProfileDefaultModel
+   */
+  ATTENDANCE_PROFILE_GUID: string;
 }

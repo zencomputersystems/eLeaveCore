@@ -18,6 +18,7 @@ import { ProratedDateEndYearService } from 'src/common/policy/entitlement-type/s
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { CompanyDbService } from '../company/company.service';
 import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
+import { AttendanceProfileDbService } from './attendance-profile.db.service';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave
     ProratedDateEndYearService,
     EntitlementRoundingService,
     CompanyDbService,
-    GeneralLeavePolicyService
+    GeneralLeavePolicyService,
+    AttendanceProfileDbService
   ],
   controllers: [
     DefaultProfileController,

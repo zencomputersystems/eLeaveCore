@@ -283,6 +283,14 @@ export class UserInfoModel extends CreateUpdateModel {
   WORKING_HOURS_GUID: string;
 
   /**
+   * Attendance guid
+   *
+   * @type {string}
+   * @memberof UserInfoModel
+   */
+  ATTENDANCE_GUID: string;
+
+  /**
    * Deleted at
    *
    * @type {string}

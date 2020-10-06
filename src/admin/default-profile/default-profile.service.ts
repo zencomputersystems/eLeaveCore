@@ -33,6 +33,9 @@ import { CompanyDbService } from '../company/company.service';
 import { GeneralLeavePolicyService } from '../general-leave-policy/general-leave-policy.service';
 import { GeneralLeavePolicyModel } from '../general-leave-policy/model/general-leave-policy.model';
 import { generalPolicyMock } from './mock/general-policy.mock';
+import { AttendanceProfileModel } from './model/attendance-profile.model';
+import { attendanceMock } from './mock/attendance.mock';
+import { AttendanceProfileDbService } from './attendance-profile.db.service';
 
 /** XMLparser from zen library  */
 var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
@@ -50,12 +53,14 @@ export class DefaultProfileService {
     private readonly serviceYearCalcService: ServiceYearCalc,
     private readonly proratedMonthEndYearService: ProratedDateEndYearService,
     private readonly companyDbService: CompanyDbService,
-    private readonly generalLeavePolicyService: GeneralLeavePolicyService
+    private readonly generalLeavePolicyService: GeneralLeavePolicyService,
+    private readonly attendanceProfileDbService: AttendanceProfileDbService
   ) { }
   public createDefaultProfile(tenantId: string): Observable<any> {
     return this.createRoleProfile(tenantId).pipe(
       mergeMap(res => {
         let whProfile = this.createWorkingHourProfile(tenantId);
+        let attndnceProfile = this.createAttendanceProfile(tenantId);
         // let { leavetypeProcess, leaveEntitlementProcess } = this.createLeavetype(tenantId);
         let leavetypeCreate = this.createLeavetype(tenantId);
         let { calendarDetails, calendarProfiles } = this.createCalendarProfile(tenantId);
@@ -66,7 +71,7 @@ export class DefaultProfileService {
         //   err => { return err.response.data.error.context.resource[0].message; }
         // );
 
-        return forkJoin(of(res), whProfile, calendarProfiles, calendarDetails, leavetypeCreate);
+        return forkJoin(of(res), whProfile, calendarProfiles, calendarDetails, leavetypeCreate, attndnceProfile);
         // return of(tenantId);
       })
     )
@@ -91,6 +96,26 @@ export class DefaultProfileService {
       })
     );
 
+    // return of(tenantId);
+  }
+
+  private createAttendanceProfile(tenantId: string): Observable<any> {
+    let resource = new Resource(new Array);
+    let data = new AttendanceProfileModel();
+
+    data.ATTENDANCE_GUID = v1();
+    data.TENANT_GUID = tenantId;
+    data.CODE = 'Default attendance profile';
+    data.DESCRIPTION = 'Default attendance profile';
+    data.PROPERTIES_XML = convertJsonToXML(attendanceMock);
+
+    resource.resource.push(data);
+
+    return this.attendanceProfileDbService.createByModel(resource, ['ATTENDANCE_GUID', 'CODE', 'DESCRIPTION'], [], []).pipe(
+      map(res => {
+        return res.data.resource;
+      })
+    );
     // return of(tenantId);
   }
 
@@ -353,6 +378,7 @@ export class DefaultProfileService {
     let roleId = '';
     let workingHoursId = '';
     let calendarId = '';
+    let attendanceId = '';
     let leavetypeData = [];
     let leavetypeEntitlementData = [];
 
@@ -363,6 +389,9 @@ export class DefaultProfileService {
         return this.workingHourDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
       }), mergeMap(res => {
         workingHoursId = res[0].WORKING_HOURS_GUID;
+        return this.attendanceProfileDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
+      }), mergeMap(res => {
+        attendanceId = res[0].ATTENDANCE_GUID;
         return this.holidayDbService.findByFilterV2([], [`(TENANT_GUID=${tenantId})`]);
       }), mergeMap(res => {
         calendarId = res[0].CALENDAR_GUID;
@@ -381,6 +410,7 @@ export class DefaultProfileService {
         data.ROLE_GUID = roleId;
         data.CALENDAR_GUID = calendarId;
         data.WORKING_HOURS_GUID = workingHoursId;
+        data.ATTENDANCE_GUID = attendanceId;
 
         resource.resource.push(data);
         return this.userinfoService.updateByModel(resource, [], [`(USER_GUID=${userId})`], []);

@@ -190,14 +190,13 @@ export class LeaveApplicationValidationService {
         if (!policy.applyInAdvance) {
             policy.applyNextYear = false;
         }
-
         // next year 
         const nextYear = new Date().getFullYear() + 1;
 
-        if (policy.applyNextYear || (startDate.year() <= nextYear && endDate.year() <= nextYear)) {
+        // if (policy.applyNextYear || (startDate.year() <= nextYear && endDate.year() <= nextYear)) {
+        if (policy.applyNextYear || (startDate.year() < nextYear && endDate.year() < nextYear)) {
             return true;
         }
-
         return false;
     }
 

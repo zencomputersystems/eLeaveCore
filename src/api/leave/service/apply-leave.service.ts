@@ -227,7 +227,6 @@ export class ApplyLeaveService {
 	private applyLeaveData([result, y, user, onbehalf]: [any, ApplyLeaveDTO, any, boolean]) {
 		let userInfo = result.result.userInfo;
 		let userEntitlement = result.result.userEntitlement;
-		console.log(userInfo);
 		let resArr = [];
 		let sumDays = 0;
 		for (let i = 0; i < y.data.length; i++) {

@@ -67,7 +67,7 @@ export class DateCalculationService {
             startEndDuration++;
 
             // if (!isIncludeRestDay) {
-            if (!isExcludeRestDay) {
+            if (isExcludeRestDay) {
                 if (mockHoliday.rest.find(x => x.fullname == copyStartDate.format("dddd").toUpperCase())) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterRestDay.push(copyStartDate);
@@ -75,8 +75,8 @@ export class DateCalculationService {
             }
 
             // if (!isIncludeHoliday) {
-            if (!isExcludeHoliday) {
-                if (mockHoliday.holiday.find(x => x.start === copyStartDate.format("YYYY-MM-DD"))) {
+            if (isExcludeHoliday) {
+                if (mockHoliday.holiday.find(x => moment(x.start).format("YYYY-MM-DD") === copyStartDate.format("YYYY-MM-DD"))) {
                     // console.log(copyStartDate.format("dddd").toUpperCase());
                     filterHoliday.push(copyStartDate);
                 }
@@ -87,7 +87,7 @@ export class DateCalculationService {
 
         // find holiday between start date and end date
         // if (isIncludeHoliday) {
-        if (isExcludeHoliday) {
+        if (!isExcludeHoliday) {
             mockHoliday.holiday.forEach(element => {
 
                 const holidayDate = moment(element.start, 'YYYY-MM-DD');
@@ -105,7 +105,7 @@ export class DateCalculationService {
 
         const totalDuration = (startEndDuration - (holidayAmount + restDayAmount));
 
-        // console.log(totalDuration+'-'+holidayAmount+'-'+restDayAmount);
+        // console.log(totalDuration + '-' + holidayAmount + '-' + restDayAmount);
         return totalDuration;
 
     }

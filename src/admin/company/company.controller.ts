@@ -69,6 +69,9 @@ export class CompanyController {
 				companyData.forEach(company => {
 					const companyPolicyTemp = companyPolicy.find(x => x.TENANT_COMPANY_GUID === company.TENANT_COMPANY_GUID);
 
+					if (company['YEAR_END'] == null)
+						company['YEAR_END'] = new Date().getFullYear() - 1;
+
 					company['YEAR_END_LIST'] = [];
 					company['LAST_CLOSED_YEAR'] = company['YEAR_END'];
 					company['NEXT_TO_CLOSED'] = company['YEAR_END'] + 1;

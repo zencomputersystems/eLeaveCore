@@ -14,7 +14,7 @@ export class LoginDto {
      * @type {string}
      * @memberof LoginDto
      */
-    @ApiModelProperty({ description: 'Email id account', example: 'tarmimi@zen.com.my' })
+    @ApiModelProperty({ description: 'Email id account', example: 'kenna.ratke35@ethereal.email' })
     @IsNotEmpty()
     readonly email: string;
 
@@ -24,7 +24,7 @@ export class LoginDto {
      * @type {string}
      * @memberof LoginDto
      */
-    @ApiModelProperty({ description: 'Password for email account', example: 'UEBzczEyMzQ=' })
+    @ApiModelProperty({ description: 'Password for email account', example: 'MTIzNDU2' })
     @IsNotEmpty()
     password: string;
 

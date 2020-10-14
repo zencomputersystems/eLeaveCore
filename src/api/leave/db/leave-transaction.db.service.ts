@@ -202,7 +202,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 
 		resource.resource.push(leaveData);
 
-		return this.createByModel(resource, [], [], []);
+		return this.createByModel(resource, ['*'], [], []);
 	}
 
 }

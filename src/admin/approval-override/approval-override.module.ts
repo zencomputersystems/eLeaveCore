@@ -17,6 +17,8 @@ import { CompanyDbService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { PendingLeaveService } from './pending-leave.service';
 import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
+import { ApprovalService } from 'src/common/approval/service/approval.service';
+import { WorkingHoursDbService } from '../working-hours/db/working-hours.db.service';
 
 @Module({
 	imports: [
@@ -39,7 +41,9 @@ import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction
 		LeavetypeService,
 		PendingLeaveService,
 		ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4,
-		LeaveTransactionLogDbService
+		LeaveTransactionLogDbService,
+		ApprovalService,
+		WorkingHoursDbService
 	],
 	controllers: [ApprovalOverrideController]
 })

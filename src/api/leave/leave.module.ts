@@ -26,6 +26,10 @@ import { LeaveTransactionLogDbService } from './db/leave-transaction-log.db.serv
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { CalendarProfileDbService } from '../../admin/holiday/db/calendar-profile-db.service';
 import { EmailNodemailerService } from '../../common/helper/email-nodemailer.service';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { ApprovalOverrideService, ApprovalOverrideServiceRef1, ApprovalOverrideServiceRef2, ApprovalOverrideServiceRef4 } from 'src/admin/approval-override/approval-override.service';
+import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
+import { WorkingHoursDbService } from '../../admin/working-hours/db/working-hours.db.service';
 
 /**
  * Module for leave
@@ -62,7 +66,9 @@ import { EmailNodemailerService } from '../../common/helper/email-nodemailer.ser
     LeaveTransactionLogDbService,
     LeavetypeEntitlementDbService,
     CalendarProfileDbService,
-    EmailNodemailerService
+    EmailNodemailerService,
+    LeavetypeService,
+    WorkingHoursDbService
   ],
 })
 export class LeaveModule { }

@@ -637,16 +637,13 @@
                         class="bodyContent"
                         mc:edit="body_content00"
                       >
-                        <p>
-                          {{user_name}} has applied leave and waiting for your
-                          approval.
-                        </p>
+                        <p>{{user_name}} has {{leave_status}} the leave application as following: </p>
                         <p>Leave Type : {{leave_type}}</p>
                         <p>{{{message}}}</p> <!-- html not escape -->
                         <p>Reason : {{reason}}</p>
-                        <p>
-                          Please login <a href="{{url_app}}">here</a> ({{url_app}}) to approve
-                          or reject.
+                        <p>Approver name : {{approver_name}}</p>
+                        <p>Leave status : {{leave_status}} </p>
+                        <p>Remarks : {{remark}}</p>
                         </p>
                       </td>
                     </tr>

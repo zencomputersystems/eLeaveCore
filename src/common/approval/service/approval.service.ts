@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { of } from 'rxjs';
+import { Observable, of, pipe } from 'rxjs';
 import { map, mergeMap, filter, flatMap } from 'rxjs/operators';
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { LeaveTransactionModel } from 'src/api/leave/model/leave-transaction.model';
@@ -8,8 +8,20 @@ import { Resource } from 'src/common/model/resource.model';
 import { UserprofileDbService } from '../../../api/userprofile/db/userprofile.db.service';
 import { ApprovedLeaveDTO } from 'src/api/leave/dto/approved-leave.dto';
 import { LeaveTransactionLogDbService } from '../../../api/leave/db/leave-transaction-log.db.service';
+import { EmailNodemailerService } from '../../helper/email-nodemailer.service';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
+import moment = require('moment');
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { ApprovalOverrideService } from 'src/admin/approval-override/approval-override.service';
+import { WorkingHoursDbService } from '../../../admin/working-hours/db/working-hours.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
+
+/** 
+ * Superior approve leave (send email at notification rule email)
+ * Superior approve, reject, cancel leave (user get email leave status)
+ * User cancel leave (superior get email leave cancel)
+ */
 
 /**
  * Service for approval
@@ -27,9 +39,12 @@ export class ApprovalService {
 	 * @memberof ApprovalService
 	 */
 	constructor(
-		private leaveTransactionService: LeaveTransactionDbService,
-		private userprofileDbService: UserprofileDbService,
-		private leaveTransactionLogDbService: LeaveTransactionLogDbService
+		public leaveTransactionService: LeaveTransactionDbService,
+		public userprofileDbService: UserprofileDbService,
+		public leaveTransactionLogDbService: LeaveTransactionLogDbService,
+		public emailNodemailerService: EmailNodemailerService,
+		public leavetypeService: LeavetypeService,
+		public workingHoursDbService: WorkingHoursDbService
 	) { }
 
 	/**
@@ -283,6 +298,7 @@ export class ApprovalService {
 	 * @memberof ApprovalService
 	 */
 	private setupDataApproval([result, approverUserId, isApprove, statusApprove, leaveTransactionReason]: [any, string, boolean, string, string]) {
+		// Check current policy whether anyone or everyone
 		if (result.currentPolicy['approvalType'].toUpperCase() === "ANYONE" || result.currentPolicy['approvalType'].toUpperCase() === "EVERYONE") {
 			result.leave = this.verticalLevel([result.leave, approverUserId, isApprove, result.currentPolicy['approvalLevel'], statusApprove]);
 		} else {
@@ -295,30 +311,161 @@ export class ApprovalService {
 		const resource = new Resource(new Array());
 
 		resource.resource.push(result.leave);
-		// console.log(resource);
 
-		return this.leaveTransactionService.updateByModel(resource, [], [], [])
+		return this.leaveTransactionService.updateByModel(resource, [], [], ['LEAVE_TRANSACTION_GUID', 'LEAVE_TYPE_GUID', 'START_DATE', 'END_DATE'])
 			.pipe(map(res => {
 				if (res.status != 200) {
 					throw "Fail to Update Leave Transaction";
 				}
 				else {
-					// console.log(resource.resource[0].LEAVE_TRANSACTION_GUID);
 					const data = resource.resource[0];
 					const leaveTransactionId = data.LEAVE_TRANSACTION_GUID as string;
 					const statusProcess = data.STATUS as string;
-
+					let leaveTransaction = res.data.resource[0];
+					let applierData;
+					let approverData;
+					let managerData;
+					let workingHoursData;
 					this.leaveTransactionLogDbService.create([leaveTransactionId, statusProcess, 'APPROVAL', leaveTransactionReason, approverUserId, data.TENANT_GUID]).subscribe(
-						data => {
-							// console.log(data); 
+						data2 => {
+
+							// if (result.leave.USER_GUID != approverUserId)
+							// approverUserId = result.leave.USER_GUID;
+
+							let userData = approverUserId + ',' + result.leave.USER_GUID;
+
+							// this.userprofileDbService.findByFilterV2([], [`(USER_GUID=${approverUserId})`]).pipe(
+							this.userprofileDbService.findByFilterV2([], [`(USER_GUID IN (${userData}))`]).pipe(
+								mergeMap(async res2 => {
+
+									applierData = res2.find(x => x.USER_GUID === result.leave.USER_GUID);
+									approverData = res2.find(x => x.USER_GUID === approverUserId);
+
+									let leavetypeData = await runServiceCallback(this.leavetypeService.findByFilterV2([], [`(LEAVE_TYPE_GUID=${leaveTransaction.LEAVE_TYPE_GUID})`])) as any[];
+
+									let workingHoursMethod = this.workingHoursDbService.findByFilterV2([], [`(WORKING_HOURS_GUID=${applierData.WORKING_HOURS_GUID})`]).pipe(
+										map(res => { return res[0]; })
+									)
+
+									workingHoursData = await runServiceCallback(workingHoursMethod);
+
+									managerData = res2.find(x => x.USER_GUID === applierData.MANAGER_USER_GUID);
+
+									if (res2.length == 1)
+										managerData = await runServiceCallback(this.userprofileDbService.findByFilterV2([], [`(USER_GUID IN (${applierData.MANAGER_USER_GUID}))`]).pipe(map(res => { return res[0]; })))
+
+									return { res2, leavetypeData, managerData };
+								})
+							).subscribe(
+								data1 => {
+									let { res2, leavetypeData, managerData } = data1;
+									workingHoursData = convertXMLToJson(workingHoursData.PROPERTIES_XML);
+
+									workingHoursData = workingHoursData.property;
+									let timeDetails = leaveTransaction.TIME_SLOT == 'AM' ? workingHoursData.halfday.AM :
+										leaveTransaction.TIME_SLOT == 'PM' ? workingHoursData.halfday.PM :
+											leaveTransaction.TIME_SLOT == 'Q1' ? workingHoursData.quarterday.Q1 :
+												leaveTransaction.TIME_SLOT == 'Q2' ? workingHoursData.quarterday.Q2 :
+													leaveTransaction.TIME_SLOT == 'Q3' ? workingHoursData.quarterday.Q3 :
+														leaveTransaction.TIME_SLOT == 'Q4' ? workingHoursData.quarterday.PQ4 :
+															workingHoursData.fullday;
+
+									if (statusProcess == 'APPROVED') {
+										this.setupEmailApprove([leaveTransaction, data, applierData, managerData, timeDetails, leavetypeData, leaveTransactionReason]);
+									} else if (statusProcess == 'CANCELLED' || statusProcess == 'REJECTED') {
+										this.setupEmailCancel([res2, leavetypeData, leaveTransaction, managerData, leaveTransactionReason, data, approverData, timeDetails]);
+									}
+								},
+								err => { }
+							)
+
 						}, err => {
-							// console.log(err); 
+
 						}
 					);
 				}
 
 				return res.data.resource;
 			}))
+	}
+
+	/**
+	 * Send email if approve leave
+	 * 1- To user
+	 * 2- To notifier
+	 *
+	 * @param {*} [leaveTransaction, data, res2]
+	 * @memberof ApprovalService
+	 */
+	public setupEmailApprove([leaveTransaction, data, applierData, managerData, timeDetails, leavetypeData, leaveTransactionReason]) {
+
+		leaveTransaction.START_DATE = leaveTransaction.START_DATE + timeDetails.start_time;
+		leaveTransaction.END_DATE = leaveTransaction.END_DATE + timeDetails.end_time;
+
+		// Send email to applier with ics file
+		let contentCal = 'BEGIN:VCALENDAR\n' +
+			'VERSION:2.0\n' +
+			'BEGIN:VEVENT\n' +
+			'SUMMARY:On Leave\n' +
+			'DTSTART;VALUE=DATE:' + moment(leaveTransaction.START_DATE, 'YYYY-MM-DDHH:mm').format('YYYYMMDDTHHmmss') + '\n' +
+			'DTEND;VALUE=DATE:' + moment(leaveTransaction.END_DATE, 'YYYY-MM-DDHH:mm').format('YYYYMMDDTHHmmss') + '\n' +
+			'DESCRIPTION:' + data.REASON + '\n' +
+			'STATUS:CONFIRMED\n' +
+			'SEQUENCE:3\n' +
+			'BEGIN:VALARM\n' +
+			'TRIGGER:-PT10M\n' +
+			'ACTION:DISPLAY\n' +
+			'END:VALARM\n' +
+			'END:VEVENT\n' +
+			'END:VCALENDAR';
+
+		let userName = managerData.FULLNAME;
+		let leaveType = leavetypeData[0].CODE;
+		let reason = data.REASON;
+		let remark = leaveTransactionReason;
+		let message = `Start Date: ${moment(leaveTransaction.START_DATE, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')} </br>
+		End Date: ${moment(leaveTransaction.END_DATE, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')}</br>
+		Duration: ${leaveTransaction.TIME_SLOT == null ? 'Full Day' : leaveTransaction.TIME_SLOT == 'AM' || leaveTransaction.TIME_SLOT == 'PM' ? 'Half Day - ' + leaveTransaction.TIME_SLOT : 'Quarter Day - ' + leaveTransaction.TIME_SLOT}</br>`;
+
+		this.emailNodemailerService.mailProcessAppproveStatus([applierData.EMAIL, managerData.FULLNAME, data.STATUS, message, contentCal, userName, leaveType, reason, remark]);
+
+		// Send email to email set in notification rule
+		let user, tempData;
+		tempData = applierData;
+		let messageToNotifier = `on ${moment(leaveTransaction.START_DATE, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')} to ${moment(leaveTransaction.END_DATE, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')}`
+		this.sendEmailToNotifier([user, tempData, leaveType, messageToNotifier]);
+	}
+
+	/**
+	 * Send email leave status cancel and reject
+	 *
+	 * @param {*} [res2, leavetypeData, leaveTransaction, managerData, leaveTransactionReason, data]
+	 * @memberof ApprovalService
+	 */
+	public setupEmailCancel([res2, leavetypeData, leaveTransaction, managerData, leaveTransactionReason, data, approverData, timeDetails]) {
+
+		leaveTransaction.START_DATE = leaveTransaction.START_DATE + timeDetails.start_time;
+		leaveTransaction.END_DATE = leaveTransaction.END_DATE + timeDetails.end_time;
+
+		let email = res2[0].EMAIL;
+
+		if (data.USER_GUID == res2[0].USER_GUID && data.STATUS == 'CANCELLED')
+			email = managerData.EMAIL + ',' + res2[0].EMAIL;
+
+		let leaveType = leavetypeData[0].CODE;
+		let reasonLeave = data.REASON;
+		let staffId = res2[0].STAFF_ID;
+		let name = approverData.FULLNAME + ` (Staff ID : ${approverData.STAFF_ID})`;
+		let message = `Start Date: ${moment(leaveTransaction.START_DATE, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')} </br>
+End Date: ${moment(leaveTransaction.END_DATE, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')}</br>
+Duration: ${leaveTransaction.TIME_SLOT == null ? 'Full Day' : leaveTransaction.TIME_SLOT == 'AM' || leaveTransaction.TIME_SLOT == 'PM' ? 'Half Day - ' + leaveTransaction.TIME_SLOT : 'Quarter Day - ' + leaveTransaction.TIME_SLOT}</br>`;
+		let approverName;
+		approverName = managerData.FULLNAME ? managerData.FULLNAME : 'N/A';
+
+		let remarks = leaveTransactionReason;
+		let leaveStatus = data.STATUS;
+
+		this.emailNodemailerService.mailProcessCancelStatus([email, approverName, leaveStatus, message, leaveType, reasonLeave, name, staffId, remarks]);
 	}
 
 	/**
@@ -438,5 +585,57 @@ export class ApprovalService {
 		return leave;
 	}
 
+
+	/**
+	 * Notification Rule
+	 * Send email to email available
+	 *
+	 * @param {*} user
+	 * @param {*} tempData
+	 * @memberof ApprovalOverrideService
+	 */
+	public sendEmailToNotifier([user, tempData, leavetype, message]) {
+		if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
+			let dataObj = convertXMLToJson(tempData.PROPERTIES_XML);
+			if (dataObj.root.notificationRule) {
+				this.sendEmailNotify([user, dataObj.root.notificationRule, tempData.FULLNAME, leavetype, message]);
+			}
+		}
+	}
+
+	/**
+	 * Notification Rule
+	 * Method to send email notify
+	 *
+	 * @param {*} user
+	 * @param {string[]} userId
+	 * @returns {Observable<any>}
+	 * @memberof ApprovalOverrideService
+	 */
+	public sendEmailNotify([user, userId, fullname, leavetype, message]: [any, string[], string, string, string]): Observable<any> {
+		let successList = [];
+		let failedList = [];
+		successList = userId;
+		successList.forEach(element => {
+			this.sendEmailV2([element, fullname, leavetype, message]);
+		});
+		return of(successList);
+	}
+
+	/**
+	 * Notification Rule
+	 * Method to send email
+	 * Setup email approve to email notification rule
+	 *
+	 * @private
+	 * @param {string} email
+	 * @param {string} token
+	 * @returns
+	 * @memberof ApprovalOverrideService
+	 */
+	private sendEmailV2([email, fullname, leavetype, message]: [string, string, string, string]) {
+		let results = this.emailNodemailerService.mailProcessApprove([email, fullname, leavetype, message]);
+		return results;
+	}
 
 }

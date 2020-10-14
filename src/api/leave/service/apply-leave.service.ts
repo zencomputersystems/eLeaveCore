@@ -27,6 +27,8 @@ import { CalendarProfileDbService } from '../../../admin/holiday/db/calendar-pro
 import { setHoliday } from '../../../common/calculation/mock/holiday.mock';
 import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.service';
 import { UserprofileDbService } from '../../userprofile/db/userprofile.db.service';
+import { LeavetypeService } from '../../../admin/leavetype/leavetype.service';
+import { WorkingHoursDbService } from '../../../admin/working-hours/db/working-hours.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -58,7 +60,9 @@ export class ApplyLeaveService {
 		private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
 		private readonly calendarProfileDbService: CalendarProfileDbService,
 		private readonly emailNodemailerService: EmailNodemailerService,
-		private readonly userprofileDbService: UserprofileDbService
+		private readonly userprofileDbService: UserprofileDbService,
+		private readonly leavetypeService: LeavetypeService,
+		private readonly workingHoursDbService: WorkingHoursDbService
 	) { }
 
 	/**
@@ -127,7 +131,7 @@ export class ApplyLeaveService {
 	private applyLeaveProcess([applyLeaveDTO, user, extensionQuery, onbehalf]: [ApplyLeaveDTO, any, any, boolean]) {
 		let y = applyLeaveDTO;
 
-		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID', 'MANAGER_USER_GUID', 'FULLNAME'], extensionQuery)
+		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID', 'MANAGER_USER_GUID', 'FULLNAME', 'WORKING_HOURS_GUID'], extensionQuery)
 			.pipe(
 				map(async res => {
 					let holidayData = await runServiceCallback(this.calendarProfileDbService.findByFilterV2([], [`(CALENDAR_GUID=${res[0].CALENDAR_GUID})`, `(YEAR=${new Date().getFullYear()})`]));
@@ -149,16 +153,12 @@ export class ApplyLeaveService {
 				mergeMap(async (result) => {
 					// find the parent leave
 					const parent = result.userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
-					// console.log(parent);
+
 					let method = this.leavetypeEntitlementDbService.findByFilterV2(['PROPERTIES_XML'], [`(ENTITLEMENT_GUID=${parent.ENTITLEMENT_GUID})`]);
 
 					// call leavetype entitlement def (before this read from xml snapshot)
 					let restemp = runServiceCallback(method).then(
 						result1 => {
-							// console.log(result1);
-							// console.log(restemp);
-							// console.log('siapa dulu?');
-
 
 							// if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
 							if (result1[0].PROPERTIES_XML == null || result1[0].PROPERTIES_XML == undefined) {
@@ -178,9 +178,6 @@ export class ApplyLeaveService {
 						}
 					);
 					return await restemp;
-
-					// console.log(restemp);
-					// console.log('siapa dulu?');
 
 					// if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
 					// 	const res = new ValidationStatusDTO();
@@ -240,21 +237,46 @@ export class ApplyLeaveService {
 			}
 			else {
 				msjStatus = noOfDays + ' ' + (noOfDays > 1 ? 'days' : 'day') + '  was send for approval between ' + leaveDetail.startDate + ' and ' + leaveDetail.endDate;
+				let leavetypeData;
+				let workingHourData;
 				this.leaveTransactionDbService.create([y.data[i], result, user, y, onbehalf]).pipe(map((res) => {
 					if (res.status != 200) {
 						result.validationResult.valid = false;
 					}
-
-					return result.validationResult;
+					// return result.validationResult;
+					return res.data.resource[0];
+				}), mergeMap(async res => {
+					leavetypeData = await runServiceCallback(this.leavetypeService.findByFilterV2([], [`(LEAVE_TYPE_GUID=${res.LEAVE_TYPE_GUID})`]));
+					workingHourData = await runServiceCallback(this.workingHoursDbService.findByFilterV2([], [`(WORKING_HOURS_GUID=${userInfo.WORKING_HOURS_GUID})`]));
+					return of(res);
+				}), mergeMap(res => {
+					return res;
 				})).subscribe(data => {
-					// console.log(userInfo);
-					// console.log(userEntitlement);
+
 					this.userprofileDbService.findByFilterV2([], [`(USER_GUID=${userInfo.MANAGER_USER_GUID}) OR (FULLNAME=${userInfo.MANAGER_USER_GUID})`, `(DELETED_AT IS NULL)`]).subscribe(
 						data1 => {
-							// console.log(data);
-							let message = "from " + leaveDetail.startDate + " to " + leaveDetail.endDate;
-							if (noOfDays == 1) { message = "on " + leaveDetail.startDate; }
-							let results = this.emailNodemailerService.mailProcessApply([data1[0].EMAIL, userInfo.FULLNAME, leaveDetail.startDate, leaveDetail.endDate, message]);
+							let workingHoursData = convertXMLToJson(workingHourData[0].PROPERTIES_XML);
+							workingHoursData = workingHoursData.property;
+							let timeDetails = data.TIME_SLOT == 'AM' ? workingHoursData.halfday.AM :
+								data.TIME_SLOT == 'PM' ? workingHoursData.halfday.PM :
+									data.TIME_SLOT == 'Q1' ? workingHoursData.quarterday.Q1 :
+										data.TIME_SLOT == 'Q2' ? workingHoursData.quarterday.Q2 :
+											data.TIME_SLOT == 'Q3' ? workingHoursData.quarterday.Q3 :
+												data.TIME_SLOT == 'Q4' ? workingHoursData.quarterday.PQ4 :
+													workingHoursData.fullday;
+
+							leaveDetail.startDate = leaveDetail.startDate + timeDetails.start_time;
+							leaveDetail.endDate = leaveDetail.endDate + timeDetails.end_time;
+
+							// let message = "from " + leaveDetail.startDate + " to " + leaveDetail.endDate;
+							let message = `Start Date: ${moment(leaveDetail.startDate, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')} </br>
+End Date: ${moment(leaveDetail.endDate, 'YYYY-MM-DDHH:mm').format('DD/MM/YYYY HH:mm')}</br>
+Duration: ${data.TIME_SLOT == null ? 'Full Day' : data.TIME_SLOT == 'AM' || data.TIME_SLOT == 'PM' ? 'Half Day - ' + data.TIME_SLOT : 'Quarter Day - ' + data.TIME_SLOT}</br>`;
+
+
+							// if (noOfDays == 1) { message = "on " + leaveDetail.startDate; }
+							let leaveType = leavetypeData[0].CODE;
+							let results = this.emailNodemailerService.mailProcessApply([data1[0].EMAIL, userInfo.FULLNAME, leaveDetail.startDate, leaveDetail.endDate, message, leaveType, data.REASON]);
 						}, err => {
 							console.log(err);
 						}

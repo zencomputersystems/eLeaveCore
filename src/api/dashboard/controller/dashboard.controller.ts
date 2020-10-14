@@ -167,7 +167,7 @@ export class DashboardController {
 				dataToShow['timeSlot'] = element.TIME_SLOT || 'fullday';
 				dataToShow['noOfDays'] = element.NO_OF_DAYS;
 				dataToShow['dateApplied'] = element.CREATION_TS;
-				dataToShow['leaveTypeName'] = findLeavetype.CODE;
+				dataToShow['leaveTypeName'] = findLeavetype.CODE || null;
 
 				combineData.push(dataToShow);
 			});

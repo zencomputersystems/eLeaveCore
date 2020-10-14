@@ -17,6 +17,8 @@ import { PendingLeaveService } from './pending-leave.service';
 import { CompanyModel } from '../company/model/company.model';
 import { LeaveTypeModel } from '../leavetype/model/leavetype.model';
 import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
+import { ApprovalService } from '../../common/approval/service/approval.service';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -55,7 +57,8 @@ export class ApprovalOverrideServiceRef2 {
    */
   constructor(
     public leaveTransactionDbService: LeaveTransactionDbService,
-    public commonFunctionService: CommonFunctionService) {
+    public commonFunctionService: CommonFunctionService,
+    public approvalService: ApprovalService) {
   }
 }
 /**
@@ -113,7 +116,8 @@ export class ApprovalOverrideService {
     // private readonly companyDbService: CompanyDbService,
     // private readonly leavetypeService: LeavetypeService,
     private readonly pendingLeaveService: PendingLeaveService,
-    private readonly leaveTransactionLogDbService: LeaveTransactionLogDbService) {
+    private readonly leaveTransactionLogDbService: LeaveTransactionLogDbService,
+    private readonly approvalService: ApprovalService) {
   }
 
   /**
@@ -239,9 +243,9 @@ export class ApprovalOverrideService {
 
         return res;
       })
-    ).subscribe(data => {
-      data.data.resource.forEach(element => {
-        this.checkMailAvailable(user, element);
+    ).subscribe(data1 => {
+      data1.data.resource.forEach(element => {
+        this.checkMailAvailable([user, element, data]);
       });
     });
     return result;
@@ -254,15 +258,59 @@ export class ApprovalOverrideService {
    * @param {*} element
    * @memberof ApprovalOverrideService
    */
-  public checkMailAvailable(user, element) {
-    if (element.status == 'APPROVE') {
-      let userData = this.approvalOverrideServiceRef1.approvalOverrideServiceRef4.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
-        data => {
-          let tempData = data.data.resource[0];
-          this.sendEmailToNotifier(user, tempData);
-        }, err => { }
-      );
-    }
+  public checkMailAvailable([user, element, data]) {
+    this.approvalService.leaveTransactionService.findByFilterV2([], [`(LEAVE_TRANSACTION_GUID=${element.LEAVE_TRANSACTION_GUID})`]).pipe(
+      mergeMap(async res => {
+
+        let leavetypeData = await runServiceCallback(this.approvalService.leavetypeService.findByFilterV2([], [`(LEAVE_TYPE_GUID=${res[0].LEAVE_TYPE_GUID})`])) as any[];
+
+        let applierData = await runServiceCallback(this.approvalService.userprofileDbService.findByFilterV2([], [`(USER_GUID=${element.USER_GUID})`]));
+
+        let managerData = await runServiceCallback(this.approvalService.userprofileDbService.findByFilterV2([], [`(USER_GUID=${applierData[0].MANAGER_USER_GUID})`]).pipe(
+          map(res => { return res[0]; })
+        )) as any;
+
+        let approverData = await runServiceCallback(this.approvalService.userprofileDbService.findByFilterV2([], [`(USER_GUID=${user.USER_GUID})`])) as any;
+
+        let workingHoursData = await runServiceCallback(this.approvalService.workingHoursDbService.findByFilterV2([], [`(WORKING_HOURS_GUID=${applierData[0].WORKING_HOURS_GUID})`]).pipe(
+          map(res => { return res[0]; })
+        )) as any;
+
+        workingHoursData = convertXMLToJson(workingHoursData.PROPERTIES_XML);
+
+        workingHoursData = workingHoursData.property;
+        let timeDetails = res[0].TIME_SLOT == 'AM' ? workingHoursData.halfday.AM :
+          res[0].TIME_SLOT == 'PM' ? workingHoursData.halfday.PM :
+            res[0].TIME_SLOT == 'Q1' ? workingHoursData.quarterday.Q1 :
+              res[0].TIME_SLOT == 'Q2' ? workingHoursData.quarterday.Q2 :
+                res[0].TIME_SLOT == 'Q3' ? workingHoursData.quarterday.Q3 :
+                  res[0].TIME_SLOT == 'Q4' ? workingHoursData.quarterday.PQ4 :
+                    workingHoursData.fullday;
+
+        if (res[0].STATUS == 'APPROVED') {
+          this.approvalService.setupEmailApprove([res[0], res[0], applierData[0], managerData, timeDetails, leavetypeData, data.remark])
+        } else if (element.STATUS == 'CANCELLED' || element.STATUS == 'REJECTED') {
+          this.approvalService.setupEmailCancel([applierData, leavetypeData, res[0], managerData, data.remark, res[0], approverData[0], timeDetails])
+        }
+        return res;
+      })
+    ).subscribe(data => { }, err => { })
+
+    // let leaveTransaction = element;
+    // if (element.STATUS == 'APPROVED') {
+    //   let userData = this.approvalOverrideServiceRef1.approvalOverrideServiceRef4.userInfoService.findOne(element.USER_GUID, user.TENANT_GUID).subscribe(
+    //     data => {
+    //       let tempData = data.data.resource[0];
+    //       this.sendEmailToNotifier(user, tempData);
+    //     }, err => { }
+    //   );
+    //   let data, res2;
+    //   leaveTransaction, data, applierData, managerData, timeDetails, leavetypeData, leaveTransactionReason
+    //   this.approvalService.setupEmailApprove([leaveTransaction, data, res2, '', '', '', '']);
+    // } else if (element.STATUS == 'CANCELLED' || element.STATUS == 'REJECTED') {
+    //   let res2, leavetypeData, managerData, leaveTransactionReason, data = null;
+    //   // this.approvalService.setupEmailCancel([res2, leavetypeData, leaveTransaction, managerData, leaveTransactionReason, data])
+    // }
   }
 
   /**
@@ -275,8 +323,8 @@ export class ApprovalOverrideService {
   public sendEmailToNotifier(user, tempData) {
     if (tempData.PROPERTIES_XML != null && tempData.PROPERTIES_XML != '' && tempData.PROPERTIES_XML != undefined) {
       let dataObj = convertXMLToJson(tempData.PROPERTIES_XML);
-      if (dataObj.notificationRule) {
-        this.sendEmailNotify(user, dataObj.notificationRule);
+      if (dataObj.root.notificationRule) {
+        this.sendEmailNotify([user, dataObj.root.notificationRule, tempData.FULLNAME]);
       }
     }
   }
@@ -289,33 +337,38 @@ export class ApprovalOverrideService {
    * @returns {Observable<any>}
    * @memberof ApprovalOverrideService
    */
-  public sendEmailNotify(user: any, userId: string[]): Observable<any> {
+  public sendEmailNotify([user, userId, fullname]: [any, string[], string]): Observable<any> {
     let successList = [];
     let failedList = [];
+    successList = userId;
+    successList.forEach(element => {
+      this.sendEmailV2([element, fullname]);
+    });
+    return of(successList);
 
-    let emailArr = this.approvalOverrideServiceRef1.approvalOverrideServiceRef4.userService.findEmail(userId).pipe(
-      map(res => {
-        userId.forEach(element => {
-          let emailToSend = res.data.resource.find(x => x.USER_GUID.toString() === element.toString());
-          if (emailToSend) {
-            successList.push(emailToSend);
-          } else {
-            failedList.push(element.toString());
-          }
-        });
-        return { successList, failedList };
-      }), map(res => {
-        res.successList.forEach(element => {
-          this.sendEmailV2(element.EMAIL, "Farah");
-        });
-        return res;
-      })).subscribe(data => {
-        return data;
-      }, err => {
-        return err;
-      })
+    // let emailArr = this.approvalOverrideServiceRef1.approvalOverrideServiceRef4.userService.findEmail(userId).pipe(
+    //   map(res => {
+    //     userId.forEach(element => {
+    //       let emailToSend = res.data.resource.find(x => x.USER_GUID.toString() === element.toString());
+    //       if (emailToSend) {
+    //         successList.push(emailToSend);
+    //       } else {
+    //         failedList.push(element.toString());
+    //       }
+    //     });
+    //     return { successList, failedList };
+    //   }), map(res => {
+    //     res.successList.forEach(element => {
+    //       this.sendEmailV2(element.EMAIL, "Farah");
+    //     });
+    //     return res;
+    //   })).subscribe(data => {
+    //     return data;
+    //   }, err => {
+    //     return err;
+    //   })
 
-    return of(emailArr);
+    // return of(emailArr);
   }
 
   /**
@@ -327,8 +380,8 @@ export class ApprovalOverrideService {
    * @returns
    * @memberof ApprovalOverrideService
    */
-  private sendEmailV2(email: string, token: string) {
-    let results = this.approvalOverrideServiceRef1.emailNodemailerService.mailProcessApprove(email, token);
+  private sendEmailV2([email, fullname]: [string, string]) {
+    let results = this.approvalOverrideServiceRef1.emailNodemailerService.mailProcessApprove([email, fullname, null, null]);
     return results;
   }
 

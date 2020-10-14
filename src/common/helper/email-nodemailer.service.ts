@@ -76,15 +76,27 @@ export class EmailNodemailerService {
      * @returns
      * @memberof EmailNodemailerService
      */
-    public mailProcessApply([email, name, startDate, endDate, message]: [string, string, Date, Date, string]) {
+    public mailProcessApply([email, name, startDate, endDate, message, leaveType, reasonLeave]: [string, string, Date, Date, string, string, string]) {
         smtpTransport = this.createSMTP();
+        // let leaveType = 'Annual leave';
+        // let reasonLeave = 'Travel';
+        // name = name + ` (Staff ID : 3107)`;
+        // message = `Start Date: 2020-10-15 </br>
+        // End Date: 2020-10-16</br>
+        // Duration: Full Day</br>
+        // </br>
+        // Start Date: 2020-10-17</br>
+        // End Date: 2020-10-17</br>
+        // Duration: Half Day - AM`;
 
         var replacements = {
             email: email,
-            user_name: name,
+            user_name: name, // need to add with staff id e.g: Ang Ruo Li (Staff ID: 3107)
             url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
-            url_app: "https://a.beesuite.app/",
-            message: message
+            url_app: "https://a.beesuite.app/#/main/task/", // "https://a.beesuite.app/", // Add link with focus page on task
+            message: message, // message detail start, end, and duration
+            leave_type: leaveType,
+            reason: reasonLeave
         };
         var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
@@ -111,6 +123,109 @@ export class EmailNodemailerService {
     }
 
     /**
+     * mail process for apply leave
+     *
+     * @param {string} email
+     * @param {string} name
+     * @returns
+     * @memberof EmailNodemailerService
+     */
+    public mailProcessAppproveStatus([email, approverName, leaveStatus, message, contentCal, userName, leaveType, reason, remark]: [string, string, string, string, string, string, string, string, string]) {
+
+        smtpTransport = this.createSMTP();
+
+        var replacements = {
+            email: email,
+            url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
+            url_app: "https://a.beesuite.app/",
+            message: message,
+            approver_name: approverName,
+            leave_status: leaveStatus,
+            user_name: userName,
+            leave_type: leaveType,
+            reason: reason,
+            remark: remark
+
+        };
+        var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
+        var emailTosend = email; // 'fakhri@zen.com.my';// email;
+        var subject = 'beeSuite Leave ' + leaveStatus;
+        var icalEvent = {
+            filename: "leavestatus.ics",
+            method: 'publish',
+            content: contentCal
+        }
+
+        let data = {};
+        data['replacement'] = replacements;
+        data['from'] = from;
+        data['emailTosend'] = emailTosend;
+        data['subject'] = subject;
+        data['icalEvent'] = icalEvent;
+
+        let dataRes = this.readHTMLFile('src/common/email-templates/notifyleavestatus.html', this.callbackReadHTMLWithCalendar(data));
+
+        const fs = require('fs');
+
+        // append data to a file
+        fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(data), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+
+        return "success";
+    }
+
+    public mailProcessCancelStatus([email, approverName, leaveStatus, message, leaveType, reasonLeave, name, staffId, remarks]: [string, string, string, string, string, string, string, string, string]) {
+        smtpTransport = this.createSMTP();
+
+        var replacements = {
+            email: email,
+            user_name: name, // need to add with staff id e.g: Ang Ruo Li (Staff ID: 3107)
+            url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
+            url_app: "https://a.beesuite.app/#/main/task/", // "https://a.beesuite.app/", // Add link with focus page on task
+            message: message, // message detail start, end, and duration
+            leave_type: leaveType,
+            reason: reasonLeave,
+            approver_name: approverName,
+            leave_status: leaveStatus,
+            remark: remarks
+        };
+
+        // var replacements = {
+        //     email: email,
+        //     url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
+        //     url_app: "https://a.beesuite.app/",
+        //     message: message,
+        //     approver_name: approverName,
+        //     leave_status: leaveStatus
+        // };
+        var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
+        var emailTosend = email;// 'fakhri@zen.com.my';// email;
+        var subject = 'beeSuite Leave ' + leaveStatus;
+
+        let data = {};
+        data['replacement'] = replacements;
+        data['from'] = from;
+        data['emailTosend'] = emailTosend;
+        data['subject'] = subject;
+
+        let dataRes = this.readHTMLFile('src/common/email-templates/notifyleavestatus.html', this.callbackReadHTML(data));
+
+        const fs = require('fs');
+
+        // append data to a file
+        fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(data), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+
+        return "success";
+    }
+
+    /**
      * mail process for approval leave
      *
      * @param {string} email
@@ -118,17 +233,22 @@ export class EmailNodemailerService {
      * @returns
      * @memberof EmailNodemailerService
      */
-    public mailProcessApprove(email: string, name: string) {
+    public mailProcessApprove([email, name, leavetype, message]: [string, string, string, string]) {
         smtpTransport = this.createSMTP();
 
         var replacements = {
-            email: email,
-            code: "#" + name,
-            name: name
+            // email: email,
+            // code: "#" + name,
+            // name: name,
+            leavetype: leavetype,
+            applier_name: name,
+            message: message,//' on 2020-10-10 to 2020-10-11',
+            url_image: "https://www.beesuite.app/wp-content/uploads/2020/07/bee04.png",
+            url_app: "https://a.beesuite.app/",
         };
         var from = process.env.SMTPSENDER;//'wantan.wonderland.2018@gmail.com';
         var emailTosend = email;
-        var subject = 'Leave approval ✔';
+        var subject = replacements.applier_name + ' is on Leave ✔';
 
         let data = {};
         data['replacement'] = replacements;
@@ -208,6 +328,40 @@ export class EmailNodemailerService {
             to: data.emailTosend, // email,
             subject: data.subject, // 'Leave approval ✔',
             html: htmlToSend
+        };
+
+        return await smtpTransport.sendMail(mailOptions, async function (error, info) {
+            if (error) {
+                console.log(error);
+                return await error;
+            } else {
+                console.log(info);
+                const fs = require('fs');
+                fs.appendFile('sendMail.log', '\n[' + new Date() + ']' + JSON.stringify(info), (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                });
+                return await info;
+            }
+        });
+    }
+
+    public callbackReadHTMLWithCalendar = (data) => async function (err, html) {
+
+        var template = handlebars.compile(html);
+        // var replacements = {
+        //     email: email,
+        //     code: "#" + name,
+        //     name: name
+        // };
+        var htmlToSend = template(data.replacement);
+        var mailOptions = {
+            from: data.from, // 'wantan.wonderland.2018@gmail.com',
+            to: data.emailTosend, // email,
+            subject: data.subject, // 'Leave approval ✔',
+            html: htmlToSend,
+            icalEvent: data.icalEvent
         };
 
         return await smtpTransport.sendMail(mailOptions, async function (error, info) {

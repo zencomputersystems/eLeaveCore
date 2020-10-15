@@ -312,7 +312,7 @@ export class ApprovalService {
 
 		resource.resource.push(result.leave);
 
-		return this.leaveTransactionService.updateByModel(resource, [], [], ['LEAVE_TRANSACTION_GUID', 'LEAVE_TYPE_GUID', 'START_DATE', 'END_DATE'])
+		return this.leaveTransactionService.updateByModel(resource, [], [], ['LEAVE_TRANSACTION_GUID', 'LEAVE_TYPE_GUID', 'START_DATE', 'END_DATE', 'TIME_SLOT'])
 			.pipe(map(res => {
 				if (res.status != 200) {
 					throw "Fail to Update Leave Transaction";
@@ -615,10 +615,11 @@ Duration: ${leaveTransaction.TIME_SLOT == null ? 'Full Day' : leaveTransaction.T
 	public sendEmailNotify([user, userId, fullname, leavetype, message]: [any, string[], string, string, string]): Observable<any> {
 		let successList = [];
 		let failedList = [];
-		successList = userId;
-		successList.forEach(element => {
-			this.sendEmailV2([element, fullname, leavetype, message]);
-		});
+		successList = [userId];
+		if (successList)
+			successList.forEach(element => {
+				this.sendEmailV2([element, fullname, leavetype, message]);
+			});
 		return of(successList);
 	}
 

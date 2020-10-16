@@ -229,8 +229,9 @@ export class UserInfoDetailsController {
       data => {
         if (data.data.resource.length > 0) {
           let results = convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+          console.log(Array.isArray(results.root.notificationRule));
           let filterResult =
-            process == 'notificationRule' ? results.root.notificationRule :
+            process == 'notificationRule' ? { "email": Array.isArray(results.root.notificationRule) ? results.root.notificationRule : [results.root.notificationRule] } :
               process == 'employmentDetail' ? results.root.employmentDetail :
                 process == 'personalDetails' ? results.root.personalDetails : results
           res.send(filterResult);

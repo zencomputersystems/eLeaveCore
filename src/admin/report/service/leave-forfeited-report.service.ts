@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { LeaveForfeitedReportDto } from '../dto/leave-forfeited-report.dto';
+import { LeaveEntitlementReportService } from './leave-entitlement-report.service';
 
 /**
  * Leave forfeited report service
@@ -10,6 +12,7 @@ import { LeaveForfeitedReportDto } from '../dto/leave-forfeited-report.dto';
  */
 @Injectable()
 export class LeaveForfeitedReportService {
+  constructor(private readonly leaveEntitlementReportService: LeaveEntitlementReportService) { }
   /**
    * Get leave forfeited data
    *
@@ -18,23 +21,37 @@ export class LeaveForfeitedReportService {
    * @memberof LeaveForfeitedReportService
    */
   getLeaveForfeitedData([tenantId, userId]: [string, string]) {
-    let leaveForfeitedReportDto = new LeaveForfeitedReportDto;
-    let userForfeitedData = [];
 
-    leaveForfeitedReportDto.userGuid = "0089edb0-2bac-11ea-ae46-2fb9e0426975";
-    leaveForfeitedReportDto.employeeNo = "1212";
-    leaveForfeitedReportDto.employeeName = "KLKL";
-    leaveForfeitedReportDto.leaveTypeId = "JBKHBKHUB";
-    leaveForfeitedReportDto.leaveTypeName = "Annual Leave";
-    leaveForfeitedReportDto.noOfDays = '1';
+    return this.leaveEntitlementReportService.getLeaveEntitlementData([tenantId, userId]).pipe(
+      map(res => {
 
-    leaveForfeitedReportDto.companyName = '';//resultUser.COMPANY_NAME;
-    leaveForfeitedReportDto.department = '';//resultUser.DEPARTMENT;
-    leaveForfeitedReportDto.costcentre = '';//resultUser.COSTCENTRE;
-    leaveForfeitedReportDto.branch = '';//resultUser.BRANCH;
+        let userForfeitedData = [];
+        res.forEach(element => {
+          element.leaveDetail.forEach(element2 => {
 
-    userForfeitedData.push(leaveForfeitedReportDto);
+            if (element2.forfeited > 0) {
+              let leaveForfeitedReportDto = new LeaveForfeitedReportDto;
 
-    return of(userForfeitedData);
+              leaveForfeitedReportDto.userGuid = element.userGuid;
+              leaveForfeitedReportDto.employeeNo = element.employeeNo;
+              leaveForfeitedReportDto.employeeName = element.employeeName;
+              leaveForfeitedReportDto.leaveTypeId = element2.leaveTypeId;
+              leaveForfeitedReportDto.leaveTypeName = element2.leaveTypeName;
+              leaveForfeitedReportDto.noOfDays = element2.forfeited;
+
+              leaveForfeitedReportDto.companyName = element.companyName;
+              leaveForfeitedReportDto.department = element.department;
+              leaveForfeitedReportDto.costcentre = element.costcentre;
+              leaveForfeitedReportDto.branch = element.branch;
+
+              userForfeitedData.push(leaveForfeitedReportDto);
+            }
+          });
+        });
+        return userForfeitedData;
+
+      })
+    )
+
   }
 }

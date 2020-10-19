@@ -306,7 +306,7 @@ export class ApprovalService {
 		}
 
 		result.leave.UPDATE_USER_GUID = approverUserId;
-		// result.leave.REMARKS = leaveTransactionReason;
+		result.leave.REMARKS = leaveTransactionReason;
 
 		const resource = new Resource(new Array());
 

@@ -103,6 +103,10 @@ export class LeaveApplicationValidationService {
                                 validationStatus.message.push("You need to apply " + policy.applyBeforeProperties.numberOfDays + " Days before");
                             }
 
+                            if (!this.allowApplyFractionLeave([policy, applyLeaveDTO])) {
+                                validationStatus.message.push("Cannot apply fraction leave");
+                            }
+
                             // apply within will be overwited by apply before properties if available
                             if (policy.applyBeforeProperties.numberOfDays == 0 || policy.applyBeforeProperties.numberOfDays == null) {
                                 if (!this.validateApplyWithin(policy, endDate)) {
@@ -167,6 +171,15 @@ export class LeaveApplicationValidationService {
         }
 
         return false;
+    }
+
+    private allowApplyFractionLeave([policy, appliedDto]: [LeaveTypePropertiesXmlDTO, ApplyLeaveDTO]): boolean {
+        let fractionData = appliedDto.data.filter(x => x.slot != '' || x.quarterDay != '');
+        if (!policy.applyFractionUnit && fractionData.length > 0) {
+            return false;
+        }
+
+        return true;
     }
 
     // check if user can apply next year application

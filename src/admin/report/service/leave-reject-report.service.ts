@@ -64,8 +64,8 @@ export class LeaveRejectReportService {
           leaveRejectReportDTO.endDate = element.END_DATE;
           leaveRejectReportDTO.noOfDays = element.NO_OF_DAYS;
           leaveRejectReportDTO.rejectBy = resultCreator.FULLNAME;
-          leaveRejectReportDTO.leaveRemarks = element.REMARKS;
-          leaveRejectReportDTO.rejectRemarks = element.REASON;
+          leaveRejectReportDTO.leaveRemarks = element.REASON;
+          leaveRejectReportDTO.rejectRemarks = element.REMARKS;
 
           leaveRejectReportDTO.companyName = resultUser.COMPANY_NAME;
           leaveRejectReportDTO.department = resultUser.DEPARTMENT;

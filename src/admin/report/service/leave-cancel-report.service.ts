@@ -63,8 +63,8 @@ export class LeaveCancelReportService {
           leaveRejectReportDTO.endDate = element.END_DATE;
           leaveRejectReportDTO.noOfDays = element.NO_OF_DAYS;
           leaveRejectReportDTO.cancelBy = resultCreator.FULLNAME;
-          leaveRejectReportDTO.leaveRemarks = element.REMARKS;
-          leaveRejectReportDTO.cancelRemarks = element.REASON;
+          leaveRejectReportDTO.leaveRemarks = element.REASON;
+          leaveRejectReportDTO.cancelRemarks = element.REMARKS;
 
           leaveRejectReportDTO.companyName = resultUser.COMPANY_NAME;
           leaveRejectReportDTO.department = resultUser.DEPARTMENT;

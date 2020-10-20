@@ -6,8 +6,8 @@ import { CommonFunctionService } from 'src/common/helper/common-function.service
 import { CreateGeneralLeavePolicyDTO } from './dto/create-general-leave-policy.dto';
 import { UpdateGeneralLeavePolicyDTO } from './dto/update-general-leave-policy.dto';
 import { ApplyAnniversaryLeaveService } from '../year-end-closing/service/apply-anniversary-leave.service';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 
@@ -135,6 +135,16 @@ export class GeneralLeavePolicyController {
 		this.runServicePolicy([this.generalLeavePolicyService.update(req.user, updateGeneralLeavePolicyDTO), res, updateGeneralLeavePolicyDTO.data]);
 	}
 
+	@Patch('resync/:companyPolicyId')
+	@ApiOperation({ title: 'Resync general policy setting' })
+	@ApiImplicitParam({ name: 'companyPolicyId', description: 'Company policy guid' })
+	resyncPolicySetting(@Param('companyPolicyId') policyId, @Res() res) {
+		this.generalLeavePolicyService.syncPolicy([policyId]).subscribe(
+			data => { res.send(data); },
+			err => { res.send(err); }
+		);
+	}
+
 	/**
 	 * Run service for create and update general leave policy
 	 *
@@ -144,17 +154,18 @@ export class GeneralLeavePolicyController {
 	 */
 	private runServicePolicy([method, res, data]: [Observable<any>, any, CreateGeneralLeavePolicyDTO]) {
 		method.pipe(map(res => {
-			console.log(res.data);
-			this.applyAnniversaryLeaveService.verifyAnniversaryLeave([data, null, null]);
+			// this.applyAnniversaryLeaveService.verifyAnniversaryLeave([data, null, null]);
+			this.generalLeavePolicyService.syncPolicy([res.data.resource[0].MAIN_GENERAL_POLICY_GUID]).subscribe();
+
 			return res;
 		})
-		).subscribe(
-			data => {
-				console.log(data.data);
-				res.send(data.data);
-			},
-			err => { res.send(err); }
 		)
+			.subscribe(
+				data => {
+					res.send(data.data);
+				},
+				err => { res.send(err); }
+			)
 	}
 
 }

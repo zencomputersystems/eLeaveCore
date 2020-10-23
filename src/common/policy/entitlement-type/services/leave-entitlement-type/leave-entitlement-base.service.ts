@@ -27,9 +27,9 @@ export class LeaveEntitlementBaseService {
 
         if (checkArray) {
             //find the entitle day for this service year
-            entitledDay = leavePolicy.levels.leaveEntitlement.find(x => yearOfService >= x.serviceYearFrom && yearOfService <= x.serviceYearTo);
+            entitledDay = leavePolicy.levels.leaveEntitlement.find(x => yearOfService >= x.serviceYearFrom && yearOfService < x.serviceYearTo);
         } else {
-            if (yearOfService >= leavePolicy.levels.leaveEntitlement.serviceYearFrom && yearOfService <= leavePolicy.levels.leaveEntitlement.serviceYearTo) {
+            if (yearOfService >= leavePolicy.levels.leaveEntitlement.serviceYearFrom && yearOfService < leavePolicy.levels.leaveEntitlement.serviceYearTo) {
                 entitledDay = leavePolicy.levels.leaveEntitlement;
             }
         }

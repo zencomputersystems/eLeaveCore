@@ -62,7 +62,7 @@ export const leavetypeMock = [
           {
             id: 1,
             serviceYearFrom: 0,
-            serviceYearTo: 1,
+            serviceYearTo: 2,
             entitledDays: 8,
             carryForward: 3
           },
@@ -75,7 +75,7 @@ export const leavetypeMock = [
           },
           {
             id: 3,
-            serviceYearFrom: 5,
+            serviceYearFrom: 4,
             serviceYearTo: 99,
             entitledDays: 16,
             carryForward: 3
@@ -147,7 +147,7 @@ export const leavetypeMock = [
           {
             id: 1,
             serviceYearFrom: 0,
-            serviceYearTo: 1,
+            serviceYearTo: 2,
             entitledDays: 14,
             carryForward: 3
           },
@@ -160,7 +160,7 @@ export const leavetypeMock = [
           },
           {
             id: 3,
-            serviceYearFrom: 5,
+            serviceYearFrom: 4,
             serviceYearTo: 99,
             entitledDays: 22,
             carryForward: 3

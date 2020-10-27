@@ -5,6 +5,7 @@ import { UserprofileDbService } from 'src/api/userprofile/db/userprofile.db.serv
 import { LeaveAdjustmentDbLogService } from '../../leave-adjustment/leave-adjustment-log.service';
 import { LeaveTransactionLogDbService } from '../../../api/leave/db/leave-transaction-log.db.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 
 /**
  * Db service for report
@@ -30,6 +31,7 @@ export class ReportDBService {
     public userprofileDbService: UserprofileDbService,
     public leaveAdjustmentLogDbService: LeaveAdjustmentDbLogService,
     public leaveTransactionLogDbService: LeaveTransactionLogDbService,
-    public userLeaveEntitlementDbService: UserLeaveEntitlementDbService
+    public userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+    public leaveEntitlementDbService: LeavetypeEntitlementDbService
   ) { }
 }

@@ -3,7 +3,7 @@ import { UserLeaveEntitlementDbService } from '../db/user-leave-entitlement.db.s
 import { UserLeaveEntitlementSummaryDbService } from '../db/user-leave-summary.db.service';
 import { AssignLeavePolicyDTO } from '../dto/leave-entitlement/assign-leave-policy.dto';
 import { UserprofileDbService } from '../db/userprofile.db.service';
-import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
+import { map, filter, switchMap, mergeMap, find } from 'rxjs/operators';
 import { LeavetypeEntitlementDbService } from 'src/admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { UserLeaveEntitlementModel } from '../model/user-leave-entitlement.model';
 import { v1 } from 'uuid';
@@ -102,6 +102,8 @@ export class UserLeaveEntitlementService {
 
                 let entitlementData = res[0];
                 let leavetypePolicy = res[1];
+
+                let MCData = entitlementData.find(x => x.ABBR === 'ML');
                 entitlementData.forEach(element => {
                     let findData = leavetypePolicy.find(x => x.ENTITLEMENT_GUID === element.ENTITLEMENT_GUID);
                     let leavePolicy = convertXMLToJson(findData.PROPERTIES_XML);
@@ -120,6 +122,11 @@ export class UserLeaveEntitlementService {
                         // element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
                     }
                     element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
+
+                    if (element.ABBR == 'HL') {
+                        element.TOTAL_PENDING = element.TOTAL_PENDING + MCData.TOTAL_PENDING;
+                        element.TOTAL_APPROVED = element.TOTAL_APPROVED + MCData.TOTAL_APPROVED;
+                    }
 
                     element.POLICY_ROUNDING = leavePolicy.leaveEntitlementRounding.toLowerCase();
                     element.POLICY_TYPE = leavePolicy.leaveEntitlementType.toLowerCase();

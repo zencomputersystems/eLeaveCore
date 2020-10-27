@@ -24,6 +24,8 @@ import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeaveAdjustmentDbLogService } from '../leave-adjustment/leave-adjustment-log.service';
 import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
 import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave-entitlement.db.service';
+import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
 
 @Module({
   imports: [
@@ -55,7 +57,9 @@ import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave
     UserLeaveEntitlementDbService,
 
     QueryParserService,
-    DateCalculationService
+    DateCalculationService,
+    EntitlementRoundingService,
+    LeavetypeEntitlementDbService
   ],
   controllers: [
     ReportController

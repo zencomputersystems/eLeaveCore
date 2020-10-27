@@ -15,6 +15,7 @@ import { UpdateUserInfoItemDTO } from 'src/admin/user-info-details/dto/update-us
 import * as moment from 'moment';
 import { ProfileDefaultDbService } from '../../admin/profile-default/profile-default.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
+import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
 /** XMLparser from zen library  */
 var { convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -69,9 +70,10 @@ export class UserImportService {
      */
     constructor(
         private readonly userService: UserService,
-        private readonly userInfoService: UserInfoService,
+        public readonly userInfoService: UserInfoService,
         private readonly pendingLeaveService: PendingLeaveService,
-        private readonly profileDefaultDbService: ProfileDefaultDbService
+        private readonly profileDefaultDbService: ProfileDefaultDbService,
+        public readonly userprofileDbService: UserprofileDbService
     ) { }
 
     /**
@@ -157,7 +159,8 @@ export class UserImportService {
      */
     private async saveInfoDataList(importData: Array<UserCsvDto>, user: any) {
 
-        let userList = await this.pendingLeaveService.getAllUserInfo(user.TENANT_GUID) as any[];
+        // let userList = await this.pendingLeaveService.getAllUserInfo(user.TENANT_GUID) as any[];
+        let userList = await runServiceCallback(this.userprofileDbService.findByFilterV2([], ['(TENANT_GUID IN (' + user.TENANT_GUID + ')', '(DELETED_AT IS NULL)'])) as any[];
         let companyList = await this.pendingLeaveService.getCompanyList(user.TENANT_GUID) as any[];
 
         let defaultData = await runServiceCallback(this.profileDefaultDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`])) as any[];
@@ -227,7 +230,7 @@ export class UserImportService {
 
         // console.log(userInfoResourceArray);
 
-        return this.userInfoService.createByModel(userInfoResourceArray, ['USER_INFO_GUID', 'USER_GUID', 'TENANT_COMPANY_GUID'], [], [])
+        return this.userInfoService.createByModel(userInfoResourceArray, ['USER_INFO_GUID', 'USER_GUID', 'TENANT_COMPANY_GUID', 'MANAGER_USER_GUID'], [], [])
             .pipe(map(res => {
                 if (res.status == 200) {
                     const saveUser = res.data.resource;
@@ -405,9 +408,9 @@ export class UserImportService {
             // }
 
             if (checkModelArray.find(x => x.TENANT_GUID === user.TENANT_GUID && x[findElement2] === element[findItem2])) {
-                data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
+                data.data.push(new UserImport('', '', '', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
             } else if (checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase())) {
-                data.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
+                data.data.push(new UserImport('', '', '', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
                 if (data.category == 'Fail') {
                     let userTemp = checkModelArray.find(x => x[findElement].toUpperCase() === element[findItem].toUpperCase());
                     if (userTemp) {
@@ -471,7 +474,7 @@ export class UserImportService {
         importData.forEach(element => {
 
             if (successList.find(x => x.STAFF_EMAIL.toUpperCase() === element.STAFF_EMAIL.toUpperCase())) {
-                duplicateUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
+                duplicateUser.data.push(new UserImport('', '', '', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
             } else {
                 successList.push(element);
             }
@@ -512,10 +515,10 @@ export class UserImportService {
             if (checkUser) {
                 element.ID = checkUser.USER_GUID;
                 successList.push(element);
-                successUser.data.push(new UserImport(checkUser.USER_GUID, element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, checkUser.TENANT_COMPANY_GUID, element.COMPANY));
+                successUser.data.push(new UserImport(checkUser.USER_GUID, checkUser.USER_INFO_GUID, checkUser.MANAGER_USER_GUID, element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, checkUser.TENANT_COMPANY_GUID, element.COMPANY));
 
             } else {
-                failUser.data.push(new UserImport('', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
+                failUser.data.push(new UserImport('', '', '', element.STAFF_EMAIL, element.STAFF_ID, element.FULLNAME, element.JOIN_DATE, element.SECTION, '', element.COMPANY));
             }
 
         });

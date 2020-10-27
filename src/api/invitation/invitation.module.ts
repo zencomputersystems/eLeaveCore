@@ -12,6 +12,7 @@ import { EmailNodemailerService } from 'src/common/helper/email-nodemailer.servi
 import { getModuleHttp } from '../../common/helper/basic-functions';
 import { AuthDbService } from 'src/auth/auth.db.service';
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
+import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 
 /**
  * Module invitation
@@ -28,7 +29,8 @@ import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
     QueryParserService,
     EmailNodemailerService,
     AuthDbService,
-    UserprofileDbService
+    UserprofileDbService,
+    ProfileDefaultDbService
   ],
   imports: [
     // AuthModule,

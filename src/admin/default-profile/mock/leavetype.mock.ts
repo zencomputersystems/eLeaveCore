@@ -56,7 +56,7 @@ export const leavetypeMock = [
         textValue: "BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
-      leaveEntitlementRounding: "Round Up 0.5",
+      leaveEntitlementRounding: "Round Down 0.25",
       levels: {
         leaveEntitlement: [
           {
@@ -141,7 +141,7 @@ export const leavetypeMock = [
         textValue: "NO BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
-      leaveEntitlementRounding: "Round Up 0.5",
+      leaveEntitlementRounding: "Round Down 0.5",
       levels: {
         leaveEntitlement: [
           {
@@ -226,7 +226,7 @@ export const leavetypeMock = [
         textValue: "NO BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
-      leaveEntitlementRounding: "Round Up 0.5",
+      leaveEntitlementRounding: "Round Down 1.00",
       levels: {
         leaveEntitlement: [
           {
@@ -297,7 +297,7 @@ export const leavetypeMock = [
         textValue: "BRING FORWARD LEAVE"
       },
       leaveEntitlementType: "Entitled in full",
-      leaveEntitlementRounding: "Round Up 0.5",
+      leaveEntitlementRounding: "Round Down 1.00",
       levels: {
         leaveEntitlement: [
           {

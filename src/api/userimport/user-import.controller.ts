@@ -9,6 +9,11 @@ import { SubscriptionDbService } from './subscription.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import { InvitationInviteService } from '../invitation/invitation-invite.service';
 import { InviteDTO } from '../invitation/dto/invite.dto';
+import { find, mergeMap } from 'rxjs/operators';
+import { UserInfoModel } from '../../admin/user-info/model/user-info.model';
+import { Resource } from 'src/common/model/resource.model';
+/** XMLparser from zen library  */
+var { convertJsonToXML, convertXMLToJson } = require('@zencloudservices/xmlparser');
 
 /**
  * Controller for user import
@@ -105,6 +110,7 @@ export class UserImportController {
 	 * @memberof UserImportController
 	 */
 	private runService([user, data, res]) {
+		let rawData = data;
 		this.userImportService.processImportData(user, data).subscribe(
 			data => {
 				const successList = data.find(x => x.category === "Success")
@@ -121,7 +127,8 @@ export class UserImportController {
 						inviteUser.id = x.USER_GUID;
 						successArr.push(inviteUser);
 					});
-					// console.log(successArr);
+					// Setup manager if null
+					this.assignManagerId([successList, rawData]);
 					this.invitationInviteService.invite(successArr, user).subscribe(
 						data => { /*console.log(data);*/ },
 						err => { /*console.log(err);*/ }
@@ -132,6 +139,50 @@ export class UserImportController {
 			},
 			err => { res.status(400).send("fail to process data"); }
 		)
+	}
+
+	/**
+	 * Setup manager id if null
+	 *
+	 * @param {*} [successList, rawData]
+	 * @memberof UserImportController
+	 */
+	public assignManagerId([successList, rawData]) {
+		// To check list success only 
+		successList.data.forEach(element => {
+			// Find only missing manager id
+			if (element.MANAGER_USER_GUID == null) {
+				// Get user data from excel
+				let getDataUser = rawData.find(x => x.STAFF_EMAIL === element.EMAIL);
+				// Get manager email from excel
+				let managerEmail = getDataUser.MANAGER_EMAIL;
+				// Find manager data in success list e.g same bulk import and success
+				let idManager = successList.data.find(x => x.EMAIL === managerEmail);
+
+				// Update to userinfo (need to update both MANAGER_USER_GUID and xml properties)
+				this.userImportService.userprofileDbService.findByFilterV2([], [`(USER_GUID=${element.USER_GUID})`]).pipe(
+					mergeMap(res => {
+						// Setup xml properties from existing
+						let xmlData = convertXMLToJson(res[0].PROPERTIES_XML);
+						// Update or create reportinf to manager id
+						xmlData.root.employmentDetail['reportingTo'] = idManager.USER_GUID;
+						// Setup data to update userinfo
+						let model = new UserInfoModel();
+						// Assign to manager id
+						model.MANAGER_USER_GUID = idManager.USER_GUID;
+						model.PROPERTIES_XML = convertJsonToXML(xmlData);
+						let resource = new Resource(new Array);
+						resource.resource.push(model);
+
+						return this.userImportService.userInfoService.updateByModel(resource, [], [`(USER_INFO_GUID = ${element.USER_INFO_GUID})`], []);
+
+					})
+				).subscribe(
+					data => { /*console.log(data);*/ },
+					err => { /*console.log(err.data.error);*/ }
+				);
+			}
+		});
 	}
 
 }

@@ -19,6 +19,7 @@ import { AuthDbService } from 'src/auth/auth.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import { linkResetPassword } from 'src/constant/commonUsed';
 import { UserprofileDbService } from '../userprofile/db/userprofile.db.service';
+import { ProfileDefaultDbService } from 'src/admin/profile-default/profile-default.db.service';
 /** Read dotenv file */
 const dotenv = require('dotenv');
 dotenv.config();
@@ -50,7 +51,8 @@ export class InvitationInviteService {
         private readonly userService: UserService,
         private readonly emailNodemailerService: EmailNodemailerService,
         private readonly authDbService: AuthDbService,
-        private readonly userprofileDbService: UserprofileDbService
+        private readonly userprofileDbService: UserprofileDbService,
+        private readonly profileDefaultDbService: ProfileDefaultDbService
     ) {
     }
 
@@ -84,7 +86,8 @@ export class InvitationInviteService {
                     // console.log('send email');
                     const observableEmail$ = [];
 
-                    let loginType = await runServiceCallback(this.authDbService.findByFilterV2([], [`(CUSTOMER_GUID=${user.TENANT_GUID})`]));
+                    // let loginType = await runServiceCallback(this.authDbService.findByFilterV2([], [`(CUSTOMER_GUID=${user.TENANT_GUID})`]));
+                    let loginType = await runServiceCallback(this.profileDefaultDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`]))
                     // console.log(loginType);
                     // console.log(res);
                     // console.log(user);

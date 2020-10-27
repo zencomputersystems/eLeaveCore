@@ -18,8 +18,8 @@ export function personalDetailAssign([resultItem, results, dataXML]) {
     if (dataXML.root.personalDetails) {
       console.log(dataXML.root.personalDetails);
       resultItem['personalDetail'] = dataXML.root.personalDetails;
-      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 || dataXML.root.personalDetails.gender == 'Male' ? 'Male' : 'Female';
-      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 || dataXML.root.personalDetails.maritalStatus == 'Married' ? 'Married' : 'Single';
+      resultItem['personalDetail']['gender'] = dataXML.root.personalDetails.gender == 1 || dataXML.root.personalDetails.gender.toUpperCase() == 'MALE' ? 'Male' : 'Female';
+      resultItem['personalDetail']['maritalStatus'] = dataXML.root.personalDetails.maritalStatus == 1 || dataXML.root.personalDetails.maritalStatus.toUpperCase() == 'MARRIED' ? 'Married' : 'Single';
 
     }
   }

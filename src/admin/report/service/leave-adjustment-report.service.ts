@@ -53,7 +53,11 @@ export class LeaveAdjustmentReportService {
           let resultCreator = resultAll.find(x => x.USER_GUID === element.CREATION_USER_GUID);
 
           let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-
+          if (!findLeaveData) {
+            findLeaveData = {};
+            findLeaveData['CODE'] = null;
+            findLeaveData['ABBR'] = null;
+          }
 
           let leaveAdjustmentReportDto = new LeaveAdjustmentReportDto;
           leaveAdjustmentReportDto.userGuid = element.USER_GUID;

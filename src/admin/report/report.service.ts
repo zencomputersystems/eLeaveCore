@@ -111,7 +111,7 @@ export class ReportService {
     ];
 
     const process = functionList.find(x => x.type === typeReport);
-
+    console.log(process);
     const dataResult = process ? process.method : of(`Failed to process ${typeReport} right now.`);
 
     return dataResult;

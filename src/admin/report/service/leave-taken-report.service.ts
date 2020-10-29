@@ -106,7 +106,11 @@ export class LeaveTakenReportService {
   runService([element, leaveTypeList, resultAll]) {
     let approverData = '';
     let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-
+    if (!findLeaveData) {
+      findLeaveData = {};
+      findLeaveData['CODE'] = null;
+      findLeaveData['ABBR'] = null;
+    }
     if (element.STATES != null) {
       const approverArr = JSON.parse(element.STATES);
       approverArr.forEach(element => {

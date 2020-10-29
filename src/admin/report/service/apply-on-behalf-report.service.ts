@@ -47,7 +47,10 @@ export class ApplyOnBehalfReportService {
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
           let resultCreator = resultAll.find(x => x.USER_GUID === element.UPDATE_USER_GUID);
           let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-
+          if (!findLeaveData) {
+            findLeaveData = {};
+            findLeaveData['CODE'] = null;
+          }
           let applyOnBehalfReportDto = new ApplyOnBehalfReportDto;
 
           applyOnBehalfReportDto.userGuid = element.USER_GUID;

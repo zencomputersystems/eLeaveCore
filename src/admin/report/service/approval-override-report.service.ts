@@ -64,7 +64,10 @@ export class ApprovalOverrideReportService {
           let resultCreator = resultAll.find(x => x.USER_GUID === element.CREATION_USER_GUID);
           // Get leavetype info by leave type guid
           let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === getLeaveInfo.LEAVE_TYPE_GUID);
-
+          if (!findLeaveData) {
+            findLeaveData = {};
+            findLeaveData['CODE'] = null;
+          }
           // Setup approval override report
           let approvalOverrideReportDto = new ApprovalOverrideReportDto;
 

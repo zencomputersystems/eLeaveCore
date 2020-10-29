@@ -152,6 +152,11 @@ export class LeaveEntitlementReportService {
       element.TOTAL_PENDING = element.TOTAL_PENDING + MCData.TOTAL_PENDING;
       element.TOTAL_APPROVED = element.TOTAL_APPROVED + MCData.TOTAL_APPROVED;
     }
+    if (!findLeaveData) {
+      findLeaveData = {};
+      findLeaveData['CODE'] = null;
+      findLeaveData['ABBR'] = null;
+    }
     element.BALANCE_DAYS = (element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING);
     leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
     leaveData.leaveTypeName = findLeaveData.CODE;

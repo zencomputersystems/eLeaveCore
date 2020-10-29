@@ -127,7 +127,10 @@ export class LeaveBalanceValidationService {
 
                 const balance = ((parentBalance + childBalance) - (leaveDuration + counterAppliedDay));
                 // console.log(parentBalance + "-" + childBalance + "-" + leaveDuration + "-" + counterAppliedDay + " bal");
-                // console.log(balance);
+                // console.log(policy.isAllowAppliedMoreThanBalance.isCheck);
+                if (policy.isAllowAppliedMoreThanBalance.isCheck) {
+                    return true;
+                }
                 if (balance < 0) {
                     return false;
                 }

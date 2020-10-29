@@ -59,6 +59,11 @@ export class EntitlementClaimService {
         entitlementAssigned.forEach(element => {
           const dataXml: LeaveTypePropertiesXmlDTO = convertXMLToJson(element.PROPERTIES_XML);
           let leaveData = leavetypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+          if (!leaveData) {
+            leaveData = {};
+            leaveData['CODE'] = null;
+            leaveData['ABBR'] = null;
+          }
           if (dataXml.claimEntitlement == true) {
             delete element.PROPERTIES_XML; // Remove properties xml
             element.LEAVE_TYPE_NAME = leaveData.CODE; // Add leavetype name

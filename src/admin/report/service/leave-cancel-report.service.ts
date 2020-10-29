@@ -30,15 +30,15 @@ export class LeaveCancelReportService {
    * @memberof LeaveCancelReportService
    */
   getLeaveCancelData([tenantId, userId]: [string, string]) {
-    let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=CANCELLED)`];
+    let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=CANCELLED)`, `(DELETED_AT IS NULL)`];
     const extra = ['(USER_GUID=' + userId + ')'];
     filter = userId != null ? filter.concat(extra) : filter;
 
     return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
         // console.log(res);
-        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID) as any[];
-        let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(tenantId) as any[];
+        let resultAll = await this.pendingLeaveService.getAllUserInfo(tenantId) as any[];
 
         return { res, leaveTypeList, resultAll };
       }),
@@ -49,29 +49,31 @@ export class LeaveCancelReportService {
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
 
           let resultCreator = resultAll.find(x => x.USER_GUID === element.UPDATE_USER_GUID);
-
           let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+          if (!findLeaveData) {
+            findLeaveData = {};
+            findLeaveData['CODE'] = null;
+          }
+          let leaveCancelReportDTO = new LeaveCancelReportDto;
 
-          let leaveRejectReportDTO = new LeaveCancelReportDto;
+          leaveCancelReportDTO.userGuid = element.USER_GUID;
+          leaveCancelReportDTO.employeeNo = resultUser.STAFF_ID;
+          leaveCancelReportDTO.employeeName = resultUser.FULLNAME;
+          leaveCancelReportDTO.leaveTypeId = element.LEAVE_TYPE_GUID;
+          leaveCancelReportDTO.leaveTypeName = findLeaveData.CODE || null;
+          leaveCancelReportDTO.startDate = element.START_DATE;
+          leaveCancelReportDTO.endDate = element.END_DATE;
+          leaveCancelReportDTO.noOfDays = element.NO_OF_DAYS;
+          leaveCancelReportDTO.cancelBy = resultCreator.FULLNAME;
+          leaveCancelReportDTO.leaveRemarks = element.REASON;
+          leaveCancelReportDTO.cancelRemarks = element.REMARKS;
 
-          leaveRejectReportDTO.userGuid = element.USER_GUID;
-          leaveRejectReportDTO.employeeNo = resultUser.STAFF_ID;
-          leaveRejectReportDTO.employeeName = resultUser.FULLNAME;
-          leaveRejectReportDTO.leaveTypeId = element.LEAVE_TYPE_GUID;
-          leaveRejectReportDTO.leaveTypeName = findLeaveData.CODE;
-          leaveRejectReportDTO.startDate = element.START_DATE;
-          leaveRejectReportDTO.endDate = element.END_DATE;
-          leaveRejectReportDTO.noOfDays = element.NO_OF_DAYS;
-          leaveRejectReportDTO.cancelBy = resultCreator.FULLNAME;
-          leaveRejectReportDTO.leaveRemarks = element.REASON;
-          leaveRejectReportDTO.cancelRemarks = element.REMARKS;
+          leaveCancelReportDTO.companyName = resultUser.COMPANY_NAME;
+          leaveCancelReportDTO.department = resultUser.DEPARTMENT;
+          leaveCancelReportDTO.costcentre = resultUser.COSTCENTRE;
+          leaveCancelReportDTO.branch = resultUser.BRANCH;
 
-          leaveRejectReportDTO.companyName = resultUser.COMPANY_NAME;
-          leaveRejectReportDTO.department = resultUser.DEPARTMENT;
-          leaveRejectReportDTO.costcentre = resultUser.COSTCENTRE;
-          leaveRejectReportDTO.branch = resultUser.BRANCH;
-
-          userIdList.push(leaveRejectReportDTO);
+          userIdList.push(leaveCancelReportDTO);
         });
         return userIdList;
       })

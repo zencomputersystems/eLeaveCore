@@ -148,14 +148,17 @@ export class DashboardController {
 	 * @memberof DashboardController
 	 */
 	public processMyTaskResult([dataDashboard, dataLeavetype, res]) {
-
 		if (dataDashboard[0].data.resource.length > 0) {
 			let combineData = [];
 			dataDashboard[0].data.resource.forEach(element => {
 				let userData = dataDashboard[1].data.resource.find(x => x.USER_GUID === element.USER_GUID);
 				let dataToShow = {};
-
 				let findLeavetype = dataLeavetype.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
+
+				if (!findLeavetype) {
+					findLeavetype = {};
+					findLeavetype['CODE'] = null;
+				}
 
 				dataToShow['leaveTransactionId'] = element.LEAVE_TRANSACTION_GUID
 				dataToShow['employeeName'] = userData.FULLNAME;

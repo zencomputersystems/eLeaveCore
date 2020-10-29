@@ -31,15 +31,15 @@ export class LeaveRejectReportService {
    * @memberof LeaveRejectReportService
    */
   getLeaveRejectData([tenantId, userId]: [string, string]) {
-    let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=REJECTED)`];
+    let filter = [`(TENANT_GUID=${tenantId})`, `(STATUS=REJECTED)`, `(DELETED_AT IS NULL)`];
     const extra = ['(USER_GUID=' + userId + ')'];
     filter = userId != null ? filter.concat(extra) : filter;
 
     return this.reportDBService.leaveTransactionDbService.findByFilterV2([], filter).pipe(
       mergeMap(async res => {
         // console.log(res);
-        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID) as any[];
-        let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(tenantId) as any[];
+        let resultAll = await this.pendingLeaveService.getAllUserInfo(tenantId) as any[];
 
         return { res, leaveTypeList, resultAll };
       }),
@@ -52,14 +52,18 @@ export class LeaveRejectReportService {
           let resultCreator = resultAll.find(x => x.USER_GUID === element.UPDATE_USER_GUID);
 
           let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === element.LEAVE_TYPE_GUID);
-
+          if (!findLeaveData) {
+            findLeaveData = {};
+            findLeaveData['CODE'] = null;
+            findLeaveData['ABBR'] = null;
+          }
           let leaveRejectReportDTO = new LeaveRejectReportDto;
 
           leaveRejectReportDTO.userGuid = element.USER_GUID;
           leaveRejectReportDTO.employeeNo = resultUser.STAFF_ID;
           leaveRejectReportDTO.employeeName = resultUser.FULLNAME;
           leaveRejectReportDTO.leaveTypeId = element.LEAVE_TYPE_GUID;
-          leaveRejectReportDTO.leaveTypeName = findLeaveData.CODE;
+          leaveRejectReportDTO.leaveTypeName = findLeaveData.CODE || null;
           leaveRejectReportDTO.startDate = element.START_DATE;
           leaveRejectReportDTO.endDate = element.END_DATE;
           leaveRejectReportDTO.noOfDays = element.NO_OF_DAYS;
@@ -75,7 +79,8 @@ export class LeaveRejectReportService {
           userIdList.push(leaveRejectReportDTO);
 
         });
-        return userIdList;
+        console.log(userIdList);
+        return userIdList || [];
       })
     );
   }

@@ -55,13 +55,15 @@ export class LeaveEntitlementReportService {
         let method = this.leaveTransactionDbService.findByFilterV2(fieldTemp, filterTemp);
         let leaveTransactionData = await this.pendingLeaveService.runService(method);
 
-        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`]);
+        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
         let leaveEntitlementData = await this.pendingLeaveService.runService(method2);
 
         let arrTemp = [];
         res.forEach(element => {
-          arrTemp.push(element.ENTITLEMENT_GUID);
+          if (!arrTemp.find(x => x === element.ENTITLEMENT_GUID))
+            arrTemp.push(element.ENTITLEMENT_GUID);
         });
+        console.log(arrTemp);
         let entitlementPolicy = await runServiceCallback(this.reportDBService.leaveEntitlementDbService.findByFilterV2([], ['(ENTITLEMENT_GUID IN (' + arrTemp + '))']));
 
         return { res, leaveTypeList, resultAll, leaveTransactionData, leaveEntitlementData, entitlementPolicy };

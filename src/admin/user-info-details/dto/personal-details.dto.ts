@@ -395,8 +395,9 @@ export class PersonalDetailsDTO {
    * @memberof PersonalDetailsDTO
    */
   @ApiModelProperty({ description: 'Email Address', example: 'pratap@gmail.com' })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  @IsOptional()
   emailAddress: string;
 
   /**

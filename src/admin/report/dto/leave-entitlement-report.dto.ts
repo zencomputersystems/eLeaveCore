@@ -72,6 +72,16 @@ export class LeaveDetailsDto {
   forfeited: string;
 
   /**
+   * Adjusted days
+   *
+   * @type {string}
+   * @memberof LeaveDetailsDto
+   */
+  @ApiModelProperty({ description: 'Adjusted Days', example: '2.5' })
+  @IsString()
+  adjusted: string;
+
+  /**
    * Taken days
    *
    * @type {string}

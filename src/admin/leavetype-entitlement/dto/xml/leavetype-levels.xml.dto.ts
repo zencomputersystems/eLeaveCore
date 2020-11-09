@@ -20,5 +20,5 @@ export class LeaveTypeLevelsXmlDTO {
     @IsNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => LeaveTypeServiceYearXmlDTO)
-    readonly leaveEntitlement: LeaveTypeServiceYearXmlDTO[]
+    leaveEntitlement: LeaveTypeServiceYearXmlDTO[]
 }

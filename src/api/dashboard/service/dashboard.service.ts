@@ -118,13 +118,19 @@ export class DashboardService {
 
     return this.leaveTransactionDbService.findLongLeave(filters).pipe(mergeMap(res => {
       let allData = res.data.resource;
-      let userGuid = '';
+      let userData;
 
-      allData.forEach(element => {
-        userGuid = userGuid == '' ? '"' + element.USER_GUID + '"' : userGuid + ',"' + element.USER_GUID + '"';
-      });
+      if (allData.length > 0) {
+        let userGuid = '';
 
-      let userData = this.userprofileDbService.findByFilterV4([['USER_GUID', 'FULLNAME', 'DESIGNATION'], ['(USER_GUID IN (' + userGuid + '))'], null, null]);
+        allData.forEach(element => {
+          userGuid = userGuid == '' ? '"' + element.USER_GUID + '"' : userGuid + ',"' + element.USER_GUID + '"';
+        });
+
+        userData = this.userprofileDbService.findByFilterV4([['USER_GUID', 'FULLNAME', 'DESIGNATION'], ['(USER_GUID IN (' + userGuid + '))'], null, null]);
+      } else {
+        userData = of([]);
+      }
 
       return forkJoin(of(res), userData);
     }));

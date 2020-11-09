@@ -15,6 +15,8 @@ import { v1 } from 'uuid';
 import { Resource } from 'src/common/model/resource.model';
 import moment = require('moment');
 import { templateElement } from 'babel-types';
+import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { runServiceCallback } from 'src/common/helper/basic-functions';
 
 /**
  * Service user leave entitlement: assign entitlement
@@ -39,7 +41,8 @@ export class UserEntitlementAssignEntitlement {
     private readonly userDbService: UserprofileDbService,
     public readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
     private readonly userInfoDbService: UserInfoService,
-    private readonly userEntitlementAssignPolicy: UserEntitlementAssignPolicy
+    private readonly userEntitlementAssignPolicy: UserEntitlementAssignPolicy,
+    private readonly leavetypeService: LeavetypeService
   ) {
 
   }
@@ -144,12 +147,15 @@ export class UserEntitlementAssignEntitlement {
           if (res.length > 0) {
             const userEntitlementFilter = [
               '(TENANT_GUID=' + user.TENANT_GUID + ')', '(ENTITLEMENT_GUID=' + data.leaveEntitlementId + ')',
-              '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID IN (' + res + '))', '(ACTIVE_FLAG=1)'
+              '(LEAVE_TYPE_GUID=' + data.leaveTypeId + ')', '(USER_GUID IN (' + res + '))', '(ACTIVE_FLAG=1)', '(PARENT_FLAG=1)'
             ]
             const dataTemp = this.dbSearch(this.userLeaveEntitlementDbService, userEntitlementFilter);
             return dataTemp;
           }
-        }), mergeMap(res => {
+        }), map(res => {
+
+          return res;
+        }), mergeMap(async res => {
           // assign status user already entitled
           if (res != 'success') {
 
@@ -161,8 +167,10 @@ export class UserEntitlementAssignEntitlement {
               let checkUser = res.filter(x => x.USER_GUID === element);
 
               if (checkUser.length > 0) {
+                let leavetypeData = await runServiceCallback(this.leavetypeService.findByFilterV2(['CODE'], [`(LEAVE_TYPE_GUID=${data.leaveTypeId})`]))
+
                 userStatus['userGuid'] = element;
-                userStatus['status'] = 'User already entitled';
+                userStatus['status'] = `User already entitled with ${leavetypeData[0].CODE}. Only one entry per leave type is allowed.`;
 
                 failedList.push(userStatus);
               } else {

@@ -8,6 +8,7 @@ import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db
 import { runServiceCallback } from 'src/common/helper/basic-functions';
 import moment = require('moment');
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 /**
@@ -134,25 +135,32 @@ export class LeaveEntitlementReportService {
 
     let findData = entitlementPolicy.find(x => x.ENTITLEMENT_GUID === element.ENTITLEMENT_GUID);
     let leavePolicy = convertXMLToJson(findData.PROPERTIES_XML);
+    let dateIndicator = this.dateToValidate([element.JOIN_DATE, element.CONFIRMATION_DATE, leavePolicy]);
 
-    if (leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-confirm to current month').toUpperCase() || leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-join to current month').toUpperCase()) {
-      let currentmonth = moment().format('M') as any;
-      // element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
 
-      let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
-      // earnedLeave = this.entitlementRoundingService.leaveEntitlementRounding(earnedLeave, leavePolicy.leaveEntitlementRounding);
-      // earnedLeave = (Math.floor(earnedLeave * 4) / 4);
-      element.EARNED_LEAVE = earnedLeave;
-    } else {
-      // element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
-      element.EARNED_LEAVE = element.ENTITLED_DAYS;
-      // element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
-    }
+    let { entitledDaysFinal, totalentitled } = this.entitledCount([dateIndicator, leavePolicy]);
+    element.ENTITLED_DAYS = totalentitled;
+
+    // if (leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-confirm to current month').toUpperCase() || leavePolicy.leaveEntitlementType.toUpperCase() == ('Prorated from date-of-join to current month').toUpperCase()) {
+    //   let currentmonth = moment().format('M') as any;
+    //   // element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+
+    //   let earnedLeave = (element.ENTITLED_DAYS / 12) * currentmonth;
+    //   // earnedLeave = this.entitlementRoundingService.leaveEntitlementRounding(earnedLeave, leavePolicy.leaveEntitlementRounding);
+    //   // earnedLeave = (Math.floor(earnedLeave * 4) / 4);
+    //   element.EARNED_LEAVE = earnedLeave;
+    // } else {
+    //   // element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+    //   element.EARNED_LEAVE = element.ENTITLED_DAYS;
+    element.EARNED_LEAVE = entitledDaysFinal;
+    //   // element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
+    // }
     element.EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(element.EARNED_LEAVE, leavePolicy.leaveEntitlementRounding);
 
     if (findLeaveData.ABBR == 'HL') {
       element.TOTAL_PENDING = element.TOTAL_PENDING + MCData.TOTAL_PENDING;
       element.TOTAL_APPROVED = element.TOTAL_APPROVED + MCData.TOTAL_APPROVED;
+      element.ADJUSTMENT_DAYS = MCData.ADJUSTMENT_DAYS;
     }
     if (!findLeaveData) {
       findLeaveData = {};
@@ -166,10 +174,84 @@ export class LeaveEntitlementReportService {
     leaveData.entitledDays = element.ENTITLED_DAYS;
     leaveData.carriedForward = element.CF_DAYS ? element.CF_DAYS : 0;
     leaveData.forfeited = forfeitedDays.toString();// "0";
+    leaveData.adjusted = element.ADJUSTMENT_DAYS;
     leaveData.taken = element.TOTAL_APPROVED;
     leaveData.pending = element.TOTAL_PENDING;
     leaveData.balance = element.BALANCE_DAYS;
     return leaveData;
+  }
+
+  public dateToValidate([dateJoin, dateConfirm, policyEntitlement]: [any, any, LeaveTypePropertiesXmlDTO]) {
+    if (policyEntitlement.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO CURRENT MONTH" || policyEntitlement.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO END OF YEAR") {
+      return dateConfirm;
+    }
+    else {
+      return dateJoin;
+    }
+  }
+
+  public entitledCount([dateOfSet, policyJson]: [any, LeaveTypePropertiesXmlDTO]) {
+    let totalentitled = 0;
+    let entitledTillMonth = 0;
+    for (var i = 1; i <= 12; i++) {
+
+      var d = new Date(new Date().getFullYear(), i, 1, 1);
+      // console.log(d);
+      // console.log(dateOfSet);
+      let yearOfService = moment.duration(moment(d).diff(dateOfSet)).asMonths();
+      // console.log(yearOfService);
+      yearOfService = yearOfService / 12;
+      // console.log(yearOfService);
+      policyJson.levels.leaveEntitlement = Array.isArray(policyJson.levels.leaveEntitlement) ? policyJson.levels.leaveEntitlement : [policyJson.levels.leaveEntitlement];
+      let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfService && x.serviceYearTo > yearOfService);
+      // console.log(currentLevel);
+      if (currentLevel != undefined) {
+        // console.log(currentLevel.entitledDays);
+        let byMonthEntitled = currentLevel.entitledDays / 12;
+        // console.log(byMonthEntitled);
+        totalentitled += byMonthEntitled;
+        if (new Date().getMonth() == d.getMonth()) {
+          entitledTillMonth = totalentitled;
+        }
+      }
+    }
+
+
+    // console.log('Till month : ' + entitledTillMonth);
+
+    // console.log('Till year : ' + totalentitled);
+    // console.log(dateOfSet);
+
+    let yearOfServiceFull = moment.duration(moment().diff(dateOfSet)).asYears();
+    // console.log(yearOfServiceFull);
+    let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfServiceFull && x.serviceYearTo > yearOfServiceFull);
+    // console.log('Full Entitled : ' + currentLevel.entitledDays);
+
+    let monthOfService = moment.duration(moment().diff(dateOfSet)).asMonths();
+    // console.log(monthOfService);
+    let after12Month = 0;
+    if (monthOfService > 12) {
+      let yearService = (monthOfService - 12) / 12;
+      // console.log(yearService);
+      let levelAfterDeduct = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearService && x.serviceYearTo > yearService);
+      after12Month = levelAfterDeduct.entitledDays;
+    }
+
+    let entitledDaysFinal = 0;
+
+    if (policyJson.leaveEntitlementType.toUpperCase() == "ENTITLED IN FULL") {
+      entitledDaysFinal = currentLevel.entitledDays;
+      totalentitled = currentLevel.entitledDays;
+    } else if (policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-JOIN TO CURRENT MONTH" || policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO CURRENT MONTH") {
+      entitledDaysFinal = entitledTillMonth;
+    } else if (policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-JOIN TO END OF YEAR" || policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO END OF YEAR") {
+      entitledDaysFinal = totalentitled;
+    } else if (policyJson.leaveEntitlementType.toUpperCase() == "LEAVE ENTITLED AFTER 12 MONTHS") {
+      entitledDaysFinal = after12Month;
+      totalentitled = entitledDaysFinal;
+    }
+
+    return { entitledDaysFinal, totalentitled };
   }
 
   /**

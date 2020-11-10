@@ -167,7 +167,11 @@ export class LeaveEntitlementReportService {
       findLeaveData['CODE'] = null;
       findLeaveData['ABBR'] = null;
     }
-    element.BALANCE_DAYS = (element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING);
+    element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+    element.ADJUSTMENT_DAYS = element.ADJUSTMENT_DAYS ? element.ADJUSTMENT_DAYS : 0;
+    // element.BALANCE_DAYS = (element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING);
+    element.BALANCE_DAYS = element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING + parseFloat(element.ADJUSTMENT_DAYS);
+
     leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
     leaveData.leaveTypeName = findLeaveData.CODE;
     leaveData.leaveTypeAbbr = findLeaveData.ABBR;
@@ -177,7 +181,7 @@ export class LeaveEntitlementReportService {
     leaveData.adjusted = element.ADJUSTMENT_DAYS;
     leaveData.taken = element.TOTAL_APPROVED;
     leaveData.pending = element.TOTAL_PENDING;
-    leaveData.balance = element.BALANCE_DAYS;
+    leaveData.balance = element.BALANCE_DAYS.toFixed(2);
     return leaveData;
   }
 
@@ -196,24 +200,35 @@ export class LeaveEntitlementReportService {
     for (var i = 1; i <= 12; i++) {
 
       var d = new Date(new Date().getFullYear(), i, 1, 1);
-      // console.log(d);
-      // console.log(dateOfSet);
+
       let yearOfService = moment.duration(moment(d).diff(dateOfSet)).asMonths();
-      // console.log(yearOfService);
+
       yearOfService = yearOfService / 12;
-      // console.log(yearOfService);
+
       policyJson.levels.leaveEntitlement = Array.isArray(policyJson.levels.leaveEntitlement) ? policyJson.levels.leaveEntitlement : [policyJson.levels.leaveEntitlement];
+
       let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfService && x.serviceYearTo > yearOfService);
-      // console.log(currentLevel);
+
       if (currentLevel != undefined) {
-        // console.log(currentLevel.entitledDays);
+
+        let totalDaysInMonth = moment(d).subtract(1, 'days').format('DD');
+
+        let daysOfService = moment.duration(moment(d).diff(dateOfSet)).asDays();
+
         let byMonthEntitled = currentLevel.entitledDays / 12;
-        // console.log(byMonthEntitled);
+
+        if (daysOfService <= parseInt(totalDaysInMonth)) {
+          byMonthEntitled = byMonthEntitled / parseInt(totalDaysInMonth) * daysOfService;
+        }
+
         totalentitled += byMonthEntitled;
+
         if (new Date().getMonth() == d.getMonth()) {
           entitledTillMonth = totalentitled;
         }
+
       }
+
     }
 
 

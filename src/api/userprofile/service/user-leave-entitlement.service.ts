@@ -177,43 +177,46 @@ export class UserLeaveEntitlementService {
         for (var i = 1; i <= 12; i++) {
 
             var d = new Date(new Date().getFullYear(), i, 1, 1);
-            // console.log(d);
-            // console.log(dateOfSet);
+
             let yearOfService = moment.duration(moment(d).diff(dateOfSet)).asMonths();
-            // console.log(yearOfService);
+
             yearOfService = yearOfService / 12;
-            // console.log(yearOfService);
+
             policyJson.levels.leaveEntitlement = Array.isArray(policyJson.levels.leaveEntitlement) ? policyJson.levels.leaveEntitlement : [policyJson.levels.leaveEntitlement];
             let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfService && x.serviceYearTo > yearOfService);
-            // console.log(currentLevel);
+
             if (currentLevel != undefined) {
-                // console.log(currentLevel.entitledDays);
+
+                let totalDaysInMonth = moment(d).subtract(1, 'days').format('DD');
+
+                let daysOfService = moment.duration(moment(d).diff(dateOfSet)).asDays();
+
                 let byMonthEntitled = currentLevel.entitledDays / 12;
-                // console.log(byMonthEntitled);
+
+                if (daysOfService <= parseInt(totalDaysInMonth)) {
+                    byMonthEntitled = byMonthEntitled / parseInt(totalDaysInMonth) * daysOfService;
+                }
+
                 totalentitled += byMonthEntitled;
+
                 if (new Date().getMonth() == d.getMonth()) {
                     entitledTillMonth = totalentitled;
                 }
+
             }
+
         }
 
-
-        // console.log('Till month : ' + entitledTillMonth);
-
-        // console.log('Till year : ' + totalentitled);
-        // console.log(dateOfSet);
-
         let yearOfServiceFull = moment.duration(moment().diff(dateOfSet)).asYears();
-        // console.log(yearOfServiceFull);
+
         let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfServiceFull && x.serviceYearTo > yearOfServiceFull);
-        // console.log('Full Entitled : ' + currentLevel.entitledDays);
 
         let monthOfService = moment.duration(moment().diff(dateOfSet)).asMonths();
-        // console.log(monthOfService);
+
         let after12Month = 0;
         if (monthOfService > 12) {
             let yearService = (monthOfService - 12) / 12;
-            // console.log(yearService);
+
             let levelAfterDeduct = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearService && x.serviceYearTo > yearService);
             after12Month = levelAfterDeduct.entitledDays;
         }

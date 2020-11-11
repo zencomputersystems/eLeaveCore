@@ -22,8 +22,9 @@ export class ServiceYearCalc implements IServiceYearCalc {
         let now = moment();
 
         let serviceYear = moment.duration(now.diff(dateOfJoin)).asYears();
-
-        return Math.ceil(serviceYear);
+        // console.log(serviceYear);
+        return serviceYear;
+        // return Math.ceil(serviceYear);
 
     }
 

@@ -5,6 +5,7 @@ import { AllowProfileManagementSetupDTO } from './allow-profile-management-setup
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
+import { StatusPermissionDTO } from './status-permission.dto';
 
 /**
  * Data properties for role
@@ -67,4 +68,27 @@ export class RolePropertiesDTO {
     @IsNotEmpty()
     @Type(() => AllowProfileManagementSetupDTO)
     allowProfileManagement: AllowProfileManagementSetupDTO;
+
+    /**
+     * Data allow client setup
+     *
+     * @type {StatusPermissionDTO}
+     * @memberof RolePropertiesDTO
+     */
+    @ApiModelProperty({ description: 'Allow setup client', type: StatusPermissionDTO })
+    @IsNotEmpty()
+    @Type(() => StatusPermissionDTO)
+    allowClientSetup: StatusPermissionDTO;
+
+    /**
+     * Data allow attendance setup
+     *
+     * @type {StatusPermissionDTO}
+     * @memberof RolePropertiesDTO
+     */
+    @ApiModelProperty({ description: 'Allow setup attendance', type: StatusPermissionDTO })
+    @IsNotEmpty()
+    @Type(() => StatusPermissionDTO)
+    allowAttendanceSetup: StatusPermissionDTO;
+
 }

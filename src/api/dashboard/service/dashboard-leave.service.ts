@@ -6,6 +6,7 @@ import { mergeMap, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { LeavetypeEntitlementDbService } from '../../../admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
+import { dateToValidate, entitledCount } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 /**
@@ -54,8 +55,17 @@ export class DashboardLeaveService {
         }), mergeMap(res => {
           let [data, entitlement] = res;
           let leavePolicy = convertXMLToJson(entitlement[0].PROPERTIES_XML);
-          data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
-          data[0].BALANCE_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].BALANCE_DAYS, leavePolicy.leaveEntitlementRounding);
+          // data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+
+          let dateIndicator = dateToValidate([data[0].JOIN_DATE, data[0].CONFIRMATION_DATE, leavePolicy]);
+
+
+          let { entitledDaysFinal, totalentitled } = entitledCount([dateIndicator, leavePolicy]);
+          data[0].ENTITLED_DAYS = totalentitled;
+          data[0].EARNED_LEAVE = entitledDaysFinal;
+          data[0].BALANCE_DAYS = (data[0].EARNED_LEAVE - data[0].TOTAL_APPROVED - data[0].TOTAL_PENDING);
+          data[0].BALANCE_DAYS = data[0].BALANCE_DAYS + data[0].ADJUSTMENT_DAYS;
+          // data[0].BALANCE_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].BALANCE_DAYS, leavePolicy.leaveEntitlementRounding);
           return of(data);
         })
     );

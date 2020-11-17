@@ -23,6 +23,7 @@ import { UserEntitlementAssignEntitlement } from './userentitlement-assign-entit
 import { CreateReplacementLeaveDTO } from '../dto/leave-entitlement/create-replacement-leave.dto';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
+import { CreateEntitlementClaimDTO } from '../dto/leave-entitlement/create-entitlement-claim.dto';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -48,7 +49,7 @@ export class UserLeaveEntitlementService {
      */
     constructor(
         private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
-        // private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
+        private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
         // private readonly userDbService: UserprofileDbService,
         // private readonly leaveEntitlementDbService: LeavetypeEntitlementDbService,
         // private readonly userInfoDbService: UserInfoService,
@@ -58,6 +59,45 @@ export class UserLeaveEntitlementService {
         // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService,
         private readonly entitlementRoundingService: EntitlementRoundingService
     ) { }
+
+    public assignEntitlementClaim([entitlementClaim, user]: [CreateEntitlementClaimDTO, any]) {
+        // let resource = new Resource(new Array);
+        entitlementClaim.data.forEach(element => {
+            this.userLeaveEntitlementDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`, `(USER_GUID=${element.userId})`, `(PARENT_FLAG=1)`, `(YEAR=${new Date().getFullYear()})`]).pipe(map(res => {
+                console.log(res);
+                let model = new UserLeaveEntitlementModel();
+                let resource = new Resource(new Array);
+                model.USER_LEAVE_ENTITLEMENT_GUID = v1();
+                model.USER_GUID = element.userId;
+                model.LEAVE_TYPE_GUID = element.leaveTypeId;
+                model.ENTITLEMENT_GUID = res[0].ENTITLEMENT_GUID;
+                model.YEAR = res[0].YEAR;
+                model.DAYS_ADDED = parseFloat(element.noOfDays);
+                model.CF_FLAG = 0;
+                model.PARENT_FLAG = 0;
+                model.EXPIREDATE = new Date(element.expiredDate);
+                model.REMARKS = 'REPLACEMENT LEAVE';
+                model.PROPERTIES_XML = res[0].PROPERTIES_XML;
+                model.CREATION_USER_GUID = user.USER_GUID;
+                model.TENANT_GUID = user.TENANT_GUID;
+                model.ACTIVE_FLAG = 1;
+
+                resource.resource.push(model);
+                console.log(resource);
+                this.userLeaveEntitlementDbService.createByModel(resource, [], [], []).subscribe(
+                    data => { console.log(data.data.resource); },
+                    err => { console.log(err); }
+                );
+            })).subscribe(
+                data => { //console.log(data); 
+                },
+                err => { //console.log(err); 
+                }
+            );
+        });
+        // console.log(resource);
+        return of(entitlementClaim);
+    }
 
     // /**
     //  * Method get entitlement list

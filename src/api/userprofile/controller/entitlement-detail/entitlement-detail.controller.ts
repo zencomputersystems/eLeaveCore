@@ -7,6 +7,7 @@ import { UserLeaveEntitlementService } from '../../service/user-leave-entitlemen
 import { AuthGuard } from '@nestjs/passport';
 import { CommonFunctionService } from '../../../../common/helper/common-function.services';
 import { CreateReplacementLeaveDTO } from '../../dto/leave-entitlement/create-replacement-leave.dto';
+import { CreateEntitlementClaimDTO } from '../../dto/leave-entitlement/create-entitlement-claim.dto';
 
 /**
  *  Controller for entitlement detail
@@ -126,6 +127,18 @@ export class EntitlementDetailController {
 		// 	}
 		// )
 
+	}
+
+	@UseGuards(ResourceGuard)
+	@Post('/entitlement-claim')
+	@Roles('ProfileAdmin')
+	@ApiOperation({ title: 'Assign entitlement claim to user' })
+	createEntitlementClaim(@Body() assignEntitlementClaimDTO: CreateEntitlementClaimDTO, @Req() req, @Res() res) {
+
+		this.entitlementService.assignEntitlementClaim([assignEntitlementClaimDTO, req.user]).subscribe(
+			data => { res.send(data); },
+			err => { res.send(err); }
+		);
 	}
 
 	/**

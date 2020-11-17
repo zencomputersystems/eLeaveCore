@@ -24,6 +24,8 @@ import { CreateReplacementLeaveDTO } from '../dto/leave-entitlement/create-repla
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
 import { CreateEntitlementClaimDTO } from '../dto/leave-entitlement/create-entitlement-claim.dto';
+import { EntitlementClaimTraceDbService } from '../db/entitlement-claim-trace.db.service';
+import { EntitlementClaimTraceModel } from '../model/entitlement-claim-trace.model';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -57,14 +59,15 @@ export class UserLeaveEntitlementService {
         // private readonly serviceYearCalcService: ServiceYearCalc,
         // private readonly proratedMonthEndYearService: ProratedDateEndYearService,
         // private readonly proratedMonthCurrentMonthService: ProratedDateCurrentMonthService,
-        private readonly entitlementRoundingService: EntitlementRoundingService
+        private readonly entitlementRoundingService: EntitlementRoundingService,
+        private readonly entitlementClaimTraceDbService: EntitlementClaimTraceDbService
     ) { }
 
     public assignEntitlementClaim([entitlementClaim, user]: [CreateEntitlementClaimDTO, any]) {
         // let resource = new Resource(new Array);
         entitlementClaim.data.forEach(element => {
             this.userLeaveEntitlementDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`, `(USER_GUID=${element.userId})`, `(PARENT_FLAG=1)`, `(YEAR=${new Date().getFullYear()})`]).pipe(map(res => {
-                console.log(res);
+                // console.log(res);
                 let model = new UserLeaveEntitlementModel();
                 let resource = new Resource(new Array);
                 model.USER_LEAVE_ENTITLEMENT_GUID = v1();
@@ -76,16 +79,19 @@ export class UserLeaveEntitlementService {
                 model.CF_FLAG = 0;
                 model.PARENT_FLAG = 0;
                 model.EXPIREDATE = new Date(element.expiredDate);
-                model.REMARKS = 'REPLACEMENT LEAVE';
+                model.REMARKS = element.reason;  //'REPLACEMENT LEAVE';
                 model.PROPERTIES_XML = res[0].PROPERTIES_XML;
                 model.CREATION_USER_GUID = user.USER_GUID;
                 model.TENANT_GUID = user.TENANT_GUID;
                 model.ACTIVE_FLAG = 1;
 
                 resource.resource.push(model);
-                console.log(resource);
-                this.userLeaveEntitlementDbService.createByModel(resource, [], [], []).subscribe(
-                    data => { console.log(data.data.resource); },
+                // console.log(resource);
+                this.userLeaveEntitlementDbService.createByModel(resource, ['USER_LEAVE_ENTITLEMENT_GUID', 'TENANT_GUID', 'USER_GUID', 'LEAVE_TYPE_GUID', 'DAYS_ADDED', 'REMARKS', 'CREATION_USER_GUID'], [], []).subscribe(
+                    data => {
+                        // console.log(data.data.resource);
+                        this.entitlementClaimLog([data.data.resource[0]]);
+                    },
                     err => { console.log(err); }
                 );
             })).subscribe(
@@ -97,6 +103,28 @@ export class UserLeaveEntitlementService {
         });
         // console.log(resource);
         return of(entitlementClaim);
+    }
+
+    public entitlementClaimLog([dataResult]) {
+        let resource = new Resource(new Array);
+        let model = new EntitlementClaimTraceModel();
+
+        model.ENTITLEMENT_CLAIM_LOG_GUID = v1();
+        model.USER_LEAVE_ENTITLEMENT_GUID = dataResult.USER_LEAVE_ENTITLEMENT_GUID;
+        model.TENANT_GUID = dataResult.TENANT_GUID;
+        model.USER_GUID = dataResult.USER_GUID;
+        model.LEAVE_TYPE_GUID = dataResult.LEAVE_TYPE_GUID;
+        model.NO_OF_DAYS = dataResult.DAYS_ADDED;
+        model.REMARKS = dataResult.REMARKS;
+        model.CREATION_USER_GUID = dataResult.CREATION_USER_GUID;
+
+        resource.resource.push(model);
+        // console.log(resource);
+
+        this.entitlementClaimTraceDbService.createByModel(resource, [], [], []).subscribe(
+            data => { /*console.log(data);*/ },
+            err => { /*console.log(err);*/ }
+        );
     }
 
     // /**

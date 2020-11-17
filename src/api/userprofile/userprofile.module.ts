@@ -34,6 +34,7 @@ import { EntitledFullService } from 'src/common/policy/entitlement-type/services
 import { PendingLeaveService } from '../../admin/approval-override/pending-leave.service';
 import { CompanyDbService } from 'src/admin/company/company.service';
 import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
+import { EntitlementClaimTraceDbService } from './db/entitlement-claim-trace.db.service';
 
 /**
  * Module for user profile
@@ -52,6 +53,7 @@ import { LeavetypeService } from 'src/admin/leavetype/leavetype.service';
     UserLeaveEntitlementDbService,
     UserLeaveEntitlementService,
     LeavetypeEntitlementDbService,
+    EntitlementClaimTraceDbService,
     EntitlementRoundingService,
     ServiceYearCalc,
     ProratedDateEndYearService,

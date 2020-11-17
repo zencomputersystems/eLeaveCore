@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 export class EntitlementClaimDetailsDTO {
   @ApiModelProperty({ description: 'User id', example: '507a60c0-18a5-11eb-ba6c-3972e8c82172' })
   @IsString()
@@ -18,6 +18,11 @@ export class EntitlementClaimDetailsDTO {
   @IsString()
   @IsNotEmpty()
   expiredDate: string; //"2020-12-31"
+  @ApiModelProperty({ description: 'Reason', example: 'OT last night' })
+  @IsString()
+  @IsOptional()
+  reason: string;
+
 }
 
 export class CreateEntitlementClaimDTO {

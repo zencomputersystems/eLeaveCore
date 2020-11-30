@@ -72,6 +72,17 @@ export class LeaveTakenDetailsDto {
   approveBy: string;
 
   /**
+   * Attachment
+   *
+   * @type {string}
+   * @memberof LeaveTakenDetailsDto
+   */
+  @ApiModelProperty({ description: 'Attachment', example: 'KN' })
+  @IsString()
+  attachment: string;
+
+
+  /**
    * Remarks
    *
    * @type {string}

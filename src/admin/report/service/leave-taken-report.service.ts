@@ -127,6 +127,7 @@ export class LeaveTakenReportService {
     leaveData.endDate = element.END_DATE;
     leaveData.noOfDays = element.NO_OF_DAYS;
     leaveData.approveBy = approverData;
+    leaveData.attachment = element.ATTACHMENT;
     leaveData.remarks = element.REMARKS;
     return leaveData;
   }

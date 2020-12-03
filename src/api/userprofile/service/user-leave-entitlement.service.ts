@@ -66,7 +66,7 @@ export class UserLeaveEntitlementService {
     public assignEntitlementClaim([entitlementClaim, user]: [CreateEntitlementClaimDTO, any]) {
         // let resource = new Resource(new Array);
         entitlementClaim.data.forEach(element => {
-            this.userLeaveEntitlementDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`, `(USER_GUID=${element.userId})`, `(PARENT_FLAG=1)`, `(YEAR=${new Date().getFullYear()})`]).pipe(map(res => {
+            this.userLeaveEntitlementDbService.findByFilterV2([], [`(TENANT_GUID=${user.TENANT_GUID})`, `(USER_GUID=${element.userId})`, `(PARENT_FLAG=1)`, `(YEAR=${new Date().getFullYear()})`, `(LEAVE_TYPE_GUID=${element.leaveTypeId})`]).pipe(map(res => {
                 // console.log(res);
                 let model = new UserLeaveEntitlementModel();
                 let resource = new Resource(new Array);

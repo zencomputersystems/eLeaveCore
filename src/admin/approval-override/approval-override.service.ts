@@ -213,14 +213,18 @@ export class ApprovalOverrideService {
       let findData = resultAll.find(x => x.USER_GUID === res.data.resource[i].USER_GUID);
       let findCompanyData = companyList.find(x => x.TENANT_COMPANY_GUID === findData.TENANT_COMPANY_GUID);
       let findLeaveData = leaveTypeList.find(x => x.LEAVE_TYPE_GUID === res.data.resource[i].LEAVE_TYPE_GUID);
-      if (!findLeaveData) {
-        findLeaveData['CODE'] = null;
-        findLeaveData['ABBR'] = null;
-      }
+
       res.data.resource[i].userData = findData;
       res.data.resource[i].companyName = findCompanyData.NAME;
-      res.data.resource[i].leavetypeName = findLeaveData.CODE;
-      res.data.resource[i].leavetypeAbbr = findLeaveData.ABBR;
+
+      if (findLeaveData == undefined) {
+        res.data.resource[i].leavetypeName = 'Birthday Leave';
+        res.data.resource[i].leavetypeAbbr = 'BL';
+      } else {
+        res.data.resource[i].leavetypeName = findLeaveData['CODE'];
+        res.data.resource[i].leavetypeAbbr = findLeaveData['ABBR'];
+      }
+
     }
     return await res.data.resource;
   }

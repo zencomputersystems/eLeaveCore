@@ -130,8 +130,8 @@ export class ApplyLeaveService {
 	 */
 	private applyLeaveProcess([applyLeaveDTO, user, extensionQuery, onbehalf]: [ApplyLeaveDTO, any, any, boolean]) {
 		let y = applyLeaveDTO;
-
-		return this.userInfoService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID', 'MANAGER_USER_GUID', 'FULLNAME', 'WORKING_HOURS_GUID'], extensionQuery)
+		// userInfoService
+		return this.userprofileDbService.findByFilterV2(['JOIN_DATE', 'CONFIRMATION_DATE', 'USER_GUID', 'TENANT_GUID', 'TENANT_COMPANY_GUID', 'CALENDAR_GUID', 'MANAGER_USER_GUID', 'FULLNAME', 'WORKING_HOURS_GUID'], extensionQuery)
 			.pipe(
 				map(async res => {
 					let holidayData = await runServiceCallback(this.calendarProfileDbService.findByFilterV2([], [`(CALENDAR_GUID=${res[0].CALENDAR_GUID})`, `(YEAR=${new Date().getFullYear()})`]));

@@ -174,6 +174,9 @@ export class DashboardController {
 
 				combineData.push(dataToShow);
 			});
+
+			combineData.sort((a, b) => (a.dateApplied > b.dateApplied) ? -1 : ((b.dateApplied > a.dateApplied) ? 1 : 0));
+
 			res.send(combineData);
 		} else {
 			res.send({ "status": "No pending leave" });

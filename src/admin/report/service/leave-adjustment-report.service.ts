@@ -48,6 +48,7 @@ export class LeaveAdjustmentReportService {
         let leaveAdjustmentData = [];
 
         res.forEach(element => {
+
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
 
           let resultCreator = resultAll.find(x => x.USER_GUID === element.CREATION_USER_GUID);
@@ -69,7 +70,7 @@ export class LeaveAdjustmentReportService {
           leaveAdjustmentReportDto.adjustment = element.ADJUSTMENT;
           leaveAdjustmentReportDto.adjustBy = resultCreator.FULLNAME;
           leaveAdjustmentReportDto.adjustDate = element.CREATION_TS;
-          leaveAdjustmentReportDto.remarks = element.REMAKRS;
+          leaveAdjustmentReportDto.remarks = element.REMARKS || null;
 
           leaveAdjustmentReportDto.companyName = resultUser.COMPANY_NAME;
           leaveAdjustmentReportDto.department = resultUser.DEPARTMENT;

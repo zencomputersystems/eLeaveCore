@@ -171,6 +171,7 @@ export class DashboardController {
 				dataToShow['noOfDays'] = element.NO_OF_DAYS;
 				dataToShow['dateApplied'] = element.CREATION_TS;
 				dataToShow['leaveTypeName'] = findLeavetype.CODE || null;
+				dataToShow['attachment'] = element.ATTACHMENT || null;
 
 				combineData.push(dataToShow);
 			});

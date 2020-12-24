@@ -231,8 +231,8 @@ export class LeaveBalanceValidationService {
 
             if (element.EXPIREDATE != null) {
                 let expiryDate = moment(element.EXPIREDATE, 'YYYY-MM-DD').startOf('days');
-
-                if (expiryDate.isSameOrBefore(endDate) && expiryDate.isSameOrAfter(startDate)) {
+                // if (expiryDate.isSameOrBefore(endDate) && expiryDate.isSameOrAfter(startDate)) {
+                if (endDate.isSameOrBefore(expiryDate) && startDate.isSameOrBefore(expiryDate)) {
                     // calculate the duration between start date and expiry date
                     // let durationExpiredToStart = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,element.EXPIREDATE,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 

@@ -118,7 +118,8 @@ export class InvitationService {
 
         //validated the invitation data
         if (invitationData == null || invitationData == undefined) {
-            activatedResult.message = "Invalid User";
+            // activatedResult.message = "Invalid User";
+            activatedResult.message = "Invalid Token";
             activatedResult.status = false;
 
             return of(activatedResult);
@@ -134,7 +135,8 @@ export class InvitationService {
                     const result = res[0];
 
                     if (result == null) {
-                        activatedResult.message = "Invalid User";
+                        // activatedResult.message = "Invalid User";
+                        activatedResult.message = "User already activated";
                         activatedResult.status = false;
 
                         return activatedResult;

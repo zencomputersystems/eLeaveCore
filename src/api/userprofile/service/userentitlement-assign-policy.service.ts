@@ -30,7 +30,7 @@ export class UserEntitlementAssignPolicy {
   constructor(
     private readonly serviceYearCalcService: ServiceYearCalc,
     private readonly proratedMonthEndYearService: ProratedDateEndYearService,
-    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService, ) { }
+    private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,) { }
 
 
   /**
@@ -65,8 +65,9 @@ export class UserEntitlementAssignPolicy {
 
       //get the entitlement days
       const entitlementDay = this.proratedMonthEndYearService.calculateEntitledLeave(dateOfJoin, serviceYear, policy);
-
-      if (entitlementDay == 0 || entitlementDay == undefined) {
+      console.log(entitlementDay);
+      // if (entitlementDay == 0 || entitlementDay == undefined) {
+      if (entitlementDay == undefined) {
         return of(null);
       }
 

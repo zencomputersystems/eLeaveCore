@@ -41,7 +41,7 @@
     "fast-xml-parser": "^3.12.13",
     "jsonwebtoken": "^8.4.0",
     "local-storage": "^2.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "nodemailer": "^6.2.1",
     "nodemailer-smtp-transport": "^2.7.4",

@@ -84,7 +84,7 @@ export class CompanyController {
 						const policyCompany = convertXMLToJson(companyPolicyTemp.PROPERTIES_XML);
 						let year = moment().format('YYYY');
 						if (policyCompany.allowYearEndClosing.relativeYear === 'Next year') {
-							year = moment().add(1, 'year').format('YYYY');
+							year = moment(company['NEXT_TO_CLOSED'], 'YYYY').add(1, 'year').format('YYYY');
 						}
 						company['AVAILABLE_DATE_CLOSE'] = year + '-' + policyCompany.allowYearEndClosing.month + '-' + policyCompany.allowYearEndClosing.day;
 						company['POLICY'] = policyCompany.allowYearEndClosing;

@@ -273,14 +273,15 @@ export class DashboardService {
    * @memberof DashboardService
    */
   public convertData([upcomingHolidayArr, data]: [any, any]) {
-    let holidayData = convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
+    if (data.data.resource.length > 0) {
+      let holidayData = convertXMLToJson(data.data.resource[0].PROPERTIES_XML);
 
-    holidayData.holiday.forEach(element => {
-      if (moment(element.start, 'YYYY-MM-DD') > moment()) {
-        upcomingHolidayArr.push(element);
-      }
-    });
-
+      holidayData.holiday.forEach(element => {
+        if (moment(element.start, 'YYYY-MM-DD') > moment()) {
+          upcomingHolidayArr.push(element);
+        }
+      });
+    }
     return upcomingHolidayArr;
   }
 }

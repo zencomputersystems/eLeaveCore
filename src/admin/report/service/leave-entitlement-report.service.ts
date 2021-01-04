@@ -9,6 +9,7 @@ import { runServiceCallback } from 'src/common/helper/basic-functions';
 import moment = require('moment');
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/xml/leavetype-properties.xml.dto';
+import { CompanyService } from 'src/admin/company/company.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 /**
@@ -29,7 +30,8 @@ export class LeaveEntitlementReportService {
     private readonly reportDBService: ReportDBService,
     private readonly pendingLeaveService: PendingLeaveService,
     private readonly leaveTransactionDbService: LeaveTransactionDbService,
-    private readonly entitlementRoundingService: EntitlementRoundingService
+    private readonly entitlementRoundingService: EntitlementRoundingService,
+    private readonly companyService: CompanyService
   ) { }
   /**
    * Get leave entitlement data
@@ -42,12 +44,31 @@ export class LeaveEntitlementReportService {
     // let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`]; // for all user
 
     // temporary
-    let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear() - 1})`]; // for all user
-    const extra = ['(USER_GUID=' + userId + ')']; // for one user
-    filter = userId != null ? filter.concat(extra) : filter; // chcek if one user add extra filter
+    // let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear() - 1})`]; // for all user
+    // const extra = ['(USER_GUID=' + userId + ')']; // for one user
+    // filter = userId != null ? filter.concat(extra) : filter; // chcek if one user add extra filter
 
+    // this.companyService.findAll([tenantId, 'year-end']).subscribe(
+    //   data => { console.log(data); },
+    //   err => { console.log(err); }
+    // );
+
+    let currentYear = new Date().getFullYear();
+    const extra = ['(USER_GUID=' + userId + ')']; // for one user
     // get leave entitlement summary
-    return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
+    // return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
+    return this.companyService.findAll([tenantId, 'year-end']).pipe(
+      mergeMap(res => {
+        if (res[0].YEAR_END != null) {
+          currentYear = res[0].YEAR_END + 1;
+        }
+        let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${currentYear})`]; // for all user
+
+        filter = userId != null ? filter.concat(extra) : filter; // chcek if one user add extra filter
+
+        return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter)
+      }),
+
       mergeMap(async res => {
         let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
@@ -56,7 +77,7 @@ export class LeaveEntitlementReportService {
         // filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
 
         // temporary
-        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() - 1 + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
+        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((currentYear + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
         filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
 
         let fieldTemp = ['LEAVE_TYPE_GUID', 'USER_GUID', 'ENTITLEMENT_GUID', 'START_DATE', 'END_DATE', 'NO_OF_DAYS', 'STATUS', 'CREATION_TS'];
@@ -66,7 +87,7 @@ export class LeaveEntitlementReportService {
         // let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
 
         // temporary
-        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() - 1 + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
+        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((currentYear + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
 
         let leaveEntitlementData = await this.pendingLeaveService.runService(method2);
 

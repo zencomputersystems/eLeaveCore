@@ -19,7 +19,7 @@ import { EntitlementClaimReportService } from './service/entitlement-claim-repor
 import { LeaveAdjustmentReportService } from './service/leave-adjustment-report.service';
 import { LeaveForfeitedReportService } from './service/leave-forfeited-report.service';
 import { PendingLeaveService } from '../approval-override/pending-leave.service';
-import { CompanyDbService } from '../company/company.service';
+import { CompanyDbService, CompanyService } from '../company/company.service';
 import { LeavetypeService } from '../leavetype/leavetype.service';
 import { LeaveAdjustmentDbLogService } from '../leave-adjustment/leave-adjustment-log.service';
 import { LeaveTransactionLogDbService } from 'src/api/leave/db/leave-transaction-log.db.service';
@@ -27,6 +27,7 @@ import { UserLeaveEntitlementDbService } from 'src/api/userprofile/db/user-leave
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { LeavetypeEntitlementDbService } from '../leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { EntitlementClaimTraceDbService } from 'src/api/userprofile/db/entitlement-claim-trace.db.service';
+import { UserInfoDbService } from '../holiday/db/user-info.db.service';
 
 @Module({
   imports: [
@@ -61,7 +62,10 @@ import { EntitlementClaimTraceDbService } from 'src/api/userprofile/db/entitleme
     DateCalculationService,
     EntitlementRoundingService,
     LeavetypeEntitlementDbService,
-    EntitlementClaimTraceDbService
+    EntitlementClaimTraceDbService,
+
+    CompanyService,
+    UserInfoDbService
   ],
   controllers: [
     ReportController

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { LeaveEntitlementReportDto, LeaveDetailsDto } from '../dto/leave-entitlement-report.dto';
 import { Observable } from 'rxjs';
 import { ReportDBService } from './report-db.service';
-import { map, mergeMap, flatMap, filter } from 'rxjs/operators';
+import { map, mergeMap, flatMap, filter, find } from 'rxjs/operators';
 import { PendingLeaveService } from 'src/admin/approval-override/pending-leave.service';
 import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 import { runServiceCallback } from 'src/common/helper/basic-functions';
@@ -39,7 +39,10 @@ export class LeaveEntitlementReportService {
    * @memberof LeaveEntitlementReportService
    */
   getLeaveEntitlementData([tenantId, userId]: [string, string]): Observable<any> {
-    let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`]; // for all user
+    // let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear()})`]; // for all user
+
+    // temporary
+    let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${new Date().getFullYear() - 1})`]; // for all user
     const extra = ['(USER_GUID=' + userId + ')']; // for one user
     filter = userId != null ? filter.concat(extra) : filter; // chcek if one user add extra filter
 
@@ -49,14 +52,22 @@ export class LeaveEntitlementReportService {
         let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
         let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
         // let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD')})`];
-        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
+        // let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
+        // filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
+
+        // temporary
+        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() - 1 + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
         filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
 
         let fieldTemp = ['LEAVE_TYPE_GUID', 'USER_GUID', 'ENTITLEMENT_GUID', 'START_DATE', 'END_DATE', 'NO_OF_DAYS', 'STATUS', 'CREATION_TS'];
         let method = this.leaveTransactionDbService.findByFilterV2(fieldTemp, filterTemp);
         let leaveTransactionData = await this.pendingLeaveService.runService(method);
 
-        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
+        // let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
+
+        // temporary
+        let method2 = this.reportDBService.userLeaveEntitlementDbService.findByFilterV2(['LEAVE_TYPE_GUID', 'USER_GUID', 'CREATION_TS', 'EXPIREDATE', 'DAYS_ADDED', 'ACTIVE_FLAG'], [`(TENANT_GUID=${tenantId})`, `(YEAR=${moment((new Date().getFullYear() - 1 + '-01-01'), 'YYYY-MM-DD').format('YYYY')})`, `(DELETED_AT IS NULL)`]);
+
         let leaveEntitlementData = await this.pendingLeaveService.runService(method2);
 
         let arrTemp = [];
@@ -64,7 +75,7 @@ export class LeaveEntitlementReportService {
           if (!arrTemp.find(x => x === element.ENTITLEMENT_GUID))
             arrTemp.push(element.ENTITLEMENT_GUID);
         });
-        console.log(arrTemp);
+        // console.log(arrTemp);
         let entitlementPolicy = await runServiceCallback(this.reportDBService.leaveEntitlementDbService.findByFilterV2([], ['(ENTITLEMENT_GUID IN (' + arrTemp + '))']));
 
         return { res, leaveTypeList, resultAll, leaveTransactionData, leaveEntitlementData, entitlementPolicy };
@@ -73,11 +84,13 @@ export class LeaveEntitlementReportService {
         let { res, leaveTypeList, resultAll, leaveTransactionData, leaveEntitlementData, entitlementPolicy } = result;
         let userIdList = [];
 
-        let MCData = res.find(x => x.ABBR === 'ML');
+        // let MCData = res.find(x => x.ABBR === 'ML');
+        let MCAll = res.filter(x => x.ABBR === 'ML');
 
         res.forEach(async element => {
           const userId = userIdList.find(x => (x.userGuid == element.USER_GUID));
           let resultUser = resultAll.find(x => x.USER_GUID === element.USER_GUID);
+          let MCData = MCAll.find(x => x.USER_GUID === element.USER_GUID);
 
           if (!userId) {
             let leaveEntitlementReportDTO = new LeaveEntitlementReportDto;
@@ -167,10 +180,14 @@ export class LeaveEntitlementReportService {
       findLeaveData['CODE'] = null;
       findLeaveData['ABBR'] = null;
     }
+    // console.log(element.USER_GUID + '-' + element.ADJUSTMENT_DAYS + '-' + element.LEAVE_TYPE_GUID + '-' + findLeaveData.ABBR)
     element.ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(element.ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
     element.ADJUSTMENT_DAYS = element.ADJUSTMENT_DAYS ? element.ADJUSTMENT_DAYS : 0;
     // element.BALANCE_DAYS = (element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING);
     element.BALANCE_DAYS = element.EARNED_LEAVE - element.TOTAL_APPROVED - element.TOTAL_PENDING + parseFloat(element.ADJUSTMENT_DAYS);
+
+    // if (element.USER_GUID == 'a82edb60-2260-11eb-ae4a-5b310e38e8b3' && element.LEAVE_TYPE_GUID == '4a150710-0939-11eb-906e-0b4c0d3abe6d')
+    // console.log(element.USER_GUID + '-' + element.ADJUSTMENT_DAYS + '-' + element.LEAVE_TYPE_GUID + '-' + findLeaveData.ABBR + '-' + element.EARNED_LEAVE + '-' + element.TOTAL_APPROVED + '-' + element.TOTAL_PENDING + '-' + parseFloat(element.ADJUSTMENT_DAYS));
 
     leaveData.leaveTypeId = element.LEAVE_TYPE_GUID;
     leaveData.leaveTypeName = findLeaveData.CODE;
@@ -266,6 +283,7 @@ export class LeaveEntitlementReportService {
       totalentitled = entitledDaysFinal;
     }
 
+    // console.log(policyJson.leaveEntitlementType.toUpperCase() + '-' + entitledDaysFinal + '-' + totalentitled);
     return { entitledDaysFinal, totalentitled };
   }
 

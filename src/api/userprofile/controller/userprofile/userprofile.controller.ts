@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { Roles } from 'src/decorator/resource.decorator';
 import { UserprofileService } from '../../service/userprofile.service';
-import { switchMap } from 'rxjs/operators';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { AccessLevelValidateService } from 'src/common/helper/access-level-validate.service';
 import { ResourceGuard } from 'src/guard/resource.guard';
 import { EntitlementDetailDTO } from '../../dto/userprofile-detail/entitlement-detail/entitlement-detail.dto';
@@ -117,35 +117,57 @@ export class UserprofileController {
 	 * @param {*} res
 	 * @memberof UserprofileController
 	 */
-	@UseGuards(ResourceGuard)
+	// @UseGuards(ResourceGuard)
 	@Get('userprofile/:id')
 	@ApiOperation({ title: 'Get profile detail for requested user' })
 	@ApiImplicitParam({ name: 'id', description: 'filter user by USER_GUID', required: true })
-	@Roles('ViewProfile', 'ProfileAdmin')
+	// @Roles('ViewProfile', 'ProfileAdmin')
 	findOne(@Param('id') id, @Req() req, @Res() res) {
+		// const user = req.user;
+		// this.accessLevelValidationService.generateFilterWithChecking([user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + id + ')']])
+		// 	.pipe(
+		// 		switchMap(filter => {
+
+		// 			let filters: string[] = [];
+		// 			let merge: string;
+		// 			for (var i = 0; i < filter.length; i++) {
+		// 				merge = filter[i - 1] + ' AND ' + filter[i];
+		// 			}
+		// 			filters.push(merge);
+
+		// 			return this.userprofileService.getDetail(filters);
+		// 		})
+		// 	).subscribe(data => {
+
+		// 		if (data) { this.getEntitlementProcess([data, res, user]); }
+		// 		else { res.status(HttpStatus.NOT_FOUND).send(new NotFoundException(`Data user guid not found`)); }
+		// 	}, err => {
+		// 		res.status(500);
+		// 		// if (err.response.data) { res.send(err.response.data1.error) } 
+		// 		// else { 
+		// 		res.send(err);
+		// 		// }
+		// 	});
+
 		const user = req.user;
-		this.accessLevelValidationService.generateFilterWithChecking([user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + id + ')']])
-			.pipe(
-				switchMap(filter => {
-					let filters: string[] = [];
-					let merge: string;
-					for (var i = 0; i < filter.length; i++) {
-						merge = filter[i - 1] + ' AND ' + filter[i];
-					}
-					filters.push(merge);
-					return this.userprofileService.getDetail(filters);
-				})
-			).subscribe(data => {
-				// console.log(data);
-				if (data) { this.getEntitlementProcess([data, res, user]); }
-				else { res.status(HttpStatus.NOT_FOUND).send(new NotFoundException(`Data user guid not found`)); }
-			}, err => {
-				res.status(500);
-				// if (err.response.data) { res.send(err.response.data1.error) } 
-				// else { 
-				res.send(err);
-				// }
-			});
+		// this.accessLevelValidationService.generateFilterWithChecking([user.TENANT_GUID, user.USER_GUID, req.accessLevel, ['(USER_GUID=' + id + ')']])
+		// 	.pipe(
+		// 		switchMap(filter => {
+
+		// 			let filters: string[] = [];
+		// 			let merge: string;
+		// 			for (var i = 0; i < filter.length; i++) {
+		// 				merge = filter[i - 1] + ' AND ' + filter[i];
+		// 			}
+		// 			filters.push(merge);
+
+		// 			return this.userprofileService.getDetail(filters);
+		// 		})
+		// 	)
+		let filters = [`(USER_GUID=${id}) AND (TENANT_GUID=${req.user.TENANT_GUID})`];
+
+		this.processUserProfile([filters, res, user]);
+
 	}
 
 	/**
@@ -164,17 +186,19 @@ export class UserprofileController {
 
 		const filters = ['(TENANT_GUID=' + user.TENANT_GUID + ') AND (USER_GUID=' + user.USER_GUID + ')'];
 
+		this.processUserProfile([filters, res, user]);
+
+	}
+
+	private processUserProfile([filters, res, user]: [any, any, any]) {
 		this.userprofileService.getDetail(filters)
-			.subscribe(
-				data => { this.getEntitlementProcess([data, res, user]); },
-				err => {
-
-					res.status(500);
-					if (err.response) { res.send(err.response.data.error) }
-					else { res.send(err); }
-				}
-			)
-
+			.pipe(mergeMap(data1 => { return this.getEntitlementProcessNew([data1, res, user]); }))
+			.subscribe(data => {
+				if (data) { res.send(data); }
+				else { res.status(HttpStatus.NOT_FOUND).send(new NotFoundException(`Data user guid not found`)); }
+			}, err => {
+				res.status(500).send(err);
+			});
 	}
 
 	/**
@@ -185,16 +209,14 @@ export class UserprofileController {
 	 * @param {*} user
 	 * @memberof UserprofileController
 	 */
-	public getEntitlementProcess([data1, res, user]) {
-		// console.log(data1);
+	public getEntitlementProcessNew([data1, res, user]) {
 
-		this.userprofileService.getEntitlementDetail(user.TENANT_GUID, data1.userId).subscribe(
-			data => {
+		return this.userprofileService.getEntitlementDetail(user.TENANT_GUID, data1.userId).pipe(
+			map(data => {
 				let abbrMerge = [];
 				let leaveData = [];
 				for (let i = 0; i < data.length; i++) {
 					let tempObj = new EntitlementDetailDTO;
-					// console.log(data[i].LEAVE_TYPE_GUID);
 					tempObj.leaveTypeId = data[i].LEAVE_TYPE_GUID;
 					tempObj.leaveTypeName = data[i].LEAVE_CODE;
 					tempObj.abbr = data[i].ABBR;
@@ -207,12 +229,8 @@ export class UserprofileController {
 				}
 				data1.abbr = abbrMerge;
 				data1.entitlementDetail = leaveData;
-				res.send(data1);
-			},
-			err => {
-				res.status(500);
-				err.response ? res.send(err.response.data.error) : res.send(err);
-			}
+				return data1;
+			})
 		)
 	}
 

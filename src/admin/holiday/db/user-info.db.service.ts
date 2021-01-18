@@ -9,6 +9,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { UserService } from 'src/admin/user/user.service';
 import { UserModel } from 'src/admin/user/model/user.model';
 import { UpdateUserInfoItemDTO } from 'src/admin/user-info-details/dto/update-user-info-details.dto';
+import * as moment from 'moment';
 
 /**
  * DB Service for user info to update calendar
@@ -251,7 +252,8 @@ export class UserInfoDbService extends BaseDBService {
      */
     public findMyDownline(userGuid: string) {
         let fields = ['USER_GUID'];
-        let filters = ['(MANAGER_USER_GUID=' + userGuid + ')', '(RESIGNATION_DATE IS NULL)'];
+        // let filters = ['(MANAGER_USER_GUID=' + userGuid + ')', '(RESIGNATION_DATE IS NULL)'];
+        let filters = ['(MANAGER_USER_GUID=' + userGuid + ')', '((RESIGNATION_DATE IS NULL) OR (RESIGNATION_DATE >= ' + moment().format('YYYY-MM-DD') + '))'];
         return this.findByFilterV2(fields, filters);
 
     }

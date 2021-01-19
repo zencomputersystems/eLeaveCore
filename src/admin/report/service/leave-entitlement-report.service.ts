@@ -59,8 +59,11 @@ export class LeaveEntitlementReportService {
     // return this.reportDBService.userLeaveEntitlementSummary.findByFilterV2([], filter).pipe(
     return this.companyService.findAll([tenantId, 'year-end']).pipe(
       mergeMap(res => {
+        // if (res[0].YEAR_END != null) {
+        //   currentYear = res[0].YEAR_END + 1;
+        // }
         if (res[0].YEAR_END != null) {
-          currentYear = res[0].YEAR_END + 1;
+          currentYear = res[0].YEAR_END;
         }
         let filter = [`(TENANT_GUID=${tenantId})`, `(YEAR=${currentYear})`]; // for all user
 
@@ -70,14 +73,15 @@ export class LeaveEntitlementReportService {
       }),
 
       mergeMap(async res => {
-        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(res[0].TENANT_GUID);
-        let resultAll = await this.pendingLeaveService.getAllUserInfo(res[0].TENANT_GUID) as any[];
+
+        let leaveTypeList = await this.pendingLeaveService.getLeavetypeList(tenantId);
+        let resultAll = await this.pendingLeaveService.getAllUserInfo(tenantId) as any[];
         // let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD')})`];
         // let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((new Date().getFullYear() + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
         // filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
 
         // temporary
-        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(CREATION_TS>=${moment((currentYear + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
+        let filterTemp = [`(TENANT_GUID=${tenantId})`, `(START_DATE>=${moment((currentYear + '-01-01'), 'YYYY-MM-DD').format('YYYY-MM-DD')})`, `(STATUS IN ('PENDING','APPROVED'))`];
         filterTemp = userId != null ? filterTemp.concat(extra) : filterTemp;
 
         let fieldTemp = ['LEAVE_TYPE_GUID', 'USER_GUID', 'ENTITLEMENT_GUID', 'START_DATE', 'END_DATE', 'NO_OF_DAYS', 'STATUS', 'CREATION_TS'];
@@ -339,7 +343,7 @@ export class LeaveEntitlementReportService {
 
       let count = totalDaysAdded - totalApplied;
 
-      if (count > 0)
+      if (count > 0 && element.EXPIREDATE <= moment().format('YYYY-MM-DD'))
         forfeited += count;
     });
     forfeited = forfeited < 0 ? 0 : forfeited;

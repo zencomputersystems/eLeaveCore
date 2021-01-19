@@ -183,10 +183,16 @@ export function dateToValidate([dateJoin, dateConfirm, policyEntitlement]: [any,
   }
 }
 
-export function entitledCount([dateOfSet, policyJson]: [any, LeaveTypePropertiesXmlDTO]) {
+export function entitledCount([dateOfSet, dateOfResign, policyJson]: [any, any, LeaveTypePropertiesXmlDTO]) {
   let totalentitled = 0;
   let entitledTillMonth = 0;
+
+  let monthResign = moment(dateOfResign).subtract(1, 'days').format('MM');
   for (var i = 1; i <= 12; i++) {
+
+    if (i > parseInt(monthResign)) {
+      break;
+    }
 
     var d = new Date(new Date().getFullYear(), i, 1, 1);
 
@@ -201,7 +207,15 @@ export function entitledCount([dateOfSet, policyJson]: [any, LeaveTypeProperties
 
       let totalDaysInMonth = moment(d).subtract(1, 'days').format('DD');
 
-      let daysOfService = moment.duration(moment(d).diff(dateOfSet)).asDays();
+      let resignDay = '';
+
+      if (i == parseInt(monthResign)) {
+        resignDay = moment(dateOfResign).format('DD');
+      }
+
+      // let daysOfService = moment.duration(moment(d).diff(dateOfSet)).asDays();
+
+      let daysOfService = moment.duration(moment(d, 'YYYY-MM-DD').diff(moment(new Date().getFullYear() + '-01-01', 'YYYY-MM-DD'))).asDays();
 
       let byMonthEntitled = currentLevel.entitledDays / 12;
 
@@ -209,12 +223,15 @@ export function entitledCount([dateOfSet, policyJson]: [any, LeaveTypeProperties
         byMonthEntitled = byMonthEntitled / parseInt(totalDaysInMonth) * daysOfService;
       }
 
+      if (totalDaysInMonth > resignDay && i == parseInt(moment(dateOfResign).format('M'))) {
+        byMonthEntitled = parseInt(resignDay) / parseInt(totalDaysInMonth) * byMonthEntitled;
+      }
+
       totalentitled += byMonthEntitled;
 
       if (new Date().getMonth() == d.getMonth()) {
         entitledTillMonth = totalentitled;
       }
-
     }
 
   }
@@ -246,6 +263,5 @@ export function entitledCount([dateOfSet, policyJson]: [any, LeaveTypeProperties
     entitledDaysFinal = after12Month;
     totalentitled = entitledDaysFinal;
   }
-
   return { entitledDaysFinal, totalentitled };
 }

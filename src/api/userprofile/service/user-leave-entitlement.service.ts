@@ -26,6 +26,7 @@ import { LeaveTypePropertiesXmlDTO } from 'src/admin/leavetype-entitlement/dto/x
 import { CreateEntitlementClaimDTO } from '../dto/leave-entitlement/create-entitlement-claim.dto';
 import { EntitlementClaimTraceDbService } from '../db/entitlement-claim-trace.db.service';
 import { EntitlementClaimTraceModel } from '../model/entitlement-claim-trace.model';
+import { entitledCount } from 'src/common/helper/basic-functions';
 /** XMLparser from zen library  */
 var { convertXMLToJson, convertJsonToXML } = require('@zencloudservices/xmlparser');
 
@@ -151,7 +152,7 @@ export class UserLeaveEntitlementService {
          */
     public getEntitlementList(tenantId: string, userId: string) {
         const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')', '(YEAR=' + moment().format('YYYY') + ')'];
-        const fields = ['USER_LEAVE_ENTITLEMENT_GUID', 'JOIN_DATE', 'CONFIRMATION_DATE', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'ADJUSTMENT_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
+        const fields = ['USER_LEAVE_ENTITLEMENT_GUID', 'JOIN_DATE', 'RESIGNATION_DATE', 'CONFIRMATION_DATE', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'ADJUSTMENT_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
 
         return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter).pipe(
             mergeMap(res => {
@@ -179,7 +180,7 @@ export class UserLeaveEntitlementService {
 
                     let dateIndicator = this.dateToValidate([element.JOIN_DATE, element.CONFIRMATION_DATE, leavePolicy]);
 
-                    let { entitledDaysFinal, totalentitled } = this.entitledCount([dateIndicator, leavePolicy]);
+                    let { entitledDaysFinal, totalentitled } = entitledCount([dateIndicator, element.RESIGNATION_DATE, leavePolicy]);
                     element.ENTITLED_DAYS = totalentitled;
 
                     // console.log(element.ENTITLED_DAYS);
@@ -238,72 +239,72 @@ export class UserLeaveEntitlementService {
         }
     }
 
-    public entitledCount([dateOfSet, policyJson]: [any, LeaveTypePropertiesXmlDTO]) {
-        let totalentitled = 0;
-        let entitledTillMonth = 0;
-        for (var i = 1; i <= 12; i++) {
+    // public entitledCount([dateOfSet, policyJson]: [any, LeaveTypePropertiesXmlDTO]) {
+    //     let totalentitled = 0;
+    //     let entitledTillMonth = 0;
+    //     for (var i = 1; i <= 12; i++) {
 
-            var d = new Date(new Date().getFullYear(), i, 1, 1);
+    //         var d = new Date(new Date().getFullYear(), i, 1, 1);
 
-            let yearOfService = moment.duration(moment(d).diff(dateOfSet)).asMonths();
+    //         let yearOfService = moment.duration(moment(d).diff(dateOfSet)).asMonths();
 
-            yearOfService = yearOfService / 12;
+    //         yearOfService = yearOfService / 12;
 
-            policyJson.levels.leaveEntitlement = Array.isArray(policyJson.levels.leaveEntitlement) ? policyJson.levels.leaveEntitlement : [policyJson.levels.leaveEntitlement];
-            let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfService && x.serviceYearTo > yearOfService);
+    //         policyJson.levels.leaveEntitlement = Array.isArray(policyJson.levels.leaveEntitlement) ? policyJson.levels.leaveEntitlement : [policyJson.levels.leaveEntitlement];
+    //         let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfService && x.serviceYearTo > yearOfService);
 
-            if (currentLevel != undefined) {
+    //         if (currentLevel != undefined) {
 
-                let totalDaysInMonth = moment(d).subtract(1, 'days').format('DD');
+    //             let totalDaysInMonth = moment(d).subtract(1, 'days').format('DD');
 
-                let daysOfService = moment.duration(moment(d).diff(dateOfSet)).asDays();
+    //             let daysOfService = moment.duration(moment(d).diff(dateOfSet)).asDays();
 
-                let byMonthEntitled = currentLevel.entitledDays / 12;
+    //             let byMonthEntitled = currentLevel.entitledDays / 12;
 
-                if (daysOfService <= parseInt(totalDaysInMonth)) {
-                    byMonthEntitled = byMonthEntitled / parseInt(totalDaysInMonth) * daysOfService;
-                }
+    //             if (daysOfService <= parseInt(totalDaysInMonth)) {
+    //                 byMonthEntitled = byMonthEntitled / parseInt(totalDaysInMonth) * daysOfService;
+    //             }
 
-                totalentitled += byMonthEntitled;
+    //             totalentitled += byMonthEntitled;
 
-                if (new Date().getMonth() == d.getMonth()) {
-                    entitledTillMonth = totalentitled;
-                }
+    //             if (new Date().getMonth() == d.getMonth()) {
+    //                 entitledTillMonth = totalentitled;
+    //             }
 
-            }
+    //         }
 
-        }
+    //     }
 
-        let yearOfServiceFull = moment.duration(moment().diff(dateOfSet)).asYears();
+    //     let yearOfServiceFull = moment.duration(moment().diff(dateOfSet)).asYears();
 
-        let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfServiceFull && x.serviceYearTo > yearOfServiceFull);
+    //     let currentLevel = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearOfServiceFull && x.serviceYearTo > yearOfServiceFull);
 
-        let monthOfService = moment.duration(moment().diff(dateOfSet)).asMonths();
+    //     let monthOfService = moment.duration(moment().diff(dateOfSet)).asMonths();
 
-        let after12Month = 0;
-        if (monthOfService > 12) {
-            let yearService = (monthOfService - 12) / 12;
+    //     let after12Month = 0;
+    //     if (monthOfService > 12) {
+    //         let yearService = (monthOfService - 12) / 12;
 
-            let levelAfterDeduct = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearService && x.serviceYearTo > yearService);
-            after12Month = levelAfterDeduct.entitledDays;
-        }
+    //         let levelAfterDeduct = policyJson.levels.leaveEntitlement.find(x => x.serviceYearFrom <= yearService && x.serviceYearTo > yearService);
+    //         after12Month = levelAfterDeduct.entitledDays;
+    //     }
 
-        let entitledDaysFinal = 0;
+    //     let entitledDaysFinal = 0;
 
-        if (policyJson.leaveEntitlementType.toUpperCase() == "ENTITLED IN FULL") {
-            entitledDaysFinal = currentLevel.entitledDays;
-            totalentitled = currentLevel.entitledDays;
-        } else if (policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-JOIN TO CURRENT MONTH" || policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO CURRENT MONTH") {
-            entitledDaysFinal = entitledTillMonth;
-        } else if (policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-JOIN TO END OF YEAR" || policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO END OF YEAR") {
-            entitledDaysFinal = totalentitled;
-        } else if (policyJson.leaveEntitlementType.toUpperCase() == "LEAVE ENTITLED AFTER 12 MONTHS") {
-            entitledDaysFinal = after12Month;
-            totalentitled = entitledDaysFinal;
-        }
+    //     if (policyJson.leaveEntitlementType.toUpperCase() == "ENTITLED IN FULL") {
+    //         entitledDaysFinal = currentLevel.entitledDays;
+    //         totalentitled = currentLevel.entitledDays;
+    //     } else if (policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-JOIN TO CURRENT MONTH" || policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO CURRENT MONTH") {
+    //         entitledDaysFinal = entitledTillMonth;
+    //     } else if (policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-JOIN TO END OF YEAR" || policyJson.leaveEntitlementType.toUpperCase() == "PRORATED FROM DATE-OF-CONFIRM TO END OF YEAR") {
+    //         entitledDaysFinal = totalentitled;
+    //     } else if (policyJson.leaveEntitlementType.toUpperCase() == "LEAVE ENTITLED AFTER 12 MONTHS") {
+    //         entitledDaysFinal = after12Month;
+    //         totalentitled = entitledDaysFinal;
+    //     }
 
-        return { entitledDaysFinal, totalentitled };
-    }
+    //     return { entitledDaysFinal, totalentitled };
+    // }
 
     /**
      * Method to assign entitlement

@@ -220,7 +220,7 @@ export class LeaveEntitlementReportService {
     leaveData.entitledDays = element.ENTITLED_DAYS;
     leaveData.carriedForward = element.CF_DAYS ? element.CF_DAYS : 0;
     leaveData.forfeited = forfeitedDays.toString();// "0";
-    leaveData.adjusted = element.ADJUSTMENT_DAYS;
+    leaveData.adjusted = (element.ADJUSTMENT_DAYS - element.CF_DAYS).toString();
     leaveData.taken = element.TOTAL_APPROVED;
     leaveData.pending = element.TOTAL_PENDING;
     leaveData.balance = element.BALANCE_DAYS.toFixed(2);

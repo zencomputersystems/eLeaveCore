@@ -59,6 +59,20 @@ export class DashboardLeaveService {
         }), mergeMap(res => {
           let [data, entitlement, leaveTransaction, userLeaveEntitlement] = res;
 
+
+
+          let leavePolicy = convertXMLToJson(entitlement[0].PROPERTIES_XML);
+          // data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
+          let dateIndicator = dateToValidate([data[0].JOIN_DATE, data[0].CONFIRMATION_DATE, leavePolicy]);
+
+          let { entitledDaysFinal, totalentitled } = entitledCount([dateIndicator, data[0].RESIGNATION_DATE, leavePolicy]);
+          data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(totalentitled, leavePolicy.leaveEntitlementRounding.toUpperCase());
+          data[0].EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(entitledDaysFinal, leavePolicy.leaveEntitlementRounding.toUpperCase());;
+          data[0].BALANCE_DAYS = (data[0].EARNED_LEAVE - data[0].TOTAL_APPROVED - data[0].TOTAL_PENDING);
+          data[0].BALANCE_DAYS = data[0].BALANCE_DAYS + data[0].ADJUSTMENT_DAYS;
+          // data[0].BALANCE_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].BALANCE_DAYS, leavePolicy.leaveEntitlementRounding);
+
+
           if (abbr == 'AL') {
             let cfEntitlement = userLeaveEntitlement.find(x => x.CF_FLAG === 1);
             let etEntitlement = userLeaveEntitlement.find(x => x.PARENT_FLAG === 1);
@@ -81,25 +95,24 @@ export class DashboardLeaveService {
 
             const end = moment();
             const start = moment(cfEntitlement.EXPIREDATE, "YYYY-MM-DD");
+            const startFull = moment(new Date().getFullYear() + '-12-31', "YYYY-MM-DD");
 
             //Difference in number of days
             let daysExpired = Math.floor(moment.duration(start.diff(end)).asDays());
+            let daysExpiredFull = Math.floor(moment.duration(startFull.diff(end)).asDays());
 
+            cfBalance = cfBalance < 0 ? 0 : cfBalance;
             data[0].BALANCE_CF = cfBalance;
             data[0].BALANCE_ENTITLED = etBalance;
             data[0].EXPIRED_STATUS = `${cfBalance == 1 ? cfBalance + ' day' : cfBalance + ' days'} expired in ${daysExpired == 1 ? daysExpired + ' day.' : daysExpired + ' days.'}`;
+
+            if (cfBalance == 0) {
+              data[0].BALANCE_DAYS = data[0].BALANCE_DAYS < 0 ? 0 : data[0].BALANCE_DAYS;
+              data[0].EXPIRED_STATUS = `${data[0].BALANCE_DAYS == 1 ? data[0].BALANCE_DAYS + ' day' : data[0].BALANCE_DAYS + ' days'} expired in ${daysExpiredFull == 1 ? daysExpiredFull + ' day.' : daysExpiredFull + ' days.'}`;
+            }
+
           }
 
-          let leavePolicy = convertXMLToJson(entitlement[0].PROPERTIES_XML);
-          // data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
-          let dateIndicator = dateToValidate([data[0].JOIN_DATE, data[0].CONFIRMATION_DATE, leavePolicy]);
-
-          let { entitledDaysFinal, totalentitled } = entitledCount([dateIndicator, data[0].RESIGNATION_DATE, leavePolicy]);
-          data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(totalentitled, leavePolicy.leaveEntitlementRounding.toUpperCase());
-          data[0].EARNED_LEAVE = this.entitlementRoundingService.leaveEntitlementRounding(entitledDaysFinal, leavePolicy.leaveEntitlementRounding.toUpperCase());;
-          data[0].BALANCE_DAYS = (data[0].EARNED_LEAVE - data[0].TOTAL_APPROVED - data[0].TOTAL_PENDING);
-          data[0].BALANCE_DAYS = data[0].BALANCE_DAYS + data[0].ADJUSTMENT_DAYS;
-          // data[0].BALANCE_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].BALANCE_DAYS, leavePolicy.leaveEntitlementRounding);
           return of(data);
         })
     );

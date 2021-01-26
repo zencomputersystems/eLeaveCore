@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { LeavetypeEntitlementDbService } from '../../../admin/leavetype-entitlement/db/leavetype-entitlement.db.service';
 import { EntitlementRoundingService } from 'src/common/policy/entitlement-rounding/services/entitlement-rounding.service';
 import { dateToValidate, entitledCount } from 'src/common/helper/basic-functions';
+import { LeaveTransactionDbService } from 'src/api/leave/db/leave-transaction.db.service';
 /** XMLparser from zen library  */
 var { convertXMLToJson } = require('@zencloudservices/xmlparser');
 /**
@@ -27,7 +28,8 @@ export class DashboardLeaveService {
     private readonly userLeaveEntitlementSummaryDbService: UserLeaveEntitlementSummaryDbService,
     private readonly userLeaveEntitlementDbService: UserLeaveEntitlementDbService,
     private readonly leavetypeEntitlementDbService: LeavetypeEntitlementDbService,
-    private readonly entitlementRoundingService: EntitlementRoundingService
+    private readonly entitlementRoundingService: EntitlementRoundingService,
+    private readonly leaveTransactionDbService: LeaveTransactionDbService
   ) { }
 
   /**
@@ -48,12 +50,46 @@ export class DashboardLeaveService {
             leaveId = data[0].LEAVE_TYPE_GUID;
             const field = [];
             const filter = ['(ENTITLEMENT_GUID=' + data[0].ENTITLEMENT_GUID + ')'];
-            return forkJoin(of(data), this.leavetypeEntitlementDbService.findByFilterV2(field, filter));
+            let userLeaveEntitlement = this.userLeaveEntitlementDbService.findByFilterV2([], [`(USER_GUID=${userGuid})`, `(YEAR=${new Date().getFullYear()})`, `(LEAVE_TYPE_GUID=${data[0].LEAVE_TYPE_GUID})`]);
+            let leaveTransaction = this.leaveTransactionDbService.findByFilterV2([], [`(USER_GUID=${userGuid})`, `(START_DATE>=${new Date().getFullYear() + '-01-01'})`, `(LEAVE_TYPE_GUID=${data[0].LEAVE_TYPE_GUID})`, `(STATUS IN (APPROVED,PENDING))`]);
+            return forkJoin(of(data), this.leavetypeEntitlementDbService.findByFilterV2(field, filter), leaveTransaction, userLeaveEntitlement);
           } else {
             throw new NotFoundException('Leavetype not found');
           }
         }), mergeMap(res => {
-          let [data, entitlement] = res;
+          let [data, entitlement, leaveTransaction, userLeaveEntitlement] = res;
+
+          if (abbr == 'AL') {
+            let cfEntitlement = userLeaveEntitlement.find(x => x.CF_FLAG === 1);
+            let etEntitlement = userLeaveEntitlement.find(x => x.PARENT_FLAG === 1);
+
+            let leaveTransactionBeforeExpire = leaveTransaction.filter(x => x.START_DATE <= cfEntitlement.EXPIREDATE);
+            let leaveTransactionAfterExpire = leaveTransaction.filter(x => x.START_DATE > cfEntitlement.EXPIREDATE);
+
+            let cfUsed = 0;
+            leaveTransactionBeforeExpire.forEach(element => {
+              cfUsed += element.NO_OF_DAYS;
+            });
+
+            let etUsed = 0;
+            leaveTransactionAfterExpire.forEach(element => {
+              etUsed += element.NO_OF_DAYS;
+            })
+
+            let cfBalance = cfEntitlement.DAYS_ADDED - cfUsed;
+            let etBalance = etEntitlement.DAYS_ADDED - etUsed;
+
+            const end = moment();
+            const start = moment(cfEntitlement.EXPIREDATE, "YYYY-MM-DD");
+
+            //Difference in number of days
+            let daysExpired = Math.floor(moment.duration(start.diff(end)).asDays());
+
+            data[0].BALANCE_CF = cfBalance;
+            data[0].BALANCE_ENTITLED = etBalance;
+            data[0].EXPIRED_STATUS = `${cfBalance == 1 ? cfBalance + ' day' : cfBalance + ' days'} expired in ${daysExpired == 1 ? daysExpired + ' day.' : daysExpired + ' days.'}`;
+          }
+
           let leavePolicy = convertXMLToJson(entitlement[0].PROPERTIES_XML);
           // data[0].ENTITLED_DAYS = this.entitlementRoundingService.leaveEntitlementRounding(data[0].ENTITLED_DAYS, leavePolicy.leaveEntitlementRounding);
           let dateIndicator = dateToValidate([data[0].JOIN_DATE, data[0].CONFIRMATION_DATE, leavePolicy]);

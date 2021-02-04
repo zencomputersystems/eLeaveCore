@@ -247,6 +247,8 @@ export class LeaveBalanceValidationService {
 
 
                     childLeaveCounter += durationExpiredToStart > element.DAYS_ADDED ? element.DAYS_ADDED : durationExpiredToStart;
+                } else {
+                    childLeaveCounter += element.DAYS_ADDED;
                 }
             } else {
                 childLeaveCounter += element.DAYS_ADDED;

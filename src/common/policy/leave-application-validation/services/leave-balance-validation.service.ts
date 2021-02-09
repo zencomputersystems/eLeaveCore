@@ -230,26 +230,29 @@ export class LeaveBalanceValidationService {
         childLeave.forEach(element => {
 
             if (element.EXPIREDATE != null) {
-                let expiryDate = moment(element.EXPIREDATE, 'YYYY-MM-DD').startOf('days');
-                // if (expiryDate.isSameOrBefore(endDate) && expiryDate.isSameOrAfter(startDate)) {
-                if (endDate.isSameOrBefore(expiryDate) && startDate.isSameOrBefore(expiryDate)) {
-                    // calculate the duration between start date and expiry date
-                    // let durationExpiredToStart = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,element.EXPIREDATE,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
+                // let expiryDate = moment(element.EXPIREDATE, 'YYYY-MM-DD').startOf('days');
+                // // if (expiryDate.isSameOrBefore(endDate) && expiryDate.isSameOrAfter(startDate)) {
+                // if (endDate.isSameOrBefore(expiryDate) && startDate.isSameOrBefore(expiryDate)) {
+                //     console.log('one : ' + childLeaveCounter + '-' + element.DAYS_ADDED);
+                //     // calculate the duration between start date and expiry date
+                //     // let durationExpiredToStart = this.dateCalculationService.getLeaveDuration(applyLeaveDTO.startDate,element.EXPIREDATE,applyLeaveDTO.dayType,policy.excludeDayType.isExcludeHoliday,policy.excludeDayType.isExcludeRestDay);
 
-                    let sumLeaveDurTemp = 0
-                    // for (let i = 0; i < applyLeaveDTO.data.length; i++) {
-                    //     let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
-                    //     sumLeaveDurTemp = sumLeaveDurTemp + leaveDurationTemp;
-                    // }
-                    sumLeaveDurTemp = this.sumAllLeave(applyLeaveDTO, policy, sumLeaveDurTemp);
+                //     let sumLeaveDurTemp = 0
+                //     // for (let i = 0; i < applyLeaveDTO.data.length; i++) {
+                //     //     let leaveDurationTemp = this.dateCalculationService.getLeaveDuration([applyLeaveDTO.data[i].startDate, applyLeaveDTO.data[i].endDate, applyLeaveDTO.data[i].dayType, policy.excludeDayType.isExcludeHoliday, policy.excludeDayType.isExcludeRestDay]);
+                //     //     sumLeaveDurTemp = sumLeaveDurTemp + leaveDurationTemp;
+                //     // }
+                //     sumLeaveDurTemp = this.sumAllLeave(applyLeaveDTO, policy, sumLeaveDurTemp);
+                //     console.log(sumLeaveDurTemp);
+                //     let durationExpiredToStart = sumLeaveDurTemp;
 
-                    let durationExpiredToStart = sumLeaveDurTemp;
 
-
-                    childLeaveCounter += durationExpiredToStart > element.DAYS_ADDED ? element.DAYS_ADDED : durationExpiredToStart;
-                } else {
-                    childLeaveCounter += element.DAYS_ADDED;
-                }
+                //     childLeaveCounter += durationExpiredToStart > element.DAYS_ADDED ? element.DAYS_ADDED : durationExpiredToStart;
+                // } else {
+                //     console.log('two : ' + childLeaveCounter + '-' + element.DAYS_ADDED);
+                //     childLeaveCounter += element.DAYS_ADDED;
+                // }
+                childLeaveCounter += element.DAYS_ADDED;
             } else {
                 childLeaveCounter += element.DAYS_ADDED;
             }

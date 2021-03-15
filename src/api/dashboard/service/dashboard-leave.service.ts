@@ -75,7 +75,7 @@ export class DashboardLeaveService {
 
           if (abbr == 'AL') {
             let cfEntitlement = userLeaveEntitlement.find(x => x.CF_FLAG === 1);
-            let etEntitlement = userLeaveEntitlement.find(x => x.PARENT_FLAG === 1);
+            let etEntitlement = parseFloat(data[0].ENTITLED_DAYS); // userLeaveEntitlement.find(x => x.PARENT_FLAG === 1);
 
             let leaveTransactionBeforeExpire = leaveTransaction.filter(x => x.START_DATE <= cfEntitlement.EXPIREDATE);
             let leaveTransactionAfterExpire = leaveTransaction.filter(x => x.START_DATE > cfEntitlement.EXPIREDATE);
@@ -91,7 +91,7 @@ export class DashboardLeaveService {
             })
 
             let cfBalance = cfEntitlement.DAYS_ADDED - cfUsed;
-            let etBalance = etEntitlement.DAYS_ADDED - etUsed;
+            let etBalance = etEntitlement - etUsed;
 
             const end = moment();
             const start = moment(cfEntitlement.EXPIREDATE, "YYYY-MM-DD");
@@ -100,7 +100,10 @@ export class DashboardLeaveService {
             //Difference in number of days
             let daysExpired = Math.floor(moment.duration(start.diff(end)).asDays());
             let daysExpiredFull = Math.floor(moment.duration(startFull.diff(end)).asDays());
-
+            if (cfBalance < 0) {
+              let cfBalanceTemp = Math.abs(cfBalance);
+              etBalance = etBalance - cfBalanceTemp;
+            }
             cfBalance = cfBalance < 0 ? 0 : cfBalance;
             data[0].BALANCE_CF = cfBalance;
             data[0].BALANCE_ENTITLED = etBalance;

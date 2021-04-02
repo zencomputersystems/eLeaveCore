@@ -78,7 +78,9 @@ export class ApprovalOverrideController {
   findOwn(@Param() param, @Req() req, @Res() res) {
     this.approvalOverrideService.findAllOwnLeave([param.id, req.user.TENANT_GUID]).subscribe(
       data => {
-        data.sort((a, b) => (a.dateApplied > b.dateApplied) ? -1 : ((b.dateApplied > a.dateApplied) ? 1 : 0));
+        // data.sort((a, b) => (a.dateApplied > b.dateApplied) ? -1 : ((b.dateApplied > a.dateApplied) ? 1 : 0));
+        data.sort((a, b) => (a.startDate > b.startDate) ? -1 : ((b.startDate > a.startDate) ? 1 : 0));
+
         res.send(data);
       },
       err => {

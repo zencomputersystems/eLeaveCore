@@ -61,6 +61,15 @@ export class LeaveBalanceValidationService {
         // get policy
         const parent = userEntitlement.filter(x => x.PARENT_FLAG == 1)[0];
 
+        // initially set max and min as first element
+        var max = userEntitlement[0].EXPIREDATE,
+            min = userEntitlement[0].EXPIREDATE;
+
+        // iterate over array values and update min & max
+        userEntitlement.forEach(function (v) {
+            max = new Date(v.EXPIREDATE) > new Date(max) ? v.EXPIREDATE : max;
+            min = new Date(v.EXPIREDATE) < new Date(min) ? v.EXPIREDATE : min;
+        });
         if (parent.PROPERTIES_XML == null || parent.PROPERTIES_XML == undefined) {
             throw 'Policy Not Found';
         }
@@ -125,9 +134,15 @@ export class LeaveBalanceValidationService {
 
                 const childBalance = this.getChildBalance([applyLeaveDTO, userEntitlement, policy]);
 
-                const balance = ((parentBalance + childBalance) - (leaveDuration + counterAppliedDay));
+                let balance = ((parentBalance + childBalance) - (leaveDuration + counterAppliedDay));
                 // console.log(parentBalance + "-" + childBalance + "-" + leaveDuration + "-" + counterAppliedDay + " bal");
                 // console.log(policy.isAllowAppliedMoreThanBalance.isCheck);
+                // Check maximum expired date, if backdate then will set to 0
+                if (applyLeaveDTO.leaveTypeID == '103c6c10-3452-11eb-aa42-6dcde99f6a5e') {
+                    if (new Date() > new Date(max)) {
+                        balance = -1;
+                    }
+                }
                 if (policy.isAllowAppliedMoreThanBalance.isCheck) {
                     return true;
                 }

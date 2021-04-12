@@ -152,7 +152,7 @@ export class UserLeaveEntitlementService {
          */
     public getEntitlementList(tenantId: string, userId: string) {
         const userFilter = ['(USER_GUID=' + userId + ')', '(TENANT_GUID=' + tenantId + ')', '(YEAR=' + moment().format('YYYY') + ')'];
-        const fields = ['USER_LEAVE_ENTITLEMENT_GUID', 'JOIN_DATE', 'RESIGNATION_DATE', 'CONFIRMATION_DATE', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'ADJUSTMENT_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS'];
+        const fields = ['USER_LEAVE_ENTITLEMENT_GUID', 'JOIN_DATE', 'RESIGNATION_DATE', 'CONFIRMATION_DATE', 'LEAVE_TYPE_GUID', 'ENTITLEMENT_GUID', 'ABBR', 'LEAVE_CODE', 'ENTITLED_DAYS', 'ADJUSTMENT_DAYS', 'TOTAL_APPROVED', 'TOTAL_PENDING', 'BALANCE_DAYS', 'EXPIREDATE'];
 
         return this.userLeaveEntitlementSummaryDbService.findByFilterV2(fields, userFilter).pipe(
             mergeMap(res => {
@@ -223,6 +223,13 @@ export class UserLeaveEntitlementService {
 
                     element.ENTITLED_DAYS = element.ENTITLED_DAYS.toFixed(2);
                     element.BALANCE_DAYS = parseFloat(element.BALANCE_DAYS.toFixed(2)) + parseFloat(element.ADJUSTMENT_DAYS);
+
+
+                    if (element.ABBR == 'RL') {
+                        if (new Date() > new Date(element.EXPIREDATE)) {
+                            element.BALANCE_DAYS = 0;
+                        }
+                    }
 
                 });
                 return entitlementData;

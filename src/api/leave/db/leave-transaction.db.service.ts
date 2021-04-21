@@ -78,7 +78,7 @@ export class LeaveTransactionDbService extends BaseDBService implements IDbServi
 	public findAllPendingLeave(userGuid: string) {
 		let dateLastMonth = moment().subtract(1, 'months').format('YYYY-MM-DD');
 		const fields = [];
-		const filters = ['(USER_GUID IN (' + userGuid + '))', '(START_DATE >= ' + dateLastMonth + ')', '(ENTITLEMENT_GUID != "Anniversary Policy")'];
+		const filters = ['(USER_GUID IN (' + userGuid + '))', '((START_DATE >= ' + dateLastMonth + ') OR (STATUS=PENDING))', '(ENTITLEMENT_GUID != "Anniversary Policy")'];
 		const url = this.queryService.generateDbQueryV2('l_main_leave_transaction', fields, filters, []);
 		return this.httpService.get(url);
 	}

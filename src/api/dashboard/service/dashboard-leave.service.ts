@@ -180,6 +180,8 @@ export class DashboardLeaveService {
           }
 
           // resultTemp['balance'] = leaveBalance[0].BALANCE_DAYS;
+          if (leaveBalance[0].BALANCE_DAYS < balanceDays)
+            balanceDays = leaveBalance[0].BALANCE_DAYS;
 
           resultTemp['balance'] = balanceDays;
           return resultTemp;

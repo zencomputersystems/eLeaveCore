@@ -139,7 +139,7 @@ export class LeaveBalanceValidationService {
                 // console.log(policy.isAllowAppliedMoreThanBalance.isCheck);
                 // Check maximum expired date, if backdate then will set to 0
                 if (applyLeaveDTO.leaveTypeID == '103c6c10-3452-11eb-aa42-6dcde99f6a5e') {
-                    if (new Date() > new Date(max)) {
+                    if (new Date() > new Date(max + ' 23:59:59')) {
                         balance = -1;
                     }
                 }

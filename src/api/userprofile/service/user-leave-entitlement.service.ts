@@ -226,7 +226,7 @@ export class UserLeaveEntitlementService {
 
 
                     if (element.ABBR == 'RL') {
-                        if (new Date() > new Date(element.EXPIREDATE)) {
+                        if (new Date() > new Date(element.EXPIREDATE + ' 23:59:59')) {
                             element.BALANCE_DAYS = 0;
                         }
                     }

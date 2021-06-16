@@ -77,6 +77,14 @@ export class DashboardLeaveService {
             let cfEntitlement = userLeaveEntitlement.find(x => x.CF_FLAG === 1);
             let etEntitlement = parseFloat(data[0].ENTITLED_DAYS); // userLeaveEntitlement.find(x => x.PARENT_FLAG === 1);
 
+            if (cfEntitlement == undefined) {
+              cfEntitlement = [{
+                "EXPIREDATE": new Date('Y') + '-12-31',
+                "DAYS_ADDED": 0,
+                "NO_OF_DAYS": 0
+              }];
+            }
+
             let leaveTransactionBeforeExpire = leaveTransaction.filter(x => x.START_DATE <= cfEntitlement.EXPIREDATE);
             let leaveTransactionAfterExpire = leaveTransaction.filter(x => x.START_DATE > cfEntitlement.EXPIREDATE);
 

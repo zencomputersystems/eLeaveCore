@@ -180,11 +180,9 @@ export class DashboardLeaveService {
           resultTemp['active'] = activeRL;
           resultTemp['expired'] = expiredRL;
 
-          // console.log(resultTemp);
-
           let balanceDays = 0;
           if (activeRL.length > 0) {
-            activeRL.forEach(x => balanceDays = balanceDays + parseInt(x.DAYS_ADDED));
+            activeRL.forEach(x => balanceDays = balanceDays + parseFloat(x.DAYS_ADDED));
           }
 
           // resultTemp['balance'] = leaveBalance[0].BALANCE_DAYS;
